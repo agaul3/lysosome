@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-10 — Milestone 3: Campus
+
+- Replaced the temporary dorm exit with a traversable academic courtyard and Learning Center entry lobby.
+- Added directory and static student interactions, signs, original low-poly buildings/palms, collision and configured morning lighting.
+- Added bounded camera follow, configurable shared location HUD, destination-specific arrival state and return transitions.
+- Added full campus-route tests and updated dorm regression expectations. Reused existing folders; no Milestone 4 or 5 simulation built.
+
 ## 2026-09-10 — Milestone 2: Player + Dorm
 
 - Added four original preset appearances, shared preview/gameplay visuals and stable selection IDs.

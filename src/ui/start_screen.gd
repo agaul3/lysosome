@@ -46,7 +46,7 @@ Visible RPG progression.", 23, Color("b7cbd7"))
 	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	identity.add_child(spacer)
 	_add_label(identity, "VERTICAL SLICE v0.1  /  FIRST MORNING", 15, Color("74d7c0"))
-	_add_label(identity, "Milestone 2 • Player + Dorm
+	_add_label(identity, "Milestone 3 • Campus
 Keyboard, mouse & controller", 16, Color("b7cbd7"))
 	var panel_center := CenterContainer.new()
 	panel_center.custom_minimum_size.x = 370

@@ -6,15 +6,18 @@ const Presets = preload("res://data/character_presets.gd")
 const SCENES := {
 	"title": "res://ui/start_screen.tscn",
 	"dorm": "res://world/dorm/dorm.tscn",
-	"exit": "res://world/dorm/exit_destination.tscn",
+	"campus": "res://world/campus/campus.tscn",
+	"lecture_building": "res://world/lecture_building/lecture_building.tscn",
 }
-enum Phase { TITLE, CHARACTER_SELECT, DORM, EXIT }
+enum Phase { TITLE, CHARACTER_SELECT, DORM, CAMPUS, LECTURE_BUILDING }
 var phase: Phase = Phase.TITLE
 var selected_character: String = Presets.DEFAULT_ID
 var transitioning := false
+var campus_entry := "dorm"
 
 func start_new_game() -> void:
 	selected_character = Presets.DEFAULT_ID
+	campus_entry = "dorm"
 	_set_phase(Phase.CHARACTER_SELECT)
 
 func select_character(id: String) -> bool:
@@ -28,10 +31,20 @@ func enter_dorm() -> void:
 
 func leave_dorm() -> void:
 	if phase == Phase.DORM:
-		_request_transition("exit", Phase.EXIT)
+		enter_campus("dorm")
+
+func enter_campus(entry: String = "dorm") -> void:
+	if transitioning:
+		return
+	campus_entry = entry if entry in ["dorm", "lecture_building"] else "dorm"
+	_request_transition("campus", Phase.CAMPUS)
+
+func enter_lecture_building() -> void:
+	if phase == Phase.CAMPUS:
+		_request_transition("lecture_building", Phase.LECTURE_BUILDING)
 
 func return_to_title() -> void:
-	if phase in [Phase.DORM, Phase.EXIT]:
+	if phase in [Phase.DORM, Phase.CAMPUS, Phase.LECTURE_BUILDING]:
 		_request_transition("title", Phase.TITLE)
 	else:
 		_set_phase(Phase.TITLE)

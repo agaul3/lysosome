@@ -1,5 +1,7 @@
 extends CanvasLayer
 ## Context prompts and a small settings overlay; no progression HUD or future menu pages.
+@export var location_title := "CEDAR RESIDENCE  /  YOUR DORM"
+@export var objective_text := ""
 const SettingsPanel = preload("res://ui/settings_panel.gd")
 var player: CharacterBody3D
 var prompt: Label
@@ -9,23 +11,46 @@ var settings: VBoxContainer
 var settings_backdrop: PanelContainer
 var settings_open := false
 var current_target: Node3D
+var context_backdrop: ColorRect
 
 func _ready() -> void:
 	var root := Control.new()
 	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(root)
+	var heading_backdrop := ColorRect.new()
+	heading_backdrop.color = Color(0.035, 0.075, 0.10, 0.88)
+	heading_backdrop.position = Vector2(16, 12)
+	heading_backdrop.size = Vector2(740, 74 if not objective_text.is_empty() else 46)
+	heading_backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(heading_backdrop)
 	var heading := Label.new()
-	heading.text = "CEDAR RESIDENCE  /  YOUR DORM"
+	heading.text = location_title
 	heading.position = Vector2(30, 22)
 	heading.add_theme_font_size_override("font_size", 20)
 	root.add_child(heading)
+	if not objective_text.is_empty():
+		var objective := Label.new()
+		objective.text = objective_text
+		objective.position = Vector2(30, 50)
+		objective.add_theme_font_size_override("font_size", 17)
+		root.add_child(objective)
 	var help := Label.new()
 	help.text = "WASD / Left stick — Move    E / X — Interact    Tab / Start — Settings"
 	help.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
 	help.position = Vector2(30, -38)
 	help.add_theme_font_size_override("font_size", 16)
+	help.add_theme_color_override("font_outline_color", Color("172d36"))
+	help.add_theme_constant_override("outline_size", 5)
 	root.add_child(help)
+	context_backdrop = ColorRect.new()
+	context_backdrop.color = Color(0.035, 0.075, 0.10, 0.9)
+	context_backdrop.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
+	context_backdrop.position = Vector2(-365, -160)
+	context_backdrop.size = Vector2(730, 120)
+	context_backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	context_backdrop.hide()
+	root.add_child(context_backdrop)
 	var stack := VBoxContainer.new()
 	stack.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
 	stack.position = Vector2(-350, -150)
@@ -45,7 +70,7 @@ func _ready() -> void:
 	message_timer = Timer.new()
 	message_timer.one_shot = true
 	message_timer.wait_time = 6.0
-	message_timer.timeout.connect(func() -> void: message.text = "")
+	message_timer.timeout.connect(_clear_message)
 	add_child(message_timer)
 	settings_backdrop = PanelContainer.new()
 	settings_backdrop.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
@@ -77,11 +102,20 @@ func _show_target(target: Node3D) -> void:
 	if is_instance_valid(target) and not settings_open:
 		var key: String = "X / West" if player.interaction.using_controller else "E"
 		prompt.text = "%s — %s" % [key, target.display_name]
+	_refresh_context()
 
 func _show_response(target: Node3D) -> void:
 	message.text = target.response
 	if not message.text.is_empty():
 		message_timer.start()
+	_refresh_context()
+
+func _clear_message() -> void:
+	message.text = ""
+	_refresh_context()
+
+func _refresh_context() -> void:
+	context_backdrop.visible = not settings_open and (not prompt.text.is_empty() or not message.text.is_empty())
 
 func set_settings_open(value: bool) -> void:
 	settings_open = value

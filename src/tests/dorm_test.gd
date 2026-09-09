@@ -121,9 +121,9 @@ func _run() -> void:
 	Input.parse_input_event(exit_event)
 	await scene_changed
 	await ticks(3)
-	check(state.phase == state.Phase.EXIT, "Exit transitions to temporary destination")
-	check(current_scene.name == "ExitDestination", "Temporary destination loaded")
-	current_scene.return_button.pressed.emit()
+	check(state.phase == state.Phase.CAMPUS, "Exit transitions to campus")
+	check(current_scene.name == "Campus", "Campus destination loaded")
+	current_scene.dorm_door.interact()
 	await acquire_dorm()
 	check(player.position.distance_to(Vector3(0, 0, 1.5)) < 0.1, "Restart has clean spawn")
 	check(player.movement_enabled and player.interaction.target == null, "Restart clears interaction/movement state")
