@@ -1,9 +1,11 @@
-# Known issues
+# Known issues — Milestone 2
 
-- New Game intentionally ends at the foundation screen. Player, appearances and dorm are Milestone 2 work.
-- Continue is unavailable; save/load is not implemented.
-- Volume/fullscreen settings are session-only. This build has no game audio, so volume is verified against the audio bus.
-- Physical controller hardware has not been tested; automated tests inject controller events and verify bindings.
-- Sandboxed Godot can emit a macOS certificate-store initialization error (`get_system_ca_certificates`). No project network functionality exists. Initial import also reported denied Godot cache/user-data writes; access was subsequently granted for normal engine directories.
+- Physical controller hardware has not been tested. Bindings and injected controller events are covered by automated tests.
+- Continue remains unavailable and character selection lasts only for this process. Save/load is deferred.
+- Volume/fullscreen settings are session-only. There is no game audio yet; volume is checked against the audio bus.
+- Original low-poly visuals are placeholders. The room camera is intentionally fixed and near walls are visually cut away while retaining collision.
+- The door leads to a temporary transition screen. Campus, education, progression and other later systems are outside this run.
 
-Graphical launch from the sandbox exited with code 134. The desktop-control tool displayed Project Manager but repeatedly failed with `noWindowsAvailable`; Finder also failed with `cgWindowNotFound`. Rendered game layout, mouse interaction, and fullscreen remain unverified. Overall Milestone 1 status is PARTIAL pending graphical acceptance. No critical code blocker was found in headless tests; desktop acceptance must still be resolved. See `docs/MILESTONE_1_ACCEPTANCE.md`.
+The earlier sandbox launch/certificate issues are historical: graphical launch and fullscreen worked with the current environment. The Run #2 instructions also state Milestone 1 was manually verified and committed. Its original acceptance report is retained as historical evidence rather than rewritten.
+
+See `MILESTONE_2_ACCEPTANCE.md` for current validation results.

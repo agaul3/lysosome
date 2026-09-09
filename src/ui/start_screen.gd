@@ -1,8 +1,9 @@
 extends Control
-## Title shell only. The New Game destination is an explicit milestone boundary.
+## Title shell and preset selection. Gameplay is owned by the dorm scene.
+const CharacterSelection = preload("res://ui/character_selection.gd")
 const SettingsPanel = preload("res://ui/settings_panel.gd")
 var title_panel: VBoxContainer
-var foundation_panel: VBoxContainer
+var selection_panel: VBoxContainer
 var settings_panel: VBoxContainer
 var new_game_button: Button
 var continue_button: Button
@@ -44,8 +45,8 @@ Visible RPG progression.", 23, Color("b7cbd7"))
 	var spacer := Control.new()
 	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	identity.add_child(spacer)
-	_add_label(identity, "VERTICAL SLICE v0.1  /  FOUNDATION", 15, Color("74d7c0"))
-	_add_label(identity, "Milestone 1 • Local desktop prototype
+	_add_label(identity, "VERTICAL SLICE v0.1  /  FIRST MORNING", 15, Color("74d7c0"))
+	_add_label(identity, "Milestone 2 • Player + Dorm
 Keyboard, mouse & controller", 16, Color("b7cbd7"))
 	var panel_center := CenterContainer.new()
 	panel_center.custom_minimum_size.x = 370
@@ -58,14 +59,12 @@ Keyboard, mouse & controller", 16, Color("b7cbd7"))
 	continue_button.tooltip_text = "Save/load will be added in a later milestone."
 	settings_button = _add_button(title_panel, "Settings", _open_settings)
 	quit_button = _add_button(title_panel, "Quit", _quit)
-	_add_label(title_panel, "No save data in this foundation build.", 16, Color("b7cbd7"))
-	foundation_panel = _make_panel(panel_center)
-	_add_label(foundation_panel, "Foundation ready", 30)
-	_add_label(foundation_panel, "New Game flow is connected.
-
-Character selection and the dorm
-arrive in Milestone 2.", 20)
-	return_button = _add_button(foundation_panel, "Back to title", AppState.return_to_title)
+	_add_label(title_panel, "Save/load arrives in a later milestone.", 16, Color("b7cbd7"))
+	selection_panel = CharacterSelection.new()
+	selection_panel.custom_minimum_size.x = 370
+	panel_center.add_child(selection_panel)
+	selection_panel.cancelled.connect(AppState.return_to_title)
+	return_button = selection_panel.back_button
 	settings_panel = SettingsPanel.new()
 	settings_panel.custom_minimum_size.x = 370
 	panel_center.add_child(settings_panel)
@@ -96,11 +95,11 @@ func _add_button(parent: Node, text: String, callback: Callable) -> Button:
 func _on_phase_changed(phase: AppState.Phase) -> void:
 	settings_panel.hide()
 	title_panel.visible = phase == AppState.Phase.TITLE
-	foundation_panel.visible = phase == AppState.Phase.FOUNDATION
+	selection_panel.visible = phase == AppState.Phase.CHARACTER_SELECT
 	if title_panel.visible:
 		new_game_button.grab_focus()
 	else:
-		return_button.grab_focus()
+		selection_panel.focus_selection()
 
 func _open_settings() -> void:
 	title_panel.hide()
@@ -116,7 +115,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("cancel"):
 		if settings_panel.visible:
 			_close_settings()
-		elif foundation_panel.visible:
+		elif selection_panel.visible:
 			AppState.return_to_title()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("confirm") and not event.is_echo():

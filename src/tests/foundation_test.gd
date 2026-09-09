@@ -23,9 +23,9 @@ func _run() -> void:
 		_check(keyboard and controller, "Keyboard/controller bindings: " + action)
 	for directory in ["autoload", "player", "npc", "world/dorm", "world/campus", "world/lecture_building", "world/lecture_hall", "education/questions", "education/lectures", "education/models", "ui", "audio", "assets", "data", "tests", "docs"]:
 		_check(DirAccess.dir_exists_absolute("res://" + directory), "Directory: " + directory)
-	for document in ["README.md", "PROJECT_SPEC.md", "ARCHITECTURE.md", "CHANGELOG.md", "KNOWN_ISSUES.md", "MEDICAL_CONTENT_REVIEW.md"]:
+	for document in ["README.md", "PROJECT_SPEC.md", "docs/architecture/ARCHITECTURE.md", "docs/development/CHANGELOG.md", "docs/development/KNOWN_ISSUES.md", "docs/development/MEDICAL_CONTENT_REVIEW.md"]:
 		_check(FileAccess.file_exists("res://" + document), "Document: " + document)
-	_check(FileAccess.get_file_as_bytes("res://PROJECT_SPEC.md") == FileAccess.get_file_as_bytes("res://medical_school_rpg_spec.md"), "Product requirements preserved byte-for-byte")
+	_check(FileAccess.get_file_as_bytes("res://PROJECT_SPEC.md") == FileAccess.get_file_as_bytes("res://docs/design/medical_school_rpg_spec.md"), "Product requirements preserved byte-for-byte")
 	var state := root.get_node("AppState")
 	var screen = load("res://ui/start_screen.tscn").instantiate()
 	root.add_child(screen)
@@ -34,8 +34,8 @@ func _run() -> void:
 	_check(screen.new_game_button.has_focus(), "Initial keyboard/controller focus")
 	_check(screen.continue_button.disabled, "Continue unavailable without save support")
 	screen.new_game_button.pressed.emit()
-	_check(state.phase == state.Phase.FOUNDATION and screen.foundation_panel.visible, "New Game enters foundation")
-	_check(screen.return_button.has_focus(), "Foundation focuses Back")
+	_check(state.phase == state.Phase.CHARACTER_SELECT and screen.selection_panel.visible, "New Game enters character selection")
+	_check(screen.selection_panel.preset_buttons[0].has_focus(), "Selection focuses first preset")
 	screen.return_button.pressed.emit()
 	_check(screen.title_panel.visible, "Back returns to title")
 	screen.settings_button.pressed.emit()
@@ -63,7 +63,7 @@ func _run() -> void:
 	controller_confirm.pressed = true
 	Input.parse_input_event(controller_confirm)
 	await process_frame
-	_check(screen.foundation_panel.visible, "Controller A starts New Game")
+	_check(screen.selection_panel.visible, "Controller A starts New Game")
 	controller_confirm.pressed = false
 	Input.parse_input_event(controller_confirm)
 	var keyboard_cancel := InputEventKey.new()

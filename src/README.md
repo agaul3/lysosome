@@ -1,51 +1,54 @@
-# Medical School RPG — Milestone 1
+# Medical School RPG — Milestone 2
 
-A local educational RPG prototype in which real medical learning will drive progression. This build contains only the project foundation. It has no explorable world or medical content yet.
+A local educational RPG prototype where real medical learning will drive progression. This build implements character selection and a playable dorm; educational systems and the campus remain deferred.
 
 ## Launch
 
-Tested with **Godot 4.7.2.stable.official.ed1daf0bf**, the installed stable Godot 4.x version. No third-party dependencies or runtime network services.
-
-Import `project.godot` in Godot and press F6 with `ui/start_screen.tscn` open, or F5 to run the project. On this Mac:
+Tested with **Godot 4.7.2.stable.official.ed1daf0bf**. Import `project.godot` in Godot and press F5, or run:
 
 ```sh
 /Applications/Godot.app/Contents/MacOS/Godot --path /Users/adamgault3/Developer/personal/games/rpg_med/src
 ```
 
-New Game opens a foundation placeholder with Back to title. Continue is disabled because save/load is deferred. Settings changes master volume and fullscreen for the current session. Quit closes the application.
+Choose **New Game**, select one of four student appearances, then **Begin morning**. Walk to the desk or bed and interact. The green door exits to a clearly marked temporary destination with options to return to the dorm or title. Continue is disabled until save/load exists. Settings apply volume/fullscreen for the current session.
 
 ## Controls
 
-| Action | Keyboard | Standard controller |
+| Action | Keyboard/mouse | Standard controller |
 |---|---|---|
-| Movement (reserved) | WASD | Left stick / D-pad |
-| Interact (reserved) | E | X / west face button |
-| Player menu (reserved) | Tab | Start |
-| Confirm | Enter / Space | A / south face button |
-| Cancel / Back | Escape | B / east face button |
-| Title/settings navigation | Arrow keys / Tab / mouse | D-pad / built-in UI navigation |
+| Move relative to camera | WASD | Left stick / D-pad |
+| Interact with highlighted object | E | X / west face button |
+| Dorm settings | Tab or Escape | Start or B / east face button |
+| Confirm UI | Enter / Space / click | A / south face button |
+| Back | Escape | B / east face button |
+| Navigate UI | Arrows / Tab / mouse | D-pad |
 
-Gameplay actions are configured but deliberately have no movement or interaction consumer yet. Godot's built-in `ui_*` actions handle Control navigation; semantic `confirm`/`cancel` support application actions. Analog movement uses a 0.25 deadzone.
+Movement is normalized, uses Godot physics, and preserves analog strength. Settings block player movement while leaving the scene tree running. The HUD displays a single nearby interaction prompt and temporary response text.
 
 ## Structure
 
-- `autoload/`: minimal application flow.
-- `ui/`: start scene and session settings.
-- `player/`, `npc/`, `world/{dorm,campus,lecture_building,lecture_hall}/`: reserved directories only.
-- `education/{questions,lectures,models}/`: reserved directories only.
-- `audio/`, `assets/`, `data/`, `docs/`: reserved content/documentation locations.
-- `tests/`: dependency-free Godot integration harness.
+- `autoload/`: application phases, selected character ID, guarded scene transitions.
+- `data/`: stable character preset records.
+- `player/`: reusable CharacterBody3D scene, movement, visual appearance, interaction detector.
+- `world/`: shared original geometry, interaction endpoint, exploration camera.
+- `world/dorm/`: dorm and temporary exit destination scenes.
+- `ui/`: title, selection preview, settings, contextual dorm HUD, exit screen.
+- `tests/`: dependency-free Godot integration tests.
+- `docs/architecture/`, `docs/design/`, `docs/development/`, `docs/prompts/`: established documentation locations.
+- Other existing domain directories remain reserved for later milestones. No new directories were needed.
 
-## Test
+## Tests
 
-From the project root (or replace `.` with its absolute path):
+Run these from the project root:
 
 ```sh
 /Applications/Godot.app/Contents/MacOS/Godot --headless --path . --editor --import --quit
 /Applications/Godot.app/Contents/MacOS/Godot --headless --path . --script res://tests/foundation_test.gd
-/Applications/Godot.app/Contents/MacOS/Godot --headless --path . --quit-after 120
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path . --script res://tests/dorm_test.gd
 ```
 
-Require zero failures and inspect console output for script/runtime errors, not just the process exit code. Graphical acceptance: launch, activate New Game and Back, open Settings, change volume, toggle fullscreen both ways, return with Escape, verify disabled Continue, and Quit. Physical controller hardware should also be checked when available.
+The dorm suite takes about one minute. It exercises all presets, a complete walking/interaction/exit route, restart, physical keyboard and injected controller events, 30/60/120 Hz movement, furniture and boundary collision, overlapping/occluded/removed targets, and settings. Inspect output for errors as well as the check counts: Godot may return exit code 0 on some script errors.
 
-See `docs/MILESTONE_1_ACCEPTANCE.md` for actual validation results and `ARCHITECTURE.md` for ownership and deferred work. `medical_school_rpg_spec.md` is authoritative; `PROJECT_SPEC.md` is its exact immutable snapshot. The run file limits this implementation to Milestone 1.
+For graphical testing, omit `--headless` from the dorm test command. Also manually check mouse navigation, readable visuals, and fullscreen both ways; these are not established by headless tests.
+
+See `docs/development/MILESTONE_2_ACCEPTANCE.md` for recorded results and `docs/architecture/ARCHITECTURE.md` for ownership. `docs/design/medical_school_rpg_spec.md` is authoritative; `PROJECT_SPEC.md` is its exact snapshot. Run #2 instructions define the current scope. No third-party assets, runtime AI, or network services are used.
