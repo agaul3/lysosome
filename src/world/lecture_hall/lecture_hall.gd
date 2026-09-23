@@ -10,6 +10,11 @@ const Geometry = preload("res://world/geometry.gd")
 const Appearance = preload("res://player/appearance.gd")
 const Seat = preload("res://world/seat.gd")
 const LectureCamera = preload("res://world/lecture_camera.gd")
+const LectureSession = preload("res://world/lecture_hall/lecture_session.gd")
+const LectureSlide = preload("res://ui/lecture_slide.gd")
+const Professor = preload("res://npc/professor.gd")
+const SCREEN_CENTER := Vector3(0.8, 2.75, FRONT_WALL_Z + 0.075)
+const SCREEN_SIZE := Vector2(6.2, 3.1)
 
 const TIERS := 5
 ## Steep rake, as in teaching auditoria, so each row sees over the one in front.
@@ -30,8 +35,12 @@ const SECTIONS := {
 	"right": [4.96, 5.88, 6.8],
 }
 const SEAT_COLOR := Color("d45a2e")
-const STEP_COLOR := Color("c9c6bf")
-const FLOOR_COLOR := Color("d8d4cb")
+## Modern, muted palette: slate carpet, warm greige walls, walnut panelling.
+const STEP_COLOR := Color("5f6368")
+const FLOOR_COLOR := Color("6a6d70")
+const WALL_COLOR := Color("9c968c")
+const TRIM_COLOR := Color("7d786f")
+const WOOD_COLOR := Color(0.52, 0.35, 0.21)
 ## Seat key "row:x" -> classmate look. Alex's saved seat is separate.
 const CLASSMATES := {
 	"0:-0.92": "teal", "0:1.84": "plum", "0:5.88": "sage",
@@ -54,6 +63,10 @@ var seats: Array[Node3D] = []
 var alex_seat: Node3D
 var table_chairs: Array[Node3D] = []
 var nav := AStar3D.new()
+var slide_viewport: SubViewport
+var slide: Control
+var lecture_ui: CanvasLayer
+var session: Node
 ## Ceiling and full-height near walls, only needed from the seated viewpoint.
 ## They fade in as the lecture camera settles so the isometric view keeps its
 ## cutaway and the hand-off never shows them popping in.
@@ -111,6 +124,12 @@ func _ready() -> void:
 	hud.objective_text = "Find an open seat for Pharmacodynamics"
 	add_child(hud)
 	hud.bind_player(player)
+	lecture_ui = preload("res://ui/lecture_ui.gd").new()
+	add_child(lecture_ui)
+	session = LectureSession.new()
+	session.name = "LectureSession"
+	add_child(session)
+	session.setup(self, lecture_ui, slide, slide_viewport, professor)
 
 func _build_room() -> void:
 	var depth := BACK_WALL_Z - FRONT_WALL_Z
@@ -119,10 +138,10 @@ func _build_room() -> void:
 	# Far walls stand full height; the two walls nearest the camera are cut away
 	# but keep full-height colliders.
 	var walls := [
-		["FrontWall", Vector3(HALF_WIDTH * 2 + 0.4, WALL_HEIGHT, 0.2), Vector3(0, WALL_HEIGHT / 2, FRONT_WALL_Z - 0.1), false, Color("ece8df")],
-		["LeftWall", Vector3(0.2, WALL_HEIGHT, depth), Vector3(-HALF_WIDTH - 0.1, WALL_HEIGHT / 2, mid_z), false, Color("c08d5e")],
-		["RightWall", Vector3(0.2, WALL_HEIGHT, depth), Vector3(HALF_WIDTH + 0.1, WALL_HEIGHT / 2, mid_z), true, Color("c08d5e")],
-		["BackWall", Vector3(HALF_WIDTH * 2 + 0.4, WALL_HEIGHT, 0.2), Vector3(0, WALL_HEIGHT / 2, BACK_WALL_Z + 0.1), true, Color("c08d5e")],
+		["FrontWall", Vector3(HALF_WIDTH * 2 + 0.4, WALL_HEIGHT, 0.2), Vector3(0, WALL_HEIGHT / 2, FRONT_WALL_Z - 0.1), false, WALL_COLOR],
+		["LeftWall", Vector3(0.2, WALL_HEIGHT, depth), Vector3(-HALF_WIDTH - 0.1, WALL_HEIGHT / 2, mid_z), false, WALL_COLOR],
+		["RightWall", Vector3(0.2, WALL_HEIGHT, depth), Vector3(HALF_WIDTH + 0.1, WALL_HEIGHT / 2, mid_z), true, WALL_COLOR],
+		["BackWall", Vector3(HALF_WIDTH * 2 + 0.4, WALL_HEIGHT, 0.2), Vector3(0, WALL_HEIGHT / 2, BACK_WALL_Z + 0.1), true, WALL_COLOR],
 	]
 	for wall in walls:
 		var body := Geometry.box(self, wall[0], wall[1], wall[2], wall[4], true)
@@ -134,24 +153,24 @@ func _build_room() -> void:
 	_build_interior_shell(depth, mid_z)
 	# Warm wood panelling on the long left wall, with slim vertical reveals.
 	var panel := Geometry.box(self, "WoodPanelling", Vector3(0.04, 3.4, depth - 3.2), Vector3(-HALF_WIDTH + 0.02, 1.9, mid_z + 1.6), Color("c08d5e"))
-	_wood(panel.get_child(0), Color(0.75, 0.52, 0.31))
+	_wood(panel.get_child(0), WOOD_COLOR)
 	for index in range(12):
 		var z := FRONT_WALL_Z + 3.2 + index * (depth - 3.2) / 12.0
-		Geometry.box(self, "PanelReveal", Vector3(0.05, 3.4, 0.03), Vector3(-HALF_WIDTH + 0.03, 1.9, z), Color("8f6440"))
-	Geometry.box(self, "PanelCap", Vector3(0.08, 0.08, depth - 3.2), Vector3(-HALF_WIDTH + 0.04, 3.62, mid_z + 1.6), Color("8f6440"))
+		Geometry.box(self, "PanelReveal", Vector3(0.05, 3.4, 0.03), Vector3(-HALF_WIDTH + 0.03, 1.9, z), Color("5a3c26"))
+	Geometry.box(self, "PanelCap", Vector3(0.08, 0.08, depth - 3.2), Vector3(-HALF_WIDTH + 0.04, 3.62, mid_z + 1.6), Color("5a3c26"))
 	# Front-left entrance: blue double doors in a frame, exit sign above.
 	for z in [DOOR_Z - 0.48, DOOR_Z + 0.48]:
-		Geometry.box(self, "HallDoorLeaf", Vector3(0.05, 2.25, 0.9), Vector3(-HALF_WIDTH + 0.03, 1.125, z), Color("3e6b8c"))
+		Geometry.box(self, "HallDoorLeaf", Vector3(0.05, 2.25, 0.9), Vector3(-HALF_WIDTH + 0.03, 1.125, z), Color("365d78"))
 		Geometry.box(self, "DoorPushPlate", Vector3(0.03, 0.3, 0.1), Vector3(-HALF_WIDTH + 0.07, 1.1, z + (0.3 if z > DOOR_Z else -0.3)), Color("c9d2d6"))
 	for z in [DOOR_Z - 1.0, DOOR_Z + 1.0]:
-		Geometry.box(self, "HallDoorJamb", Vector3(0.1, 2.4, 0.1), Vector3(-HALF_WIDTH + 0.05, 1.2, z), Color("ece8df"))
-	Geometry.box(self, "HallDoorHead", Vector3(0.1, 0.12, 2.1), Vector3(-HALF_WIDTH + 0.05, 2.4, DOOR_Z), Color("ece8df"))
+		Geometry.box(self, "HallDoorJamb", Vector3(0.1, 2.4, 0.1), Vector3(-HALF_WIDTH + 0.05, 1.2, z), TRIM_COLOR)
+	Geometry.box(self, "HallDoorHead", Vector3(0.1, 0.12, 2.1), Vector3(-HALF_WIDTH + 0.05, 2.4, DOOR_Z), TRIM_COLOR)
 	Geometry.box(self, "ExitSign", Vector3(0.06, 0.18, 0.44), Vector3(-HALF_WIDTH + 0.06, 2.72, DOOR_Z), Color("c8433a"))
-	Geometry.box(self, "WallClock", Vector3(0.05, 0.36, 0.36), Vector3(-HALF_WIDTH + 0.04, 2.9, DOOR_Z + 1.9), Color("f2f0ea"))
+	Geometry.box(self, "WallClock", Vector3(0.05, 0.36, 0.36), Vector3(-HALF_WIDTH + 0.04, 2.9, DOOR_Z + 1.9), Color("d6d3cc"))
 
 func _build_interior_shell(depth: float, mid_z: float) -> void:
 	interior_material = StandardMaterial3D.new()
-	interior_material.albedo_color = Color(0.93, 0.92, 0.89, 0.0)
+	interior_material.albedo_color = Color(0.55, 0.53, 0.5, 0.0)
 	interior_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	interior_material.roughness = 0.9
 	var pieces := [
@@ -209,7 +228,7 @@ func _build_tiers() -> void:
 			var block := Geometry.box(self, "Tier%d" % row, Vector3(width, height, z1 - z0), Vector3((span[0] + span[1]) / 2.0, height / 2.0, (z0 + z1) / 2.0), STEP_COLOR, true)
 			block.get_child(0).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 			# A slightly darker riser strip marks each step edge without patterning the floor.
-			Geometry.box(self, "TierNosing", Vector3(width, 0.03, 0.05), Vector3((span[0] + span[1]) / 2.0, height + 0.012, z0 + 0.025), Color("aaa69f"))
+			Geometry.box(self, "TierNosing", Vector3(width, 0.03, 0.05), Vector3((span[0] + span[1]) / 2.0, height + 0.012, z0 + 0.025), Color("4a4e53"))
 
 func _section_spans() -> Array:
 	var left_aisle: float = AISLES[0]
@@ -242,7 +261,7 @@ func _build_aisles() -> void:
 			step.get_child(0).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 			for nose_z in [z0 + 0.8, z0 + 1.2]:
 				var nose_y := level + (RISE / 2 if nose_z < z0 + 1.0 else RISE)
-				Geometry.box(self, "StepNosing", Vector3(AISLE_WIDTH, 0.03, 0.05), Vector3(x, nose_y + 0.012, nose_z + 0.025), Color("8e8a83"))
+				Geometry.box(self, "StepNosing", Vector3(AISLE_WIDTH, 0.03, 0.05), Vector3(x, nose_y + 0.012, nose_z + 0.025), Color("44484d"))
 			_ramp(x, z0 + 0.65, z0 + 1.25, level, level + RISE)
 
 func _collider_box(center: Vector3, size: Vector3) -> void:
@@ -274,9 +293,8 @@ func _ramp(x: float, z0: float, z1: float, y0: float, y1: float) -> void:
 func _build_front() -> void:
 	# Projection screen with a slim frame and the lecture title.
 	Geometry.box(self, "ScreenFrame", Vector3(6.4, 3.3, 0.06), Vector3(0.8, 2.75, FRONT_WALL_Z + 0.03), Color("2f3438"))
-	Geometry.box(self, "LectureDisplay", Vector3(6.2, 3.1, 0.04), Vector3(0.8, 2.75, FRONT_WALL_Z + 0.07), Color("34535c"))
-	Geometry.nameplate(self, "PHARMACODYNAMICS", Vector3(0.8, 3.7, FRONT_WALL_Z + 0.2), 26, 0.01)
-	Geometry.box(self, "Whiteboard", Vector3(3.2, 1.3, 0.04), Vector3(-5.6, 1.75, FRONT_WALL_Z + 0.03), Color("f5f6f2"))
+	_build_screen()
+	Geometry.box(self, "Whiteboard", Vector3(3.2, 1.3, 0.04), Vector3(-5.6, 1.75, FRONT_WALL_Z + 0.03), Color("cfd1cd"))
 	Geometry.box(self, "WhiteboardTray", Vector3(3.2, 0.05, 0.1), Vector3(-5.6, 1.08, FRONT_WALL_Z + 0.07), Color("b9bcb8"))
 	# Podium: dark cabinet, sloped top, two monitors and a gooseneck microphone.
 	var podium := Vector3(-2.4, 0, -5.4)
@@ -289,14 +307,13 @@ func _build_front() -> void:
 		monitor.rotation.x = 0.15
 	var mic := Geometry.box(self, "Microphone", Vector3(0.025, 0.3, 0.025), podium + Vector3(0.05, 1.2, 0.2), Color("1f2226"))
 	mic.rotation.x = -0.5
-	professor = Appearance.new()
+	professor = Professor.new()
 	professor.name = "Professor"
 	professor.position = podium + Vector3(0, 0, -0.75)
-	professor.rotation.y = PI
+	professor.screen_point = SCREEN_CENTER
 	add_child(professor)
-	professor.apply_preset("professor")
 	# Side table with two loose chairs near the entrance.
-	Geometry.box(self, "SideTable", Vector3(1.5, 0.06, 0.75), Vector3(-5.8, 0.74, -4.95), Color("e6e3dc"), true)
+	Geometry.box(self, "SideTable", Vector3(1.5, 0.06, 0.75), Vector3(-5.8, 0.74, -4.95), Color("b3aea4"), true)
 	for x in [-6.45, -5.15]:
 		for z in [-5.25, -4.65]:
 			Geometry.box(self, "TableLeg", Vector3(0.05, 0.72, 0.05), Vector3(x, 0.36, z), Color("8d9196"))
@@ -308,6 +325,29 @@ func _build_front() -> void:
 		add_child(chair)
 		chair.sit_requested.connect(_on_sit_requested)
 		table_chairs.append(chair)
+
+## The projection screen shows a live 2D slide rendered in a SubViewport.
+func _build_screen() -> void:
+	slide_viewport = SubViewport.new()
+	slide_viewport.name = "SlideViewport"
+	slide_viewport.size = Vector2i(1200, 600)
+	slide_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	slide_viewport.disable_3d = true
+	add_child(slide_viewport)
+	slide = LectureSlide.new()
+	slide.size = Vector2(1200, 600)
+	slide_viewport.add_child(slide)
+	var screen := MeshInstance3D.new()
+	screen.name = "LectureDisplay"
+	screen.mesh = QuadMesh.new()
+	screen.mesh.size = SCREEN_SIZE
+	screen.position = SCREEN_CENTER
+	var material := StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.albedo_texture = slide_viewport.get_texture()
+	screen.material_override = material
+	screen.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(screen)
 
 func _build_seats() -> void:
 	for row in range(TIERS):
@@ -431,14 +471,14 @@ func _build_lighting() -> void:
 	environment.background_mode = Environment.BG_COLOR
 	environment.background_color = Color("263c47")
 	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	environment.ambient_light_color = Color("e2e0d8")
-	environment.ambient_light_energy = 0.5
+	environment.ambient_light_color = Color("d8d2c6")
+	environment.ambient_light_energy = 0.42
 	environment_node.environment = environment
 	add_child(environment_node)
 	var light := DirectionalLight3D.new()
 	light.rotation_degrees = Vector3(-58, -30, 0)
-	light.light_energy = 0.6
-	light.light_color = Color("fff0d8")
+	light.light_energy = 0.5
+	light.light_color = Color("ffe9cf")
 	Geometry.configure_shadows(light)
 	add_child(light)
 	for x in [-4.5, 0.8, 5.0]:

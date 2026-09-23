@@ -20,6 +20,14 @@ var key_prompts: Array[Control] = []
 var menu_tabs: TabContainer
 var schedule_panel: VBoxContainer
 var calendar_panel: VBoxContainer
+var objective_label: Label
+var help_row: HBoxContainer
+## Set while another overlay (the lecture) owns the bottom of the screen.
+var suppress_context := false:
+	set(value):
+		suppress_context = value
+		if is_instance_valid(prompt_row):
+			_refresh_context()
 
 func _ready() -> void:
 	var root := Control.new()
@@ -46,9 +54,9 @@ func _ready() -> void:
 	var heading := _hud_label(location_title, 14, 0)
 	heading_stack.add_child(heading)
 	if not objective_text.is_empty():
-		var objective := _hud_label(objective_text, 12, 0)
-		objective.add_theme_color_override("font_color", Color("b9d3cf"))
-		heading_stack.add_child(objective)
+		objective_label = _hud_label(objective_text, 12, 0)
+		objective_label.add_theme_color_override("font_color", Color("b9d3cf"))
+		heading_stack.add_child(objective_label)
 	var spacer := Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -61,7 +69,7 @@ func _ready() -> void:
 	GameClock.minute_changed.connect(_refresh_clock)
 	AcademicSession.attendance_recorded.connect(_arrival_feedback)
 	_refresh_clock()
-	var help_row := HBoxContainer.new()
+	help_row = HBoxContainer.new()
 	help_row.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	help_row.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	help_row.offset_left = 14
@@ -166,6 +174,15 @@ func _show_response(target: Node3D) -> void:
 		message_timer.start()
 	_refresh_context()
 
+func set_objective(text: String) -> void:
+	objective_text = text
+	if is_instance_valid(objective_label):
+		objective_label.text = text
+
+## The controls hint is hidden while seated in a lecture.
+func set_help_visible(value: bool) -> void:
+	help_row.visible = value
+
 func show_message(text: String, seconds := 4.0) -> void:
 	message.text = text
 	message_timer.start(seconds)
@@ -176,14 +193,14 @@ func _clear_message() -> void:
 	_refresh_context()
 
 func _refresh_context() -> void:
-	message_card.visible = not settings_open and not message.text.is_empty()
-	prompt_row.visible = not settings_open and not prompt.text.is_empty()
+	message_card.visible = not settings_open and not suppress_context and not message.text.is_empty()
+	prompt_row.visible = not settings_open and not suppress_context and not prompt.text.is_empty()
 
 func set_settings_open(value: bool) -> void:
 	settings_open = value
 	settings_backdrop.visible = value
 	player.movement_enabled = not value
-	player.interaction.enabled = not value and not (player.seating.busy() and player.seating.state != player.seating.State.SEATED)
+	player.interaction.enabled = not value and not player.seating.stand_locked and not (player.seating.busy() and player.seating.state != player.seating.State.SEATED)
 	_show_target(current_target if is_instance_valid(current_target) else null)
 	if value:
 		menu_tabs.current_tab = 0

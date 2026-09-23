@@ -69,10 +69,11 @@ func _physics_process(delta: float) -> void:
 		return
 	if state == State.SITTING:
 		state = State.SEATED
-		state_changed.emit(state)
 		seat.interactable.display_name = "Stand up"
 		seat.interactable.marker_enabled = false
 		player.interaction.enabled = true
+		# Listeners (e.g. a lecture locking the seat) run after seating settles.
+		state_changed.emit(state)
 		seated_changed.emit(true)
 	else:
 		_release()
@@ -85,9 +86,9 @@ func _release() -> void:
 		seat.occupant = null
 	seat = null
 	state = State.FREE
-	state_changed.emit(state)
 	player.external_control = false
 	player.interaction.enabled = true
+	state_changed.emit(state)
 
 ## Walking uses the body's own collision so the approach can never pass through furniture.
 func _walk(target: Vector3, delta: float) -> bool:

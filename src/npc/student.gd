@@ -35,7 +35,9 @@ func _sync(on_screen := false) -> void:
 		return
 	var seated := actor_id == "alex" and NPCSchedule.stage == NPCSchedule.Stage.SEATED
 	if seated and is_instance_valid(seat):
-		if not was_seated and on_screen:
+		# Animate only when actually watched arriving at the seat; after a time
+		# skip or a scene load, appear already seated.
+		if not was_seated and on_screen and global_position.distance_to(seat.point(Seat.FRONT_POINT)) < 0.3:
 			# Watched arriving: turn, side-step in front of the chair and sit down.
 			was_seated = true
 			var plan: Dictionary

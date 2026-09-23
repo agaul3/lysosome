@@ -77,24 +77,25 @@ func _grass_allowed(x: float, z: float) -> bool:
 			return false
 	return true
 
-## Scattered grass tufts and a few small wildflowers over the lawn.
+## Dense, short turf tufts over the lawn, tinted in the same vivid greens as
+## the ground shader so they add pile depth rather than separate clumps.
 func _build_grass() -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 20260921 # Deterministic layout between runs and captures.
 	var transforms: Array[Transform3D] = []
 	var colors: Array[Color] = []
 	var attempts := 0
-	while transforms.size() < 8000 and attempts < 40000:
+	while transforms.size() < 18000 and attempts < 60000:
 		attempts += 1
 		var x := rng.randf_range(-13.6, 13.6)
 		var z := rng.randf_range(-11.6, 11.6)
 		if not _grass_allowed(x, z):
 			continue
-		var size := rng.randf_range(0.6, 1.2)
-		var tuft_basis := Basis(Vector3.UP, rng.randf() * TAU).scaled(Vector3(size, size * rng.randf_range(0.8, 1.2), size))
+		var size := rng.randf_range(0.5, 0.8)
+		var tuft_basis := Basis(Vector3.UP, rng.randf() * TAU).scaled(Vector3(size, size * rng.randf_range(0.28, 0.4), size))
 		transforms.append(Transform3D(tuft_basis, Vector3(x, 0.0, z)))
 		var tone := rng.randf()
-		colors.append(Color("4f9a5c").lerp(Color("8cc27a"), tone).lerp(Color("a9b86a"), 0.25 if rng.randf() < 0.12 else 0.0))
+		colors.append(Color("2f7a1f").lerp(Color("6db43a"), tone))
 	var tufts := MultiMesh.new()
 	tufts.transform_format = MultiMesh.TRANSFORM_3D
 	tufts.use_colors = true
@@ -111,15 +112,6 @@ func _build_grass() -> void:
 	blade_material.shader = preload("res://assets/grass_blades.gdshader")
 	tuft_instance.material_override = blade_material
 	add_child(tuft_instance)
-	var flowers := 0
-	while flowers < 70:
-		var x := rng.randf_range(-13.4, 13.4)
-		var z := rng.randf_range(-11.4, 11.4)
-		if not _grass_allowed(x, z):
-			continue
-		flowers += 1
-		var bloom := Geometry.sphere(self, Vector3(0.07, 0.05, 0.07), Vector3(x, 0.13, z), Color("f4f0e2") if flowers % 3 else Color("f3cf6a"))
-		bloom.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
 ## One tuft: five tapered blades leaning out from a shared root.
 static func _tuft_mesh() -> ArrayMesh:

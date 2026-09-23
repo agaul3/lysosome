@@ -8,6 +8,8 @@ var question_history: Dictionary = {}
 var topic_statistics: Dictionary = {}
 var attempted := 0
 var correct := 0
+## Lecture id -> true once its presentation has been delivered this session.
+var presentations_completed: Dictionary = {}
 
 func reset() -> void:
 	attendance.clear()
@@ -16,6 +18,7 @@ func reset() -> void:
 	topic_statistics.clear()
 	attempted = 0
 	correct = 0
+	presentations_completed.clear()
 
 func events_for_date(date: String) -> Array:
 	return GameClock.config.events.filter(func(event: Dictionary) -> bool: return event.date == date).duplicate(true)

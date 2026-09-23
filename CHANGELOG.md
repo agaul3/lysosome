@@ -4,7 +4,39 @@
 
 **Project:** Godot 4.7.2, Compatibility renderer. Open `src/project.godot`. The authoritative product requirements are in `src/docs/design/medical_school_rpg_spec.md` (also snapshotted as `src/PROJECT_SPEC.md`). Run-specific instructions live in `src/docs/prompts/` and `src/docs/development/`. User instructions in the current task take precedence over this handoff.
 
-**Current state:** Milestones 1–6 are implemented and committed. Milestone 7 is in progress: Hall A (tiered auditorium), seating and the lecture camera transition are done; the professor presentation, visualization, questions and completion remain. The more recent visual, room, and UI improvements below sit on top of Milestones 1–6. (This note originally said the work was uncommitted; it has since been committed — see the 2026-09-23 documentation entry above.)
+**Current state:** Milestones 1–6 are implemented and committed. Milestone 7 is in progress: Hall A (tiered auditorium), seating, the lecture camera transition and the professor presentation are done; the interactive visualization, the lecture question set with feedback, and lecture completion remain. The more recent visual, room, and UI improvements below sit on top of Milestones 1–6. (This note originally said the work was uncommitted; it has since been committed — see the 2026-09-23 documentation entry above.)
+
+## 2026-09-23 08:49 PDT — Professor presentation, turf lawn, muted Hall A
+
+Committed the previous change set (`2f0eac8`); both commits were pushed to origin/main together.
+
+**Professor presentation (Milestone 7).**
+- **Script as data:** `src/education/lectures/pharmacodynamics_01.json` has 11 segments: introduction; the nine suggested topics in order (receptors and ligands, agonists, antagonists, competitive and noncompetitive antagonism, potency, efficacy, dose-response relationships, clinical application); and a summary. Each segment has one slide (heading, up to four progressively revealed bullets, one diagram) and three or four professor lines with gestures. Schema: `src/education/lectures/README.md`.
+- **Runner:** `lecture_runner.gd` validates the script and steps line by line with signals. It has no UI dependency.
+- **Model:** `src/education/models/dose_response.gd` provides the Hill equation, occupancy, the competitive dose ratio and the noncompetitive Emax. It is shared with the upcoming interactive model.
+- **Slides:** `src/ui/lecture_slide.gd` renders onto the hall's projection screen through a SubViewport. The curves are drawn from the model on a log axis (full vs. partial agonist, competitive shift, noncompetitive depression, potency, efficacy, quantal ED50/TD50 with TI, clinical opioid, summary), plus receptor diagrams.
+- **Professor:** `src/npc/professor.gd` (Dr. Lena Park) breathes and shifts her weight, gestures with alternating hands while speaking, and for "screen" lines half-turns and points with the arm on the screen's side.
+- **Overlay:** `src/ui/lecture_ui.gd` is compact: a small subtitle card with the speaker's name, typewriter text and a Continue keycap, a topic chip (e.g. "5 / 11 · Competitive antagonism"), and a waiting card.
+- **Session flow** (`src/world/lecture_hall/lecture_session.gd`):
+  - Sitting before 8:00 shows "Class begins at 8:00 AM" with Space: wait for class, or E: stand up. Waiting fast-forwards the academic clock, and the autonomous NPC event by the matching real time, to the start of class.
+  - Once class time has come and the lecture camera has settled, the seat locks, the exploration controls hint hides, and the presentation starts. E, Space or Enter first finishes the current line and then advances.
+  - At the end, the presentation is recorded in `AcademicSession.presentations_completed`, the seat unlocks, and a closing message appears. Sitting again does not replay it.
+  - The HUD's own prompt and toasts give way while the lecture overlay is showing.
+- **Fix:** `seating.state_changed` now fires after seating finishes settling, so listeners can lock the seat reliably.
+
+**Lawn (user reference image).** `grass.gdshader` now draws dense, short, vivid turf: procedural blade flecks at two scales in world space, over very soft tonal variation, with the finest layer faded out at a distance. The tufts are 18,000 short instances in matching greens, and the wildflowers were removed.
+
+**Hall A palette (user request: modern and clean, not bright white).** The hall now uses slate carpet on the floor and tiers, warm greige walls, walnut panelling, muted trim and whiteboard, and slightly lower ambient and key light. The seats keep their colour, which the user approved.
+
+**Verification:** foundation 54, dorm 67, campus 38, NPC 35, academic 77, visual motion 19, room polish 25, seating 147, lecture 42 (new) — all passing. Editor import and `git diff --check` pass. Graphical captures of the whole presentation (every segment and screen-gesture line), the waiting prompt, the hall palette and the lawn were inspected; a mis-anchored subtitle card and slide label overlaps were found and fixed.
+
+**Limitations:**
+- The professor does not walk.
+- Lines are advanced by the player; there is no voice-over or audio.
+- Slides are 2D in a SubViewport and are not readable from the isometric view (they are meant for the seated view).
+- Narration awaits human medical review (`MEDICAL_CONTENT_REVIEW.md`).
+
+**Remaining Milestone 7 work:** the competitive-antagonism interactive visualization, about 12 original lecture questions with feedback and selective remediation, the concept → clinical → application question beats in the script, lecture completion, and the acceptance record.
 
 ## 2026-09-23 08:03 PDT — Auditorium Hall A, lecture camera, sprint, campus fixes and lawn
 
@@ -125,5 +157,5 @@ Committed the previous change set first (`a20e234`).
 
 1. Read the product spec and the relevant milestone/run document before beginning another milestone. Read this file from top to bottom for the current architecture and user preferences.
 2. Inspect `git status --short` before editing and preserve any uncommitted work you find.
-3. Run tests with `/Applications/Godot.app/Contents/MacOS/Godot --headless --path src --script res://tests/<suite>.gd`. Existing suites are `foundation_test.gd`, `dorm_test.gd`, `campus_test.gd`, `npc_test.gd`, `academic_test.gd`, `visual_motion_test.gd`, `room_polish_test.gd`, and `seating_test.gd`. Use `--path src --editor --import --quit` to validate import. Run graphical capture when visual behavior changes.
+3. Run tests with `/Applications/Godot.app/Contents/MacOS/Godot --headless --path src --script res://tests/<suite>.gd`. Existing suites are `foundation_test.gd`, `dorm_test.gd`, `campus_test.gd`, `npc_test.gd`, `academic_test.gd`, `visual_motion_test.gd`, `room_polish_test.gd`, `seating_test.gd`, and `lecture_test.gd`. Use `--path src --editor --import --quit` to validate import. Run graphical capture when visual behavior changes.
 4. Update this file with a new timestamped section at the top for each future change set. Preserve the user's preferences: plain floor surfaces, subtle wood grain, a small HUD with unboxed keycap prompts, physically plausible character motion around furniture, and the UIC-style raked auditorium for Hall A.
