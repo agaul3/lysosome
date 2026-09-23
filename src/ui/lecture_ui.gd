@@ -19,6 +19,19 @@ var wait_key: Control
 var stand_key: Control
 var typing := false
 var shown := 0.0
+## Activity controls (replace the Continue hint while an activity runs).
+var activity_row: HBoxContainer
+## Multiple-choice question card.
+var question_card: PanelContainer
+var question_prompt: Label
+var question_lead: Label
+var choice_rows: Array[HBoxContainer] = []
+var choice_keys: Array = []
+var selected := 0
+var feedback: Label
+var question_hint: HBoxContainer
+var answered := false
+var using_controller := false
 
 func _ready() -> void:
 	layer = 2
@@ -49,6 +62,41 @@ func _ready() -> void:
 	continue_key.key = "E"
 	continue_row.add_child(continue_key)
 	continue_row.add_child(_label(12, Color("b9d3cf"), "Continue"))
+	activity_row = HBoxContainer.new()
+	activity_row.alignment = BoxContainer.ALIGNMENT_END
+	activity_row.add_theme_constant_override("separation", 6)
+	stack.add_child(activity_row)
+	question_card = _card(Vector2(620, 0))
+	_pin_bottom(question_card, 620)
+	var question_stack := VBoxContainer.new()
+	question_stack.add_theme_constant_override("separation", 4)
+	question_card.add_child(question_stack)
+	question_lead = _label(12, Color("f0a36f"))
+	question_stack.add_child(question_lead)
+	question_prompt = _label(15, Color("f1f6f2"))
+	question_prompt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	question_prompt.custom_minimum_size.x = 596
+	question_stack.add_child(question_prompt)
+	for index in range(4):
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 8)
+		var key := KeyPrompt.new()
+		key.key = str(index + 1)
+		row.add_child(key)
+		var choice := _label(14, Color("d9e6e2"))
+		choice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		choice.custom_minimum_size.x = 560
+		row.add_child(choice)
+		question_stack.add_child(row)
+		choice_rows.append(row)
+	feedback = _label(14, Color("f1f6f2"))
+	feedback.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	feedback.custom_minimum_size.x = 596
+	question_stack.add_child(feedback)
+	question_hint = HBoxContainer.new()
+	question_hint.alignment = BoxContainer.ALIGNMENT_END
+	question_hint.add_theme_constant_override("separation", 6)
+	question_stack.add_child(question_hint)
 	topic_chip = _card(Vector2.ZERO)
 	_pin(topic_chip, 0.5, 0.0, 0.0, 12.0, Control.GROW_DIRECTION_END)
 	topic_label = _label(12, Color("d9e6e2"))
@@ -119,6 +167,7 @@ func _label(size: int, color: Color, value := "") -> Label:
 	return label
 
 func hide_all() -> void:
+	question_card.hide()
 	card.hide()
 	topic_chip.hide()
 	waiting_card.hide()
@@ -136,6 +185,9 @@ func show_topic(value: String) -> void:
 
 func show_line(name: String, line: String) -> void:
 	waiting_card.hide()
+	question_card.hide()
+	_set_controls(activity_row, [])
+	continue_row.show()
 	speaker.text = name.to_upper()
 	text.text = line
 	text.visible_characters = 0
@@ -153,12 +205,93 @@ func show_notice(message: String) -> void:
 	card.show()
 	_set_typing(false)
 
+## An instruction from the professor with activity controls instead of Continue.
+func show_activity(name: String, line: String, controls: Array) -> void:
+	show_line(name, line)
+	continue_row.hide()
+	_set_controls(activity_row, controls)
+
+func set_activity_controls(controls: Array) -> void:
+	_set_controls(activity_row, controls)
+
+func _set_controls(row: HBoxContainer, controls: Array) -> void:
+	for child in row.get_children():
+		row.remove_child(child)
+		child.queue_free()
+	for control in controls:
+		var key := KeyPrompt.new()
+		key.key = control[0]
+		row.add_child(key)
+		row.add_child(_label(12, Color("b9d3cf"), control[1]))
+
+## choices: Array of [key, text] in display order.
+func show_question(prompt: String, choices: Array, lead := "") -> void:
+	card.hide()
+	waiting_card.hide()
+	question_lead.text = lead
+	question_lead.visible = not lead.is_empty()
+	question_prompt.text = prompt
+	choice_keys.clear()
+	for index in range(choice_rows.size()):
+		var row := choice_rows[index]
+		row.visible = index < choices.size()
+		row.modulate.a = 1.0
+		if row.visible:
+			choice_keys.append(choices[index][0])
+			(row.get_child(1) as Label).text = choices[index][1]
+	selected = 0
+	answered = false
+	feedback.hide()
+	_set_controls(question_hint, [["↑↓", "Choose"], ["E", "Answer"]])
+	_highlight()
+	question_card.show()
+
+func move_selection(step: int) -> void:
+	if answered or choice_keys.is_empty():
+		return
+	selected = posmod(selected + step, choice_keys.size())
+	_highlight()
+
+func select(index: int) -> void:
+	if not answered and index >= 0 and index < choice_keys.size():
+		selected = index
+		_highlight()
+
+func selected_key() -> String:
+	return choice_keys[selected]
+
+## After answering, only the chosen and correct rows stay, so the card shrinks.
+func show_feedback(correct: bool, chosen_key: String, correct_key: String, explanation: String, xp: int) -> void:
+	answered = true
+	for index in range(choice_keys.size()):
+		var row := choice_rows[index]
+		var label := row.get_child(1) as Label
+		row.modulate.a = 1.0
+		if choice_keys[index] == correct_key:
+			label.add_theme_color_override("font_color", Color("8fe0a8"))
+		elif choice_keys[index] == chosen_key:
+			label.add_theme_color_override("font_color", Color("f08a7a"))
+		else:
+			row.hide()
+	var verdict := ("Correct  +%d XP" % xp) if correct else "Not quite"
+	feedback.text = verdict + " — " + explanation
+	feedback.add_theme_color_override("font_color", Color("bff0cc") if correct else Color("f6c1b8"))
+	feedback.show()
+	_set_controls(question_hint, [["E", "Continue"]])
+
+func _highlight() -> void:
+	for index in range(choice_rows.size()):
+		var label := choice_rows[index].get_child(1) as Label
+		label.add_theme_color_override("font_color", Color("ffffff") if index == selected else Color("aebfbd"))
+		choice_rows[index].modulate.a = 1.0 if index == selected else 0.85
+
 func finish_typing() -> void:
 	text.visible_characters = -1
-	continue_row.modulate.a = 1.0
+	continue_row.modulate.a = 1.0 if activity_row.get_child_count() == 0 else 0.0
 	_set_typing(false)
 
 func set_controller(controller: bool) -> void:
+	using_controller = controller
 	continue_key.key = "X" if controller else "E"
 	stand_key.key = "X" if controller else "E"
 	wait_key.key = "A" if controller else "Space"

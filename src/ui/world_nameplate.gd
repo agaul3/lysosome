@@ -1,6 +1,10 @@
 extends Label3D
-## Billboard text with an opaque backing; shared by signs and NPC speech.
+## Text with an opaque backing; shared by signs and NPC speech. Floating
+## labels billboard toward the camera and draw on top. Mounted labels are
+## real signs: flat on a surface (their node faces +Z), depth-tested, so they
+## sit in the scene instead of covering whatever is behind them.
 const FONT = preload("res://assets/outfit_medium.tres")
+var mounted := false
 var backing: MeshInstance3D
 var previous_text := ""
 
@@ -9,8 +13,9 @@ func _ready() -> void:
 	font_size = maxi(font_size, 24)
 	outline_size = 0
 	modulate = Color("f1f6f2")
-	billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	no_depth_test = true
+	billboard = BaseMaterial3D.BILLBOARD_DISABLED if mounted else BaseMaterial3D.BILLBOARD_ENABLED
+	no_depth_test = not mounted
+	double_sided = not mounted
 	render_priority = 2
 	backing = MeshInstance3D.new()
 	backing.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
@@ -18,8 +23,10 @@ func _ready() -> void:
 	var material := StandardMaterial3D.new()
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.albedo_color = Color("18343c")
-	material.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
-	material.no_depth_test = true
+	material.billboard_mode = BaseMaterial3D.BILLBOARD_DISABLED if mounted else BaseMaterial3D.BILLBOARD_ENABLED
+	material.no_depth_test = not mounted
+	if mounted:
+		backing.position.z = -0.004 # Plate just behind the lettering.
 	material.render_priority = 1
 	# Alpha pipeline ensures priority sorting with the Label3D glyphs.
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA

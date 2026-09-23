@@ -15,6 +15,7 @@ const LectureSlide = preload("res://ui/lecture_slide.gd")
 const Professor = preload("res://npc/professor.gd")
 const SCREEN_CENTER := Vector3(0.8, 2.75, FRONT_WALL_Z + 0.075)
 const SCREEN_SIZE := Vector2(6.2, 3.1)
+const PODIUM := Vector3(-2.4, 0, -5.4)
 
 const TIERS := 5
 ## Steep rake, as in teaching auditoria, so each row sees over the one in front.
@@ -296,22 +297,13 @@ func _build_front() -> void:
 	_build_screen()
 	Geometry.box(self, "Whiteboard", Vector3(3.2, 1.3, 0.04), Vector3(-5.6, 1.75, FRONT_WALL_Z + 0.03), Color("cfd1cd"))
 	Geometry.box(self, "WhiteboardTray", Vector3(3.2, 0.05, 0.1), Vector3(-5.6, 1.08, FRONT_WALL_Z + 0.07), Color("b9bcb8"))
-	# Podium: dark cabinet, sloped top, two monitors and a gooseneck microphone.
-	var podium := Vector3(-2.4, 0, -5.4)
-	Geometry.box(self, "Podium", Vector3(1.2, 0.98, 0.7), podium + Vector3(0, 0.49, 0), Color("3b3f45"), true)
-	var top := Geometry.box(self, "PodiumTop", Vector3(1.3, 0.05, 0.8), podium + Vector3(0, 1.02, 0), Color("d4d6d4"))
-	top.rotation.x = -0.12
-	for offset in [-0.3, 0.28]:
-		Geometry.box(self, "MonitorStand", Vector3(0.06, 0.18, 0.06), podium + Vector3(offset, 1.14, -0.18), Color("1f2226"))
-		var monitor := Geometry.box(self, "PodiumMonitor", Vector3(0.5, 0.32, 0.04), podium + Vector3(offset, 1.36, -0.2), Color("15181b"))
-		monitor.rotation.x = 0.15
-	var mic := Geometry.box(self, "Microphone", Vector3(0.025, 0.3, 0.025), podium + Vector3(0.05, 1.2, 0.2), Color("1f2226"))
-	mic.rotation.x = -0.5
+	_build_podium(PODIUM)
 	professor = Professor.new()
 	professor.name = "Professor"
-	professor.position = podium + Vector3(0, 0, -0.75)
+	professor.position = PODIUM + Vector3(0, 0, -0.75)
 	professor.screen_point = SCREEN_CENTER
 	add_child(professor)
+	preload("res://npc/student.gd").make_blocker(professor)
 	# Side table with two loose chairs near the entrance.
 	Geometry.box(self, "SideTable", Vector3(1.5, 0.06, 0.75), Vector3(-5.8, 0.74, -4.95), Color("b3aea4"), true)
 	for x in [-6.45, -5.15]:
@@ -348,6 +340,66 @@ func _build_screen() -> void:
 	screen.material_override = material
 	screen.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(screen)
+
+## Teaching podium. The professor stands on its −Z side facing the students.
+## Monitors sit toward the audience edge with their screens facing the
+## professor; keyboard and mouse are at the professor's edge, and a gooseneck
+## microphone rises from the professor's right to just below mouth height.
+func _build_podium(origin: Vector3) -> void:
+	var top_y := 1.05
+	Geometry.box(self, "Podium", Vector3(1.2, 1.0, 0.7), origin + Vector3(0, 0.5, 0), Color("3b3f45"), true)
+	Geometry.box(self, "PodiumTop", Vector3(1.3, 0.05, 0.8), origin + Vector3(0, top_y - 0.025, 0), Color("c9cbc8"))
+	Geometry.box(self, "PodiumPanel", Vector3(1.0, 0.7, 0.02), origin + Vector3(0, 0.5, 0.36), Color("4a4f56"))
+	for offset in [-0.29, 0.29]:
+		var base := origin + Vector3(offset, top_y, 0.2)
+		Geometry.box(self, "MonitorBase", Vector3(0.24, 0.014, 0.17), base + Vector3(0, 0.007, 0), Color("25282c"))
+		Geometry.box(self, "MonitorNeck", Vector3(0.05, 0.26, 0.03), base + Vector3(0, 0.14, 0.05), Color("2c3035"))
+		Geometry.box(self, "MonitorHinge", Vector3(0.09, 0.05, 0.05), base + Vector3(0, 0.27, 0.03), Color("2c3035"))
+		var monitor := Node3D.new()
+		monitor.name = "PodiumMonitor"
+		monitor.position = base + Vector3(0, 0.36, 0.0)
+		monitor.rotation.x = -0.12 # Tilted back, away from the professor.
+		add_child(monitor)
+		Geometry.box(monitor, "MonitorBezel", Vector3(0.52, 0.32, 0.022), Vector3.ZERO, Color("15181b"))
+		Geometry.box(monitor, "MonitorBack", Vector3(0.4, 0.22, 0.03), Vector3(0, -0.01, 0.024), Color("1f2226"))
+		var screen := Geometry.box(monitor, "MonitorScreen", Vector3(0.49, 0.28, 0.004), Vector3(0, 0.005, -0.012), Color("2a4f63"))
+		var glow := StandardMaterial3D.new()
+		glow.albedo_color = Color("2a4f63")
+		glow.emission_enabled = true
+		glow.emission = Color("315f78")
+		glow.emission_energy_multiplier = 0.6
+		screen.get_child(0).material_override = glow
+		Geometry.box(monitor, "SlideThumb", Vector3(0.3, 0.14, 0.002), Vector3(-0.04, 0.02, -0.0145), Color("d98a57"))
+	# Keyboard with individual keycaps, and a mouse on a pad.
+	var keyboard := origin + Vector3(-0.08, top_y, -0.17)
+	Geometry.box(self, "Keyboard", Vector3(0.44, 0.018, 0.15), keyboard + Vector3(0, 0.009, 0), Color("2a2d31"))
+	for row in range(4):
+		for column in range(13):
+			Geometry.box(self, "Key", Vector3(0.026, 0.008, 0.026), keyboard + Vector3(-0.192 + column * 0.032, 0.022, -0.05 + row * 0.032), Color("454a50"))
+	Geometry.box(self, "SpaceBar", Vector3(0.18, 0.008, 0.024), keyboard + Vector3(0, 0.022, 0.078), Color("454a50"))
+	var pad := origin + Vector3(0.3, top_y, -0.17)
+	Geometry.box(self, "MousePad", Vector3(0.21, 0.004, 0.18), pad + Vector3(0, 0.002, 0), Color("1d2024"))
+	var mouse := Geometry.sphere(self, Vector3(0.06, 0.035, 0.1), pad + Vector3(0.02, 0.02, 0.01), Color("2e3237"))
+	mouse.name = "Mouse"
+	Geometry.box(self, "MouseCable", Vector3(0.006, 0.006, 0.12), pad + Vector3(0.02, 0.006, 0.12), Color("1b1d20"))
+	# Gooseneck microphone: weighted base, curved neck, capsule with windscreen.
+	var mic_base := origin + Vector3(-0.47, top_y, -0.28)
+	var puck := Geometry.cylinder_between(self, "MicBase", mic_base, mic_base + Vector3(0, 0.03, 0), 0.04, Color("1f2226"))
+	puck.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+	var start := mic_base + Vector3(0, 0.03, 0)
+	var control := start + Vector3(0, 0.34, 0.02)
+	var tip := start + Vector3(0.05, 0.34, -0.16)
+	var previous := start
+	for step in range(1, 13):
+		var t := step / 12.0
+		var point := start.lerp(control, t).lerp(control.lerp(tip, t), t)
+		Geometry.cylinder_between(self, "Gooseneck", previous, point, 0.007, Color("2a2d31"))
+		previous = point
+	var direction := (tip - control).normalized()
+	Geometry.cylinder_between(self, "MicCapsule", tip, tip + direction * 0.07, 0.011, Color("33373c"))
+	Geometry.cylinder_between(self, "MicRing", tip + direction * 0.005, tip + direction * 0.012, 0.0125, Color("c8433a"))
+	var foam := Geometry.sphere(self, Vector3(0.042, 0.05, 0.042), tip + direction * 0.09, Color("202225"))
+	foam.name = "MicWindscreen"
 
 func _build_seats() -> void:
 	for row in range(TIERS):

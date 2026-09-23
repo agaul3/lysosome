@@ -140,8 +140,10 @@ func _build_buildings() -> void:
 	Geometry.box(self, "CenterRoof", Vector3(10.4, 0.2, 5.4), Vector3(7, 4.58, -8.5), Color("b2b6ad"))
 	_build_learning_center_facade()
 	Geometry.box(self, "EntryCanopy", Vector3(4, 0.16, 2.1), Vector3(8, 3.15, -5.35), Color("c6ae88"))
-	_label("LEARNING CENTER", Vector3(7, 4.05, -5.8), 32)
-	_label("LECTURE HALL A", Vector3(8, 2.75, -4.4), 24)
+	# Signs are mounted on the building: name above the glazing, hall name on the canopy fascia.
+	Geometry.wall_sign(self, "LEARNING CENTER", Vector3(7, 3.72, -5.93), 0.0, 36, 0.013)
+	Geometry.box(self, "CanopyFascia", Vector3(2.4, 0.34, 0.06), Vector3(8, 3.4, -4.33), Color("365d65"))
+	Geometry.wall_sign(self, "LECTURE HALL A", Vector3(8, 3.4, -4.295), 0.0, 26, 0.009)
 
 ## East face of Cedar Residence (x = -8). Trim frames the openings instead of
 ## running across them; every layer sits at its own depth to avoid z-fighting.
@@ -160,6 +162,8 @@ func _build_residence_facade() -> void:
 		Geometry.box(self, "ResidenceDoorJamb", Vector3(0.1, 2.35, 0.14), Vector3(face + 0.05, 1.175, z), trim)
 	Geometry.box(self, "ResidenceDoorHead", Vector3(0.1, 0.14, 1.48), Vector3(face + 0.05, 2.35, 5), trim)
 	Geometry.box(self, "ResidenceAwning", Vector3(0.7, 0.08, 1.9), Vector3(face + 0.35, 2.62, 5), Color("bd6949"))
+	# Building name mounted on the wall between the awning and the cornice.
+	Geometry.wall_sign(self, "CEDAR RESIDENCE", Vector3(face + 0.012, 3.05, 5), PI / 2, 30, 0.01)
 	for z in [2.2, 7.0]:
 		Geometry.box(self, "ResidenceWindow", Vector3(0.03, 1.1, 1.1), Vector3(face + 0.015, 2, z), Color("8ba9b1"))
 		Geometry.box(self, "WindowMuntin", Vector3(0.02, 1.1, 0.05), Vector3(face + 0.04, 2, z), trim)
@@ -199,14 +203,20 @@ func _build_courtyard() -> void:
 	Geometry.box(self, "BenchBack", Vector3(2.6, 0.55, 0.12), Vector3(1.7, 0.7, -1.1), Color("b87743"))
 	Geometry.box(self, "Noticeboard", Vector3(1.6, 1.85, 0.2), Vector3(-3.5, 0.925, 4), Color("496d6b"), true)
 	Geometry.box(self, "NoticePaper", Vector3(1.35, 1.12, 0.03), Vector3(-3.5, 1.12, 4.12), Color("ece1c7"))
-	_label("CAMPUS DIRECTORY", Vector3(-3.5, 2.15, 4), 22)
+	# Header plate on top of the directory board, above the map.
+	Geometry.box(self, "DirectoryHeader", Vector3(1.9, 0.34, 0.2), Vector3(-3.5, 2.02, 4), Color("3d5c5a"))
+	Geometry.wall_sign(self, "CAMPUS DIRECTORY", Vector3(-3.5, 2.02, 4.105), 0.0, 26, 0.0095)
 	for id in ["alex", "sam"]:
 		var actor := StudentScene.instantiate()
 		actor.actor_id = id
 		actor.world_zone = "campus"
 		add_child(actor)
 	NPCSchedule.start()
-	_label("LEARNING CENTER  →", Vector3(1, 0.16, 3), 23)
+	# Wayfinding post at the edge of the walk instead of a label over the path.
+	for x in [0.15, 2.25]:
+		Geometry.box(self, "SignPost", Vector3(0.08, 1.45, 0.08), Vector3(x, 0.725, 4.55), Color("4a5a5f"), true)
+	Geometry.box(self, "SignPanel", Vector3(2.3, 0.44, 0.05), Vector3(1.2, 1.3, 4.55), Color("2c4a50"))
+	Geometry.wall_sign(self, "LEARNING CENTER  →", Vector3(1.2, 1.3, 4.578), 0.0, 28, 0.0105)
 
 func _palm(position: Vector3) -> void:
 	Geometry.box(self, "PalmTrunk", Vector3(0.32, 3.3, 0.32), position + Vector3(0, 1.65, 0), Color("9f8056"), true)
@@ -232,9 +242,6 @@ func _endpoint(node_name: String, title: String, response: String, position: Vec
 	endpoint.position = position
 	add_child(endpoint)
 	return endpoint
-
-func _label(text: String, position: Vector3, font_size: int) -> void:
-	Geometry.nameplate(self, text, position, maxi(font_size, 28), 0.013)
 
 func _build_lighting() -> void:
 	var sky := WorldEnvironment.new()

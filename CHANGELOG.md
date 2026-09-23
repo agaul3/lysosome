@@ -4,7 +4,37 @@
 
 **Project:** Godot 4.7.2, Compatibility renderer. Open `src/project.godot`. The authoritative product requirements are in `src/docs/design/medical_school_rpg_spec.md` (also snapshotted as `src/PROJECT_SPEC.md`). Run-specific instructions live in `src/docs/prompts/` and `src/docs/development/`. User instructions in the current task take precedence over this handoff.
 
-**Current state:** Milestones 1–6 are implemented and committed. Milestone 7 is in progress: Hall A (tiered auditorium), seating, the lecture camera transition and the professor presentation are done; the interactive visualization, the lecture question set with feedback, and lecture completion remain. The more recent visual, room, and UI improvements below sit on top of Milestones 1–6. (This note originally said the work was uncommitted; it has since been committed — see the 2026-09-23 documentation entry above.)
+**Current state:** Milestones 1–6 are implemented and committed. Milestone 7 is in progress: Hall A (tiered auditorium), seating, the lecture camera transition, the professor presentation and the interactive competitive-antagonism visualization are done; the full lecture question set with feedback/remediation and lecture completion remain. The more recent visual, room, and UI improvements below sit on top of Milestones 1–6. (This note originally said the work was uncommitted; it has since been committed — see the 2026-09-23 documentation entry above.)
+
+## 2026-09-23 09:48 PDT — Competitive-antagonism visualization, NPC collision, sign and podium fixes
+
+**Interactive visualization (Milestone 7).** The competitive-antagonism segment now includes a hands-on activity (`src/world/lecture_hall/competitive_activity.gd`), declared in the lecture JSON as an `activity` line; the runner validates it.
+- **Model:** `src/education/models/competitive_antagonism.gd` implements Gaddum competitive binding. Agonist and antagonist occupancies share one site, response = Emax × agonist occupancy, and the antagonist raises EC50 by the dose ratio 1 + [B]/KB (fixed at 10 in the activity).
+- **Screen:** `ui/lecture_slide.gd` gained a live model mode. It shows 24 receptors where agonists (circles) and antagonists (squares) bind and unbind at equilibrium fractions, drifting free molecules, readouts, and a live log dose-response plot. The agonist-alone curve stays as a ghost, and the shifted curve, apparent-EC50 marker and a moving operating point update as you play.
+- **Flow:**
+  1. The player holds A/D (or the stick) to raise agonist to about 90% response. The first phase stops at the goal so the effect is consistent.
+  2. The professor adds the antagonist, which washes in visibly, and the response drops to about 47%.
+  3. The player predicts what more agonist will do.
+  4. The player tests the prediction, and the full response returns only at about ten times the agonist.
+  5. The professor wraps up.
+- **Prediction question:** it comes from the shared bank (`pd_viz_competitive_01`, added to `pharmacodynamics.json` with a review entry). It is graded with `QuestionBank.submit`: an incorrect answer awards no XP but updates stats. The question card in `ui/lecture_ui.gd` (arrow keys or 1–4, then E) is reusable for the upcoming question set. After answering, it shrinks to show only the chosen and correct choices plus the explanation.
+
+**Character models:** a procedural rebuild (realistic proportions, strand hair) was prototyped in this session, but at the user's request it was reverted in full. The character models, presets, seat dimensions and NPC route are exactly as committed in `405f17f`.
+
+**NPCs are solid (user request).** Alex and Sam carry an animatable capsule on physics layer 3 (disabled when hidden or seated, since the seat's colliders cover seated figures), and the professor has one too. The player now collides with layer 3. Interaction raycasts stay world-only, so NPCs never block prompts.
+
+**Signs no longer cover objects (user request).** `ui/world_nameplate.gd` gained mounted signs: flat, depth-tested plates attached to surfaces, created with `Geometry.wall_sign()`.
+- **Dorm:** the "PHARMACOLOGY" label was removed, and "FIRST YEAR" is lettered flat on the noticeboard, so it follows the board's angle. EXIT is smaller and sits above the door.
+- **Campus:** CEDAR RESIDENCE sits on the wall between awning and cornice; LEARNING CENTER is above the glazing; LECTURE HALL A is on a canopy fascia; CAMPUS DIRECTORY is on a header plate. The floating path label became a two-post wayfinding sign beside the walk.
+- **Elsewhere:** the lobby hall sign is on the wall above the door, and the vending-machine labels are on the machine headers.
+
+**Podium (user request).** The podium has a flat top with two monitors on real stands (base, neck and hinge), with screens facing the professor and showing a slide thumbnail. It also has a keyboard with individual keys, a mouse on a pad with its cable, and a gooseneck microphone. The mic has a weighted base and a curved segmented neck, and its capsule, red ring and windscreen sit just in front of and below the professor's mouth.
+
+**Verification:** all suites pass — foundation 54, dorm 67, campus 38, NPC 37 (new NPC-blocking checks), academic 77, visual motion 19, room polish 25, seating 147, lecture 59 (new model and activity checks, including a deliberately wrong prediction). Editor import and `git diff --check` pass. Graphical captures of the activity (every phase), podium, dorm desk and board, and campus signs were inspected.
+
+**Limitations:** the auditorium seat pitch stays wide (0.92 m) to suit the broad stylized figures.
+
+**Remaining Milestone 7 work:** about 12 lecture questions with feedback and selective remediation, the concept → clinical → application question beats, lecture completion, and the acceptance record.
 
 ## 2026-09-23 08:49 PDT — Professor presentation, turf lawn, muted Hall A
 

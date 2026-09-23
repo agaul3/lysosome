@@ -47,3 +47,12 @@ The professor's narration and slides in `education/lectures/pharmacodynamics_01.
   - Warfarin is an example of a narrow therapeutic index requiring close monitoring.
   - *Review:* no doses or treatment protocols are given, and the content is educational only. A clinician reviewer should confirm the phrasing.
 - **Summary:** restates the above.
+
+
+## pd_viz_competitive_01 (visualization prediction)
+
+- Objective: Predict that reversible competitive antagonism is surmountable and shifts the agonist curve right without lowering Emax.
+- Answer: b — The response climbs back to the original maximum, but only at higher agonist concentrations.
+- Explanation: Both drugs compete reversibly for the same site, so enough agonist outcompetes the antagonist; the curve shifts right and Emax is unchanged.
+- Model used by the activity: Gaddum competitive occupancy with a full agonist and simple occupancy theory (response ∝ agonist occupancy), [B]/KB = 9 (dose ratio 10).
+- Human review: the simplified occupancy-response model ignores receptor reserve and signal amplification; confirm the wording is appropriately qualified for first-year teaching.

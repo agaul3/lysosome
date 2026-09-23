@@ -12,8 +12,13 @@ var was_seated := false
 var sit_sequence: SitSequence
 var sit_approach := ""
 
+## Physics layer for characters the player must walk around (layer 3).
+const NPC_LAYER := 4
+var body: AnimatableBody3D
+
 func _ready() -> void:
 	appearance.apply_preset("ochre" if actor_id == "alex" else "indigo")
+	body = make_blocker(self)
 	_sync(false)
 
 func _process(delta: float) -> void:
@@ -31,6 +36,9 @@ func _process(delta: float) -> void:
 
 func _sync(on_screen := false) -> void:
 	visible = NPCSchedule.zone == world_zone if actor_id == "alex" else world_zone == "campus"
+	if is_instance_valid(body):
+		# Only a present NPC blocks; seated NPCs are covered by their seat's colliders.
+		body.get_child(0).disabled = not visible or was_seated
 	if not visible:
 		return
 	var seated := actor_id == "alex" and NPCSchedule.stage == NPCSchedule.Stage.SEATED
@@ -61,6 +69,23 @@ func _sync(on_screen := false) -> void:
 		appearance.set_seated(seated)
 		was_seated = seated
 	_sync_speech()
+
+## A capsule the player collides with; moves with the NPC view.
+static func make_blocker(owner_node: Node3D) -> AnimatableBody3D:
+	var blocker := AnimatableBody3D.new()
+	blocker.name = "Blocker"
+	blocker.collision_layer = NPC_LAYER
+	blocker.collision_mask = 0
+	blocker.sync_to_physics = false
+	var shape := CollisionShape3D.new()
+	var capsule := CapsuleShape3D.new()
+	capsule.radius = 0.24
+	capsule.height = 1.7
+	shape.shape = capsule
+	shape.position.y = 0.85
+	blocker.add_child(shape)
+	owner_node.add_child(blocker)
+	return blocker
 
 func _sync_speech() -> void:
 	speech.text = ("Alex: " if actor_id == "alex" else "Sam: ") + NPCSchedule.dialogue_text

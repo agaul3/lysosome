@@ -17,6 +17,9 @@ var heading: Label
 var subheading: Label
 var bullet_box: VBoxContainer
 var diagram: Control
+## Live interactive model (education/models/competitive_antagonism.gd), when shown.
+var model: RefCounted
+var model_canvas: Control
 
 func _ready() -> void:
 	var background := ColorRect.new()
@@ -45,6 +48,12 @@ func _ready() -> void:
 	diagram.size = Vector2(500, 410)
 	diagram.draw.connect(_draw_diagram)
 	add_child(diagram)
+	model_canvas = Control.new()
+	model_canvas.position = Vector2(0, 140)
+	model_canvas.size = Vector2(1200, 460)
+	model_canvas.draw.connect(_draw_model)
+	model_canvas.hide()
+	add_child(model_canvas)
 
 func _label(font_size: int, color: Color) -> Label:
 	var label := Label.new()
@@ -53,7 +62,24 @@ func _label(font_size: int, color: Color) -> Label:
 	label.add_theme_color_override("font_color", color)
 	return label
 
+func show_model(target: RefCounted, title: String) -> void:
+	model = target
+	heading.text = title
+	subheading.hide()
+	bullet_box.hide()
+	diagram.hide()
+	model_canvas.show()
+	model_canvas.queue_redraw()
+
+func refresh_model() -> void:
+	if model_canvas.visible:
+		model_canvas.queue_redraw()
+
 func show_slide(data: Dictionary, reveal_count: int) -> void:
+	model = null
+	model_canvas.hide()
+	bullet_box.show()
+	diagram.show()
 	slide = data
 	revealed = reveal_count
 	heading.text = data.get("heading", "")
@@ -193,3 +219,85 @@ func _title_art() -> void:
 		points.append(_to_screen(log_c, DoseResponse.response(pow(10.0, log_c), 100.0, 1.0), rect))
 	diagram.draw_polyline(points, ACCENT, 6.0, true)
 	diagram.draw_string(FONT, Vector2(rect.position.x, rect.end.y + 50), "Lecture Hall A  ·  First-year Pharmacology", HORIZONTAL_ALIGNMENT_LEFT, -1, 26, MUTED)
+
+# --- Interactive model ---------------------------------------------------------
+
+func _draw_model() -> void:
+	if model == null:
+		return
+	var canvas := model_canvas
+	# Left: two membrane patches of receptors with bound and free molecules.
+	var field := Rect2(60, 20, 520, 330)
+	var per_row := 12
+	for row in range(2):
+		var membrane_y := field.position.y + 130 + row * 150
+		canvas.draw_rect(Rect2(field.position.x, membrane_y, field.size.x, 22), Color("3b4f58"))
+		for column in range(per_row):
+			var index := row * per_row + column
+			var x := field.position.x + 22 + column * (field.size.x - 44) / (per_row - 1)
+			var receptor := Color("8fb8c9")
+			canvas.draw_rect(Rect2(x - 15, membrane_y - 26, 8, 44), receptor)
+			canvas.draw_rect(Rect2(x + 7, membrane_y - 26, 8, 44), receptor)
+			canvas.draw_rect(Rect2(x - 15, membrane_y + 12, 30, 8), receptor)
+			match model.receptor_state(index):
+				1:
+					canvas.draw_circle(Vector2(x, membrane_y - 12), 9, ACCENT)
+					# Activated receptors glow beneath the membrane.
+					canvas.draw_circle(Vector2(x, membrane_y + 34), 6, ACCENT.lightened(0.3))
+				2:
+					canvas.draw_rect(Rect2(x - 8, membrane_y - 20, 16, 16), THIRD)
+	# Free molecules drifting above the membranes; counts follow concentration.
+	var free_agonists: int = int(round(remap(model.log_agonist, model.LOG_MIN, model.LOG_MAX, 1.0, 16.0)))
+	for index in range(free_agonists):
+		var phase: float = model.time * 0.6 + index * 1.7
+		var p := Vector2(field.position.x + fposmod(index * 97.0 + sin(phase) * 30.0, field.size.x), field.position.y + 30 + fposmod(index * 53.0 + cos(phase * 0.8) * 20.0, 70.0))
+		canvas.draw_circle(p, 7, ACCENT.darkened(0.15))
+	var free_antagonists: int = int(round(model.antagonist_level * 8.0))
+	for index in range(free_antagonists):
+		var phase: float = model.time * 0.5 + index * 2.3
+		var p := Vector2(field.position.x + fposmod(index * 131.0 + 40.0 + cos(phase) * 30.0, field.size.x), field.position.y + 40 + fposmod(index * 71.0 + sin(phase) * 20.0, 60.0))
+		canvas.draw_rect(Rect2(p - Vector2(6, 6), Vector2(12, 12)), THIRD.darkened(0.1))
+	var readout_y := field.end.y + 40
+	canvas.draw_string(FONT, Vector2(field.position.x, readout_y), "[Agonist] = %s × KA" % _concentration_text(model.agonist()), HORIZONTAL_ALIGNMENT_LEFT, -1, 26, INK)
+	canvas.draw_string(FONT, Vector2(field.position.x, readout_y + 36), "Antagonist: " + ("present" if model.antagonist else "none"), HORIZONTAL_ALIGNMENT_LEFT, -1, 26, THIRD if model.antagonist else MUTED)
+	canvas.draw_string(FONT, Vector2(field.position.x + 300, readout_y), "Response %d%%" % int(round(model.response())), HORIZONTAL_ALIGNMENT_LEFT, -1, 30, ACCENT)
+	# Right: live dose-response plot with the agonist-alone curve as reference.
+	var rect := Rect2(Vector2(700, 20), Vector2(440, 300))
+	canvas.draw_line(rect.position, Vector2(rect.position.x, rect.end.y), MUTED, 3.0)
+	canvas.draw_line(Vector2(rect.position.x, rect.end.y), rect.end, MUTED, 3.0)
+	canvas.draw_string(FONT, Vector2(rect.position.x + 6, rect.end.y + 34), "log [agonist]", HORIZONTAL_ALIGNMENT_LEFT, -1, 22, MUTED)
+	canvas.draw_string(FONT, Vector2(rect.position.x - 8, rect.position.y - 4), "Response", HORIZONTAL_ALIGNMENT_RIGHT, -1, 22, MUTED)
+	var alone := PackedVector2Array()
+	var shifted := PackedVector2Array()
+	for step in range(121):
+		var log_c: float = model.LOG_MIN + step / 120.0 * (model.LOG_MAX - model.LOG_MIN)
+		alone.append(_plot(rect, log_c, DoseResponse.response(pow(10.0, log_c), 100.0, 1.0)))
+		shifted.append(_plot(rect, log_c, DoseResponse.response(pow(10.0, log_c), 100.0, model.apparent_ec50())))
+	var ghost := ACCENT
+	ghost.a = 0.45 if model.antagonist_level > 0.01 else 1.0
+	canvas.draw_polyline(alone, ghost, 4.0, true)
+	if model.antagonist_level > 0.01:
+		canvas.draw_polyline(shifted, SECOND, 5.0, true)
+		var ec50: Vector2 = _plot(rect, log(model.apparent_ec50()) / log(10.0), 50.0)
+		canvas.draw_dashed_line(ec50, Vector2(ec50.x, rect.end.y), SECOND, 2.0, 8.0)
+		canvas.draw_string(FONT, Vector2(ec50.x + 6, rect.end.y - 10), "EC50 × %d" % int(round(1.0 + model.antagonist_ratio())), HORIZONTAL_ALIGNMENT_LEFT, -1, 20, SECOND)
+	var base_ec50 := _plot(rect, 0.0, 50.0)
+	canvas.draw_dashed_line(base_ec50, Vector2(base_ec50.x, rect.end.y), ghost, 2.0, 8.0)
+	var point: Vector2 = _plot(rect, model.log_agonist, model.response())
+	canvas.draw_dashed_line(Vector2(rect.position.x, point.y), point, INK, 1.5, 6.0)
+	canvas.draw_circle(point, 11, INK)
+	canvas.draw_circle(point, 7, SECOND if model.antagonist_level > 0.01 else ACCENT)
+	canvas.draw_rect(Rect2(rect.position.x, rect.end.y + 52, 22, 8), ACCENT)
+	canvas.draw_string(FONT, Vector2(rect.position.x + 30, rect.end.y + 63), "Agonist alone", HORIZONTAL_ALIGNMENT_LEFT, -1, 20, INK)
+	canvas.draw_rect(Rect2(rect.position.x + 190, rect.end.y + 52, 22, 8), SECOND)
+	canvas.draw_string(FONT, Vector2(rect.position.x + 220, rect.end.y + 63), "+ antagonist", HORIZONTAL_ALIGNMENT_LEFT, -1, 20, INK)
+
+func _plot(rect: Rect2, log_c: float, value: float) -> Vector2:
+	return Vector2(rect.position.x + (log_c + 2.0) / 5.0 * rect.size.x, rect.end.y - value / 100.0 * rect.size.y)
+
+static func _concentration_text(value: float) -> String:
+	if value >= 10.0:
+		return str(int(round(value)))
+	if value >= 1.0:
+		return "%.1f" % value
+	return "%.2f" % value

@@ -6,6 +6,7 @@ signal segment_started(segment: Dictionary, index: int)
 signal line_started(line: Dictionary)
 signal finished
 const GESTURES := ["audience", "screen", "none"]
+const ACTIVITIES := ["competitive_antagonism"]
 const DIAGRAMS := ["title", "receptor_binding", "full_partial", "antagonist_block", "competitive_shift", "noncompetitive", "potency", "efficacy", "graded_quantal", "clinical_opioid", "summary"]
 
 var script_data: Dictionary = {}
@@ -59,12 +60,31 @@ static func validate(data: Variant) -> String:
 		if typeof(lines) != TYPE_ARRAY or lines.is_empty():
 			return "Segment %s needs professor lines" % segment.id
 		for line in lines:
+			if typeof(line) == TYPE_DICTIONARY and line.has("activity"):
+				var error := _validate_activity(line.activity)
+				if not error.is_empty():
+					return "Segment %s: %s" % [segment.id, error]
+				continue
 			if typeof(line) != TYPE_DICTIONARY or typeof(line.get("text")) != TYPE_STRING or String(line.text).strip_edges().is_empty():
 				return "Segment %s has an empty line" % segment.id
 			if not GESTURES.has(line.get("gesture", "none")):
 				return "Segment %s has an unknown gesture" % segment.id
 			if int(line.get("reveal", 0)) > slide.bullets.size():
 				return "Segment %s reveals more bullets than it has" % segment.id
+	return ""
+
+## Activities reference questions by id only; question text stays in the bank.
+static func _validate_activity(activity: Variant) -> String:
+	if typeof(activity) != TYPE_DICTIONARY or not ACTIVITIES.has(activity.get("type", "")):
+		return "unknown activity"
+	if typeof(activity.get("question")) != TYPE_STRING or String(activity.question).is_empty():
+		return "activity needs a question id"
+	var steps: Variant = activity.get("steps")
+	if typeof(steps) != TYPE_DICTIONARY:
+		return "activity needs steps"
+	for key in ["intro", "antagonist", "predict", "test", "wrap"]:
+		if typeof(steps.get(key)) != TYPE_STRING or String(steps.get(key)).is_empty():
+			return "activity step '%s' is missing" % key
 	return ""
 
 func reset() -> void:

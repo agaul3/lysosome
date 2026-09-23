@@ -60,6 +60,31 @@
       "xp_reward": null,
       "lecture_id": "pharmacodynamics_01",
       "format": "multiple_choice"
+    },
+    {
+      "id": "pd_viz_competitive_01",
+      "discipline": "Pharmacology",
+      "topic": "Pharmacodynamics",
+      "subtopic": "Competitive antagonism",
+      "question_type": "Application",
+      "difficulty_tier": 1,
+      "prompt": "A reversible competitive antagonist is present at a fixed concentration. If you keep increasing the agonist concentration, what happens to the response?",
+      "choices": {
+        "a": "It stays capped below the original maximum.",
+        "b": "It climbs back to the original maximum, but only at higher agonist concentrations.",
+        "c": "It falls toward zero as the receptors saturate.",
+        "d": "It does not change, because the antagonist has already bound."
+      },
+      "correct_answer": "b",
+      "explanation": "Binding is reversible and both drugs compete for the same site, so enough agonist outcompetes the antagonist. The full response returns, but more agonist is needed: the curve shifts right and Emax is unchanged.",
+      "learning_objective": "Predict that reversible competitive antagonism is surmountable and shifts the agonist curve right without lowering Emax.",
+      "xp_reward": null,
+      "lecture_id": "pharmacodynamics_01",
+      "format": "multiple_choice",
+      "tags": [
+        "visualization",
+        "prediction"
+      ]
     }
   ]
 }

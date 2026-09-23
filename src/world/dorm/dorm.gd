@@ -50,7 +50,7 @@ func _build_room() -> void:
 	Geometry.box(self, "WindowDivider", Vector3(0.07, 1.4, 0.08), Vector3(0, 1.8, -4.21), Color("f3ead7"))
 	Geometry.box(self, "Door", Vector3(0.12, 2.25, 1.35), Vector3(4.85, 1.13, 2.5), Color("597b74"))
 	Geometry.sphere(self, Vector3(0.12, 0.12, 0.12), Vector3(4.71, 1, 2.02), Color("d6b56e"))
-	_label("EXIT", Vector3(4.65, 2.55, 2.5), 28)
+	_label("EXIT", Vector3(4.65, 2.75, 2.5), 24, 0.0075) # Above the door frame, not over it.
 	exit_door = _interaction("DormExit", "Leave dorm", "", Vector3(4.05, 1, 2.5))
 	exit_door.activated.connect(AppState.leave_dorm)
 
@@ -72,7 +72,6 @@ func _build_furniture() -> void:
 	Geometry.box(self, "ScreenGlow", Vector3(0.55, 0.34, 0.02), Vector3(1.65, 1.23, -3.645), Color("9abbb2"))
 	for book_index in range(3):
 		Geometry.box(self, "MedicalTextbook", Vector3(0.46, 0.09, 0.58), Vector3(2.55, 1.03 + book_index * 0.09, -3.5), Color(["827c9b", "b7775d", "647b72"][book_index]))
-	_label("PHARMACOLOGY", Vector3(2.55, 1.55, -3.5), 17)
 	Geometry.box(self, "LampBase", Vector3(0.25, 0.07, 0.25), Vector3(0.4, 1.01, -3.7), Color("d9b971"))
 	Geometry.box(self, "LampStem", Vector3(0.045, 0.5, 0.045), Vector3(0.4, 1.26, -3.7), Color("d9b971"))
 	Geometry.sphere(self, Vector3(0.34, 0.22, 0.34), Vector3(0.4, 1.55, -3.7), Color("f1d4a0"))
@@ -82,7 +81,8 @@ func _build_furniture() -> void:
 		for index in range(5):
 			Geometry.box(self, "BookSpine", Vector3(0.17, 0.36, 0.36), Vector3(-4.02 + index * 0.23, 0.35 + row * 0.54, -3.57), Color(["597d7c", "b98c65", "e3cba4", "777b94", "9ba48a"][index]))
 	Geometry.box(self, "Noticeboard", Vector3(1.65, 0.88, 0.08), Vector3(2.65, 2.05, -4.33), Color("ab8c68"))
-	_label("FIRST YEAR", Vector3(2.65, 2.2, -4.22), 24)
+	# Lettering pinned flat to the board, so it follows the board's perspective.
+	Geometry.wall_sign(self, "FIRST YEAR", Vector3(2.65, 2.3, -4.285), 0.0, 26, 0.009)
 
 func _interaction(node_name: String, title: String, response: String, position: Vector3) -> Node3D:
 	var endpoint := Interactable.new()
@@ -94,8 +94,8 @@ func _interaction(node_name: String, title: String, response: String, position: 
 	add_child(endpoint)
 	return endpoint
 
-func _label(text: String, position: Vector3, font_size: int) -> void:
-	Geometry.nameplate(self, text, position, font_size, 0.01)
+func _label(text: String, position: Vector3, font_size: int, pixel_size := 0.01) -> void:
+	Geometry.nameplate(self, text, position, font_size, pixel_size)
 
 func _build_lighting() -> void:
 	var world_environment := WorldEnvironment.new()

@@ -15,6 +15,24 @@ func _run() -> void:
 	await acquire_world()
 	check(schedule.started, "Campus starts sequence without interaction")
 	check_route("campus")
+	# The player cannot walk through an NPC: approach Sam and push into him.
+	var sam: Node3D
+	for node in dorm.find_children("*", "Node3D", true, false):
+		if node.get_script() == load("res://npc/student.gd") and node.actor_id == "sam":
+			sam = node
+	var spawn := player.global_position
+	player.global_position = sam.global_position + Vector3(1.4, 0.05, 0)
+	await ticks(3)
+	var closest := 9.0
+	drive(Vector3.LEFT)
+	for index in range(90):
+		await ticks(1)
+		closest = minf(closest, Vector2(player.global_position.x - sam.global_position.x, player.global_position.z - sam.global_position.z).length())
+	release_movement()
+	check(closest > 0.45, "Player is blocked by an NPC instead of passing through (closest %.2f m)" % closest)
+	check(player.interaction.enabled, "NPC blockers do not disable interaction")
+	player.global_position = spawn
+	await ticks(3)
 	var initial_position: Vector3 = schedule.actor_position
 	dorm.hud.set_settings_open(true)
 	await ticks(180)

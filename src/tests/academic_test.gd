@@ -133,8 +133,8 @@ func attendance_tests() -> void:
 	academics.reset()
 
 func question_tests() -> void:
-	check(bank.records.size() == 3, "Original seed bank loaded")
-	check(bank.for_lecture("pharmacodynamics_01").size() == 3, "Shared lecture filter")
+	check(bank.records.size() == 4, "Original question bank loaded (three seeds + visualization prediction)")
+	check(bank.for_lecture("pharmacodynamics_01").size() == 4, "Shared lecture filter")
 	var q: Dictionary = bank.get_question("pd_potency_01")
 	var outcome: Dictionary = bank.grade(q.id, "a")
 	check(outcome.valid and outcome.correct and outcome.xp_reward == 20, "Correct answer gets tier-two reward")
@@ -157,7 +157,7 @@ func question_tests() -> void:
 	check(bank.get_question(q.id).choices.a != "changed", "Question access returns independent data")
 	var valid_json := JSON.stringify({"version":1,"questions":[q]})
 	check(not bank.load_json("{"), "Malformed JSON rejected")
-	check(bank.records.size() == 3, "Malformed import preserves old bank")
+	check(bank.records.size() == 4, "Malformed import preserves old bank")
 	for field in ["prompt", "correct_answer", "learning_objective", "choices", "xp_reward"]:
 		var bad := q.duplicate(true)
 		bad.erase(field)

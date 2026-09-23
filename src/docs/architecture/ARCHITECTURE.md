@@ -113,3 +113,12 @@ Hall A (`world/lecture_hall/lecture_hall.gd`) is a raked auditorium. Its layout 
 ### Professor presentation
 
 Lecture content is JSON under `education/lectures/`. `LectureRunner` (RefCounted) validates it and exposes a cursor (segment, line) plus signals: `segment_started`, `line_started` and `finished`. `LectureSession` (a node in Hall A) owns the flow state (IDLE → WAITING → STARTING → PRESENTING → COMPLETE). It listens to seating and to the lecture camera's `transition_finished`, locks the seat through `seating.stand_locked`, and routes E/Space/Enter to the runner. It drives three views, none of which know about each other: `ui/lecture_slide.gd` (a Control inside a SubViewport whose texture is the screen's unshaded material), `npc/professor.gd` (procedural gestures over the shared Appearance rig), and `ui/lecture_ui.gd` (the compact overlay, whose typewriter state also tells the professor when to gesture). Class time comes from the schedule event whose id matches the lecture id, and waiting advances `GameClock` and `NPCSchedule` consistently. Completion is session state in `AcademicSession.presentations_completed` until save/load exists. The HUD exposes `set_objective`, `set_help_visible` and `suppress_context` so overlays can take over the bottom of the screen without new coupling.
+
+
+### Interactive visualization, NPC collision and mounted signs
+
+Lecture scripts may contain `activity` lines. `LectureSession` hands input to `CompetitiveActivity` until it emits `finished`, then restores the segment slide and advances the runner. The activity owns a `CompetitiveAntagonism` model (pure math plus a receptor-state visual helper), drives `LectureSlide.show_model()`, and grades its prediction through `QuestionBank.submit` with a stable attempt id. Question text stays in the bank.
+
+Physics layers: 1 = world, 2 = player, 3 = NPC blockers. The player's mask includes 3; interaction rays and NPC route checks use layer 1 only.
+
+`world_nameplate.gd` supports floating (billboard, drawn on top) and mounted (flat, depth-tested) labels; `Geometry.wall_sign()` creates mounted ones. Speech bubbles stay floating.

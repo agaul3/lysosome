@@ -33,7 +33,7 @@ func _ready() -> void:
 		Geometry.box(self, "BackCushion", Vector3(0.22, 0.55, 0.82), Vector3(3.95, 0.98, z), Color("69998f"))
 	for z in [-1.02, 1.82]:
 		Geometry.box(self, "SofaArm", Vector3(1.2, 0.55, 0.18), Vector3(3.65, 0.72, z), Color("578b88"))
-	Geometry.nameplate(self, "LECTURE HALL A", Vector3(0, 2.85, -3.6), 28)
+	Geometry.wall_sign(self, "LECTURE HALL A", Vector3(0, 2.8, -3.885), 0.0, 28, 0.01)
 	exit_door = _endpoint("CampusExit", "Return to campus", "", Vector3(0, 1, 3))
 	exit_door.activated.connect(AppState.enter_campus.bind("lecture_building"))
 	hall_door = _endpoint("HallA", "Enter Hall A", "", Vector3(0, 1, -3))

@@ -5,6 +5,7 @@ extends "res://tests/campus_test.gd"
 const LectureRunner = preload("res://education/lectures/lecture_runner.gd")
 const DoseResponse = preload("res://education/models/dose_response.gd")
 const Seat = preload("res://world/seat.gd")
+const CompetitiveModel = preload("res://education/models/competitive_antagonism.gd")
 const SPEC_TOPICS := ["receptors", "agonists", "antagonists", "competitive", "noncompetitive", "potency", "efficacy", "dose_response", "clinical"]
 
 func _run() -> void:
@@ -70,6 +71,14 @@ func model_tests() -> void:
 	check(is_equal_approx(DoseResponse.competitive_ec50(1.0, 3.0, 1.0), 4.0), "Competitive antagonist dose ratio 1 + B/Kb")
 	check(is_equal_approx(DoseResponse.noncompetitive_emax(100.0, 0.4), 60.0), "Noncompetitive antagonism lowers Emax")
 	check(is_equal_approx(DoseResponse.occupancy(3.0, 3.0), 0.5), "Half occupancy at Kd")
+	var model := CompetitiveModel.new()
+	model.log_agonist = 1.0
+	model.antagonist = true
+	model.advance(5.0)
+	check(is_equal_approx(model.response(), 50.0) and is_equal_approx(model.apparent_ec50(), 10.0), "With B/KB = 9, half response needs 10× agonist")
+	check(is_equal_approx(model.agonist_occupancy() + model.antagonist_occupancy() + 1.0 / (1.0 + 10.0 + 9.0), 1.0), "Occupancy fractions sum to one")
+	model.log_agonist = 3.0
+	check(model.response() > 98.0, "Surmountable: enough agonist restores the maximum")
 
 func hall_tests() -> void:
 	state = root.get_node("AppState")
@@ -130,6 +139,9 @@ func hall_tests() -> void:
 	var headings := {}
 	guard = 0
 	while session.state == session.State.PRESENTING and guard < 200:
+		if session.activity.running():
+			await activity_checks(hall, session)
+			continue
 		headings[hall.slide.heading.text] = true
 		var visible := 0
 		for row in hall.slide.bullet_box.get_children():
@@ -170,3 +182,71 @@ func press_confirm() -> void:
 	event = event.duplicate()
 	event.pressed = false
 	Input.parse_input_event(event)
+
+func press_action(action: String) -> void:
+	var event := InputEventAction.new()
+	event.action = action
+	event.pressed = true
+	Input.parse_input_event(event)
+	await ticks(1)
+	var released := InputEventAction.new()
+	released.action = action
+	released.pressed = false
+	Input.parse_input_event(released)
+	await ticks(1)
+
+## Plays the competitive-antagonism activity through real input, answering
+## the prediction wrongly to check incorrect-answer handling.
+func activity_checks(hall: Node3D, session: Node) -> void:
+	var activity: Node = session.activity
+	var model = activity.model
+	var ui: CanvasLayer = hall.lecture_ui
+	var academics := root.get_node("AcademicSession")
+	check(hall.slide.model_canvas.visible and hall.slide.heading.text.contains("Try it"), "Live model replaces the slide")
+	check(ui.activity_row.get_child_count() > 0 and not ui.continue_row.visible, "Activity shows agonist controls")
+	var start_log: float = model.log_agonist
+	Input.action_press("move_right")
+	await ticks(30)
+	Input.action_release("move_right")
+	check(model.log_agonist > start_log + 0.3, "Holding right raises agonist concentration")
+	check(activity.phase == activity.Phase.INTRO, "Goal not yet reached")
+	Input.action_press("move_right")
+	for index in range(400):
+		if activity.phase != activity.Phase.INTRO:
+			break
+		await ticks(1)
+	Input.action_release("move_right")
+	check(activity.phase == activity.Phase.ANTAGONIST, "Reaching ~90% response brings in the antagonist")
+	var before: float = model.response()
+	await ticks(150)
+	check(model.antagonist_level > 0.99 and model.response() < before - 30.0, "Antagonist lowers the response at the same agonist level")
+	var bound_antagonist := 0
+	for index in range(model.RECEPTORS):
+		if model.receptor_state(index) == 2:
+			bound_antagonist += 1
+	check(bound_antagonist > 0, "Antagonist molecules occupy receptors on screen")
+	await press_action("interact")
+	if activity.phase == activity.Phase.ANTAGONIST:
+		await press_action("interact")
+	check(activity.phase == activity.Phase.PREDICT and ui.question_card.visible, "Prediction question shown")
+	var attempted_before: int = academics.attempted
+	var xp_before: int = academics.xp_balance
+	await press_action("move_down") # a -> b
+	await press_action("move_down") # b -> c (a wrong answer)
+	check(ui.selected_key() == "c", "Arrow keys move the choice")
+	await press_action("interact")
+	check(activity.phase == activity.Phase.FEEDBACK and ui.feedback.text.begins_with("Not quite"), "Incorrect prediction is clearly marked")
+	check(academics.attempted == attempted_before + 1 and academics.xp_balance == xp_before, "Incorrect answer updates stats and awards no XP")
+	await press_action("interact")
+	check(activity.phase == activity.Phase.TEST, "Player tests the prediction")
+	Input.action_press("move_right")
+	for index in range(400):
+		if activity.phase != activity.Phase.TEST:
+			break
+		await ticks(1)
+	Input.action_release("move_right")
+	check(activity.phase == activity.Phase.WRAP and model.response() >= 90.0 and model.log_agonist > 1.8, "Full response returns only at ~10× higher agonist")
+	await press_action("interact")
+	if activity.phase == activity.Phase.WRAP:
+		await press_action("interact")
+	check(not activity.running() and not hall.slide.model_canvas.visible, "Activity ends and the slide returns")

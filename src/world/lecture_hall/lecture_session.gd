@@ -5,6 +5,7 @@ extends Node
 ## professor presents slide by slide. Afterwards the student may stand.
 signal state_changed(state: int)
 const LectureRunner = preload("res://education/lectures/lecture_runner.gd")
+const CompetitiveActivity = preload("res://world/lecture_hall/competitive_activity.gd")
 const SCRIPT_PATH := "res://education/lectures/pharmacodynamics_01.json"
 enum State { IDLE, WAITING, STARTING, PRESENTING, COMPLETE }
 var state := State.IDLE
@@ -16,6 +17,7 @@ var slide: Control
 var slide_viewport: SubViewport
 var professor: Node3D
 var event: Dictionary = {}
+var activity: Node
 
 func setup(target_hall: Node3D, target_ui: CanvasLayer, target_slide: Control, viewport: SubViewport, target_professor: Node3D) -> void:
 	hall = target_hall
@@ -36,6 +38,10 @@ func setup(target_hall: Node3D, target_ui: CanvasLayer, target_slide: Control, v
 	player.seating.state_changed.connect(_on_seating)
 	player.interaction.device_changed.connect(ui.set_controller)
 	hall.lecture_camera.transition_finished.connect(_on_camera_settled)
+	activity = CompetitiveActivity.new()
+	activity.name = "CompetitiveActivity"
+	add_child(activity)
+	activity.finished.connect(_on_activity_finished)
 	_show_title_slide()
 
 func completed() -> bool:
@@ -97,7 +103,7 @@ func _begin() -> void:
 	runner.start()
 
 func advance() -> void:
-	if state != State.PRESENTING:
+	if state != State.PRESENTING or activity.running():
 		return
 	if ui.typing:
 		ui.finish_typing()
@@ -110,6 +116,9 @@ func _unhandled_input(event_input: InputEvent) -> void:
 	if state == State.WAITING and event_input.is_action_pressed("confirm"):
 		wait_for_class()
 		get_viewport().set_input_as_handled()
+	elif state == State.PRESENTING and activity.running():
+		if activity.handle_input(event_input):
+			get_viewport().set_input_as_handled()
 	elif state == State.PRESENTING and (event_input.is_action_pressed("interact") or event_input.is_action_pressed("confirm")):
 		advance()
 		get_viewport().set_input_as_handled()
@@ -120,9 +129,16 @@ func _on_segment(segment: Dictionary, _index: int) -> void:
 	hall.hud.set_objective("Pharmacodynamics  ·  " + segment.topic)
 
 func _on_line(line: Dictionary) -> void:
+	if line.has("activity"):
+		activity.begin(line.activity, runner.script_data.id, runner.script_data.professor, ui, slide, professor)
+		return
 	slide.set_revealed(runner.revealed_bullets())
 	professor.set_line(line.get("gesture", "none"))
 	ui.show_line(runner.script_data.professor, line.text)
+
+func _on_activity_finished() -> void:
+	slide.show_slide(runner.current_segment().slide, runner.revealed_bullets())
+	runner.advance()
 
 func _on_finished() -> void:
 	AcademicSession.presentations_completed[runner.script_data.id] = true

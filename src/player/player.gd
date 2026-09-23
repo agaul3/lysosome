@@ -17,6 +17,7 @@ var movement_camera: Camera3D
 func _ready() -> void:
 	appearance.apply_preset(AppState.selected_character)
 	current_speed = speed
+	collision_mask |= 4 # Also collide with NPCs (layer 3); interaction rays stay world-only.
 	seating = preload("res://player/seating.gd").new()
 	seating.name = "Seating"
 	add_child(seating)

@@ -14,9 +14,18 @@
         "diagram": "title"
       },
       "lines": [
-        {"text": "Good morning, everyone. Let's get started.", "gesture": "audience"},
-        {"text": "Today is pharmacodynamics: what a drug does to the body. Pharmacokinetics, what the body does to the drug, is a separate lecture.", "gesture": "audience"},
-        {"text": "By the end, you should be able to read a dose-response curve and explain what it tells you about a drug, and about your patient.", "gesture": "screen"}
+        {
+          "text": "Good morning, everyone. Let's get started.",
+          "gesture": "audience"
+        },
+        {
+          "text": "Today is pharmacodynamics: what a drug does to the body. Pharmacokinetics, what the body does to the drug, is a separate lecture.",
+          "gesture": "audience"
+        },
+        {
+          "text": "By the end, you should be able to read a dose-response curve and explain what it tells you about a drug, and about your patient.",
+          "gesture": "screen"
+        }
       ]
     },
     {
@@ -33,10 +42,26 @@
         "diagram": "receptor_binding"
       },
       "lines": [
-        {"text": "Most drugs work by binding a specific target protein. Very often, that target is a receptor.", "gesture": "screen", "reveal": 1},
-        {"text": "Anything that binds the receptor is called a ligand: the drug, but also the body's own hormones and neurotransmitters.", "gesture": "audience", "reveal": 2},
-        {"text": "Most of this binding is reversible. Molecules attach and detach constantly, so how many receptors are occupied depends on concentration.", "gesture": "audience", "reveal": 3},
-        {"text": "How tightly a ligand binds is its affinity. We describe it with Kd, the concentration at which half the receptors are occupied. A lower Kd means higher affinity.", "gesture": "screen", "reveal": 4}
+        {
+          "text": "Most drugs work by binding a specific target protein. Very often, that target is a receptor.",
+          "gesture": "screen",
+          "reveal": 1
+        },
+        {
+          "text": "Anything that binds the receptor is called a ligand: the drug, but also the body's own hormones and neurotransmitters.",
+          "gesture": "audience",
+          "reveal": 2
+        },
+        {
+          "text": "Most of this binding is reversible. Molecules attach and detach constantly, so how many receptors are occupied depends on concentration.",
+          "gesture": "audience",
+          "reveal": 3
+        },
+        {
+          "text": "How tightly a ligand binds is its affinity. We describe it with Kd, the concentration at which half the receptors are occupied. A lower Kd means higher affinity.",
+          "gesture": "screen",
+          "reveal": 4
+        }
       ]
     },
     {
@@ -53,10 +78,26 @@
         "diagram": "full_partial"
       },
       "lines": [
-        {"text": "An agonist binds the receptor and activates it. Binding alone isn't the point; activation is what produces the response.", "gesture": "audience", "reveal": 1},
-        {"text": "A full agonist can drive the system all the way to its maximal response.", "gesture": "screen", "reveal": 2},
-        {"text": "A partial agonist binds the same receptor but produces a smaller maximal response, even when every receptor is occupied.", "gesture": "screen", "reveal": 3},
-        {"text": "I've drawn these two at the same potency so you can compare the plateaus. The partial agonist's lower ceiling reflects its intrinsic activity. More drug won't raise it.", "gesture": "screen", "reveal": 4}
+        {
+          "text": "An agonist binds the receptor and activates it. Binding alone isn't the point; activation is what produces the response.",
+          "gesture": "audience",
+          "reveal": 1
+        },
+        {
+          "text": "A full agonist can drive the system all the way to its maximal response.",
+          "gesture": "screen",
+          "reveal": 2
+        },
+        {
+          "text": "A partial agonist binds the same receptor but produces a smaller maximal response, even when every receptor is occupied.",
+          "gesture": "screen",
+          "reveal": 3
+        },
+        {
+          "text": "I've drawn these two at the same potency so you can compare the plateaus. The partial agonist's lower ceiling reflects its intrinsic activity. More drug won't raise it.",
+          "gesture": "screen",
+          "reveal": 4
+        }
       ]
     },
     {
@@ -73,9 +114,21 @@
         "diagram": "antagonist_block"
       },
       "lines": [
-        {"text": "An antagonist binds the receptor but doesn't activate it.", "gesture": "screen", "reveal": 1},
-        {"text": "With no agonist around, a pure antagonist does nothing visible. Its effect comes from stopping an agonist, whether a drug or the body's own ligand, from acting.", "gesture": "audience", "reveal": 3},
-        {"text": "How it blocks matters. The two patterns you need to know are competitive and noncompetitive antagonism.", "gesture": "audience", "reveal": 4}
+        {
+          "text": "An antagonist binds the receptor but doesn't activate it.",
+          "gesture": "screen",
+          "reveal": 1
+        },
+        {
+          "text": "With no agonist around, a pure antagonist does nothing visible. Its effect comes from stopping an agonist, whether a drug or the body's own ligand, from acting.",
+          "gesture": "audience",
+          "reveal": 3
+        },
+        {
+          "text": "How it blocks matters. The two patterns you need to know are competitive and noncompetitive antagonism.",
+          "gesture": "audience",
+          "reveal": 4
+        }
       ]
     },
     {
@@ -92,9 +145,41 @@
         "diagram": "competitive_shift"
       },
       "lines": [
-        {"text": "A competitive antagonist binds reversibly to the same site the agonist uses. The two compete for every receptor.", "gesture": "audience", "reveal": 1},
-        {"text": "Add enough agonist and it outcompetes the antagonist. We call that surmountable.", "gesture": "audience", "reveal": 2},
-        {"text": "On the graph, that's a parallel shift to the right. You need more agonist for the same effect, so the EC50 goes up, but the maximal response is unchanged.", "gesture": "screen", "reveal": 4}
+        {
+          "text": "A competitive antagonist binds reversibly to the same site the agonist uses. The two compete for every receptor.",
+          "gesture": "audience",
+          "reveal": 1
+        },
+        {
+          "text": "Add enough agonist and it outcompetes the antagonist. We call that surmountable.",
+          "gesture": "audience",
+          "reveal": 2
+        },
+        {
+          "text": "On the graph, that's a parallel shift to the right. You need more agonist for the same effect, so the EC50 goes up, but the maximal response is unchanged.",
+          "gesture": "screen",
+          "reveal": 4
+        },
+        {
+          "activity": {
+            "type": "competitive_antagonism",
+            "title": "Try it: competitive antagonism",
+            "question": "pd_viz_competitive_01",
+            "goal_response": 90,
+            "steps": {
+              "intro": "Let's see it happen. Use the agonist control to raise the concentration until the response is close to its maximum.",
+              "antagonist": "Good. Now I'm adding a competitive antagonist at a fixed concentration. Watch the receptors, and watch your response drop.",
+              "predict": "Before you touch anything, make a prediction.",
+              "test": "Now test it. Keep raising the agonist concentration and watch the response.",
+              "wrap": "Same maximum, but it took about ten times more agonist: the EC50 moved from 1 to 10. That parallel, rightward shift is competitive antagonism."
+            }
+          }
+        },
+        {
+          "text": "Remember that picture. When more agonist wins back the full effect, think competitive.",
+          "gesture": "audience",
+          "reveal": 4
+        }
       ]
     },
     {
@@ -111,9 +196,21 @@
         "diagram": "noncompetitive"
       },
       "lines": [
-        {"text": "A noncompetitive antagonist either binds irreversibly, often covalently, or binds a separate allosteric site that stops the receptor responding.", "gesture": "audience", "reveal": 1},
-        {"text": "Either way, adding more agonist can't fix it. Those receptors are out of play.", "gesture": "audience", "reveal": 2},
-        {"text": "So the maximal response drops. In the classic textbook picture, the plateau falls while the EC50 stays about the same.", "gesture": "screen", "reveal": 4}
+        {
+          "text": "A noncompetitive antagonist either binds irreversibly, often covalently, or binds a separate allosteric site that stops the receptor responding.",
+          "gesture": "audience",
+          "reveal": 1
+        },
+        {
+          "text": "Either way, adding more agonist can't fix it. Those receptors are out of play.",
+          "gesture": "audience",
+          "reveal": 2
+        },
+        {
+          "text": "So the maximal response drops. In the classic textbook picture, the plateau falls while the EC50 stays about the same.",
+          "gesture": "screen",
+          "reveal": 4
+        }
       ]
     },
     {
@@ -130,10 +227,26 @@
         "diagram": "potency"
       },
       "lines": [
-        {"text": "Potency tells you how much drug you need to get a given effect.", "gesture": "audience", "reveal": 1},
-        {"text": "We compare potency using the EC50: the concentration that produces half of that drug's own maximal effect.", "gesture": "screen", "reveal": 2},
-        {"text": "Drug A reaches half its maximum at a lower concentration than Drug B, so A is more potent. On the graph, more potent means further to the left.", "gesture": "screen", "reveal": 3},
-        {"text": "But potency mostly changes the dose you prescribe, not how much the drug can ultimately do.", "gesture": "audience", "reveal": 4}
+        {
+          "text": "Potency tells you how much drug you need to get a given effect.",
+          "gesture": "audience",
+          "reveal": 1
+        },
+        {
+          "text": "We compare potency using the EC50: the concentration that produces half of that drug's own maximal effect.",
+          "gesture": "screen",
+          "reveal": 2
+        },
+        {
+          "text": "Drug A reaches half its maximum at a lower concentration than Drug B, so A is more potent. On the graph, more potent means further to the left.",
+          "gesture": "screen",
+          "reveal": 3
+        },
+        {
+          "text": "But potency mostly changes the dose you prescribe, not how much the drug can ultimately do.",
+          "gesture": "audience",
+          "reveal": 4
+        }
       ]
     },
     {
@@ -150,10 +263,25 @@
         "diagram": "efficacy"
       },
       "lines": [
-        {"text": "Efficacy is the maximal effect a drug can produce: the height of the plateau.", "gesture": "screen", "reveal": 2},
-        {"text": "Here, Drug B is more potent because its curve rises earlier, but Drug A reaches a higher maximum. A is more efficacious.", "gesture": "screen", "reveal": 3},
-        {"text": "Keep the two separate. Potency is where the curve sits; efficacy is how high it goes.", "gesture": "audience"},
-        {"text": "When you need a large effect, efficacy is usually the property that matters most.", "gesture": "audience", "reveal": 4}
+        {
+          "text": "Efficacy is the maximal effect a drug can produce: the height of the plateau.",
+          "gesture": "screen",
+          "reveal": 2
+        },
+        {
+          "text": "Here, Drug B is more potent because its curve rises earlier, but Drug A reaches a higher maximum. A is more efficacious.",
+          "gesture": "screen",
+          "reveal": 3
+        },
+        {
+          "text": "Keep the two separate. Potency is where the curve sits; efficacy is how high it goes.",
+          "gesture": "audience"
+        },
+        {
+          "text": "When you need a large effect, efficacy is usually the property that matters most.",
+          "gesture": "audience",
+          "reveal": 4
+        }
       ]
     },
     {
@@ -170,10 +298,26 @@
         "diagram": "graded_quantal"
       },
       "lines": [
-        {"text": "A graded dose-response curve follows one patient or one tissue: as the dose rises, the response grows.", "gesture": "audience", "reveal": 1},
-        {"text": "Plot it against the log of the dose and you get the familiar S-shape, which makes EC50 and Emax easy to read.", "gesture": "screen", "reveal": 2},
-        {"text": "A quantal curve asks something different: what fraction of a population shows a defined response at each dose? The dose that works in half of them is the ED50.", "gesture": "screen", "reveal": 3},
-        {"text": "Do the same for a toxic effect and you get the TD50. The therapeutic index is TD50 divided by ED50. The larger it is, the wider the margin of safety.", "gesture": "screen", "reveal": 4}
+        {
+          "text": "A graded dose-response curve follows one patient or one tissue: as the dose rises, the response grows.",
+          "gesture": "audience",
+          "reveal": 1
+        },
+        {
+          "text": "Plot it against the log of the dose and you get the familiar S-shape, which makes EC50 and Emax easy to read.",
+          "gesture": "screen",
+          "reveal": 2
+        },
+        {
+          "text": "A quantal curve asks something different: what fraction of a population shows a defined response at each dose? The dose that works in half of them is the ED50.",
+          "gesture": "screen",
+          "reveal": 3
+        },
+        {
+          "text": "Do the same for a toxic effect and you get the TD50. The therapeutic index is TD50 divided by ED50. The larger it is, the wider the margin of safety.",
+          "gesture": "screen",
+          "reveal": 4
+        }
       ]
     },
     {
@@ -190,10 +334,26 @@
         "diagram": "clinical_opioid"
       },
       "lines": [
-        {"text": "Let's make this clinical. A patient arrives after an opioid overdose. Naloxone, a competitive antagonist at opioid receptors, displaces the opioid and can reverse the respiratory depression.", "gesture": "audience", "reveal": 1},
-        {"text": "Naloxone often wears off before the opioid does, so these patients need observation. Breathing can slow again.", "gesture": "audience", "reveal": 2},
-        {"text": "Buprenorphine is a partial agonist that binds mu-opioid receptors with high affinity. In someone dependent on a full agonist, it can displace that drug while activating the receptor less, and precipitate withdrawal.", "gesture": "screen", "reveal": 3},
-        {"text": "And for drugs with a narrow therapeutic index, like warfarin, small changes in dose or blood level matter a lot, so we monitor closely.", "gesture": "audience", "reveal": 4}
+        {
+          "text": "Let's make this clinical. A patient arrives after an opioid overdose. Naloxone, a competitive antagonist at opioid receptors, displaces the opioid and can reverse the respiratory depression.",
+          "gesture": "audience",
+          "reveal": 1
+        },
+        {
+          "text": "Naloxone often wears off before the opioid does, so these patients need observation. Breathing can slow again.",
+          "gesture": "audience",
+          "reveal": 2
+        },
+        {
+          "text": "Buprenorphine is a partial agonist that binds mu-opioid receptors with high affinity. In someone dependent on a full agonist, it can displace that drug while activating the receptor less, and precipitate withdrawal.",
+          "gesture": "screen",
+          "reveal": 3
+        },
+        {
+          "text": "And for drugs with a narrow therapeutic index, like warfarin, small changes in dose or blood level matter a lot, so we monitor closely.",
+          "gesture": "audience",
+          "reveal": 4
+        }
       ]
     },
     {
@@ -210,9 +370,20 @@
         "diagram": "summary"
       },
       "lines": [
-        {"text": "So: agonists activate and antagonists block. Competitive antagonists shift the curve right; noncompetitive ones lower the ceiling.", "gesture": "screen", "reveal": 3},
-        {"text": "Potency is where the curve sits, efficacy is how high it goes, and the therapeutic index tells you the margin of safety.", "gesture": "screen", "reveal": 4},
-        {"text": "That's the framework. Hold on to it; you'll use it constantly.", "gesture": "audience"}
+        {
+          "text": "So: agonists activate and antagonists block. Competitive antagonists shift the curve right; noncompetitive ones lower the ceiling.",
+          "gesture": "screen",
+          "reveal": 3
+        },
+        {
+          "text": "Potency is where the curve sits, efficacy is how high it goes, and the therapeutic index tells you the margin of safety.",
+          "gesture": "screen",
+          "reveal": 4
+        },
+        {
+          "text": "That's the framework. Hold on to it; you'll use it constantly.",
+          "gesture": "audience"
+        }
       ]
     }
   ]
