@@ -196,6 +196,20 @@ func show_line(name: String, line: String) -> void:
 	card.show()
 	_set_typing(true)
 
+## End-of-lecture results in the subtitle card, with a Continue hint.
+func show_summary(title: String, rows: Array) -> void:
+	waiting_card.hide()
+	question_card.hide()
+	topic_chip.hide()
+	_set_controls(activity_row, [])
+	continue_row.show()
+	speaker.text = title.to_upper()
+	text.text = "\n".join(rows)
+	text.visible_characters = -1
+	continue_row.modulate.a = 1.0
+	card.show()
+	_set_typing(false)
+
 func show_notice(message: String) -> void:
 	speaker.text = ""
 	text.text = message

@@ -1,7 +1,7 @@
 # PROJECT_HANDOFF.md — rpg_med
 
 ## Current status (updated 2026-09-23)
-Milestones 1–6 are complete and committed; Milestone 7 (Pharmacodynamics Lecture) is in progress. `CHANGELOG.md` at the repository root is the running, timestamped record of current state and supersedes the historical notes below. `CLAUDE.md` holds standing agent instructions.
+Milestones 1–7 are complete; Milestone 8 (Progression Feedback) is next. `CHANGELOG.md` at the repository root is the running, timestamped record of current state and supersedes the historical notes below. `CLAUDE.md` holds standing agent instructions.
 
 ## Purpose
 This file is the cross-agent handoff for the ongoing `rpg_med` project.
@@ -27,7 +27,7 @@ The player is a medical student. Real medical learning should drive XP, levels, 
 - Milestone 1 (Project Foundation) — committed as the baseline after the user manually verified fullscreen/settings behavior.
 - Milestone 2 (Player + Dorm) and Milestone 3 (Campus) — committed.
 - Milestones 4–6 (NPC Prototype, Time + Schedule, Question Engine) plus room/UI polish — committed together with a documentation cleanup.
-- Milestone 7 — in progress; see `CHANGELOG.md`.
+- Milestone 7 (Pharmacodynamics Lecture) — complete; see `src/docs/development/MILESTONE_7_ACCEPTANCE.md`.
 
 Verify against `git log` rather than trusting this list.
 

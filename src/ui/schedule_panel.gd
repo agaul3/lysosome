@@ -30,7 +30,11 @@ func refresh() -> void:
 		var hour: int = int(event.hour) % 12
 		body.text += "%s\n%d:%02d %s — %s\n%s • %s\n" % [event.date, 12 if hour == 0 else hour, event.minute, "AM" if event.hour < 12 else "PM", event.title, event.location, "MANDATORY" if event.mandatory else "OPTIONAL"]
 		var record: Dictionary = AcademicSession.attendance.get(event.date + ":" + event.id, {})
-		body.text += ("Not yet attended" if record.is_empty() else ("Late • %d XP" % record.xp_delta if record.late else "Arrived on time")) + "\n\n"
+		body.text += ("Not yet attended" if record.is_empty() else ("Late • %d XP" % record.xp_delta if record.late else "Arrived on time")) + "\n"
+		var lecture: Dictionary = AcademicSession.lectures_completed.get(event.id, {})
+		if not lecture.is_empty():
+			body.text += "Lecture complete • %d/%d correct • +%d XP\n" % [lecture.correct, lecture.attempted, lecture.xp]
+		body.text += "\n"
 	body.text += "XP balance: %d\nTime continues while this menu is open." % AcademicSession.xp_balance
 	body.text = body.text.replace("\n", "
 ")

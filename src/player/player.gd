@@ -5,6 +5,12 @@ const Presets = preload("res://data/character_presets.gd")
 ## Seconds to reach full sprint speed or settle back to a walk.
 @export var sprint_ramp: float = 0.25
 var current_speed := 3.2
+## Minecraft-style sprint: tap a movement key twice within this window and
+## keep holding to sprint in that direction. Sprint ends when movement stops.
+const DOUBLE_TAP_WINDOW := 0.3
+const MOVE_ACTIONS := ["move_up", "move_down", "move_left", "move_right"]
+var sprint_latched := false
+var last_tap := {}
 @export var gravity: float = 18.0
 @export var movement_enabled := true
 ## Set while a scripted motion (sitting, standing) drives the body instead of input.
@@ -32,12 +38,25 @@ func world_direction(input_vector: Vector2) -> Vector3:
 		direction = right.normalized() * input_vector.x + backward.normalized() * input_vector.y
 	return direction.limit_length(1.0)
 
+func _unhandled_input(event: InputEvent) -> void:
+	if not movement_enabled or external_control or event.is_echo():
+		return
+	for action in MOVE_ACTIONS:
+		if event.is_action_pressed(action):
+			var now := Time.get_ticks_msec() / 1000.0
+			if now - float(last_tap.get(action, -10.0)) <= DOUBLE_TAP_WINDOW:
+				sprint_latched = true
+			last_tap[action] = now
+
 func _physics_process(delta: float) -> void:
 	if external_control:
 		return
 	var input_vector := Input.get_vector("move_left", "move_right", "move_up", "move_down") if movement_enabled else Vector2.ZERO
 	var direction := world_direction(input_vector)
-	var sprinting := movement_enabled and Input.is_action_pressed("sprint") and direction.length_squared() > 0.25
+	var moving := direction.length_squared() > 0.25
+	if not moving or not movement_enabled:
+		sprint_latched = false
+	var sprinting := movement_enabled and moving and (sprint_latched or Input.is_action_pressed("sprint"))
 	var target_speed := sprint_speed if sprinting else speed
 	current_speed = move_toward(current_speed, target_speed, (sprint_speed - speed) / sprint_ramp * delta)
 	velocity.x = direction.x * current_speed

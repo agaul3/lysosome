@@ -54,6 +54,22 @@ func runner_tests() -> void:
 	for signal_name in ["segment_started", "line_started", "finished"]:
 		for connection in runner.get_signal_connection_list(signal_name):
 			runner.disconnect(signal_name, connection.callable)
+	var bank := root.get_node("QuestionBank")
+	var referenced: Array = runner.question_ids()
+	var missing := referenced.filter(func(id): return bank.get_question(id).is_empty())
+	check(missing.is_empty(), "Every referenced question exists in the shared bank %s" % str(missing))
+	var scored := referenced.filter(func(id): return not bank.get_question(id).get("is_remediation", false))
+	var remedial := referenced.filter(func(id): return bank.get_question(id).get("is_remediation", false))
+	check(scored.size() == 12, "About twelve lecture questions (%d)" % scored.size())
+	check(remedial.size() == 2, "Remediation is selective (%d follow-ups)" % remedial.size())
+	var types := {}
+	var complete := true
+	for id in referenced:
+		var q: Dictionary = bank.get_question(id)
+		types[q.question_type] = true
+		complete = complete and q.lecture_id == "pharmacodynamics_01" and not q.explanation.is_empty() and not q.learning_objective.is_empty()
+	check(complete, "Each question has an explanation, objective and the lecture id")
+	check(types.has("Recall") and types.has("Conceptual") and types.has("Application") and types.has("Clinical Application"), "Recall, conceptual, application and clinical application questions")
 	for broken in [
 		"{}",
 		'{"version":1,"id":"x","title":"t","professor":"p","segments":[]}',
@@ -138,9 +154,16 @@ func hall_tests() -> void:
 	check(hall.professor.turn > 0.3 and hall.professor.point > 0.3, "Professor turns and points at the screen")
 	var headings := {}
 	guard = 0
-	while session.state == session.State.PRESENTING and guard < 200:
+	var academics := root.get_node("AcademicSession")
+	var xp_before_lecture: int = academics.xp_balance
+	var asked: Array = []
+	while session.state == session.State.PRESENTING and guard < 300:
 		if session.activity.running():
 			await activity_checks(hall, session)
+			continue
+		if session.question.running():
+			asked.append(session.question.current_id)
+			await question_checks(hall, session)
 			continue
 		headings[hall.slide.heading.text] = true
 		var visible := 0
@@ -154,10 +177,23 @@ func hall_tests() -> void:
 		guard += 1
 	await ticks(2)
 	check(headings.size() >= 10, "Slides change with each segment (%d)" % headings.size())
-	check(session.state == session.State.COMPLETE and root.get_node("AcademicSession").presentations_completed.has("pharmacodynamics_01"), "Presentation completes and is recorded")
-	check(not player.seating.stand_locked and hall.hud.help_row.visible, "Seat unlocks after the lecture")
+	check(asked.size() == 11, "Every question beat is asked (%d, plus the activity prediction)" % asked.size())
+	check(session.state == session.State.SUMMARY and ui.card.visible and ui.speaker.text.begins_with("LECTURE COMPLETE"), "Lecture completion summary shown")
+	var summary: Dictionary = session.summary
+	# All answered correctly except the deliberate noncompetitive miss and the
+	# deliberate wrong prediction in the activity: 10 of 12 scored questions.
+	check(summary.attempted == 12 and summary.correct == 10, "Summary counts lecture questions, not remediation (%d/%d)" % [summary.correct, summary.attempted])
+	check(summary.xp == academics.xp_balance - xp_before_lecture and summary.xp > 0, "Summary XP matches the XP actually earned (%d)" % summary.xp)
+	check(ui.text.text.contains("10 of 12") and ui.text.text.contains("XP earned this lecture: %d" % summary.xp), "Summary card shows score and XP")
+	check(player.seating.stand_locked, "Seat stays locked until the summary is dismissed")
+	await press_action("interact")
+	await ticks(2)
+	check(session.state == session.State.COMPLETE and academics.lectures_completed.has("pharmacodynamics_01"), "Lecture completion is recorded")
+	check(not player.seating.stand_locked and hall.hud.help_row.visible and not ui.card.visible, "Seat unlocks and exploration resumes after the summary")
+	check(hall.hud.schedule_panel.body.text.contains("Lecture complete • 10/12 correct"), "Schedule shows the lecture result")
+	check(hall.hud.objective_text.contains("10/12"), "HUD objective shows the result")
 	await ticks(3)
-	check(hall.hud.message.text.contains("end of today's presentation") and hall.hud.prompt.text == "Stand up" and hall.hud.prompt_row.visible, "Closing message with a visible stand-up prompt")
+	check(hall.hud.message.text.contains("Class dismissed") and hall.hud.prompt.text == "Stand up" and hall.hud.prompt_row.visible, "Closing message with a visible stand-up prompt")
 	player.seating.request(seat)
 	await wait_for(func(): return player.seating.state == player.seating.State.FREE)
 	check(player.seating.state == player.seating.State.FREE and not ui.card.visible, "Student stands after the lecture")
@@ -250,3 +286,41 @@ func activity_checks(hall: Node3D, session: Node) -> void:
 	if activity.phase == activity.Phase.WRAP:
 		await press_action("interact")
 	check(not activity.running() and not hall.slide.model_canvas.visible, "Activity ends and the slide returns")
+
+## Answers a question beat through real input. Every question is answered
+## correctly except the noncompetitive one, which is missed on purpose to
+## exercise its simpler remediation follow-up.
+func question_checks(hall: Node3D, session: Node) -> void:
+	var beat: Node = session.question
+	var ui: CanvasLayer = hall.lecture_ui
+	var academics := root.get_node("AcademicSession")
+	var id: String = beat.current_id
+	var question: Dictionary = root.get_node("QuestionBank").get_question(id)
+	check(ui.question_card.visible and ui.question_prompt.text == question.prompt, "Question shown from the bank: " + id)
+	var keys: Array = question.choices.keys()
+	keys.sort()
+	var wrong_on_purpose := id == "pd_noncompetitive_01"
+	var target: String = question.correct_answer
+	if wrong_on_purpose:
+		target = keys[1] if keys[0] == question.correct_answer else keys[0]
+	var xp_before: int = academics.xp_balance
+	var attempted_before: int = academics.attempted
+	for step in range(keys.find(target)):
+		await press_action("move_down")
+	await press_action("interact")
+	check(academics.attempted == attempted_before + 1, "Answer recorded in performance stats: " + id)
+	if wrong_on_purpose:
+		check(ui.feedback.text.begins_with("Not quite") and academics.xp_balance == xp_before, "Incorrect answer: clear failure, explanation, no XP")
+		await press_action("interact")
+		check(beat.current_id == "pd_noncompetitive_remedial_01" and ui.question_card.visible, "Selected wrong answers get a simpler follow-up")
+		var remedial: Dictionary = root.get_node("QuestionBank").get_question(beat.current_id)
+		var remedial_keys: Array = remedial.choices.keys()
+		remedial_keys.sort()
+		for step in range(remedial_keys.find(remedial.correct_answer)):
+			await press_action("move_down")
+		await press_action("interact")
+		check(ui.feedback.text.begins_with("Correct"), "Remediation answered correctly")
+	else:
+		check(ui.feedback.text.begins_with("Correct") and academics.xp_balance > xp_before, "Correct answer: confirmation and XP: " + id)
+	await press_action("interact")
+	check(not beat.running(), "Question beat hands back to the lecture: " + id)

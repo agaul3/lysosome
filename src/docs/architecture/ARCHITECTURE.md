@@ -1,4 +1,4 @@
-# Architecture — Milestones 1–6, Milestone 7 in progress
+# Architecture — Milestones 1–7
 
 ## Application and scenes
 
@@ -122,3 +122,10 @@ Lecture scripts may contain `activity` lines. `LectureSession` hands input to `C
 Physics layers: 1 = world, 2 = player, 3 = NPC blockers. The player's mask includes 3; interaction rays and NPC route checks use layer 1 only.
 
 `world_nameplate.gd` supports floating (billboard, drawn on top) and mounted (flat, depth-tested) labels; `Geometry.wall_sign()` creates mounted ones. Speech bubbles stay floating.
+
+
+### Lecture questions and completion (Milestone 7)
+
+Question beats are lines of the form `{"question": id, "lead": text, "remediation": id}` in the lecture script. `LectureSession` hands them to `QuestionBeat`, which shows the bank question on the lecture overlay's question card, grades it with `QuestionBank.submit` using the attempt id `<lecture>:<question>`, shows feedback and offers the remediation question only after a miss. When the runner finishes, the session tallies the scored questions from `AcademicSession.question_history`, excluding remediation (which still counts toward XP). It stores the summary in `AcademicSession.lectures_completed` and shows it in the SUMMARY state; dismissing it unlocks the seat (COMPLETE). The schedule panel reads `lectures_completed`.
+
+Player sprint: `player.gd` watches movement-action presses in `_unhandled_input`. A second press of the same action within `DOUBLE_TAP_WINDOW` latches sprint until movement stops. The joypad `sprint` action (L3) remains as an alternative.

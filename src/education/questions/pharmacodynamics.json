@@ -85,6 +85,216 @@
         "visualization",
         "prediction"
       ]
+    },
+    {
+      "id": "pd_affinity_01",
+      "discipline": "Pharmacology",
+      "topic": "Pharmacodynamics",
+      "subtopic": "Receptors and ligands",
+      "question_type": "Conceptual",
+      "difficulty_tier": 1,
+      "prompt": "Drug A binds a receptor with a Kd of 1 nM. Drug B binds the same receptor with a Kd of 50 nM. Which statement is correct?",
+      "choices": {
+        "a": "A has the higher affinity: it occupies half of the receptors at a lower concentration.",
+        "b": "B has the higher affinity, because its Kd is larger.",
+        "c": "A must produce the larger maximal response.",
+        "d": "Kd describes how quickly each drug is eliminated."
+      },
+      "correct_answer": "a",
+      "explanation": "Kd is the concentration that occupies half of the receptors at equilibrium, so a lower Kd means higher affinity. Affinity alone does not set the maximal response (that is efficacy), and elimination is pharmacokinetics.",
+      "learning_objective": "Interpret Kd as an inverse measure of receptor affinity.",
+      "xp_reward": null,
+      "lecture_id": "pharmacodynamics_01",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "pd_partial_agonist_01",
+      "discipline": "Pharmacology",
+      "topic": "Pharmacodynamics",
+      "subtopic": "Agonists",
+      "question_type": "Conceptual",
+      "difficulty_tier": 1,
+      "prompt": "At a concentration high enough to occupy every receptor, a partial agonist produces only 40% of the maximal response the tissue can generate. What best explains this?",
+      "choices": {
+        "a": "Low intrinsic activity: even fully occupied receptors are activated less than by a full agonist.",
+        "b": "Its affinity is too low for it to bind the receptors.",
+        "c": "It is acting as a competitive antagonist.",
+        "d": "The concentration is still too low to reach a plateau."
+      },
+      "correct_answer": "a",
+      "explanation": "Occupancy is already complete, so neither affinity nor dose explains the lower ceiling. A partial agonist's submaximal response reflects its lower intrinsic activity (efficacy).",
+      "learning_objective": "Explain a partial agonist's submaximal response in terms of intrinsic activity.",
+      "xp_reward": null,
+      "lecture_id": "pharmacodynamics_01",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "pd_antagonist_01",
+      "discipline": "Pharmacology",
+      "topic": "Pharmacodynamics",
+      "subtopic": "Antagonists",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "A pure (neutral) antagonist is added to an isolated tissue with no agonist present. What response is expected?",
+      "choices": {
+        "a": "No response: it binds the receptor without activating it.",
+        "b": "A maximal response.",
+        "c": "A response equal to half of Emax.",
+        "d": "A response opposite to the agonist's in every tissue."
+      },
+      "correct_answer": "a",
+      "explanation": "Antagonists have affinity but no intrinsic activity; their effect appears only when they block an agonist. (Inverse agonists acting on constitutively active receptors are a separate case.)",
+      "learning_objective": "Define an antagonist as a ligand with affinity but no intrinsic activity.",
+      "xp_reward": null,
+      "lecture_id": "pharmacodynamics_01",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "pd_noncompetitive_01",
+      "discipline": "Pharmacology",
+      "topic": "Pharmacodynamics",
+      "subtopic": "Noncompetitive antagonism",
+      "question_type": "Conceptual",
+      "difficulty_tier": 2,
+      "prompt": "An agonist's concentration-response curve is measured before and after adding an antagonist that binds the receptor irreversibly. Afterwards, even very high agonist concentrations no longer reach the original maximum. Which description fits?",
+      "choices": {
+        "a": "Noncompetitive (insurmountable) antagonism: Emax is reduced.",
+        "b": "Competitive antagonism: a parallel rightward shift with the same Emax.",
+        "c": "The agonist has become a partial agonist.",
+        "d": "The agonist's potency has increased."
+      },
+      "correct_answer": "a",
+      "explanation": "Irreversibly blocked receptors are taken out of use, so adding agonist cannot restore the maximum. That insurmountable loss of Emax is the noncompetitive pattern; a competitive antagonist would shift the curve right without lowering it.",
+      "learning_objective": "Recognise insurmountable antagonism from a reduced Emax.",
+      "xp_reward": null,
+      "lecture_id": "pharmacodynamics_01",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "pd_noncompetitive_remedial_01",
+      "discipline": "Pharmacology",
+      "topic": "Pharmacodynamics",
+      "subtopic": "Noncompetitive antagonism",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "Which change in an agonist's curve is the hallmark of noncompetitive antagonism?",
+      "choices": {
+        "a": "A lower maximal response",
+        "b": "A parallel shift to the left",
+        "c": "A parallel shift to the right with the same maximum"
+      },
+      "correct_answer": "a",
+      "explanation": "The ceiling falls because blocked receptors cannot be recruited by more agonist. A rightward shift with the same maximum is the competitive pattern.",
+      "learning_objective": "Identify reduced Emax as the signature of noncompetitive antagonism.",
+      "xp_reward": 5,
+      "lecture_id": "pharmacodynamics_01",
+      "format": "multiple_choice",
+      "is_remediation": true
+    },
+    {
+      "id": "pd_potency_remedial_01",
+      "discipline": "Pharmacology",
+      "topic": "Pharmacodynamics",
+      "subtopic": "Dose-response",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "On a concentration-response graph, which drug is more potent?",
+      "choices": {
+        "a": "The drug with the lower EC50, whose curve sits further left",
+        "b": "The drug with the higher EC50",
+        "c": "The drug with the higher Emax"
+      },
+      "correct_answer": "a",
+      "explanation": "Potency is compared by EC50: less drug is needed for the same relative effect, so the curve sits further left. Emax describes efficacy, not potency.",
+      "learning_objective": "Relate lower EC50 and a leftward curve to greater potency.",
+      "xp_reward": 5,
+      "lecture_id": "pharmacodynamics_01",
+      "format": "multiple_choice",
+      "is_remediation": true
+    },
+    {
+      "id": "pd_efficacy_application_01",
+      "discipline": "Pharmacology",
+      "topic": "Pharmacodynamics",
+      "subtopic": "Efficacy",
+      "question_type": "Application",
+      "difficulty_tier": 2,
+      "prompt": "Two analgesics act on the same pathway. Drug X has an EC50 of 0.5 mg/L and produces at most 50% of maximal pain relief. Drug Y has an EC50 of 5 mg/L and produces up to 100%. A patient needs the largest possible effect. Which is the better choice on pharmacodynamic grounds?",
+      "choices": {
+        "a": "Drug Y, because its efficacy (Emax) is greater.",
+        "b": "Drug X, because it is more potent.",
+        "c": "Either one, because potency and efficacy mean the same thing.",
+        "d": "Drug X, because a lower EC50 means a higher maximum."
+      },
+      "correct_answer": "a",
+      "explanation": "X is more potent, but it plateaus at 50% and no dose of X can match Y's maximum. Potency changes the dose needed; efficacy sets the ceiling. (Real prescribing also weighs safety and other factors.)",
+      "learning_objective": "Choose between drugs using efficacy rather than potency when a large effect is needed.",
+      "xp_reward": null,
+      "lecture_id": "pharmacodynamics_01",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "pd_therapeutic_index_01",
+      "discipline": "Pharmacology",
+      "topic": "Pharmacodynamics",
+      "subtopic": "Dose-response",
+      "question_type": "Application",
+      "difficulty_tier": 2,
+      "prompt": "In a population study, Drug P has an ED50 of 10 mg and a TD50 of 40 mg. Drug Q has an ED50 of 10 mg and a TD50 of 400 mg. Which statement is correct?",
+      "choices": {
+        "a": "Q has the larger therapeutic index (40 vs 4), so it has the wider margin between effective and toxic doses.",
+        "b": "P has the larger therapeutic index, because its TD50 is lower.",
+        "c": "Both have the same therapeutic index, because their ED50s are equal.",
+        "d": "The therapeutic index is ED50 divided by TD50."
+      },
+      "correct_answer": "a",
+      "explanation": "Therapeutic index = TD50 / ED50. For P it is 40 / 10 = 4; for Q it is 400 / 10 = 40. The larger index means a wider margin of safety.",
+      "learning_objective": "Calculate and interpret the therapeutic index from ED50 and TD50.",
+      "xp_reward": null,
+      "lecture_id": "pharmacodynamics_01",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "pd_naloxone_01",
+      "discipline": "Pharmacology",
+      "topic": "Pharmacodynamics",
+      "subtopic": "Clinical application",
+      "question_type": "Clinical Application",
+      "difficulty_tier": 2,
+      "prompt": "A 34-year-old man is brought in unresponsive after taking a large amount of methadone. His pupils are pinpoint and he breathes 6 times per minute. After IV naloxone he wakes and breathes normally, but 45 minutes later his breathing slows again. What is the most likely explanation?",
+      "choices": {
+        "a": "Naloxone wore off before the methadone was cleared, so the opioid is binding the receptors again.",
+        "b": "Naloxone is a partial agonist that depresses breathing itself.",
+        "c": "Naloxone irreversibly destroyed the opioid receptors.",
+        "d": "Naloxone precipitated opioid withdrawal, which slows breathing."
+      },
+      "correct_answer": "a",
+      "explanation": "Naloxone is a competitive antagonist with a shorter duration of action than long-acting opioids such as methadone. As it is cleared, the opioid again occupies the receptors and respiratory depression returns, which is why these patients need observation and may need repeat doses or an infusion. Withdrawal causes agitation, not respiratory depression.",
+      "learning_objective": "Explain recurrent respiratory depression after naloxone by its shorter duration versus a long-acting opioid.",
+      "xp_reward": null,
+      "lecture_id": "pharmacodynamics_01",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "pd_buprenorphine_01",
+      "discipline": "Pharmacology",
+      "topic": "Pharmacodynamics",
+      "subtopic": "Clinical application",
+      "question_type": "Clinical Application",
+      "difficulty_tier": 3,
+      "prompt": "A patient who uses high doses of a full mu-opioid agonist every day is given a first dose of buprenorphine while still intoxicated. Within an hour he develops yawning, sweating, a runny nose and abdominal cramps. Which property of buprenorphine best explains this?",
+      "choices": {
+        "a": "High affinity with low intrinsic activity: it displaces the full agonist but activates the receptor less.",
+        "b": "It is a pure antagonist with no intrinsic activity.",
+        "c": "Its affinity is lower than the full agonist's, so it cannot bind.",
+        "d": "It irreversibly destroys opioid receptors."
+      },
+      "correct_answer": "a",
+      "explanation": "Buprenorphine is a high-affinity partial agonist at mu-opioid receptors. It displaces the full agonist and produces less receptor activation, so the net effect falls abruptly: precipitated withdrawal. This is why buprenorphine is usually started once mild withdrawal has begun.",
+      "learning_objective": "Explain precipitated withdrawal by buprenorphine's high affinity and partial agonism.",
+      "xp_reward": null,
+      "lecture_id": "pharmacodynamics_01",
+      "format": "multiple_choice"
     }
   ]
 }

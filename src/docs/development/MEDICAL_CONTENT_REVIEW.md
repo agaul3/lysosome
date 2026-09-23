@@ -56,3 +56,78 @@ The professor's narration and slides in `education/lectures/pharmacodynamics_01.
 - Explanation: Both drugs compete reversibly for the same site, so enough agonist outcompetes the antagonist; the curve shifts right and Emax is unchanged.
 - Model used by the activity: Gaddum competitive occupancy with a full agonist and simple occupancy theory (response ∝ agonist occupancy), [B]/KB = 9 (dose ratio 10).
 - Human review: the simplified occupancy-response model ignores receptor reserve and signal amplification; confirm the wording is appropriately qualified for first-year teaching.
+
+
+# Lecture question set — pharmacodynamics_01 (Milestone 7)
+
+Twelve scored lecture questions (the three seeds, the visualization prediction and the eight below) plus two remediation follow-ups, delivered from the shared bank by `question_beat.gd`. All are original, AI-assisted prototype items that have not been professionally validated, and they were checked against the Merck Manual Professional pages listed at the top of this file. Remediation appears only after a wrong answer on `pd_noncompetitive_01` and `pd_potency_01`.
+
+## pd_affinity_01
+
+- Objective: Interpret Kd as an inverse measure of receptor affinity.
+- Answer: a — A has the higher affinity: it occupies half of the receptors at a lower concentration.
+- Explanation: Kd is the concentration that occupies half of the receptors at equilibrium, so a lower Kd means higher affinity. Affinity alone does not set the maximal response (that is efficacy), and elimination is pharmacokinetics.
+- Human review: Confirm that equating lower Kd with higher affinity is stated at equilibrium; no issues expected.
+
+## pd_partial_agonist_01
+
+- Objective: Explain a partial agonist's submaximal response in terms of intrinsic activity.
+- Answer: a — Low intrinsic activity: even fully occupied receptors are activated less than by a full agonist.
+- Explanation: Occupancy is already complete, so neither affinity nor dose explains the lower ceiling. A partial agonist's submaximal response reflects its lower intrinsic activity (efficacy).
+- Human review: The stem stipulates full occupancy to isolate intrinsic activity; reviewer may prefer 'efficacy' terminology.
+
+## pd_antagonist_01
+
+- Objective: Define an antagonist as a ligand with affinity but no intrinsic activity.
+- Answer: a — No response: it binds the receptor without activating it.
+- Explanation: Antagonists have affinity but no intrinsic activity; their effect appears only when they block an agonist. (Inverse agonists acting on constitutively active receptors are a separate case.)
+- Human review: Explanation notes inverse agonism as a separate case; confirm the level of detail suits first-year teaching.
+
+## pd_noncompetitive_01
+
+- Objective: Recognise insurmountable antagonism from a reduced Emax.
+- Answer: a — Noncompetitive (insurmountable) antagonism: Emax is reduced.
+- Explanation: Irreversibly blocked receptors are taken out of use, so adding agonist cannot restore the maximum. That insurmountable loss of Emax is the noncompetitive pattern; a competitive antagonist would shift the curve right without lowering it.
+- Human review: Uses the classic insurmountable picture; receptor reserve can initially shift the curve right before Emax falls.
+
+## pd_noncompetitive_remedial_01
+
+- Objective: Identify reduced Emax as the signature of noncompetitive antagonism.
+- Answer: a — A lower maximal response
+- Explanation: The ceiling falls because blocked receptors cannot be recruited by more agonist. A rightward shift with the same maximum is the competitive pattern.
+- Human review: Remediation item (5 XP override); intentionally simple.
+
+## pd_potency_remedial_01
+
+- Objective: Relate lower EC50 and a leftward curve to greater potency.
+- Answer: a — The drug with the lower EC50, whose curve sits further left
+- Explanation: Potency is compared by EC50: less drug is needed for the same relative effect, so the curve sits further left. Emax describes efficacy, not potency.
+- Human review: Remediation item (5 XP override); intentionally simple.
+
+## pd_efficacy_application_01
+
+- Objective: Choose between drugs using efficacy rather than potency when a large effect is needed.
+- Answer: a — Drug Y, because its efficacy (Emax) is greater.
+- Explanation: X is more potent, but it plateaus at 50% and no dose of X can match Y's maximum. Potency changes the dose needed; efficacy sets the ceiling. (Real prescribing also weighs safety and other factors.)
+- Human review: Hypothetical drugs; explanation states that real prescribing also weighs safety. Confirm no implied clinical recommendation.
+
+## pd_therapeutic_index_01
+
+- Objective: Calculate and interpret the therapeutic index from ED50 and TD50.
+- Answer: a — Q has the larger therapeutic index (40 vs 4), so it has the wider margin between effective and toxic doses.
+- Explanation: Therapeutic index = TD50 / ED50. For P it is 40 / 10 = 4; for Q it is 400 / 10 = 40. The larger index means a wider margin of safety.
+- Human review: Uses TD50/ED50 (clinical definition); LD50/ED50 animal definition not mentioned.
+
+## pd_naloxone_01
+
+- Objective: Explain recurrent respiratory depression after naloxone by its shorter duration versus a long-acting opioid.
+- Answer: a — Naloxone wore off before the methadone was cleared, so the opioid is binding the receptors again.
+- Explanation: Naloxone is a competitive antagonist with a shorter duration of action than long-acting opioids such as methadone. As it is cleared, the opioid again occupies the receptors and respiratory depression returns, which is why these patients need observation and may need repeat doses or an infusion. Withdrawal causes agitation, not respiratory depression.
+- Human review: Vignette uses methadone because re-sedation is classic with long-acting opioids. A clinician should confirm the wording; no doses are given.
+
+## pd_buprenorphine_01
+
+- Objective: Explain precipitated withdrawal by buprenorphine's high affinity and partial agonism.
+- Answer: a — High affinity with low intrinsic activity: it displaces the full agonist but activates the receptor less.
+- Explanation: Buprenorphine is a high-affinity partial agonist at mu-opioid receptors. It displaces the full agonist and produces less receptor activation, so the net effect falls abruptly: precipitated withdrawal. This is why buprenorphine is usually started once mild withdrawal has begun.
+- Human review: Precipitated withdrawal scenario; explanation mentions starting buprenorphine once mild withdrawal has begun (general principle, no protocol or doses). Clinician review required.

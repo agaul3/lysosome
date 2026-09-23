@@ -1,7 +1,8 @@
 extends RefCounted
 ## Loads a lecture script (JSON, see README.md) and steps through it one
 ## professor line at a time. Knows nothing about scenes or UI; views listen to
-## its signals. Question and visualization beats will join the same cursor.
+## its signals. Lines are professor speech, question beats (bank ids) or
+## interactive activities; all share one cursor.
 signal segment_started(segment: Dictionary, index: int)
 signal line_started(line: Dictionary)
 signal finished
@@ -60,6 +61,14 @@ static func validate(data: Variant) -> String:
 		if typeof(lines) != TYPE_ARRAY or lines.is_empty():
 			return "Segment %s needs professor lines" % segment.id
 		for line in lines:
+			if typeof(line) == TYPE_DICTIONARY and line.has("question"):
+				# Question beats reference the shared bank by id; text never lives here.
+				if typeof(line.question) != TYPE_STRING or String(line.question).is_empty():
+					return "Segment %s has a question beat without an id" % segment.id
+				for optional in ["lead", "remediation"]:
+					if line.has(optional) and typeof(line[optional]) != TYPE_STRING:
+						return "Segment %s has an invalid question '%s'" % [segment.id, optional]
+				continue
 			if typeof(line) == TYPE_DICTIONARY and line.has("activity"):
 				var error := _validate_activity(line.activity)
 				if not error.is_empty():
@@ -135,3 +144,16 @@ func advance() -> void:
 
 func progress_label() -> String:
 	return "%d / %d  ·  %s" % [segment_index + 1, segments().size(), current_segment().get("topic", "")]
+
+## Every question id the script references (beats, remediation, activities).
+func question_ids() -> Array:
+	var ids: Array = []
+	for segment in segments():
+		for line in segment.lines:
+			if line.has("question"):
+				ids.append(line.question)
+				if line.has("remediation"):
+					ids.append(line.remediation)
+			if line.has("activity"):
+				ids.append(line.activity.question)
+	return ids

@@ -6,8 +6,9 @@ extends Node
 signal state_changed(state: int)
 const LectureRunner = preload("res://education/lectures/lecture_runner.gd")
 const CompetitiveActivity = preload("res://world/lecture_hall/competitive_activity.gd")
+const QuestionBeat = preload("res://world/lecture_hall/question_beat.gd")
 const SCRIPT_PATH := "res://education/lectures/pharmacodynamics_01.json"
-enum State { IDLE, WAITING, STARTING, PRESENTING, COMPLETE }
+enum State { IDLE, WAITING, STARTING, PRESENTING, SUMMARY, COMPLETE }
 var state := State.IDLE
 var runner := LectureRunner.new()
 var hall: Node3D
@@ -18,6 +19,8 @@ var slide_viewport: SubViewport
 var professor: Node3D
 var event: Dictionary = {}
 var activity: Node
+var question: Node
+var summary: Dictionary = {}
 
 func setup(target_hall: Node3D, target_ui: CanvasLayer, target_slide: Control, viewport: SubViewport, target_professor: Node3D) -> void:
 	hall = target_hall
@@ -42,10 +45,14 @@ func setup(target_hall: Node3D, target_ui: CanvasLayer, target_slide: Control, v
 	activity.name = "CompetitiveActivity"
 	add_child(activity)
 	activity.finished.connect(_on_activity_finished)
+	question = QuestionBeat.new()
+	question.name = "QuestionBeat"
+	add_child(question)
+	question.finished.connect(func() -> void: runner.advance())
 	_show_title_slide()
 
 func completed() -> bool:
-	return AcademicSession.presentations_completed.has(runner.script_data.id)
+	return AcademicSession.lectures_completed.has(runner.script_data.id)
 
 ## Unix time at which class begins, from data/academic_config.json.
 func start_time() -> float:
@@ -57,7 +64,7 @@ func class_has_started() -> bool:
 func _set_state(next: State) -> void:
 	state = next
 	# The lecture overlay owns the bottom of the screen while it is showing.
-	hall.hud.suppress_context = state in [State.WAITING, State.STARTING, State.PRESENTING]
+	hall.hud.suppress_context = state in [State.WAITING, State.STARTING, State.PRESENTING, State.SUMMARY]
 	state_changed.emit(state)
 
 func _on_seating(seating_state: int) -> void:
@@ -103,7 +110,7 @@ func _begin() -> void:
 	runner.start()
 
 func advance() -> void:
-	if state != State.PRESENTING or activity.running():
+	if state != State.PRESENTING or activity.running() or question.running():
 		return
 	if ui.typing:
 		ui.finish_typing()
@@ -119,6 +126,12 @@ func _unhandled_input(event_input: InputEvent) -> void:
 	elif state == State.PRESENTING and activity.running():
 		if activity.handle_input(event_input):
 			get_viewport().set_input_as_handled()
+	elif state == State.PRESENTING and question.running():
+		if question.handle_input(event_input):
+			get_viewport().set_input_as_handled()
+	elif state == State.SUMMARY and (event_input.is_action_pressed("interact") or event_input.is_action_pressed("confirm")):
+		_finish_lecture()
+		get_viewport().set_input_as_handled()
 	elif state == State.PRESENTING and (event_input.is_action_pressed("interact") or event_input.is_action_pressed("confirm")):
 		advance()
 		get_viewport().set_input_as_handled()
@@ -132,6 +145,9 @@ func _on_line(line: Dictionary) -> void:
 	if line.has("activity"):
 		activity.begin(line.activity, runner.script_data.id, runner.script_data.professor, ui, slide, professor)
 		return
+	if line.has("question"):
+		question.begin(line, runner.script_data.id, runner.script_data.professor, ui, professor)
+		return
 	slide.set_revealed(runner.revealed_bullets())
 	professor.set_line(line.get("gesture", "none"))
 	ui.show_line(runner.script_data.professor, line.text)
@@ -140,17 +156,50 @@ func _on_activity_finished() -> void:
 	slide.show_slide(runner.current_segment().slide, runner.revealed_bullets())
 	runner.advance()
 
+## End of the script: tally the lecture's questions (remediation follow-ups
+## add XP but are not scored), record the result and show the summary.
 func _on_finished() -> void:
-	AcademicSession.presentations_completed[runner.script_data.id] = true
+	summary = tally()
+	AcademicSession.lectures_completed[runner.script_data.id] = summary.duplicate()
+	professor.set_line("audience")
+	professor.set_speaking(false)
+	ui.show_summary("Lecture complete  ·  " + runner.script_data.title, [
+		"Questions correct: %d of %d  (%d%%)" % [summary.correct, summary.attempted, int(round(summary.accuracy * 100.0))],
+		"XP earned this lecture: %d" % summary.xp,
+		"%s accuracy overall: %d%%" % [runner.script_data.title, int(round(AcademicSession.accuracy("Pharmacology/Pharmacodynamics") * 100.0))],
+	])
+	_set_state(State.SUMMARY)
+
+func tally() -> Dictionary:
+	var remediation := {}
+	for segment in runner.segments():
+		for line in segment.lines:
+			if line.has("remediation"):
+				remediation[line.remediation] = true
+	var result := {"correct": 0, "attempted": 0, "xp": 0, "accuracy": 0.0}
+	for id in runner.question_ids():
+		var attempt: Dictionary = AcademicSession.question_history.get("%s:%s" % [runner.script_data.id, id], {})
+		if attempt.is_empty():
+			continue
+		result.xp += int(attempt.xp_reward)
+		if remediation.has(id):
+			continue
+		result.attempted += 1
+		result.correct += 1 if attempt.correct else 0
+	result.accuracy = float(result.correct) / result.attempted if result.attempted > 0 else 0.0
+	return result
+
+## Leaving the summary: unlock the seat and resume exploration.
+func _finish_lecture() -> void:
+	ui.hide_all()
 	player.seating.stand_locked = false
 	player.interaction.enabled = true
 	hall.hud.set_help_visible(true)
-	hall.hud.set_objective("Pharmacodynamics presentation complete")
-	professor.set_line("audience")
-	professor.set_speaking(false)
-	ui.hide_all()
+	hall.hud.set_objective("Pharmacodynamics complete  ·  %d/%d correct" % [summary.correct, summary.attempted])
 	_set_state(State.COMPLETE)
-	hall.hud.show_message("That's the end of today's presentation.", 6.0)
+	hall.hud.show_message("Class dismissed. Your results are in the schedule menu.", 6.0)
+	hall.hud.schedule_panel.refresh()
+	hall.hud.calendar_panel.refresh()
 
 func _show_title_slide() -> void:
 	var first: Dictionary = runner.segments()[0]

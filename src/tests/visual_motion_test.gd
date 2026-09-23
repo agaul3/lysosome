@@ -59,20 +59,55 @@ func _run() -> void:
 	print("VISUAL MOTION: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures else 0)
 
+func tap(action: String) -> void:
+	var press := InputEventAction.new()
+	press.action = action
+	press.pressed = true
+	Input.parse_input_event(press)
+	await ticks(1)
+	var release := InputEventAction.new()
+	release.action = action
+	release.pressed = false
+	Input.parse_input_event(release)
+	await ticks(1)
+
+func hold(action: String) -> void:
+	var press := InputEventAction.new()
+	press.action = action
+	press.pressed = true
+	Input.parse_input_event(press)
+
+func speed() -> float:
+	return Vector2(player.velocity.x, player.velocity.z).length()
+
+## Minecraft-style sprint: double-tap a movement key and hold it.
 func sprint_checks() -> void:
 	var visual: Node3D = player.appearance
 	var bindings := InputMap.action_get_events("sprint")
-	check(bindings.any(func(e): return e is InputEventKey) and bindings.any(func(e): return e is InputEventJoypadButton), "Sprint bound to keyboard and controller")
+	check(bindings.any(func(e): return e is InputEventJoypadButton) and not bindings.any(func(e): return e is InputEventKey), "Keyboard sprint is double-tap; controller keeps L3")
 	player.position = Vector3(6, 0.05, 2)
 	await ticks(3)
-	drive(Vector3.LEFT)
-	await ticks(30)
-	var walk_speed: float = Vector2(player.velocity.x, player.velocity.z).length()
-	check(visual.run_weight < 0.01, "Walking keeps the walk gait")
-	Input.action_press("sprint")
+	hold("move_left")
+	await ticks(40)
+	var walk_speed := speed()
+	check(visual.run_weight < 0.01 and walk_speed > 2.5, "Holding a direction walks")
+	release_movement()
+	await ticks(10)
+	# A slow second tap is not a double tap.
+	await tap("move_left")
+	await create_timer(0.45).timeout
+	hold("move_left")
+	await ticks(40)
+	check(speed() < walk_speed + 0.05, "Two slow taps do not sprint")
+	release_movement()
+	await ticks(10)
+	player.position = Vector3(6, 0.05, 2)
+	await ticks(3)
+	await tap("move_left")
+	hold("move_left")
 	await ticks(45)
-	var run_speed: float = Vector2(player.velocity.x, player.velocity.z).length()
-	check(run_speed > walk_speed * 1.6, "Sprint is substantially faster (%.1f vs %.1f m/s)" % [run_speed, walk_speed])
+	var run_speed := speed()
+	check(run_speed > walk_speed * 1.6, "Double-tap and hold sprints (%.1f vs %.1f m/s)" % [run_speed, walk_speed])
 	check(visual.run_weight > 0.9, "Sprint blends into the run gait")
 	var strides := []
 	var bends := []
@@ -83,8 +118,20 @@ func sprint_checks() -> void:
 	check(strides.max() > 0.75, "Run stride is longer than a walk stride")
 	check(bends.max() > 1.0, "Recovering leg folds high behind while running")
 	check(visual.spine.rotation.x < -0.15, "Torso leans forward into the sprint")
-	Input.action_release("sprint")
+	var facing_left: float = visual.rotation.y
+	# Double-tapping the opposite key turns around and sprints the other way.
+	release_movement()
+	await ticks(2)
+	await tap("move_right")
+	hold("move_right")
+	await ticks(60)
+	check(speed() > walk_speed * 1.6 and player.velocity.dot(player.world_direction(Vector2(1, 0))) > 0.0, "Double-tapping the opposite key sprints back the other way")
+	check(absf(wrapf(visual.rotation.y - facing_left, -PI, PI)) > 2.8, "Character turns around to face the new sprint direction")
+	release_movement()
 	await ticks(45)
-	check(visual.run_weight < 0.05 and Vector2(player.velocity.x, player.velocity.z).length() < walk_speed + 0.05, "Releasing sprint returns to walking")
+	check(not player.sprint_latched and visual.run_weight < 0.05, "Letting go ends the sprint")
+	hold("move_left")
+	await ticks(45)
+	check(speed() < walk_speed + 0.05, "Moving again without a double tap walks")
 	release_movement()
 	await ticks(10)

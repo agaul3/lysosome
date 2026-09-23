@@ -29,6 +29,6 @@ Lectures are data, not code. `pharmacodynamics_01.json` is loaded by `lecture_ru
 - `gesture` is `audience`, `screen` (the professor half-turns and points at the screen) or `none`.
 - `reveal` is the number of bullets visible from that line on. It only ever adds bullets and never hides one already shown.
 - Diagrams are drawn by `ui/lecture_slide.gd` from `education/models/dose_response.gd`, using the Hill equation on a log-concentration axis, so the curves are quantitatively consistent: EC50 at half of Emax, and a competitive shift by the dose ratio 1 + [B]/Kb.
-- Questions are not written into lecture scripts. They live in the shared question bank (`education/questions/`) and will be referenced by id when question beats are added.
+- Questions are not written into lecture scripts. A question beat is a line `{"question": "pd_affinity_01", "lead": "Quick check.", "remediation": "optional_follow_up_id"}`, and the text comes from the shared bank (`education/questions/`). An activity line `{"activity": {"type": "competitive_antagonism", "question": id, "steps": {...}}}` runs the interactive model.
 
 All narration is original, AI-assisted prototype content awaiting human review; see `docs/development/MEDICAL_CONTENT_REVIEW.md`.

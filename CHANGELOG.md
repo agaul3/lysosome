@@ -4,7 +4,22 @@
 
 **Project:** Godot 4.7.2, Compatibility renderer. Open `src/project.godot`. The authoritative product requirements are in `src/docs/design/medical_school_rpg_spec.md` (also snapshotted as `src/PROJECT_SPEC.md`). Run-specific instructions live in `src/docs/prompts/` and `src/docs/development/`. User instructions in the current task take precedence over this handoff.
 
-**Current state:** Milestones 1–6 are implemented and committed. Milestone 7 is in progress: Hall A (tiered auditorium), seating, the lecture camera transition, the professor presentation and the interactive competitive-antagonism visualization are done; the full lecture question set with feedback/remediation and lecture completion remain. The more recent visual, room, and UI improvements below sit on top of Milestones 1–6. (This note originally said the work was uncommitted; it has since been committed — see the 2026-09-23 documentation entry above.)
+**Current state:** Milestones 1–6 are implemented and committed. Milestones 1–7 are complete. Milestone 8 (progression feedback) is next. The more recent visual, room, and UI improvements below sit on top of Milestones 1–6. (This note originally said the work was uncommitted; it has since been committed — see the 2026-09-23 documentation entry above.)
+
+## 2026-09-23 10:14 PDT — Milestone 7 complete; character rebuild reverted; double-tap sprint
+
+**Character models reverted (user request).** The procedural rebuild was removed entirely: `appearance.gd`, presets, character selection, seat dimensions, Alex's route and the professor rig are back to `405f17f`, and `body_mesh.gd`, `hair_mesh.gd` and `hair.gdshader` were deleted. The rest of that session's work (visualization, mounted signs, podium, NPC collision) was committed and pushed as `5f8c4d3`.
+
+**Double-tap sprint (user request, Minecraft-style).** Tap W, A, S or D twice within 0.3 s and keep holding to sprint in that direction. The character turns to face it, so double-tapping S turns you around and sprints back. Letting go of movement ends the sprint. Shift no longer sprints; controller L3 still does. The HUD shows a compact "×2 Sprint" hint. `visual_motion_test.gd` covers: a single or slow double tap doesn't sprint; a quick double tap does; the opposite direction turns you around; letting go stops.
+
+**Milestone 7 finished.**
+- **Questions:** there are 12 scored lecture questions (the 3 original seeds, the visualization prediction and 8 new ones) plus 2 remediation follow-ups (5 XP each), all in the shared bank and covering Recall, Conceptual, Application and Clinical Application. The new ones are affinity/Kd, partial agonist intrinsic activity, pure antagonist, noncompetitive antagonism, efficacy vs potency in prescribing, therapeutic index, recurrent respiratory depression after naloxone in methadone overdose, and buprenorphine-precipitated withdrawal.
+- **Question beats:** the lecture script places a beat (`{"question", "lead", "remediation"}`) after each topic. The efficacy, dose-response and clinical segments follow the spec's concept → feedback → clinical connection → application loop.
+- **Delivery:** `world/lecture_hall/question_beat.gd` delivers each beat on the compact question card. Answers are graded with `QuestionBank.submit`, so there is one attempt per lecture and stats and XP are recorded. A correct answer gets a confirmation and XP. A wrong answer is clearly marked, awards no XP and shows the explanation. Only the noncompetitive and potency beats follow a miss with a simpler question.
+- **Completion:** after the summary lines, a completion card shows questions correct, accuracy, lecture XP and overall Pharmacodynamics accuracy. It is recorded in `AcademicSession.lectures_completed` (which replaces `presentations_completed`). Dismissing it unlocks the seat and resumes exploration. The HUD objective and the schedule's Today and Calendar pages show the result.
+- **Tests and records:** `lecture_test.gd` (118 checks) plays every beat through real input, deliberately missing one remediated question and the activity prediction, and verifies the 10/12 tally, the XP reconciliation, recording and the resumed exploration. The acceptance record is `src/docs/development/MILESTONE_7_ACCEPTANCE.md`, and every question has an entry in `MEDICAL_CONTENT_REVIEW.md`.
+
+**Verification:** foundation 54, dorm 67, campus 38, NPC 37, academic 77, visual motion 23, room polish 25, seating 147, lecture 118 — all passing. Import and `git diff --check` are clean. Graphical captures of the question, feedback, summary, schedule and HUD were inspected.
 
 ## 2026-09-23 09:48 PDT — Competitive-antagonism visualization, NPC collision, sign and podium fixes
 

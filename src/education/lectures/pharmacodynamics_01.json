@@ -61,6 +61,10 @@
           "text": "How tightly a ligand binds is its affinity. We describe it with Kd, the concentration at which half the receptors are occupied. A lower Kd means higher affinity.",
           "gesture": "screen",
           "reveal": 4
+        },
+        {
+          "question": "pd_affinity_01",
+          "lead": "Quick check on affinity."
         }
       ]
     },
@@ -97,6 +101,10 @@
           "text": "I've drawn these two at the same potency so you can compare the plateaus. The partial agonist's lower ceiling reflects its intrinsic activity. More drug won't raise it.",
           "gesture": "screen",
           "reveal": 4
+        },
+        {
+          "question": "pd_partial_agonist_01",
+          "lead": "Let's make sure that ceiling makes sense."
         }
       ]
     },
@@ -128,6 +136,10 @@
           "text": "How it blocks matters. The two patterns you need to know are competitive and noncompetitive antagonism.",
           "gesture": "audience",
           "reveal": 4
+        },
+        {
+          "question": "pd_antagonist_01",
+          "lead": "One quick one before we look at the two patterns."
         }
       ]
     },
@@ -159,6 +171,10 @@
           "text": "On the graph, that's a parallel shift to the right. You need more agonist for the same effect, so the EC50 goes up, but the maximal response is unchanged.",
           "gesture": "screen",
           "reveal": 4
+        },
+        {
+          "question": "pd_competitive_01",
+          "lead": "Concept check: what does the curve do?"
         },
         {
           "activity": {
@@ -210,6 +226,11 @@
           "text": "So the maximal response drops. In the classic textbook picture, the plateau falls while the EC50 stays about the same.",
           "gesture": "screen",
           "reveal": 4
+        },
+        {
+          "question": "pd_noncompetitive_01",
+          "lead": "Apply it.",
+          "remediation": "pd_noncompetitive_remedial_01"
         }
       ]
     },
@@ -246,6 +267,11 @@
           "text": "But potency mostly changes the dose you prescribe, not how much the drug can ultimately do.",
           "gesture": "audience",
           "reveal": 4
+        },
+        {
+          "question": "pd_potency_01",
+          "lead": "Read the curves.",
+          "remediation": "pd_potency_remedial_01"
         }
       ]
     },
@@ -281,6 +307,19 @@
           "text": "When you need a large effect, efficacy is usually the property that matters most.",
           "gesture": "audience",
           "reveal": 4
+        },
+        {
+          "question": "pd_efficacy_01",
+          "lead": "First, the vocabulary."
+        },
+        {
+          "text": "Clinically, this matters when a patient needs a big effect: a very potent drug with a low ceiling can't get you there, however much you give.",
+          "gesture": "audience",
+          "reveal": 4
+        },
+        {
+          "question": "pd_efficacy_application_01",
+          "lead": "Now apply it to a prescribing decision."
         }
       ]
     },
@@ -317,6 +356,15 @@
           "text": "Do the same for a toxic effect and you get the TD50. The therapeutic index is TD50 divided by ED50. The larger it is, the wider the margin of safety.",
           "gesture": "screen",
           "reveal": 4
+        },
+        {
+          "text": "In the clinic, the therapeutic index tells you how much room you have between helping and harming.",
+          "gesture": "audience",
+          "reveal": 4
+        },
+        {
+          "question": "pd_therapeutic_index_01",
+          "lead": "Work this one out."
         }
       ]
     },
@@ -345,9 +393,17 @@
           "reveal": 2
         },
         {
+          "question": "pd_naloxone_01",
+          "lead": "Here's a case."
+        },
+        {
           "text": "Buprenorphine is a partial agonist that binds mu-opioid receptors with high affinity. In someone dependent on a full agonist, it can displace that drug while activating the receptor less, and precipitate withdrawal.",
           "gesture": "screen",
           "reveal": 3
+        },
+        {
+          "question": "pd_buprenorphine_01",
+          "lead": "A harder one, exam-style."
         },
         {
           "text": "And for drugs with a narrow therapeutic index, like warfarin, small changes in dose or blood level matter a lot, so we monitor closely.",
