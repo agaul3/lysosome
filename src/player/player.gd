@@ -3,12 +3,18 @@ const Presets = preload("res://data/character_presets.gd")
 @export var speed: float = 3.2
 @export var gravity: float = 18.0
 @export var movement_enabled := true
+## Set while a scripted motion (sitting, standing) drives the body instead of input.
+var external_control := false
+var seating: Node
 var movement_camera: Camera3D
 @onready var appearance: Node3D = $Appearance
 @onready var interaction: Node3D = $Interaction
 
 func _ready() -> void:
 	appearance.apply_preset(AppState.selected_character)
+	seating = preload("res://player/seating.gd").new()
+	seating.name = "Seating"
+	add_child(seating)
 
 func world_direction(input_vector: Vector2) -> Vector3:
 	var direction := Vector3(input_vector.x, 0, input_vector.y)
@@ -21,6 +27,8 @@ func world_direction(input_vector: Vector2) -> Vector3:
 	return direction.limit_length(1.0)
 
 func _physics_process(delta: float) -> void:
+	if external_control:
+		return
 	var input_vector := Input.get_vector("move_left", "move_right", "move_up", "move_down") if movement_enabled else Vector2.ZERO
 	var direction := world_direction(input_vector)
 	velocity.x = direction.x * speed

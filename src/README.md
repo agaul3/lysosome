@@ -1,6 +1,6 @@
-# Medical School RPG — Milestones 5–6
+# Medical School RPG — Milestones 1–6, Milestone 7 in progress
 
-A local educational RPG prototype where real medical learning will drive progression. This build implements character selection, a playable dorm, a small outdoor campus and the Learning Center lobby. An autonomous student walks to a classmate, exchanges a short conversation, then enters Hall A and sits down. The 5× academic clock, schedule and arrival penalty now work. A shared question engine is available for the next lecture milestone.
+A local educational RPG prototype where real medical learning will drive progression. This build implements character selection, a playable dorm, a small outdoor campus and the Learning Center lobby. An autonomous student walks to a classmate, exchanges a short conversation, then enters Hall A and sits down. The 5× academic clock, schedule and arrival penalty now work. A shared question engine is available for the lecture. Milestone 7 has begun: in Hall A the player can sit in any free chair, walking around to the side he approaches from and animating into the seat.
 
 ## Launch
 

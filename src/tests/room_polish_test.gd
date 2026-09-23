@@ -19,6 +19,19 @@ func _run() -> void:
 	check(dorm.hud.key_prompts[2].key == "Start", "Controller prompts switch")
 	dorm.hud._device_changed(false)
 	check(dorm.hud.key_prompts[0].key == "WASD", "Keyboard prompts return")
+	var boxed := false
+	for icon in dorm.hud.key_prompts + [dorm.hud.context_key]:
+		var node: Node = icon.get_parent()
+		while node != null and node != dorm.hud:
+			boxed = boxed or node is PanelContainer or node is Panel or node is ColorRect
+			node = node.get_parent()
+	check(not boxed, "Keycap prompts float without filled boxes")
+	var hud_area := 0.0
+	for card in dorm.hud.find_children("*", "PanelContainer", true, false):
+		if card.is_visible_in_tree():
+			hud_area += card.size.x * card.size.y
+			check(card.size.y < 64, "Compact HUD card height: %d" % card.size.y)
+	check(hud_area < 0.06 * 1152 * 720, "HUD cards cover under 6%% of the screen (%d px)" % hud_area)
 	await capture("polish-dorm")
 	state.enter_campus("dorm")
 	await acquire_world()

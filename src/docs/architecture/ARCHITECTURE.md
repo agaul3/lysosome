@@ -1,8 +1,8 @@
-# Architecture — Milestones 1–6
+# Architecture — Milestones 1–6, Milestone 7 in progress
 
 ## Application and scenes
 
-`project.godot` owns semantic input bindings, Compatibility rendering, the start scene, and the AppState and NPCSchedule autoloads. AppState owns TITLE, CHARACTER_SELECT, DORM, CAMPUS, LECTURE_BUILDING and LECTURE_HALL phases plus the selected preset's stable string ID. New Game resets the selection to the default. Invalid selection is rejected without changing the current selection.
+`project.godot` owns semantic input bindings, Compatibility rendering, the start scene, and the AppState, NPCSchedule, GameClock, AcademicSession and QuestionBank autoloads. AppState owns TITLE, CHARACTER_SELECT, DORM, CAMPUS, LECTURE_BUILDING and LECTURE_HALL phases plus the selected preset's stable string ID. New Game resets the selection to the default. Invalid selection is rejected without changing the current selection.
 
 The title owns its settings and character-selection panels. Beginning the morning, leaving the dorm, entering/leaving the lecture building, returning to the dorm, and returning to the title use a centralized scene-path map in AppState and Godot's `change_scene_to_file`. Transitions are deferred until input/physics callbacks finish, duplicate requests are ignored while a transition is in progress, and phase changes are signaled after the destination is ready. A failure restores the previous phase and emits `transition_failed` with the engine error.
 
@@ -82,3 +82,18 @@ The shared exploration menu now contains Today, Calendar and Settings. Both sche
 The three original seed questions demonstrate loading/grading and are documented for human review. Short answers use predefined strings only. The approximately twelve-item lecture, delivery, remediation, camera/seating, streaks, level curve/feedback and save system remain later work. No new directories were introduced.
 
 Earlier milestone sections describe the state at their completion; the academic clock and Hall A attendance in this section supersede earlier statements about static time or deferred schedule/question systems.
+
+
+## Hall A seating and compact HUD — Milestone 7 (in progress)
+
+`world/seat.gd` is a reusable chair. Local −Z is the direction a seated person faces. Its constants define every approach point in chair space (FRONT_POINT, SIDE_POINT with a mirrored x, BACK_CORNER, PRE_SIT, SIT_POINT, EXIT_POINT), sized so that the player's 0.27 m capsule clears the chair colliders on every walking leg. Free seats own an Interactable and emit `sit_requested`. Taken seats have none, and add a collider for the seated person's legs; they can host a static seated Appearance.
+
+`player/sit_sequence.gd` is a shared, scene-independent choreography runner. `plan_sit()` classifies the player's position in chair space (front, left, right, back_left or back_right). It tries the matching approach first and then the alternatives, rejecting any waypoint that fails an optional clearance callback. It returns walk → turn → step → pause → sit steps. `plan_rise()` returns rise → step to the exit. Walking can be delegated, so the player keeps CharacterBody3D collision, while NPC views walk kinematically. The remaining steps are short kinematic moves whose waypoints lie around the chair, never through it.
+
+`player/seating.gd` is added to the player at runtime. It owns FREE/SITTING/SEATED/RISING, reserves the seat, sets `player.external_control` so that input movement and gravity pause during scripted motion, relabels the seat interaction "Stand up", and aborts with HUD feedback if a walk makes no progress. `stand_locked` is the hook the lecture will use to keep the player seated.
+
+`player/appearance.gd` now has Body → Pelvis (hip height) → Spine for the upper body plus hip → knee joints for each leg. `set_sit_blend(t)` is a continuous pose blend, and `set_seated()` remains as the instant form. Walking is still driven by distance, with a lateral mode for side-steps.
+
+NPCSchedule ends Alex's hall route at the aisle side of the saved seat and places the model at `Route.HALL_SEAT` when he sits. The student view plays the same SitSequence when it witnesses that transition, and otherwise loads him already seated.
+
+`ui/dorm_ui.gd` uses a top bar of two content-sized translucent cards and unboxed bottom prompts (keycap plus outlined text). A message card appears only while there is text. `ui/key_prompt.gd` sizes each keycap to its label.

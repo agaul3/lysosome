@@ -1,5 +1,8 @@
 # PROJECT_HANDOFF.md — rpg_med
 
+## Current status (updated 2026-09-23)
+Milestones 1–6 are complete and committed; Milestone 7 (Pharmacodynamics Lecture) is in progress. `CHANGELOG.md` at the repository root is the running, timestamped record of current state and supersedes the historical notes below. `CLAUDE.md` holds standing agent instructions.
+
 ## Purpose
 This file is the cross-agent handoff for the ongoing `rpg_med` project.
 
@@ -21,30 +24,22 @@ The player is a medical student. Real medical learning should drive XP, levels, 
 - Git is used for milestone checkpoints.
 
 ## Confirmed project history
-The following facts are confirmed from the prior development workflow:
+- Milestone 1 (Project Foundation) — committed as the baseline after the user manually verified fullscreen/settings behavior.
+- Milestone 2 (Player + Dorm) and Milestone 3 (Campus) — committed.
+- Milestones 4–6 (NPC Prototype, Time + Schedule, Question Engine) plus room/UI polish — committed together with a documentation cleanup.
+- Milestone 7 — in progress; see `CHANGELOG.md`.
 
-- Milestone 1 established the initial project foundation.
-- The user manually verified fullscreen and other desktop/settings behavior after the first agent initially reported Milestone 1 as PARTIAL.
-- Milestone 1 was subsequently committed to Git as a baseline.
-- The next planned milestone was Milestone 2: Player + Dorm.
-- Do not assume Milestone 2 is untouched: inspect `git status`, `git diff`, file timestamps/content, recent commits, and any milestone files to determine whether work continued after this handoff document was authored.
+Verify against `git log` rather than trusting this list.
 
 ## Important existing files
-The project has contained files/directories including:
-
-- `ARCHITECTURE.md`
-- `assets/`
-- `audio/`
-- `autoload/`
-- `CHANGELOG.md`
-- `data/`
-- `docs/`
-- `education/`
-- `KNOWN_ISSUES.md`
-- `MEDICAL_CONTENT_REVIEW.md`
-- `medical_school_rpg_spec.md`
-- `Game Design Document & Technical Product Specification v0.1.md`
-- `astra_run_01_milestone_1.md`
+- `CLAUDE.md`, `CHANGELOG.md`, `PROJECT_HANDOFF.md` (repository root)
+- `src/project.godot` — the Godot project
+- `src/PROJECT_SPEC.md` — byte-identical snapshot of `src/docs/design/medical_school_rpg_spec.md`
+- `src/docs/design/` — authoritative spec and the broader Game Design Document
+- `src/docs/architecture/ARCHITECTURE.md`
+- `src/docs/development/` — acceptance records, `KNOWN_ISSUES.md`, `MEDICAL_CONTENT_REVIEW.md`, run documents
+- `src/docs/prompts/` — milestone run prompts
+- `src/tests/` — headless test suites
 
 Paths may change over time. Locate files instead of relying on this list as an exact tree.
 
@@ -85,24 +80,6 @@ The intended major milestones were:
 10. UI + Polish
 
 These are planning boundaries, not proof of completion. Verify actual repository state.
-
-## Milestone 2 intent
-When Milestone 2 is the active task, the target flow is:
-
-Launch
-→ New Game
-→ choose simple character preset
-→ spawn in dorm
-→ WASD/controller movement
-→ stable collision with room/furniture
-→ orthographic/isometric exploration camera
-→ contextual interaction prompt
-→ desk interaction
-→ one additional object interaction
-→ interact with dorm exit
-→ exercise scene-transition architecture into a temporary destination
-
-Milestone 2 should NOT build the campus, lecture system, question database, XP system, NPC schedules, hospital, live AI, or other later systems.
 
 ## Development philosophy
 - Functionality before visual polish.

@@ -8,6 +8,8 @@ const LINES := [
 	{"speaker": "sam", "text": "Hey, you heading to pharm?"},
 	{"speaker": "alex", "text": "Yeah. See you in Hall A."},
 ]
+## Origin of Alex's saved chair in Hall A (see world/lecture_hall/lecture_hall.gd ALEX_SEAT).
+const HALL_SEAT := Vector3(1.5, 0, -2)
 const GRAPHS := {
 	"campus": {
 		"points": [Vector3(-5, 0, 3), Vector3(-1, 0, 2), Vector3(3.5, 0, 1.1), Vector3(8, 0, 1.1), Vector3(8, 0, -4.8)],
@@ -18,8 +20,9 @@ const GRAPHS := {
 		"edges": [[0, 1], [1, 2]],
 	},
 	"lecture_hall": {
-		"points": [Vector3(0, 0, 3.4), Vector3(0, 0, 0), Vector3(2, 0, 0), Vector3(2, 0, -2)],
-		"edges": [[0, 1], [1, 2], [2, 3]],
+		# Down the centre aisle, then to the left side of the saved front-row seat.
+		"points": [Vector3(0, 0, 3.4), Vector3(0, 0, -2.45), Vector3(0.82, 0, -2.45)],
+		"edges": [[0, 1], [1, 2]],
 	},
 }
 

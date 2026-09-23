@@ -74,7 +74,7 @@ func _run() -> void:
 	use_endpoint()
 	await acquire_world()
 	check(state.phase == state.Phase.LECTURE_HALL, "Hall A is accessible")
-	check(dorm.hud.objective_text.contains("later milestone"), "Lecture remains deferred")
+	check(dorm.hud.objective_text.contains("open seat"), "Hall A invites the player to sit")
 	await capture("lecture-hall")
 	await walk_to(Vector3(0, 0, 3.7))
 	use_endpoint()

@@ -6,7 +6,7 @@
 - Original low-poly visuals are placeholders. The room camera is intentionally fixed and near walls are visually cut away while retaining collision.
 - NPC navigation uses a fixed authored AStar route; dynamic crowd avoidance and player blocking are not implemented. The reserved chair is entered intentionally for the seated pose.
 - Campus light follows the clock; indoor lighting remains fixed. NPC prototype timing remains elapsed-time based.
-- Hall A is a minimal NPC seating prototype. Player seating, lecture camera, questions and progression remain deferred.
+- Hall A seating works for any free chair, but the lecture itself (camera transition, presentation, visualization, questions, completion) is still Milestone 7 work in progress. Standing up always exits to the front of the chair. Chair colliders are simple boxes, and seated classmates are static.
 
 The earlier sandbox launch/certificate issues are historical: graphical launch and fullscreen worked with the current environment. The Run #2 instructions also state Milestone 1 was manually verified and committed. Its original acceptance report is retained as historical evidence rather than rewritten.
 

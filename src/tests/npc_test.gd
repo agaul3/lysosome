@@ -56,6 +56,12 @@ func _run() -> void:
 			break
 		await ticks(1)
 	await ticks(3)
+	check(dorm.actor.sit_sequence != null and dorm.actor.sit_approach == "left", "Watched NPC animates into the seat from the aisle side")
+	for index in range(360):
+		if dorm.actor.sit_sequence == null:
+			break
+		await ticks(1)
+	check(dorm.actor.global_position.distance_to(dorm.alex_seat.point(dorm.alex_seat.SIT_POINT)) < 0.01, "NPC sit animation ends on the cushion")
 	check(schedule.stage == schedule.Stage.SEATED, "NPC completes building/seat route autonomously")
 	check(schedule.spoken_count == 3 and schedule.seated_count == 1, "Three lines and one seating event")
 	check(dorm.actor.visible and dorm.actor.was_seated, "Seated NPC view visible in Hall A")
@@ -102,7 +108,7 @@ func model_tests() -> void:
 	model.advance(100)
 	check(stages == [1, 2, 3, 4, 5, 6], "Ordered autonomous state transitions")
 	check(speakers == ["alex", "sam", "alex"], "Conversation alternates speakers correctly")
-	check(model.zone == "lecture_hall" and model.actor_position.is_equal_approx(Vector3(2, 0, -2)), "Actor reaches its reserved seat")
+	check(model.zone == "lecture_hall" and model.actor_position.is_equal_approx(Route.HALL_SEAT), "Actor reaches its reserved seat")
 	model.reset()
 	check(model.stage == model.Stage.IDLE and model.seated_count == 0, "Reset clears event completion")
 	model.queue_free()
@@ -122,8 +128,6 @@ func check_route(zone: String) -> void:
 		var samples := ceili(points[index].distance_to(points[index + 1]) / 0.2)
 		for sample in range(samples + 1):
 			var point := points[index].lerp(points[index + 1], float(sample) / samples)
-			if zone == "lecture_hall" and point.distance_to(Vector3(2, 0, -2)) < 0.75:
-				continue # Final approach deliberately enters the NPC's reserved chair.
 			var query := PhysicsShapeQueryParameters3D.new()
 			query.shape = capsule
 			query.transform = Transform3D(Basis.IDENTITY, point + Vector3(0, 0.84, 0))

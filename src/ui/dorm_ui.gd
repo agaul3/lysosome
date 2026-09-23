@@ -11,7 +11,9 @@ var settings: VBoxContainer
 var settings_backdrop: PanelContainer
 var settings_open := false
 var current_target: Node3D
-var context_backdrop: ColorRect
+var message_card: PanelContainer
+var prompt_row: HBoxContainer
+var context_key: Control
 var context_stack: VBoxContainer
 var clock_label: Label
 var key_prompts: Array[Control] = []
@@ -24,85 +26,89 @@ func _ready() -> void:
 	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var theme := Theme.new()
 	theme.default_font = preload("res://assets/outfit_medium.tres")
-	theme.default_font_size = 18
+	theme.default_font_size = 15
 	root.theme = theme
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(root)
-	var heading_backdrop := Panel.new()
-	heading_backdrop.add_theme_stylebox_override("panel", _panel_style())
-	heading_backdrop.position = Vector2(16, 12)
-	heading_backdrop.size = Vector2(740, 74 if not objective_text.is_empty() else 46)
-	heading_backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	root.add_child(heading_backdrop)
-	var clock_backdrop := Panel.new()
-	clock_backdrop.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
-	clock_backdrop.position = Vector2(-316, 12)
-	clock_backdrop.size = Vector2(300, 78)
-	clock_backdrop.add_theme_stylebox_override("panel", _panel_style())
-	root.add_child(clock_backdrop)
-	clock_label = Label.new()
-	clock_label.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
-	clock_label.position = Vector2(-300, 20)
-	clock_label.custom_minimum_size = Vector2(278, 64)
-	clock_label.add_theme_color_override("font_outline_color", Color("172d36"))
-	clock_label.add_theme_constant_override("outline_size", 0)
-	clock_label.add_theme_font_size_override("font_size", 20)
-	root.add_child(clock_label)
+	# Compact translucent corner cards; everything else floats directly over the world.
+	var top_bar := HBoxContainer.new()
+	top_bar.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	top_bar.offset_left = 12
+	top_bar.offset_right = -12
+	top_bar.offset_top = 10
+	top_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(top_bar)
+	var heading_card := _card(top_bar)
+	heading_card.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	var heading_stack := VBoxContainer.new()
+	heading_stack.add_theme_constant_override("separation", 0)
+	heading_card.add_child(heading_stack)
+	var heading := _hud_label(location_title, 14, 0)
+	heading_stack.add_child(heading)
+	if not objective_text.is_empty():
+		var objective := _hud_label(objective_text, 12, 0)
+		objective.add_theme_color_override("font_color", Color("b9d3cf"))
+		heading_stack.add_child(objective)
+	var spacer := Control.new()
+	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	top_bar.add_child(spacer)
+	var clock_card := _card(top_bar)
+	clock_card.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	clock_label = _hud_label("", 14, 0)
+	clock_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	clock_card.add_child(clock_label)
 	GameClock.minute_changed.connect(_refresh_clock)
 	AcademicSession.attendance_recorded.connect(_arrival_feedback)
 	_refresh_clock()
-	var heading := Label.new()
-	heading.text = location_title
-	heading.position = Vector2(30, 22)
-	heading.add_theme_font_size_override("font_size", 20)
-	root.add_child(heading)
-	if not objective_text.is_empty():
-		var objective := Label.new()
-		objective.text = objective_text
-		objective.position = Vector2(30, 50)
-		objective.add_theme_font_size_override("font_size", 17)
-		root.add_child(objective)
-	var help := PanelContainer.new()
-	help.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
-	help.position = Vector2(16, -65)
-	help.add_theme_stylebox_override("panel", _panel_style())
-	root.add_child(help)
 	var help_row := HBoxContainer.new()
-	help_row.add_theme_constant_override("separation", 12)
-	help.add_child(help_row)
+	help_row.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+	help_row.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	help_row.offset_left = 14
+	help_row.offset_bottom = -10
+	help_row.add_theme_constant_override("separation", 6)
+	help_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(help_row)
 	for pair in [["WASD", "Move"], ["E", "Interact"], ["Tab", "Menu"]]:
 		var icon := preload("res://ui/key_prompt.gd").new()
 		icon.key = pair[0]
 		help_row.add_child(icon)
 		key_prompts.append(icon)
-		var action := Label.new()
-		action.text = pair[1]
+		var action := _hud_label(pair[1], 13)
+		action.custom_minimum_size.x = 0
 		help_row.add_child(action)
-	context_backdrop = ColorRect.new()
-	context_backdrop.color = Color(0.035, 0.075, 0.10, 0.9)
-	context_backdrop.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
-	context_backdrop.position = Vector2(-365, -205)
-	context_backdrop.size = Vector2(730, 120)
-	context_backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	context_backdrop.hide()
-	root.add_child(context_backdrop)
+		var gap := Control.new()
+		gap.custom_minimum_size.x = 8
+		help_row.add_child(gap)
 	var stack := VBoxContainer.new()
 	context_stack = stack
-	stack.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
-	stack.position = Vector2(-350, -195)
-	stack.size = Vector2(700, 100)
+	stack.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	stack.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	stack.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	stack.offset_left = -240
+	stack.offset_right = 240
+	stack.offset_bottom = -54
+	stack.alignment = BoxContainer.ALIGNMENT_END
+	stack.add_theme_constant_override("separation", 6)
 	stack.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.add_child(stack)
-	prompt = Label.new()
-	prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	prompt.add_theme_font_size_override("font_size", 23)
-	prompt.add_theme_color_override("font_color", Color("a3ffe1"))
-	stack.add_child(prompt)
-	message = Label.new()
+	message_card = _card(stack)
+	message_card.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	message = _hud_label("", 14, 0)
 	message.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	message.add_theme_font_size_override("font_size", 19)
-	stack.add_child(message)
+	message.custom_minimum_size.x = 440
+	message_card.add_child(message)
+	prompt_row = HBoxContainer.new()
+	prompt_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	prompt_row.add_theme_constant_override("separation", 8)
+	prompt_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	stack.add_child(prompt_row)
+	context_key = preload("res://ui/key_prompt.gd").new()
+	prompt_row.add_child(context_key)
+	prompt = _hud_label("", 16)
+	prompt.add_theme_color_override("font_color", Color("c9fff0"))
+	prompt_row.add_child(prompt)
 	message_timer = Timer.new()
 	message_timer.one_shot = true
 	message_timer.wait_time = 6.0
@@ -110,12 +116,12 @@ func _ready() -> void:
 	add_child(message_timer)
 	settings_backdrop = PanelContainer.new()
 	settings_backdrop.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-	settings_backdrop.position = Vector2(-285, -240)
-	settings_backdrop.size = Vector2(570, 480)
+	settings_backdrop.position = Vector2(-250, -215)
+	settings_backdrop.size = Vector2(500, 430)
 	root.add_child(settings_backdrop)
 	var margin := MarginContainer.new()
 	for side in ["left", "right", "top", "bottom"]:
-		margin.add_theme_constant_override("margin_" + side, 26)
+		margin.add_theme_constant_override("margin_" + side, 20)
 	settings_backdrop.add_child(margin)
 	menu_tabs = TabContainer.new()
 	margin.add_child(menu_tabs)
@@ -137,19 +143,21 @@ func _ready() -> void:
 	title_button.pressed.connect(AppState.return_to_title)
 	settings.add_child(title_button)
 	settings_backdrop.hide()
+	_refresh_context()
 
 func bind_player(value: CharacterBody3D) -> void:
 	player = value
 	player.interaction.target_changed.connect(_show_target)
 	player.interaction.device_changed.connect(_device_changed)
 	player.interaction.interacted.connect(_show_response)
+	player.seating.notice.connect(show_message)
 
 func _show_target(target: Node3D) -> void:
 	current_target = target
 	prompt.text = ""
 	if is_instance_valid(target) and not settings_open:
-		var key: String = "X / West" if player.interaction.using_controller else "E"
-		prompt.text = "%s — %s" % [key, target.display_name]
+		context_key.key = "X" if player.interaction.using_controller else "E"
+		prompt.text = target.display_name
 	_refresh_context()
 
 func _show_response(target: Node3D) -> void:
@@ -158,23 +166,24 @@ func _show_response(target: Node3D) -> void:
 		message_timer.start()
 	_refresh_context()
 
+func show_message(text: String, seconds := 4.0) -> void:
+	message.text = text
+	message_timer.start(seconds)
+	_refresh_context()
+
 func _clear_message() -> void:
 	message.text = ""
 	_refresh_context()
 
 func _refresh_context() -> void:
-	var expanded := not message.text.is_empty()
-	context_backdrop.position.y = -205 if expanded else -143
-	context_backdrop.size.y = 120 if expanded else 54
-	context_stack.position.y = -195 if expanded else -136
-	message.visible = expanded
-	context_backdrop.visible = not settings_open and (not prompt.text.is_empty() or not message.text.is_empty())
+	message_card.visible = not settings_open and not message.text.is_empty()
+	prompt_row.visible = not settings_open and not prompt.text.is_empty()
 
 func set_settings_open(value: bool) -> void:
 	settings_open = value
 	settings_backdrop.visible = value
 	player.movement_enabled = not value
-	player.interaction.enabled = not value
+	player.interaction.enabled = not value and not (player.seating.busy() and player.seating.state != player.seating.State.SEATED)
 	_show_target(current_target if is_instance_valid(current_target) else null)
 	if value:
 		menu_tabs.current_tab = 0
@@ -211,14 +220,27 @@ func _device_changed(controller: bool) -> void:
 		key_prompts[index].key = keys[index]
 	_show_target(current_target if is_instance_valid(current_target) else null)
 
-func _panel_style() -> StyleBoxFlat:
+func _card(parent: Control) -> PanelContainer:
+	var card := PanelContainer.new()
+	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color("142e39")
-	style.border_color = Color("3d6770")
-	style.set_border_width_all(1)
-	style.set_corner_radius_all(8)
-	style.content_margin_left = 12
-	style.content_margin_right = 16
-	style.content_margin_top = 5
+	style.bg_color = Color(0.06, 0.15, 0.19, 0.72)
+	style.set_corner_radius_all(6)
+	style.content_margin_left = 10
+	style.content_margin_right = 10
+	style.content_margin_top = 4
 	style.content_margin_bottom = 5
-	return style
+	card.add_theme_stylebox_override("panel", style)
+	parent.add_child(card)
+	return card
+
+func _hud_label(text: String, font_size: int, outline: int = 5) -> Label:
+	# Unboxed labels rely on a dark outline for contrast against bright scenery.
+	var label := Label.new()
+	label.text = text
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	label.add_theme_font_size_override("font_size", font_size)
+	label.add_theme_color_override("font_color", Color("f1f6f2"))
+	label.add_theme_color_override("font_outline_color", Color("10252d"))
+	label.add_theme_constant_override("outline_size", outline)
+	return label

@@ -82,7 +82,7 @@ func _run() -> void:
 		current_scene.selection_panel.enter_button.pressed.emit()
 		await acquire_dorm()
 		check(player.appearance.preset_id == preset.id, "Appearance reaches gameplay: " + preset.id)
-		var torso: MeshInstance3D = player.appearance.get_node("Body/Torso").get_child(0)
+		var torso: MeshInstance3D = player.appearance.get_node("Body/Pelvis/Spine/Torso").get_child(0)
 		check(torso.material_override.albedo_color.is_equal_approx(Color(preset.shirt)), "Preset material applied")
 		state.return_to_title()
 		await scene_changed

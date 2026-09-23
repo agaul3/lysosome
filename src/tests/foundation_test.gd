@@ -23,8 +23,9 @@ func _run() -> void:
 		_check(keyboard and controller, "Keyboard/controller bindings: " + action)
 	for directory in ["autoload", "player", "npc", "world/dorm", "world/campus", "world/lecture_building", "world/lecture_hall", "education/questions", "education/lectures", "education/models", "ui", "audio", "assets", "data", "tests", "docs"]:
 		_check(DirAccess.dir_exists_absolute("res://" + directory), "Directory: " + directory)
-	for document in ["README.md", "PROJECT_SPEC.md", "docs/architecture/ARCHITECTURE.md", "docs/development/CHANGELOG.md", "docs/development/KNOWN_ISSUES.md", "docs/development/MEDICAL_CONTENT_REVIEW.md"]:
+	for document in ["README.md", "PROJECT_SPEC.md", "docs/architecture/ARCHITECTURE.md", "docs/development/KNOWN_ISSUES.md", "docs/development/MEDICAL_CONTENT_REVIEW.md"]:
 		_check(FileAccess.file_exists("res://" + document), "Document: " + document)
+	_check(FileAccess.file_exists(ProjectSettings.globalize_path("res://").path_join("../CHANGELOG.md")), "Document: repository-root CHANGELOG.md")
 	_check(FileAccess.get_file_as_bytes("res://PROJECT_SPEC.md") == FileAccess.get_file_as_bytes("res://docs/design/medical_school_rpg_spec.md"), "Product requirements preserved byte-for-byte")
 	var state := root.get_node("AppState")
 	var screen = load("res://ui/start_screen.tscn").instantiate()

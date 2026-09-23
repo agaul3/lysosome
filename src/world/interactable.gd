@@ -5,6 +5,8 @@ signal activated
 @export_multiline var response := ""
 @export var reach: float = 1.55
 var marker: Label3D
+## Off when the highlight dot would sit on the player (e.g. the seat they occupy).
+var marker_enabled := true
 
 func _ready() -> void:
 	add_to_group("interactables")
@@ -19,7 +21,7 @@ func _ready() -> void:
 	add_child(marker)
 
 func set_highlighted(value: bool) -> void:
-	marker.visible = value
+	marker.visible = value and marker_enabled
 
 func interact() -> void:
 	activated.emit()

@@ -97,9 +97,11 @@ func _arrived() -> void:
 		Stage.TO_BUILDING:
 			_begin_path("lecture_building", 0, 2, Stage.LOBBY)
 		Stage.LOBBY:
-			_begin_path("lecture_hall", 0, 3, Stage.TO_SEAT)
+			_begin_path("lecture_hall", 0, Route.GRAPHS.lecture_hall.points.size() - 1, Stage.TO_SEAT)
 		Stage.TO_SEAT:
+			# Views animate the side-step and sit from the aisle-side approach point.
 			stage = Stage.SEATED
+			actor_position = Route.HALL_SEAT
 			facing = Vector3.FORWARD
 			seated_count += 1
 			stage_changed.emit(stage)
