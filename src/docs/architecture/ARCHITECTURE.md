@@ -97,3 +97,14 @@ Earlier milestone sections describe the state at their completion; the academic 
 NPCSchedule ends Alex's hall route at the aisle side of the saved seat and places the model at `Route.HALL_SEAT` when he sits. The student view plays the same SitSequence when it witnesses that transition, and otherwise loads him already seated.
 
 `ui/dorm_ui.gd` uses a top bar of two content-sized translucent cards and unboxed bottom prompts (keycap plus outlined text). A message card appears only while there is text. `ui/key_prompt.gd` sizes each keycap to its label.
+
+
+### Auditorium, row routing, lecture camera and sprint
+
+Hall A (`world/lecture_hall/lecture_hall.gd`) is a raked auditorium. Its layout constants (tier count, rise, depth, aisle positions, seat x positions per section) derive every other position: tier blocks, aisle landings and ramp colliders, seat origins, walkway z, and the walkway graph. Seats in the `auditorium` style carry a `navigator` callable into the hall's `route_to_seat()`. That function finds the nearest graph node on the player's level, runs AStar3D to the seat's front node, and drops nodes already passed. `SitSequence.plan_row_sit()` turns that path into walk → turn → back-step → sit. The player walks the path with `move_and_slide`, so tier edges, seat colliders and seated classmates' leg colliders are always respected.
+
+`world/lecture_camera.gd` owns the seated view. `enter(exploration_camera, pose)` captures the exploration framing (tracked point, forward vector, orthographic size), makes itself current and blends to `pose`. `leave()` blends back and returns `current` to the exploration camera. The blend parameterization (focal point, direction, framed height, field of view, with distance derived) is what makes the orthographic→perspective hand-off continuous. The hall fades its interior shell (ceiling and near walls) in against `lecture_camera.blend`.
+
+`player.gd` reads the `sprint` action and ramps `current_speed` between `speed` and `sprint_speed`. `appearance.gd` derives `run_weight` from measured ground speed, so NPCs or scripted motion at run speed would also run. It adds nothing at walking speed, which keeps the frame-rate-independence guarantees of the walk gait.
+
+`world/campus/campus.gd` builds the residence and Learning Center facades in dedicated functions that layer trim at distinct depths. The lawn is a world-space shader on the ground plus one `MultiMeshInstance3D` of tufts, scattered with a fixed seed and kept out of the `NO_GRASS` rectangles.

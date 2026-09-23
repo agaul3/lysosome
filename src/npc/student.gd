@@ -38,7 +38,12 @@ func _sync(on_screen := false) -> void:
 		if not was_seated and on_screen:
 			# Watched arriving: turn, side-step in front of the chair and sit down.
 			was_seated = true
-			var plan := SitSequence.plan_sit(seat, global_position)
+			var plan: Dictionary
+			if seat.navigator.is_valid():
+				# Row seat: the route already ends at the seat's front point.
+				plan = SitSequence.plan_row_sit(seat, global_position, PackedVector3Array([seat.point(Seat.FRONT_POINT)]))
+			else:
+				plan = SitSequence.plan_sit(seat, global_position)
 			sit_approach = plan.approach
 			sit_sequence = SitSequence.new(self, appearance)
 			sit_sequence.start(plan.steps)

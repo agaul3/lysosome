@@ -19,6 +19,7 @@ var campus_environment: Environment
 
 func _ready() -> void:
 	_build_ground()
+	_build_grass()
 	_build_buildings()
 	_build_courtyard()
 	_build_details()
@@ -41,7 +42,10 @@ func _ready() -> void:
 	hud.bind_player(player)
 
 func _build_ground() -> void:
-	Geometry.box(self, "Ground", Vector3(28, 0.3, 24), Vector3(0, -0.15, 0), Color("70ab75"), true)
+	var ground := Geometry.box(self, "Ground", Vector3(28, 0.3, 24), Vector3(0, -0.15, 0), Color("70ab75"), true)
+	var lawn := ShaderMaterial.new()
+	lawn.shader = preload("res://assets/grass.gdshader")
+	ground.get_child(0).material_override = lawn
 	Geometry.box(self, "MainWalk", Vector3(23, 0.03, 4), Vector3(0, 0.02, 2), Color("eedbb8"))
 	Geometry.box(self, "ResidenceWalk", Vector3(5, 0.035, 4), Vector3(-5.8, 0.025, 5), Color("eedbb8"))
 	Geometry.box(self, "LectureWalk", Vector3(4, 0.035, 10), Vector3(8, 0.025, -1), Color("eedbb8"))
@@ -53,27 +57,151 @@ func _build_ground() -> void:
 	]:
 		Geometry.box(self, boundary[0], boundary[1], boundary[2], Color("3f725e"), true)
 
+## Areas without lawn: paths, building footprints, planter, directory, bench,
+## boundary walls and palm trunks (x0, z0, x1, z1).
+const NO_GRASS := [
+	[-11.6, -0.1, 11.6, 4.1], [-8.4, 2.9, -3.2, 7.1], [5.9, -6.1, 10.1, 4.1],
+	[-13.2, 0.8, -7.7, 8.2], [1.8, -11.2, 12.2, -5.3], [-4.3, -5.0, 0.7, -1.4],
+	[-4.5, 3.6, -2.5, 4.9], [0.2, -1.4, 3.2, -0.3], [3.0, -1.0, 4.0, 0.0],
+]
+const PALMS := [Vector3(-3, 0, -3.3), Vector3(-0.8, 0, -3), Vector3(11.7, 0, 6.8), Vector3(-5.8, 0, -8.3)]
+
+func _grass_allowed(x: float, z: float) -> bool:
+	if absf(x) > 13.6 or absf(z) > 11.6:
+		return false
+	for area in NO_GRASS:
+		if x > area[0] and x < area[2] and z > area[1] and z < area[3]:
+			return false
+	for palm in PALMS:
+		if Vector2(x - palm.x, z - palm.z).length() < 0.3:
+			return false
+	return true
+
+## Scattered grass tufts and a few small wildflowers over the lawn.
+func _build_grass() -> void:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 20260921 # Deterministic layout between runs and captures.
+	var transforms: Array[Transform3D] = []
+	var colors: Array[Color] = []
+	var attempts := 0
+	while transforms.size() < 8000 and attempts < 40000:
+		attempts += 1
+		var x := rng.randf_range(-13.6, 13.6)
+		var z := rng.randf_range(-11.6, 11.6)
+		if not _grass_allowed(x, z):
+			continue
+		var size := rng.randf_range(0.6, 1.2)
+		var tuft_basis := Basis(Vector3.UP, rng.randf() * TAU).scaled(Vector3(size, size * rng.randf_range(0.8, 1.2), size))
+		transforms.append(Transform3D(tuft_basis, Vector3(x, 0.0, z)))
+		var tone := rng.randf()
+		colors.append(Color("4f9a5c").lerp(Color("8cc27a"), tone).lerp(Color("a9b86a"), 0.25 if rng.randf() < 0.12 else 0.0))
+	var tufts := MultiMesh.new()
+	tufts.transform_format = MultiMesh.TRANSFORM_3D
+	tufts.use_colors = true
+	tufts.mesh = _tuft_mesh()
+	tufts.instance_count = transforms.size()
+	for index in range(transforms.size()):
+		tufts.set_instance_transform(index, transforms[index])
+		tufts.set_instance_color(index, colors[index])
+	var tuft_instance := MultiMeshInstance3D.new()
+	tuft_instance.name = "GrassTufts"
+	tuft_instance.multimesh = tufts
+	tuft_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	var blade_material := ShaderMaterial.new()
+	blade_material.shader = preload("res://assets/grass_blades.gdshader")
+	tuft_instance.material_override = blade_material
+	add_child(tuft_instance)
+	var flowers := 0
+	while flowers < 70:
+		var x := rng.randf_range(-13.4, 13.4)
+		var z := rng.randf_range(-11.4, 11.4)
+		if not _grass_allowed(x, z):
+			continue
+		flowers += 1
+		var bloom := Geometry.sphere(self, Vector3(0.07, 0.05, 0.07), Vector3(x, 0.13, z), Color("f4f0e2") if flowers % 3 else Color("f3cf6a"))
+		bloom.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+
+## One tuft: five tapered blades leaning out from a shared root.
+static func _tuft_mesh() -> ArrayMesh:
+	var tool := SurfaceTool.new()
+	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	tool.set_color(Color.WHITE)
+	for blade in range(5):
+		var angle := blade * TAU / 5.0 + 0.4 * sin(blade * 2.3)
+		var out := Vector3(cos(angle), 0, sin(angle))
+		var side := Vector3(-out.z, 0, out.x) * 0.022
+		var height := 0.2 + 0.12 * fmod(blade * 0.618, 1.0)
+		var root := out * 0.03
+		var tip_point := out * (0.07 + (0.03 if blade % 2 else 0.0)) + Vector3(0, height, 0)
+		var normal := (out + Vector3.UP).normalized()
+		tool.set_normal(normal)
+		tool.add_vertex(root - side)
+		tool.add_vertex(root + side)
+		tool.add_vertex(tip_point)
+	return tool.commit()
+
 func _build_buildings() -> void:
 	Geometry.box(self, "Residence", Vector3(5, 3.7, 7), Vector3(-10.5, 1.85, 4.5), Color("efc998"), true)
 	Geometry.box(self, "ResidenceRoof", Vector3(5.2, 0.16, 7.2), Vector3(-10.5, 3.78, 4.5), Color("bd6949"))
-	Geometry.box(self, "ResidenceDoor", Vector3(0.05, 2.3, 1.4), Vector3(-7.96, 1.15, 5), Color("537b76"))
-	_label("CEDAR RESIDENCE", Vector3(-7.7, 3, 5), 25)
-	for z in [2.2, 7.0]:
-		Geometry.box(self, "ResidenceWindow", Vector3(0.04, 1.1, 1.1), Vector3(-7.95, 2, z), Color("8ba9b1"))
+	_build_residence_facade()
 	Geometry.box(self, "LearningCenter", Vector3(10, 4.5, 5), Vector3(7, 2.25, -8.5), Color("e5ddca"), true)
 	Geometry.box(self, "CenterRoof", Vector3(10.4, 0.2, 5.4), Vector3(7, 4.58, -8.5), Color("b2b6ad"))
-	Geometry.box(self, "GlassFacade", Vector3(8.9, 2.5, 0.06), Vector3(7, 1.75, -5.96), Color("4c9db1"))
-	for x in [3.0, 5.5, 8.0, 10.5]:
-		Geometry.box(self, "Mullion", Vector3(0.07, 2.55, 0.08), Vector3(x, 1.75, -5.89), Color("ede9db"))
-	Geometry.box(self, "LectureEntry", Vector3(1.65, 2.4, 0.1), Vector3(8, 1.2, -5.8), Color("365d65"))
+	_build_learning_center_facade()
 	Geometry.box(self, "EntryCanopy", Vector3(4, 0.16, 2.1), Vector3(8, 3.15, -5.35), Color("c6ae88"))
 	_label("LEARNING CENTER", Vector3(7, 4.05, -5.8), 32)
 	_label("LECTURE HALL A", Vector3(8, 2.75, -4.4), 24)
 
+## East face of Cedar Residence (x = -8). Trim frames the openings instead of
+## running across them; every layer sits at its own depth to avoid z-fighting.
+func _build_residence_facade() -> void:
+	var face := -8.0
+	var trim := Color("fff0d2")
+	Geometry.box(self, "ResidencePlinth", Vector3(0.08, 0.34, 7.0), Vector3(face + 0.04, 0.17, 4.5), Color("c9a57c"))
+	Geometry.box(self, "ResidenceCornice", Vector3(0.1, 0.18, 7.0), Vector3(face + 0.05, 3.55, 4.5), trim)
+	for z in [1.06, 7.94]:
+		Geometry.box(self, "ResidenceCorner", Vector3(0.09, 3.2, 0.12), Vector3(face + 0.045, 1.94, z), trim)
+	# Door: recessed leaf inside a proud frame, with a small canopy and step.
+	Geometry.box(self, "ResidenceDoor", Vector3(0.04, 2.2, 1.2), Vector3(face + 0.02, 1.1, 5), Color("537b76"))
+	Geometry.box(self, "ResidenceDoorGlass", Vector3(0.02, 0.9, 0.5), Vector3(face + 0.05, 1.55, 5), Color("8ba9b1"))
+	Geometry.box(self, "ResidenceDoorHandle", Vector3(0.05, 0.05, 0.16), Vector3(face + 0.07, 1.05, 5.38), Color("d8c9a8"))
+	for z in [4.33, 5.67]:
+		Geometry.box(self, "ResidenceDoorJamb", Vector3(0.1, 2.35, 0.14), Vector3(face + 0.05, 1.175, z), trim)
+	Geometry.box(self, "ResidenceDoorHead", Vector3(0.1, 0.14, 1.48), Vector3(face + 0.05, 2.35, 5), trim)
+	Geometry.box(self, "ResidenceAwning", Vector3(0.7, 0.08, 1.9), Vector3(face + 0.35, 2.62, 5), Color("bd6949"))
+	for z in [2.2, 7.0]:
+		Geometry.box(self, "ResidenceWindow", Vector3(0.03, 1.1, 1.1), Vector3(face + 0.015, 2, z), Color("8ba9b1"))
+		Geometry.box(self, "WindowMuntin", Vector3(0.02, 1.1, 0.05), Vector3(face + 0.04, 2, z), trim)
+		Geometry.box(self, "WindowMuntin", Vector3(0.02, 0.05, 1.1), Vector3(face + 0.04, 2, z), trim)
+		for offset in [-0.6, 0.6]:
+			Geometry.box(self, "WindowFrame", Vector3(0.08, 1.3, 0.1), Vector3(face + 0.04, 2, z + offset), trim)
+		Geometry.box(self, "WindowHead", Vector3(0.08, 0.1, 1.3), Vector3(face + 0.04, 2.6, z), trim)
+		Geometry.box(self, "WindowSill", Vector3(0.16, 0.08, 1.4), Vector3(face + 0.08, 1.4, z), trim)
+
+## South face of the Learning Center (z = -6): glazed bays, a framed double
+## door in its own bay, and sills that stop at the door frame.
+func _build_learning_center_facade() -> void:
+	var face := -6.0
+	Geometry.box(self, "GlassFacade", Vector3(8.9, 2.5, 0.04), Vector3(7, 1.75, face + 0.03), Color("4c9db1"))
+	for x in [2.55, 4.25, 5.75, 10.25, 11.45]:
+		Geometry.box(self, "Mullion", Vector3(0.08, 2.55, 0.08), Vector3(x, 1.75, face + 0.08), Color("ede9db"))
+	for bay in [[2.55, 7.05], [8.95, 11.45]]:
+		var width: float = bay[1] - bay[0]
+		var center: float = (bay[0] + bay[1]) / 2.0
+		Geometry.box(self, "FacadeSill", Vector3(width, 0.1, 0.16), Vector3(center, 0.45, face + 0.1), Color("faf0d8"))
+		Geometry.box(self, "GlassReflection", Vector3(0.13, 2.1, 0.01), Vector3(center - width * 0.2, 1.85, face + 0.055), Color("92d1dc"))
+	# Door bay: frame proud of the glass, two tinted leaves with push bars.
+	for x in [7.1, 8.9]:
+		Geometry.box(self, "EntryJamb", Vector3(0.12, 2.6, 0.16), Vector3(x, 1.3, face + 0.1), Color("ede9db"))
+	Geometry.box(self, "EntryHeader", Vector3(1.92, 0.16, 0.16), Vector3(8, 2.62, face + 0.1), Color("ede9db"))
+	for x in [7.58, 8.42]:
+		Geometry.box(self, "LectureEntry", Vector3(0.78, 2.46, 0.05), Vector3(x, 1.25, face + 0.09), Color("365d65"))
+		Geometry.box(self, "EntryPushBar", Vector3(0.5, 0.05, 0.04), Vector3(x, 1.05, face + 0.14), Color("c9d4cf"))
+	Geometry.box(self, "EntryStile", Vector3(0.06, 2.46, 0.07), Vector3(8, 1.25, face + 0.1), Color("ede9db"))
+
 func _build_courtyard() -> void:
 	Geometry.box(self, "Planter", Vector3(4.6, 0.65, 3.2), Vector3(-1.8, 0.325, -3.2), Color("cf8967"), true)
 	Geometry.box(self, "PlanterSoil", Vector3(4.3, 0.05, 2.9), Vector3(-1.8, 0.68, -3.2), Color("385c42"))
-	for point in [Vector3(-3, 0, -3.3), Vector3(-0.8, 0, -3), Vector3(11.7, 0, 6.8), Vector3(-5.8, 0, -8.3)]:
+	for point in PALMS:
 		_palm(point)
 	Geometry.box(self, "Bench", Vector3(2.6, 0.5, 0.75), Vector3(1.7, 0.25, -0.8), Color("b87743"), true)
 	Geometry.box(self, "BenchBack", Vector3(2.6, 0.55, 0.12), Vector3(1.7, 0.7, -1.1), Color("b87743"))
@@ -147,11 +275,6 @@ func _update_daylight() -> void:
 
 func _build_details() -> void:
 	# Visual-only details preserve established collision and walking routes.
-	for x in [3.0, 5.5, 8.0, 10.5]:
-		Geometry.box(self, "FacadeSill", Vector3(2.3, 0.1, 0.18), Vector3(x, 0.5, -5.84), Color("faf0d8"))
-		Geometry.box(self, "GlassReflection", Vector3(0.13, 2.2, 0.02), Vector3(x + 0.5, 1.8, -5.91), Color("92d1dc"))
-	for z in [1.4, 2.8, 4.2, 5.6, 7.0]:
-		Geometry.box(self, "ResidenceTrim", Vector3(0.06, 0.06, 6.8), Vector3(-7.94, z * 0.4, 4.5), Color("ffe2b3"))
 	for index in range(16):
 		var x := -3.8 + (index % 8) * 0.55
 		var z := -4.2 + (index / 8) * 1.8

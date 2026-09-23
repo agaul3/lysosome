@@ -76,7 +76,7 @@ func _run() -> void:
 	check(state.phase == state.Phase.LECTURE_HALL, "Hall A is accessible")
 	check(dorm.hud.objective_text.contains("open seat"), "Hall A invites the player to sit")
 	await capture("lecture-hall")
-	await walk_to(Vector3(0, 0, 3.7))
+	await walk_to(Vector3(-6.9, 0, -6.2))
 	use_endpoint()
 	await acquire_world()
 	await walk_to(Vector3(0, 0, 2.6))

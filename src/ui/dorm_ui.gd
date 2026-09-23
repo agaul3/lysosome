@@ -69,7 +69,7 @@ func _ready() -> void:
 	help_row.add_theme_constant_override("separation", 6)
 	help_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.add_child(help_row)
-	for pair in [["WASD", "Move"], ["E", "Interact"], ["Tab", "Menu"]]:
+	for pair in [["WASD", "Move"], ["E", "Interact"], ["Tab", "Menu"], ["Shift", "Sprint"]]:
 		var icon := preload("res://ui/key_prompt.gd").new()
 		icon.key = pair[0]
 		help_row.add_child(icon)
@@ -215,7 +215,7 @@ func _arrival_feedback(record: Dictionary) -> void:
 	_refresh_context()
 
 func _device_changed(controller: bool) -> void:
-	var keys := ["LS", "X", "Start"] if controller else ["WASD", "E", "Tab"]
+	var keys := ["LS", "X", "Start", "L3"] if controller else ["WASD", "E", "Tab", "Shift"]
 	for index in range(key_prompts.size()):
 		key_prompts[index].key = keys[index]
 	_show_target(current_target if is_instance_valid(current_target) else null)

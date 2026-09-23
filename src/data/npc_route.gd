@@ -8,8 +8,8 @@ const LINES := [
 	{"speaker": "sam", "text": "Hey, you heading to pharm?"},
 	{"speaker": "alex", "text": "Yeah. See you in Hall A."},
 ]
-## Origin of Alex's saved chair in Hall A (see world/lecture_hall/lecture_hall.gd ALEX_SEAT).
-const HALL_SEAT := Vector3(1.5, 0, -2)
+## Origin of Alex's saved seat in Hall A: row 2, centre section (see lecture_hall.gd ALEX_SEAT).
+const HALL_SEAT := Vector3(-1.84, 0.76, 1.04)
 const GRAPHS := {
 	"campus": {
 		"points": [Vector3(-5, 0, 3), Vector3(-1, 0, 2), Vector3(3.5, 0, 1.1), Vector3(8, 0, 1.1), Vector3(8, 0, -4.8)],
@@ -20,9 +20,15 @@ const GRAPHS := {
 		"edges": [[0, 1], [1, 2]],
 	},
 	"lecture_hall": {
-		# Down the centre aisle, then to the left side of the saved front-row seat.
-		"points": [Vector3(0, 0, 3.4), Vector3(0, 0, -2.45), Vector3(0.82, 0, -2.45)],
-		"edges": [[0, 1], [1, 2]],
+		# Front-left door, across the teaching floor, up the left aisle steps
+		# (foot and head of each flight follow the ramp), then along row 2.
+		"points": [
+			Vector3(-7, 0, -6.2), Vector3(-3.9, 0, -6.2), Vector3(-3.9, 0, -4.3), Vector3(-3.9, 0, -3.08),
+			Vector3(-3.9, 0, -2.75), Vector3(-3.9, 0.38, -2.15), Vector3(-3.9, 0.38, -1.48),
+			Vector3(-3.9, 0.38, -1.15), Vector3(-3.9, 0.76, -0.55), Vector3(-3.9, 0.76, 0.12),
+			Vector3(-2.76, 0.76, 0.12), Vector3(-1.84, 0.76, 0.12),
+		],
+		"edges": [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 9], [9, 10], [10, 11]],
 	},
 }
 

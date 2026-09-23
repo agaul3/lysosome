@@ -4,7 +4,56 @@
 
 **Project:** Godot 4.7.2, Compatibility renderer. Open `src/project.godot`. The authoritative product requirements are in `src/docs/design/medical_school_rpg_spec.md` (also snapshotted as `src/PROJECT_SPEC.md`). Run-specific instructions live in `src/docs/prompts/` and `src/docs/development/`. User instructions in the current task take precedence over this handoff.
 
-**Current state:** Milestones 1–6 are implemented and committed. Milestone 7 is in progress: Hall A seating is done; the lecture camera, professor presentation, visualization, questions and completion remain. The more recent visual, room, and UI improvements below sit on top of Milestones 1–6. (This note originally said the work was uncommitted; it has since been committed — see the 2026-09-23 documentation entry above.)
+**Current state:** Milestones 1–6 are implemented and committed. Milestone 7 is in progress: Hall A (tiered auditorium), seating and the lecture camera transition are done; the professor presentation, visualization, questions and completion remain. The more recent visual, room, and UI improvements below sit on top of Milestones 1–6. (This note originally said the work was uncommitted; it has since been committed — see the 2026-09-23 documentation entry above.)
+
+## 2026-09-23 08:03 PDT — Auditorium Hall A, lecture camera, sprint, campus fixes and lawn
+
+Committed the previous change set first (`a20e234`).
+
+**Hall A rebuilt as a raked auditorium**, modeled on the reference photo of a UIC medical-school lecture hall the user supplied (`src/world/lecture_hall/lecture_hall.gd`):
+- A floor-level teaching area at the front with a large framed projection screen, a whiteboard, a dark podium with two monitors and a gooseneck microphone (the professor stands behind it), and a side table with two loose chairs.
+- Five tiers (0.38 m rise, 1.6 m deep) of upholstered orange-red seats in three sections, split by two stepped aisles. The seats have pedestals, padded backs, shared armrests and row-end panels.
+- Wood panelling with reveals on the long wall, and blue double doors with an exit sign at the front left.
+- 65 seats in total: 14 classmates plus Alex's saved seat are taken, leaving 50 open.
+- **Seat spacing:** the stylized figures are about 0.85 m across the arms, so auditorium seats use a 0.92 m pitch and a 0.8 m cushion. At a realistic 0.6 m, seated arms would pass through the armrests.
+- **Aisle collision:** the aisles show two steps per tier, but their collision is a smooth ramp through the step nosings. Walking is continuous, and feet can sit up to about 7 cm off the drawn step.
+
+**Row-seat routing.**
+- `world/seat.gd` gained an `auditorium` style and a `navigator` callable.
+- The hall builds a walkway graph (`AStar3D`) with a node in front of every seat, aisle landings, the foot and head of each flight, and floor nodes near the door.
+- `SitSequence.plan_row_sit()` walks that route, then turns, backs up to the cushion and sits. Approach labels: `front` (already in front of the seat), `row_left` / `row_right` (along the row from the sitter's left or right), or `back` (from the row behind, routed through the nearest aisle).
+- Seated classmates' legs are solid, so the player walks around them in the walkway.
+- The two table chairs keep the free-standing four-side approach.
+- Alex now enters through the front-left door, climbs the left aisle and walks along row 2. When watched, he turns and sits from the walkway.
+
+**Lecture camera transition** (`src/world/lecture_camera.gd`).
+- On sitting, a perspective camera takes over. It starts as a 5° field-of-view camera placed far back along the isometric camera's ray, framing the same height, so the first frame matches the orthographic view (the test measures the drift in pixels).
+- It then blends focal point, direction (slerp), framed height and field of view (log space) with smootherstep over 1.7 s, arcing over the audience to an over-the-shoulder view of the screen, podium and professor.
+- Standing up reverses it and hands back to the exploration camera.
+- A ceiling with light panels and full-height near walls fade in only as the lecture view settles, so the isometric cutaway is unchanged.
+- `seating.stand_locked` is still the hook for keeping the player seated during class.
+
+**Sprint** (user request).
+- The new `sprint` action is bound to Shift and controller L3. Speed ramps from 3.2 to 5.8 m/s over 0.25 s.
+- `appearance.gd` blends a run gait from actual ground speed: longer stride cycle, bigger hip swing, the recovering knee folded high, knee lift through the swing, harder arm pump with slightly tucked arms, forward torso lean and more bounce.
+- The HUD help row shows a compact Shift/L3 keycap.
+
+**Campus visual fixes** (user screenshots).
+- **Cedar Residence:** the horizontal trim lines that crossed the door and windows (and poked out as dots at the corner) were removed. The facade now has a plinth, cornice, corner boards, framed windows with muntins and sills, and a framed door with a glass panel, handle and small awning.
+- **Learning Center entrance ("Lecture Hall A"):** a window sill whose front face was coplanar with the door leaf was z-fighting, and it ran through the door. The facade was rebuilt: glazed bays with sills that stop at a proud door frame, two tinted leaves with push bars, and a centre stile. Every layer sits at its own depth.
+
+**Detailed lawn** (user request).
+- `src/assets/grass.gdshader` adds broad, low-contrast, non-repeating tonal patches and fine blade speckle in world space, so it has no tiled pattern.
+- About 8,000 deterministic grass tufts are drawn in one `MultiMesh`, with a gentle per-tuft sway in `grass_blades.gdshader` and a sprinkling of small wildflowers. Paths, buildings, the planter and other furniture are excluded.
+
+**Verification:** foundation 54, dorm 67, campus 38, NPC 35, academic 77, visual motion 19 (new sprint checks), room polish 25, seating 147 (rewritten for the auditorium, including camera hand-off checks) — all passing. Editor import and `git diff --check` pass. Graphical captures of the campus facades, lawn, sprint, hall, a back-approach sit, and the camera transition in both directions were inspected; the hall runs at about 60 FPS on the M1.
+
+**Limitations:**
+- Auditorium seats are wider than real ones to suit the character proportions.
+- Aisle steps use a ramp collider.
+- The ceiling fades in rather than being a permanent mesh.
+- The lecture itself (presentation, visualization, questions, completion) is still to come.
+- Physical controller hardware remains untested.
 
 ## 2026-09-23 07:10 PDT — Docs cleanup, compact HUD, Milestone 7 started (Hall A seating)
 
@@ -77,4 +126,4 @@
 1. Read the product spec and the relevant milestone/run document before beginning another milestone. Read this file from top to bottom for the current architecture and user preferences.
 2. Inspect `git status --short` before editing and preserve any uncommitted work you find.
 3. Run tests with `/Applications/Godot.app/Contents/MacOS/Godot --headless --path src --script res://tests/<suite>.gd`. Existing suites are `foundation_test.gd`, `dorm_test.gd`, `campus_test.gd`, `npc_test.gd`, `academic_test.gd`, `visual_motion_test.gd`, `room_polish_test.gd`, and `seating_test.gd`. Use `--path src --editor --import --quit` to validate import. Run graphical capture when visual behavior changes.
-4. Update this file with a new timestamped section at the top for each future change set. Preserve the user's preferences: plain floor surfaces, subtle wood grain, a small HUD with unboxed keycap prompts, and physically plausible character motion around furniture.
+4. Update this file with a new timestamped section at the top for each future change set. Preserve the user's preferences: plain floor surfaces, subtle wood grain, a small HUD with unboxed keycap prompts, physically plausible character motion around furniture, and the UIC-style raked auditorium for Hall A.

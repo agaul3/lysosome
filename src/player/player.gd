@@ -1,6 +1,10 @@
 extends CharacterBody3D
 const Presets = preload("res://data/character_presets.gd")
 @export var speed: float = 3.2
+@export var sprint_speed: float = 5.8
+## Seconds to reach full sprint speed or settle back to a walk.
+@export var sprint_ramp: float = 0.25
+var current_speed := 3.2
 @export var gravity: float = 18.0
 @export var movement_enabled := true
 ## Set while a scripted motion (sitting, standing) drives the body instead of input.
@@ -12,6 +16,7 @@ var movement_camera: Camera3D
 
 func _ready() -> void:
 	appearance.apply_preset(AppState.selected_character)
+	current_speed = speed
 	seating = preload("res://player/seating.gd").new()
 	seating.name = "Seating"
 	add_child(seating)
@@ -31,8 +36,11 @@ func _physics_process(delta: float) -> void:
 		return
 	var input_vector := Input.get_vector("move_left", "move_right", "move_up", "move_down") if movement_enabled else Vector2.ZERO
 	var direction := world_direction(input_vector)
-	velocity.x = direction.x * speed
-	velocity.z = direction.z * speed
+	var sprinting := movement_enabled and Input.is_action_pressed("sprint") and direction.length_squared() > 0.25
+	var target_speed := sprint_speed if sprinting else speed
+	current_speed = move_toward(current_speed, target_speed, (sprint_speed - speed) / sprint_ramp * delta)
+	velocity.x = direction.x * current_speed
+	velocity.z = direction.z * current_speed
 	velocity.y = 0.0 if is_on_floor() else velocity.y - gravity * delta
 	var previous_position := global_position
 	move_and_slide() # Velocity is units/second; Godot integrates using the physics delta.

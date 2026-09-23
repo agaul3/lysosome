@@ -56,7 +56,7 @@ func _run() -> void:
 			break
 		await ticks(1)
 	await ticks(3)
-	check(dorm.actor.sit_sequence != null and dorm.actor.sit_approach == "left", "Watched NPC animates into the seat from the aisle side")
+	check(dorm.actor.sit_sequence != null and dorm.actor.sit_approach == "front", "Watched NPC turns and sits from the row walkway")
 	for index in range(360):
 		if dorm.actor.sit_sequence == null:
 			break

@@ -16,6 +16,10 @@ var pelvis: Node3D
 var spine: Node3D
 var gait_phase := 0.0
 var gait_weight := 0.0
+## 0 = walking gait, 1 = full sprint; blended from actual ground speed.
+var run_weight := 0.0
+const RUN_START_SPEED := 3.6
+const RUN_FULL_SPEED := 5.4
 var seated_pose := false
 var sit_blend := 0.0
 
@@ -28,6 +32,7 @@ func apply_preset(id: String) -> void:
 	shoulders.clear()
 	gait_weight = 0.0
 	gait_phase = 0.0
+	run_weight = 0.0
 	seated_pose = false
 	sit_blend = 0.0
 	body = Node3D.new()
@@ -107,18 +112,31 @@ func animate_motion(distance: float, delta: float, lateral := false) -> void:
 	var speed := distance / delta
 	var target := clampf(speed / 1.8, 0.0, 1.0)
 	gait_weight = move_toward(gait_weight, target, delta * 8.0)
-	gait_phase = fmod(gait_phase + distance * TAU / (1.0 if lateral else 1.65), TAU)
+	var run_target := 0.0 if lateral else clampf((speed - RUN_START_SPEED) / (RUN_FULL_SPEED - RUN_START_SPEED), 0.0, 1.0)
+	run_weight = move_toward(run_weight, run_target, delta * 5.0)
+	var run := run_weight * run_weight * (3.0 - 2.0 * run_weight)
+	# A run takes longer strides per cycle than a walk.
+	var cycle := 1.0 if lateral else lerpf(1.65, 2.6, run)
+	gait_phase = fmod(gait_phase + distance * TAU / cycle, TAU)
 	for index in range(2):
-		var stride := sin(gait_phase + index * PI) * gait_weight
+		var swing := sin(gait_phase + index * PI)
+		var stride := swing * gait_weight
 		if lateral:
 			# Side-steps swing the legs outward rather than forward.
 			hips[index].rotation = Vector3(0, 0, absf(stride) * 0.3 * (1 if index else -1))
 			knees[index].rotation.x = 0.0
-			shoulders[index].rotation.x = 0.0
+			shoulders[index].rotation = Vector3.ZERO
 		else:
-			hips[index].rotation = Vector3(stride * 0.58, 0, 0)
-			knees[index].rotation.x = -maxf(0.0, -stride) * 0.5
-			shoulders[index].rotation.x = -stride * 0.42
-	body.position.y = absf(cos(gait_phase)) * 0.035 * gait_weight
-	body.rotation.z = sin(gait_phase) * 0.025 * gait_weight
+			hips[index].rotation = Vector3(stride * lerpf(0.58, 0.95, run), 0, 0)
+			# Walking flexes the trailing knee a little; sprinting folds the
+			# recovering leg high behind and lifts the knee through the swing.
+			var trailing := maxf(0.0, -swing)
+			var recovering := maxf(0.0, cos(gait_phase + index * PI))
+			knees[index].rotation.x = -gait_weight * (trailing * lerpf(0.5, 1.35, run) + recovering * 0.55 * run)
+			# Arms pump harder and stay slightly bent forward and tucked in while running.
+			shoulders[index].rotation = Vector3(-stride * lerpf(0.42, 0.95, run) + 0.25 * run, 0, (0.12 if index else -0.12) * run)
+	var bounce := lerpf(0.035, 0.085, run)
+	body.position.y = absf(cos(gait_phase)) * bounce * gait_weight
+	body.rotation.z = sin(gait_phase) * lerpf(0.025, 0.04, run) * gait_weight
 	body.rotation.x = -0.035 * gait_weight
+	spine.rotation.x = -0.24 * run * gait_weight

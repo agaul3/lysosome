@@ -4,6 +4,7 @@ extends Node
 ## with the same seat while seated stands back up.
 signal seated_changed(seated: bool)
 signal notice(text: String)
+signal state_changed(state: int)
 const SitSequence = preload("res://player/sit_sequence.gd")
 const STUCK_SECONDS := 0.8
 enum State { FREE, SITTING, SEATED, RISING }
@@ -30,7 +31,11 @@ func request(target: Node3D) -> void:
 		return
 	if state != State.FREE or not target.is_free():
 		return
-	var plan := SitSequence.plan_sit(target, player.global_position, _is_clear)
+	var plan: Dictionary
+	if target.navigator.is_valid():
+		plan = SitSequence.plan_row_sit(target, player.global_position, target.navigator.call(player.global_position, target))
+	else:
+		plan = SitSequence.plan_sit(target, player.global_position, _is_clear)
 	if plan.steps.is_empty():
 		notice.emit("There's no room to get into that seat.")
 		return
@@ -46,6 +51,7 @@ func stand_up() -> void:
 
 func _begin(next: State, steps: Array) -> void:
 	state = next
+	state_changed.emit(state)
 	player.external_control = true
 	player.velocity = Vector3.ZERO
 	player.interaction.enabled = false
@@ -63,6 +69,7 @@ func _physics_process(delta: float) -> void:
 		return
 	if state == State.SITTING:
 		state = State.SEATED
+		state_changed.emit(state)
 		seat.interactable.display_name = "Stand up"
 		seat.interactable.marker_enabled = false
 		player.interaction.enabled = true
@@ -78,6 +85,7 @@ func _release() -> void:
 		seat.occupant = null
 	seat = null
 	state = State.FREE
+	state_changed.emit(state)
 	player.external_control = false
 	player.interaction.enabled = true
 

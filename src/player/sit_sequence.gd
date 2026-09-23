@@ -72,6 +72,35 @@ static func plan_sit(seat: Node3D, from: Vector3, is_clear: Callable = Callable(
 		return {"approach": option, "steps": result}
 	return {"approach": "", "steps": []}
 
+## Row seats (auditoriums) can only be entered from the walkway in front of
+## them. `path` comes from the room's walkway graph and ends at FRONT_POINT;
+## the label says where the player came from: front (already standing there),
+## row_left / row_right (along the row from the sitter's left or right), or
+## back (from behind the backrest, detouring through an aisle).
+static func plan_row_sit(seat: Node3D, from: Vector3, path: PackedVector3Array) -> Dictionary:
+	if path.is_empty():
+		return {"approach": "", "steps": []}
+	var local: Vector3 = seat.to_local(from)
+	var front: Vector3 = seat.point(Seat.FRONT_POINT)
+	var approach := ""
+	var flat := Vector2(from.x - front.x, from.z - front.z)
+	if flat.length() < 0.45 and absf(from.y - front.y) < 0.2:
+		approach = "front"
+	elif local.z > 0.3 or local.y > 0.2:
+		approach = "back"
+	else:
+		var previous: Vector3 = path[path.size() - 2] if path.size() > 1 else from
+		approach = "row_left" if seat.to_local(previous).x < 0.0 else "row_right"
+	var result: Array = []
+	if approach != "front":
+		for waypoint in path:
+			result.append({"kind": "walk", "to": waypoint})
+	result.append({"kind": "turn", "yaw": seat.seated_yaw()})
+	result.append({"kind": "step", "to": seat.point(Seat.PRE_SIT), "lateral": false})
+	result.append({"kind": "pause", "seconds": 0.12})
+	result.append({"kind": "sit", "from": seat.point(Seat.PRE_SIT), "to": seat.point(Seat.SIT_POINT)})
+	return {"approach": approach, "steps": result}
+
 static func _approach_points(option: String, local: Vector3) -> Array:
 	var side := -1.0 if option.ends_with("left") else 1.0
 	var side_point := Vector3(Seat.SIDE_POINT.x * side, 0, Seat.SIDE_POINT.z)
