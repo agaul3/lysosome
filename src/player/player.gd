@@ -26,6 +26,9 @@ func _physics_process(delta: float) -> void:
 	velocity.x = direction.x * speed
 	velocity.z = direction.z * speed
 	velocity.y = 0.0 if is_on_floor() else velocity.y - gravity * delta
+	var previous_position := global_position
 	move_and_slide() # Velocity is units/second; Godot integrates using the physics delta.
+	var travelled := global_position - previous_position
+	appearance.animate_motion(Vector2(travelled.x, travelled.z).length(), delta)
 	if direction.length_squared() > 0.01:
 		appearance.rotation.y = lerp_angle(appearance.rotation.y, atan2(-direction.x, -direction.z), 1.0 - exp(-16.0 * delta))

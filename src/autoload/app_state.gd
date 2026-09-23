@@ -8,14 +8,18 @@ const SCENES := {
 	"dorm": "res://world/dorm/dorm.tscn",
 	"campus": "res://world/campus/campus.tscn",
 	"lecture_building": "res://world/lecture_building/lecture_building.tscn",
+	"lecture_hall": "res://world/lecture_hall/lecture_hall.tscn",
 }
-enum Phase { TITLE, CHARACTER_SELECT, DORM, CAMPUS, LECTURE_BUILDING }
+enum Phase { TITLE, CHARACTER_SELECT, DORM, CAMPUS, LECTURE_BUILDING, LECTURE_HALL }
 var phase: Phase = Phase.TITLE
 var selected_character: String = Presets.DEFAULT_ID
 var transitioning := false
 var campus_entry := "dorm"
 
 func start_new_game() -> void:
+	NPCSchedule.reset()
+	GameClock.reset()
+	AcademicSession.reset()
 	selected_character = Presets.DEFAULT_ID
 	campus_entry = "dorm"
 	_set_phase(Phase.CHARACTER_SELECT)
@@ -40,11 +44,15 @@ func enter_campus(entry: String = "dorm") -> void:
 	_request_transition("campus", Phase.CAMPUS)
 
 func enter_lecture_building() -> void:
-	if phase == Phase.CAMPUS:
+	if phase in [Phase.CAMPUS, Phase.LECTURE_HALL]:
 		_request_transition("lecture_building", Phase.LECTURE_BUILDING)
 
+func enter_lecture_hall() -> void:
+	if phase == Phase.LECTURE_BUILDING:
+		_request_transition("lecture_hall", Phase.LECTURE_HALL)
+
 func return_to_title() -> void:
-	if phase in [Phase.DORM, Phase.CAMPUS, Phase.LECTURE_BUILDING]:
+	if phase in [Phase.DORM, Phase.CAMPUS, Phase.LECTURE_BUILDING, Phase.LECTURE_HALL]:
 		_request_transition("title", Phase.TITLE)
 	else:
 		_set_phase(Phase.TITLE)
@@ -68,10 +76,14 @@ func _commit_transition(destination: String, next_phase: Phase) -> void:
 		return
 	await get_tree().scene_changed
 	transitioning = false
+	GameClock.running = phase in [Phase.DORM, Phase.CAMPUS, Phase.LECTURE_BUILDING, Phase.LECTURE_HALL]
 	phase_changed.emit(phase)
+	if phase == Phase.LECTURE_HALL:
+		AcademicSession.record_arrival("pharmacodynamics_01")
 
 func _set_phase(next_phase: Phase) -> void:
 	if phase == next_phase:
 		return
 	phase = next_phase
+	GameClock.running = phase in [Phase.DORM, Phase.CAMPUS, Phase.LECTURE_BUILDING, Phase.LECTURE_HALL]
 	phase_changed.emit(phase)

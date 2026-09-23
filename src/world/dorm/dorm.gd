@@ -15,6 +15,10 @@ var exit_door: Node3D
 func _ready() -> void:
 	_build_room()
 	_build_furniture()
+	_apply_wood()
+	Geometry.potted_plant(self, Vector3(-4.1, 0, 3.5))
+	Geometry.accent_light(self, Vector3(0.4, 1.75, -3.6), Color("ffcb7d"), 0.25, 3.5)
+	Geometry.box(self, "WindowSill", Vector3(2.8, 0.12, 0.4), Vector3(0, 1.04, -4.15), Color("fff1d7"))
 	_build_lighting()
 	camera = ExplorationCamera.new()
 	add_child(camera)
@@ -35,15 +39,12 @@ func _build_room() -> void:
 		["SouthWall", Vector3(10, 2.8, 0.2), Vector3(0, 1.4, 4.5)],
 		["EastWall", Vector3(0.2, 2.8, 9), Vector3(5, 1.4, 0)],
 	]:
-		var node := Geometry.box(self, wall[0], wall[1], wall[2], Color("dedacc"), true)
+		var node := Geometry.box(self, wall[0], wall[1], wall[2], Color("f0e4cf"), true)
+		node.get_child(0).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		if wall[0] in ["SouthWall", "EastWall"]:
 			node.get_child(0).scale.y = 0.07
 			node.get_child(0).position.y = -1.3
-	Geometry.box(self, "Rug", Vector3(4.2, 0.02, 3.4), Vector3(0, 0.015, 1), Color("637d7c"))
-	for stripe in range(3):
-		Geometry.box(self, "RugStripe", Vector3(3.9, 0.01, 0.035), Vector3(0, 0.03, -0.4 + stripe * 1.3), Color("aec3b6"))
-	for plank in range(11):
-		Geometry.box(self, "FloorJoin", Vector3(0.012, 0.006, 8.8), Vector3(-4.5 + plank * 0.85, 0.004, 0), Color("af9878"))
+	Geometry.box(self, "Rug", Vector3(4.2, 0.02, 3.4), Vector3(0, 0.015, 1), Color("327f88"))
 	Geometry.box(self, "WindowFrame", Vector3(2.6, 1.55, 0.09), Vector3(0, 1.8, -4.35), Color("fff2d6"))
 	Geometry.box(self, "MorningGlass", Vector3(2.35, 1.3, 0.06), Vector3(0, 1.8, -4.28), Color("a4cbd1"))
 	Geometry.box(self, "WindowDivider", Vector3(0.07, 1.4, 0.08), Vector3(0, 1.8, -4.21), Color("f3ead7"))
@@ -56,16 +57,19 @@ func _build_room() -> void:
 func _build_furniture() -> void:
 	Geometry.box(self, "Bed", Vector3(1.85, 0.48, 3.1), Vector3(-3.45, 0.24, -0.8), Color("806e5c"), true)
 	Geometry.box(self, "Mattress", Vector3(1.82, 0.18, 3), Vector3(-3.45, 0.56, -0.8), Color("f0e5ce"))
-	Geometry.box(self, "Duvet", Vector3(1.85, 0.14, 2.15), Vector3(-3.45, 0.7, -0.35), Color("81998f"))
+	Geometry.box(self, "Duvet", Vector3(1.85, 0.14, 2.15), Vector3(-3.45, 0.7, -0.35), Color("4b9f94"))
 	Geometry.box(self, "Pillow", Vector3(1.3, 0.16, 0.58), Vector3(-3.45, 0.72, -1.98), Color("f8edda"))
 	bed = _interaction("BedInteraction", "Inspect bed", "A freshly made bed. A quiet place to recharge after class.", Vector3(-2.15, 1, -0.5))
-	Geometry.box(self, "Desk", Vector3(3.0, 0.9, 1.1), Vector3(1.65, 0.45, -3.55), Color("a98760"), true)
+	Geometry.box(self, "Desk", Vector3(3.0, 0.1, 1.1), Vector3(1.65, 0.89, -3.55), Color("a98760"), true)
+	for x in [0.35, 2.95]:
+		for z in [-3.98, -3.12]:
+			Geometry.box(self, "DeskLeg", Vector3(0.12, 0.86, 0.12), Vector3(x, 0.43, z), Color("715e4f"), true)
 	Geometry.box(self, "Desktop", Vector3(3.12, 0.08, 1.2), Vector3(1.65, 0.94, -3.55), Color("dec39a"))
-	Geometry.box(self, "Chair", Vector3(0.7, 0.6, 0.7), Vector3(0.75, 0.3, -2.25), Color("475e65"), true)
-	Geometry.box(self, "ChairBack", Vector3(0.7, 0.65, 0.12), Vector3(0.75, 0.8, -1.96), Color("475e65"))
-	Geometry.box(self, "LaptopBase", Vector3(0.65, 0.05, 0.44), Vector3(1.35, 1.01, -3.45), Color("465563"))
-	Geometry.box(self, "LaptopScreen", Vector3(0.65, 0.45, 0.05), Vector3(1.35, 1.23, -3.68), Color("314959"))
-	Geometry.box(self, "ScreenGlow", Vector3(0.55, 0.34, 0.02), Vector3(1.35, 1.23, -3.645), Color("9abbb2"))
+	Geometry.box(self, "Chair", Vector3(0.7, 0.6, 0.7), Vector3(1.65, 0.3, -2.45), Color("475e65"), true)
+	Geometry.box(self, "ChairBack", Vector3(0.7, 0.65, 0.12), Vector3(1.65, 0.8, -2.16), Color("475e65"))
+	Geometry.box(self, "LaptopBase", Vector3(0.65, 0.05, 0.44), Vector3(1.65, 1.01, -3.45), Color("465563"))
+	Geometry.box(self, "LaptopScreen", Vector3(0.65, 0.45, 0.05), Vector3(1.65, 1.23, -3.68), Color("314959"))
+	Geometry.box(self, "ScreenGlow", Vector3(0.55, 0.34, 0.02), Vector3(1.65, 1.23, -3.645), Color("9abbb2"))
 	for book_index in range(3):
 		Geometry.box(self, "MedicalTextbook", Vector3(0.46, 0.09, 0.58), Vector3(2.55, 1.03 + book_index * 0.09, -3.5), Color(["827c9b", "b7775d", "647b72"][book_index]))
 	_label("PHARMACOLOGY", Vector3(2.55, 1.55, -3.5), 17)
@@ -77,10 +81,8 @@ func _build_furniture() -> void:
 	for row in range(3):
 		for index in range(5):
 			Geometry.box(self, "BookSpine", Vector3(0.17, 0.36, 0.36), Vector3(-4.02 + index * 0.23, 0.35 + row * 0.54, -3.57), Color(["597d7c", "b98c65", "e3cba4", "777b94", "9ba48a"][index]))
-	Geometry.box(self, "Storage", Vector3(1.05, 1.15, 1.2), Vector3(4.15, 0.575, -2.9), Color("c7ab83"), true)
 	Geometry.box(self, "Noticeboard", Vector3(1.65, 0.88, 0.08), Vector3(2.65, 2.05, -4.33), Color("ab8c68"))
-	_label("M1  /  FIRST YEAR", Vector3(2.65, 2.12, -4.22), 22)
-	_label("Read. Practice. Reflect.", Vector3(2.65, 1.87, -4.22), 16)
+	_label("FIRST YEAR", Vector3(2.65, 2.2, -4.22), 24)
 
 func _interaction(node_name: String, title: String, response: String, position: Vector3) -> Node3D:
 	var endpoint := Interactable.new()
@@ -93,14 +95,7 @@ func _interaction(node_name: String, title: String, response: String, position: 
 	return endpoint
 
 func _label(text: String, position: Vector3, font_size: int) -> void:
-	var label := Label3D.new()
-	label.text = text
-	label.position = position
-	label.font_size = font_size
-	label.pixel_size = 0.008
-	label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	label.modulate = Color("fff3d6")
-	add_child(label)
+	Geometry.nameplate(self, text, position, font_size, 0.01)
 
 func _build_lighting() -> void:
 	var world_environment := WorldEnvironment.new()
@@ -109,12 +104,29 @@ func _build_lighting() -> void:
 	environment.background_color = Color("263c47")
 	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	environment.ambient_light_color = Color("d4dfdd")
-	environment.ambient_light_energy = 0.65
+	environment.ambient_light_energy = 0.45
 	world_environment.environment = environment
 	add_child(world_environment)
 	var sun := DirectionalLight3D.new()
 	sun.rotation_degrees = Vector3(-55, -35, 0)
-	sun.light_color = Color("ffe2b0")
-	sun.light_energy = 1.1
-	sun.shadow_enabled = true
+	sun.light_color = Color("fff0d9")
+	sun.light_energy = 0.65
+	Geometry.configure_shadows(sun)
 	add_child(sun)
+
+func _apply_wood() -> void:
+	# Restrained grain on the floor and furniture, with no decorative floor pattern.
+	for child in get_children():
+		if not child is Node3D:
+			continue
+		var label := str(child.get_meta("geometry_label", child.name))
+		if label not in ["Floor", "Bed", "Desk", "Desktop", "Bookshelf", "Noticeboard"] and not label.begins_with("DeskLeg"):
+			continue
+		var mesh := child.get_child(0) as MeshInstance3D
+		if mesh == null:
+			continue
+		var material := ShaderMaterial.new()
+		material.shader = preload("res://assets/wood.gdshader")
+		material.set_shader_parameter("wood_color", Color("a9845e") if label == "Floor" else Color("ad8054"))
+		material.set_shader_parameter("floor_planks", label == "Floor")
+		mesh.material_override = material

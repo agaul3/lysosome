@@ -1,0 +1,24 @@
+{
+  "start_datetime": "2026-09-21T07:35:00",
+  "time_scale": 5.0,
+  "semester": "Fall 1",
+  "starting_academic_week": 1,
+  "xp_by_tier": {
+    "1": 10,
+    "2": 20,
+    "3": 30
+  },
+  "events": [
+    {
+      "id": "pharmacodynamics_01",
+      "title": "PHARMACODYNAMICS",
+      "date": "2026-09-21",
+      "hour": 8,
+      "minute": 0,
+      "location": "Lecture Hall A",
+      "mandatory": true,
+      "late_grace_seconds": 0,
+      "late_penalty": 5
+    }
+  ]
+}

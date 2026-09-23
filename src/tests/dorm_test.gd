@@ -82,7 +82,7 @@ func _run() -> void:
 		current_scene.selection_panel.enter_button.pressed.emit()
 		await acquire_dorm()
 		check(player.appearance.preset_id == preset.id, "Appearance reaches gameplay: " + preset.id)
-		var torso: MeshInstance3D = player.appearance.get_node("Torso").get_child(0)
+		var torso: MeshInstance3D = player.appearance.get_node("Body/Torso").get_child(0)
 		check(torso.material_override.albedo_color.is_equal_approx(Color(preset.shirt)), "Preset material applied")
 		state.return_to_title()
 		await scene_changed
@@ -195,7 +195,7 @@ func movement_tests() -> void:
 
 func collision_tests() -> void:
 	# Probe each major solid from four sides; CharacterBody must stop before its face.
-	for name in ["Bed", "Desk", "Chair", "Bookshelf", "Storage"]:
+	for name in ["Bed", "Desk", "Chair", "Bookshelf"]:
 		var body: StaticBody3D = dorm.get_node(name)
 		var shape: BoxShape3D = body.get_child(1).shape
 		for direction in [Vector3.RIGHT, Vector3.LEFT, Vector3.FORWARD, Vector3.BACK]:

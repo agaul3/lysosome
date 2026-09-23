@@ -1,9 +1,8 @@
 extends RefCounted
-## Presentation-only morning data. The live time/schedule system belongs to Milestone 5.
+## Campus palette and arrival positions; starting time lives in academic_config.json.
 const MORNING := {
-	"hour": 7, "minute": 35,
 	"sun_rotation": Vector3(-32, -40, 0),
-	"sun_color": Color("ffe0b5"), "sun_energy": 0.85,
+	"sun_color": Color("ffe6c4"), "sun_energy": 1.2,
 	"ambient_color": Color("cbdce1"), "ambient_energy": 0.65,
 }
 const SPAWNS := {

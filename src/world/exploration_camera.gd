@@ -10,6 +10,7 @@ var follow_target: Node3D
 var tracked_point := Vector3.ZERO
 
 func _ready() -> void:
+	far = 80.0
 	projection = Camera3D.PROJECTION_ORTHOGONAL
 	size = view_size
 	tracked_point = focal_point

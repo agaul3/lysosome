@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "questions": [
+    {
+      "id": "pd_potency_01",
+      "discipline": "Pharmacology",
+      "topic": "Pharmacodynamics",
+      "subtopic": "Dose-response",
+      "question_type": "Interpretation",
+      "difficulty_tier": 2,
+      "prompt": "Two agonists produce the same maximum response in the same assay. Drug A has an EC50 of 2 nM and drug B an EC50 of 20 nM. Which comparison is supported?",
+      "choices": {
+        "a": "A is more potent; their measured maximal efficacy is equal.",
+        "b": "B is more potent because its EC50 is larger.",
+        "c": "A necessarily has a higher maximum response."
+      },
+      "correct_answer": "a",
+      "explanation": "A reaches half of its maximal response at a lower concentration. Equal measured maximum responses indicate equal maximal efficacy in this assay.",
+      "learning_objective": "Distinguish EC50-based potency from maximal efficacy.",
+      "xp_reward": null,
+      "lecture_id": "pharmacodynamics_01",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "pd_efficacy_01",
+      "discipline": "Pharmacology",
+      "topic": "Pharmacodynamics",
+      "subtopic": "Dose-response",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "In a graded concentration-response experiment, which measurement describes the greatest response a drug can produce in that preparation?",
+      "choices": {
+        "a": "EC50",
+        "b": "Emax",
+        "c": "Elimination half-life"
+      },
+      "correct_answer": "b",
+      "explanation": "Emax is the maximal observed response. EC50 describes the concentration associated with half-maximal response; elimination half-life is a pharmacokinetic measure.",
+      "learning_objective": "Identify Emax as the maximal effect in a specified system.",
+      "xp_reward": null,
+      "lecture_id": "pharmacodynamics_01",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "pd_competitive_01",
+      "discipline": "Pharmacology",
+      "topic": "Pharmacodynamics",
+      "subtopic": "Antagonism",
+      "question_type": "Conceptual",
+      "difficulty_tier": 2,
+      "prompt": "In a simple equilibrium assay, a reversible antagonist competes with an agonist at the same receptor site. Enough agonist can be added to overcome the blockade. What change is expected in the agonist curve?",
+      "choices": {
+        "a": "A lower maximum that cannot be restored",
+        "b": "A leftward shift with unchanged maximum",
+        "c": "A rightward shift with unchanged maximum"
+      },
+      "correct_answer": "c",
+      "explanation": "More agonist is needed for a given response, but sufficient agonist can restore the original maximum under these stated conditions.",
+      "learning_objective": "Predict surmountable competitive antagonism in a simplified equilibrium model.",
+      "xp_reward": null,
+      "lecture_id": "pharmacodynamics_01",
+      "format": "multiple_choice"
+    }
+  ]
+}
