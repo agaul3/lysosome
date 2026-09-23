@@ -184,7 +184,7 @@ func hall_tests() -> void:
 	# deliberate wrong prediction in the activity: 10 of 12 scored questions.
 	check(summary.attempted == 12 and summary.correct == 10, "Summary counts lecture questions, not remediation (%d/%d)" % [summary.correct, summary.attempted])
 	check(summary.xp == academics.xp_balance - xp_before_lecture and summary.xp > 0, "Summary XP matches the XP actually earned (%d)" % summary.xp)
-	check(ui.text.text.contains("10 of 12") and ui.text.text.contains("XP earned this lecture: %d" % summary.xp), "Summary card shows score and XP")
+	check(ui.text.text.contains("10 of 12") and ui.text.text.contains("XP earned this lecture: %d  ·  Level %d" % [summary.xp, academics.level]), "Summary card shows score and XP")
 	check(player.seating.stand_locked, "Seat stays locked until the summary is dismissed")
 	await press_action("interact")
 	await ticks(2)

@@ -21,6 +21,7 @@ var menu_tabs: TabContainer
 var schedule_panel: VBoxContainer
 var calendar_panel: VBoxContainer
 var objective_label: Label
+var progression: VBoxContainer
 var help_row: HBoxContainer
 ## Set while another overlay (the lecture) owns the bottom of the screen.
 var suppress_context := false:
@@ -61,6 +62,12 @@ func _ready() -> void:
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	top_bar.add_child(spacer)
+	progression = preload("res://ui/progression_hud.gd").new()
+	top_bar.add_child(progression)
+	var clock_gap := Control.new()
+	clock_gap.custom_minimum_size.x = 8
+	clock_gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	top_bar.add_child(clock_gap)
 	var clock_card := _card(top_bar)
 	clock_card.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	clock_label = _hud_label("", 14, 0)

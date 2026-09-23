@@ -4,7 +4,24 @@
 
 **Project:** Godot 4.7.2, Compatibility renderer. Open `src/project.godot`. The authoritative product requirements are in `src/docs/design/medical_school_rpg_spec.md` (also snapshotted as `src/PROJECT_SPEC.md`). Run-specific instructions live in `src/docs/prompts/` and `src/docs/development/`. User instructions in the current task take precedence over this handoff.
 
-**Current state:** Milestones 1–6 are implemented and committed. Milestones 1–7 are complete. Milestone 8 (progression feedback) is next. The more recent visual, room, and UI improvements below sit on top of Milestones 1–6. (This note originally said the work was uncommitted; it has since been committed — see the 2026-09-23 documentation entry above.)
+**Current state:** Milestones 1–6 are implemented and committed. Milestones 1–8 are complete. Milestone 9 (Knowledge interface) is next. The more recent visual, room, and UI improvements below sit on top of Milestones 1–6. (This note originally said the work was uncommitted; it has since been committed — see the 2026-09-23 documentation entry above.)
+
+## 2026-09-23 10:33 PDT — Milestone 8: progression feedback
+
+Committed and pushed Milestone 7 first (`0cd1e27`).
+
+- **Level curve:** `education/progression/level_curve.gd` is the only place level maths happens, configured by `level_curve` in `data/academic_config.json`. XP from level L to L+1 is round(80 × 1.3^(L−1)), giving thresholds of 80, 184, 319 and 495. Overflow carries over, one award can cross several levels, negative balances count as 0, and the level never decreases. It looks up `GameClock` at runtime so it compiles even when preloaded early.
+- **AcademicSession:** all XP changes now go through `add_xp(delta, reason)`, which emits `xp_changed`, `level_up(from, to)` and `streak_changed`. It tracks `level`, `streak` and `best_streak`, and exposes `level_progress()` and `streak_visible()` (threshold 10, configurable).
+- **HUD** (`ui/progression_hud.gd`, in the shared HUD's top bar next to the clock):
+  - a compact "LV n" card with an XP bar and "into / needed XP" (plus "owed" when the balance is negative);
+  - a tweened bar that fills, empties and continues through level-ups;
+  - floating "+N XP" (or red "−5 XP") values that rise and fade beside the bar, clear of medical content;
+  - a "10x STREAK" chip that only appears at 10 or more in a row, pulses on each correct answer and hides on a miss;
+  - a level-up banner ("LEVEL UP / Level 1 → Level 2") with a scale pop, particle burst and soft flash, for about 2.3 s.
+- **Audio:** original synthesized sounds in `audio/sfx/` (correct chime, soft incorrect tone, prominent level-up fanfare, and an achievement bell reserved for later), played by the new `Sfx` autoload on the Master bus so the volume setting applies. Answer and level-up sounds follow `AcademicSession` signals, wherever answers come from.
+- **Schedule and summary:** the schedule shows level and progress, and the lecture summary includes the level.
+- **Tests:** new `progression_test.gd` (34 checks) covers the spec's required XP, level and streak logic plus the HUD and audio feedback. The acceptance record is `src/docs/development/MILESTONE_8_ACCEPTANCE.md`.
+- **Verification:** foundation 54, dorm 67, campus 38, NPC 37, academic 77, visual motion 23, room polish 26, seating 147, lecture 118, progression 34 — all passing (621 checks). Editor import and `git diff --check` pass. Graphical captures of the HUD, floating XP, streak chip, level-up banner, and XP feedback during the lecture were inspected.
 
 ## 2026-09-23 10:14 PDT — Milestone 7 complete; character rebuild reverted; double-tap sprint
 
@@ -202,5 +219,5 @@ Committed the previous change set first (`a20e234`).
 
 1. Read the product spec and the relevant milestone/run document before beginning another milestone. Read this file from top to bottom for the current architecture and user preferences.
 2. Inspect `git status --short` before editing and preserve any uncommitted work you find.
-3. Run tests with `/Applications/Godot.app/Contents/MacOS/Godot --headless --path src --script res://tests/<suite>.gd`. Existing suites are `foundation_test.gd`, `dorm_test.gd`, `campus_test.gd`, `npc_test.gd`, `academic_test.gd`, `visual_motion_test.gd`, `room_polish_test.gd`, `seating_test.gd`, and `lecture_test.gd`. Use `--path src --editor --import --quit` to validate import. Run graphical capture when visual behavior changes.
+3. Run tests with `/Applications/Godot.app/Contents/MacOS/Godot --headless --path src --script res://tests/<suite>.gd`. Existing suites are `foundation_test.gd`, `dorm_test.gd`, `campus_test.gd`, `npc_test.gd`, `academic_test.gd`, `visual_motion_test.gd`, `room_polish_test.gd`, `seating_test.gd`, `lecture_test.gd`, and `progression_test.gd`. Use `--path src --editor --import --quit` to validate import. Run graphical capture when visual behavior changes.
 4. Update this file with a new timestamped section at the top for each future change set. Preserve the user's preferences: plain floor surfaces, subtle wood grain, a small HUD with unboxed keycap prompts, physically plausible character motion around furniture, and the UIC-style raked auditorium for Hall A.

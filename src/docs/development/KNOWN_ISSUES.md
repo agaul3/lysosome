@@ -12,7 +12,8 @@ The earlier sandbox launch/certificate issues are historical: graphical launch a
 
 See `MILESTONES_5_6_ACCEPTANCE.md` for current validation results.
 
-- Academic attendance, question history and XP are session-only until save/load is implemented. A late student at zero XP has a -5 balance; later rewards repay it. No level curve exists yet.
+- Academic attendance, question history, XP, level and streak are session-only until save/load is implemented. A late student at zero XP has a −5 balance (shown as "owed"); later rewards repay it before counting toward a level. Levels never decrease.
+- Sound effects are original synthesized placeholders.
 - The question bank holds the 12-question lecture set plus two remediation items. Human medical-content review is required before educational release.
 - The configured lecture is a one-off event. Subsequent dates show no scheduled event; repeated daily academic calendars remain future content.
 - NPC blockers are simple capsules. Moving NPCs push the player aside rather than steering around them.

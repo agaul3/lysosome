@@ -1,4 +1,4 @@
-# Architecture — Milestones 1–7
+# Architecture — Milestones 1–8
 
 ## Application and scenes
 
@@ -129,3 +129,8 @@ Physics layers: 1 = world, 2 = player, 3 = NPC blockers. The player's mask inclu
 Question beats are lines of the form `{"question": id, "lead": text, "remediation": id}` in the lecture script. `LectureSession` hands them to `QuestionBeat`, which shows the bank question on the lecture overlay's question card, grades it with `QuestionBank.submit` using the attempt id `<lecture>:<question>`, shows feedback and offers the remediation question only after a miss. When the runner finishes, the session tallies the scored questions from `AcademicSession.question_history`, excluding remediation (which still counts toward XP). It stores the summary in `AcademicSession.lectures_completed` and shows it in the SUMMARY state; dismissing it unlocks the seat (COMPLETE). The schedule panel reads `lectures_completed`.
 
 Player sprint: `player.gd` watches movement-action presses in `_unhandled_input`. A second press of the same action within `DOUBLE_TAP_WINDOW` latches sprint until movement stops. The joypad `sprint` action (L3) remains as an alternative.
+
+
+### Progression feedback (Milestone 8)
+
+`LevelCurve` (static, config-driven) is the single source of level maths. `AcademicSession.add_xp()` is the single mutation point for XP. It emits `xp_changed(before, after, delta, reason)`, then `level_up(from, to)` when the peak level rises. `commit_answer` updates `streak` and emits `streak_changed`. Views subscribe and never mutate: `ProgressionHud` (the XP card, floating values, streak chip and level-up overlay on its own CanvasLayer 6) lives in every exploration HUD. The `Sfx` autoload plays the answer and level-up sounds from the same signals, using a small `AudioStreamPlayer` pool on the Master bus.

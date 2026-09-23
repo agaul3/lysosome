@@ -165,7 +165,7 @@ func _on_finished() -> void:
 	professor.set_speaking(false)
 	ui.show_summary("Lecture complete  ·  " + runner.script_data.title, [
 		"Questions correct: %d of %d  (%d%%)" % [summary.correct, summary.attempted, int(round(summary.accuracy * 100.0))],
-		"XP earned this lecture: %d" % summary.xp,
+		"XP earned this lecture: %d  ·  Level %d" % [summary.xp, AcademicSession.level],
 		"%s accuracy overall: %d%%" % [runner.script_data.title, int(round(AcademicSession.accuracy("Pharmacology/Pharmacodynamics") * 100.0))],
 	])
 	_set_state(State.SUMMARY)

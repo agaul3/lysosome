@@ -35,6 +35,7 @@ func refresh() -> void:
 		if not lecture.is_empty():
 			body.text += "Lecture complete • %d/%d correct • +%d XP\n" % [lecture.correct, lecture.attempted, lecture.xp]
 		body.text += "\n"
-	body.text += "XP balance: %d\nTime continues while this menu is open." % AcademicSession.xp_balance
+	var progress: Dictionary = AcademicSession.level_progress()
+	body.text += "Level %d • %d / %d XP to next level • %d XP total\nTime continues while this menu is open." % [progress.level, progress.into, progress.needed, AcademicSession.xp_balance]
 	body.text = body.text.replace("\n", "
 ")

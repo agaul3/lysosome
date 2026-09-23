@@ -21,6 +21,7 @@ NPCSchedule="*res://autoload/npc_schedule.gd"
 GameClock="*res://autoload/game_clock.gd"
 AcademicSession="*res://autoload/academic_session.gd"
 QuestionBank="*res://education/questions/question_bank.gd"
+Sfx="*res://autoload/sfx.gd"
 
 [display]
 
