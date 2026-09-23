@@ -104,7 +104,7 @@ func hud_tests() -> void:
 	state.enter_dorm()
 	await acquire_world()
 	var hud: Node = dorm.hud.progression
-	check(hud.card.visible and hud.level_label.text == "LV 1" and hud.xp_label.text.begins_with("0 / 80"), "HUD shows level and XP progress")
+	check(hud.card.visible and hud.level_label.text == "Lvl 1" and hud.xp_label.text.begins_with("0 / 80"), "HUD shows level and XP progress")
 	check(not hud.streak_chip.visible, "Streak is not shown before 10")
 	answer("pd_efficacy_01", true) # tier 1: 10 XP
 	await ticks(2)
@@ -133,10 +133,10 @@ func hud_tests() -> void:
 	check(not hud.streak_chip.visible, "Streak UI hides after an incorrect answer")
 	await create_timer(2.5).timeout
 	check(not hud.banner.visible, "Level-up effect is brief")
-	check(hud.level_label.text == "LV 2" and absf(hud.shown_fraction - academics.level_progress().fraction) < 0.01, "Bar settles on the overflow into level 2")
+	check(hud.level_label.text == "Lvl 2" and absf(hud.shown_fraction - academics.level_progress().fraction) < 0.01, "Bar settles on the overflow into level 2")
 	academics.add_xp(-5, "late")
 	await ticks(2)
 	var penalty: Array = hud.float_layer.get_children().filter(func(n): return n.text == "−5 XP")
 	check(penalty.size() == 1, "A penalty shows a red −5 XP")
-	check(hud.level_label.text == "LV 2", "The displayed level does not drop")
+	check(hud.level_label.text == "Lvl 2", "The displayed level does not drop")
 	await capture("progression")

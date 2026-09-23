@@ -47,23 +47,29 @@ func _run() -> void:
 	check(dorm.camera.projection == Camera3D.PROJECTION_ORTHOGONAL, "Campus orthographic camera")
 	var original_basis: Basis = dorm.camera.global_basis
 	var original_camera: Vector3 = dorm.camera.position
-	await walk_to(Vector3(-3.5, 0, 5.5))
+	# The directory faces the quad (south); walk round its east side.
+	await walk_to(Vector3(-15.4, 0, 1.5))
+	await walk_to(Vector3(-15.4, 0, 4.4))
+	await walk_to(Vector3(-17, 0, 4.4))
 	check(player.interaction.target == dorm.noticeboard, "Directory reachable")
 	await press_interact()
 	check(dorm.hud.message.text.contains("Lecture Hall A"), "Directory provides directions")
 	await capture("campus-directory")
-	await walk_to(Vector3(-1, 0, 3))
+	await walk_to(Vector3(-9, 0, 2))
 	check(dorm.hud.prompt.text.is_empty(), "Directory prompt clears out of range")
-	await walk_to(Vector3(3.5, 0, 1.3))
+	# Approach Sam from the east, clear of the scheduled student's path.
+	await walk_to(Vector3(-4.6, 0, -3.8))
 	check(player.interaction.target == dorm.student, "Static student interaction reachable")
 	await press_interact()
 	check(dorm.hud.message.text.contains("glass doors"), "Student gives directions")
-	await walk_to(Vector3(8, 0, 1.3))
-	await walk_to(Vector3(8, 0, -3.8))
+	await walk_to(Vector3(-1.5, 0, -9))
+	await walk_to(Vector3(0, 0, -15))
+	await walk_to(Vector3(0, 0, -22.2))
 	check(player.interaction.target == dorm.lecture_door, "Lecture building reached on foot")
 	check(dorm.camera.position.distance_to(original_camera) > 4, "Camera follows traversal")
 	check(dorm.camera.global_basis.is_equal_approx(original_basis), "Camera follow preserves orientation")
-	check(absf(dorm.camera.tracked_point.x) <= 6.01 and absf(dorm.camera.tracked_point.z) <= 5.01, "Camera stays within bounds")
+	var tracked: Vector3 = dorm.camera.tracked_point
+	check(tracked.x >= Config.CAMERA_MIN.x - 0.01 and tracked.x <= Config.CAMERA_MAX.x + 0.01 and tracked.z >= Config.CAMERA_MIN.y - 0.01 and tracked.z <= Config.CAMERA_MAX.y + 0.01, "Camera stays within bounds")
 	await capture("learning-center")
 	use_endpoint()
 	await acquire_world()
@@ -84,10 +90,10 @@ func _run() -> void:
 	use_endpoint()
 	await acquire_world()
 	check(player.position.distance_to(Config.SPAWNS.lecture_building) < 0.1, "Campus return uses lecture entrance spawn")
-	await walk_to(Vector3(8, 0, 2.5))
-	await walk_to(Vector3(1, 0, 2.5))
-	await walk_to(Vector3(-5.5, 0, 2.5))
-	await walk_to(Vector3(-6.5, 0, 5))
+	await walk_to(Vector3(0, 0, -14))
+	await walk_to(Vector3(-8.5, 0, -9))
+	await walk_to(Vector3(-10, 0, -2.2))
+	await walk_to(Vector3(-20.2, 0, -2))
 	check(player.interaction.target == dorm.dorm_door, "Return route reaches residence")
 	use_endpoint()
 	await acquire_world()
@@ -120,22 +126,27 @@ func _run() -> void:
 
 func campus_collisions() -> void:
 	for probe in [
-		[Vector3(0, 0, 10.5), Vector3.BACK],
-		[Vector3(12.5, 0, 1), Vector3.RIGHT],
-		[Vector3(-12.5, 0, -3), Vector3.LEFT],
-		[Vector3(-3, 0, -10.5), Vector3.FORWARD],
+		[Vector3(0, 0, 25.4), Vector3.BACK],
+		[Vector3(35.4, 0, 10), Vector3.RIGHT],
+		[Vector3(-38.4, 0, 15), Vector3.LEFT],
+		[Vector3(-17.5, 0, -35.5), Vector3.FORWARD],
 	]:
 		await reset_position(probe[0])
 		drive(probe[1])
 		await ticks(50)
 		release_movement()
-		check(absf(player.position.x) < 13.6 and absf(player.position.z) < 11.6, "Campus boundary blocks traversal")
+		check(player.position.x > -39.0 and player.position.x < 36.0 and player.position.z > -37.0 and player.position.z < 26.0, "Campus boundary blocks traversal")
 	for probe in [
-		[Vector3(8, 0, -4), Vector3.FORWARD, "LearningCenter", -5.76],
-		[Vector3(-1.8, 0, -0.8), Vector3.FORWARD, "Planter", -1.36],
+		[Vector3(8, 0, -21), Vector3.FORWARD, "LearningCenter", -24.4],
+		[Vector3(0, 0, 1.2), Vector3.FORWARD, "Plaza planter", 0.1],
 	]:
 		await reset_position(probe[0])
 		drive(probe[1])
 		await ticks(50)
 		release_movement()
 		check(player.position.z > probe[3], "Solid obstacle blocks player: " + probe[2])
+	await reset_position(Vector3(-19, 0, -8))
+	drive(Vector3.LEFT)
+	await ticks(50)
+	release_movement()
+	check(player.position.x > -21.8, "Solid obstacle blocks player: CedarResidence")

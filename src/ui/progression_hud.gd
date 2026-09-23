@@ -91,7 +91,7 @@ func _label(font_size: int, color: Color, text := "") -> Label:
 
 func _refresh_labels() -> void:
 	var progress: Dictionary = AcademicSession.level_progress()
-	level_label.text = "LV %d" % progress.level
+	level_label.text = "Lvl %d" % progress.level
 	var debt := mini(AcademicSession.xp_balance, 0)
 	xp_label.text = "%d / %d XP" % [progress.into, progress.needed] + ("  (%d owed)" % -debt if debt < 0 else "")
 

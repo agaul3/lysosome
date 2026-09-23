@@ -1,4 +1,4 @@
-# Architecture — Milestones 1–8
+# Architecture — Milestones 1–9
 
 ## Application and scenes
 
@@ -134,3 +134,13 @@ Player sprint: `player.gd` watches movement-action presses in `_unhandled_input`
 ### Progression feedback (Milestone 8)
 
 `LevelCurve` (static, config-driven) is the single source of level maths. `AcademicSession.add_xp()` is the single mutation point for XP. It emits `xp_changed(before, after, delta, reason)`, then `level_up(from, to)` when the peak level rises. `commit_answer` updates `streak` and emits `streak_changed`. Views subscribe and never mutate: `ProgressionHud` (the XP card, floating values, streak chip and level-up overlay on its own CanvasLayer 6) lives in every exploration HUD. The `Sfx` autoload plays the answer and level-up sounds from the same signals, using a small `AudioStreamPlayer` pool on the Master bus.
+
+
+### Campus (redesigned)
+
+`world/campus/campus.gd` assembles the campus from three helpers. `mesh_kit.gd` (MeshKit) merges boxes and cylinders per material kind (facade, glass, wood, metal, paving), with vertex colour, into one `ArrayMesh`, and collects box colliders onto one `StaticBody3D`. `buildings.gd` holds one static builder per building plus `letters()` for relief signage (TextMesh). `flora.gd` builds cached species meshes and places them with `MultiMeshInstance3D`, adding trunk or hedge colliders. Layout constants that other systems depend on live in `data/campus_config.gd`: spawns, door positions, Sam's position (via `npc_route.gd`) and camera bounds. The glass, facade and foliage shaders are in `assets/`.
+
+
+### Knowledge interface (Milestone 9)
+
+`Knowledge` (static) turns the question bank's records and `AcademicSession.topic_statistics` into a discipline → topic → subtopic tree. Paths are `Discipline`, `Discipline/Topic` and `Discipline/Topic/Subtopic`, the same keys `commit_answer` writes. `KnowledgePanel` renders the tree in the player menu and rebuilds it on `answer_recorded` or when shown. `Knowledge.from_history()` recounts from `question_history` for verification. There is no separate mastery store: statistics remain session state until save/load.

@@ -26,7 +26,7 @@ func _ready() -> void:
 	material.billboard_mode = BaseMaterial3D.BILLBOARD_DISABLED if mounted else BaseMaterial3D.BILLBOARD_ENABLED
 	material.no_depth_test = not mounted
 	if mounted:
-		backing.position.z = -0.004 # Plate just behind the lettering.
+		backing.position.z = -0.008 # Plate sits between the lettering and the wall.
 	material.render_priority = 1
 	# Alpha pipeline ensures priority sorting with the Label3D glyphs.
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA

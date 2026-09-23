@@ -85,7 +85,7 @@ func sprint_checks() -> void:
 	var visual: Node3D = player.appearance
 	var bindings := InputMap.action_get_events("sprint")
 	check(bindings.any(func(e): return e is InputEventJoypadButton) and not bindings.any(func(e): return e is InputEventKey), "Keyboard sprint is double-tap; controller keeps L3")
-	player.position = Vector3(6, 0.05, 2)
+	player.position = Vector3(8, 0.05, 4.5)
 	await ticks(3)
 	hold("move_left")
 	await ticks(40)
@@ -101,7 +101,7 @@ func sprint_checks() -> void:
 	check(speed() < walk_speed + 0.05, "Two slow taps do not sprint")
 	release_movement()
 	await ticks(10)
-	player.position = Vector3(6, 0.05, 2)
+	player.position = Vector3(8, 0.05, 4.5)
 	await ticks(3)
 	await tap("move_left")
 	hold("move_left")

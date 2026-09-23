@@ -1,7 +1,7 @@
 # PROJECT_HANDOFF.md — rpg_med
 
 ## Current status (updated 2026-09-23)
-Milestones 1–8 are complete; Milestone 9 (Knowledge Interface) is next. `CHANGELOG.md` at the repository root is the running, timestamped record of current state and supersedes the historical notes below. `CLAUDE.md` holds standing agent instructions.
+Milestones 1–9 are complete; Milestone 10 (UI + Polish) is next. `CHANGELOG.md` at the repository root is the running, timestamped record of current state and supersedes the historical notes below. `CLAUDE.md` holds standing agent instructions.
 
 ## Purpose
 This file is the cross-agent handoff for the ongoing `rpg_med` project.
@@ -29,6 +29,7 @@ The player is a medical student. Real medical learning should drive XP, levels, 
 - Milestones 4–6 (NPC Prototype, Time + Schedule, Question Engine) plus room/UI polish — committed together with a documentation cleanup.
 - Milestone 7 (Pharmacodynamics Lecture) — complete; see `src/docs/development/MILESTONE_7_ACCEPTANCE.md`.
 - Milestone 8 (Progression Feedback) — complete; see `src/docs/development/MILESTONE_8_ACCEPTANCE.md`.
+- Milestone 9 (Knowledge Interface) — complete; see `src/docs/development/MILESTONE_9_ACCEPTANCE.md`.
 
 Verify against `git log` rather than trusting this list.
 

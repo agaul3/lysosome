@@ -40,8 +40,8 @@ func _run() -> void:
 	check(not paused, "Settings leaves simulation running")
 	dorm.hud.set_settings_open(false)
 	# Follow the autonomous actor, without activating it.
-	await walk_to(Vector3(-1, 0, 3))
-	await walk_to(Vector3(2.5, 0, 2.5))
+	await walk_to(Vector3(-12, 0, 1))
+	await walk_to(Vector3(-8, 0, 1))
 	for index in range(600):
 		if schedule.stage == schedule.Stage.CONVERSATION:
 			break

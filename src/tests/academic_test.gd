@@ -21,7 +21,7 @@ func _run() -> void:
 	check(clock.now_seconds() - before > 4.5 and clock.now_seconds() - before < 6.5, "Live clock advances at 5x with menu open")
 	check(dorm.hud.schedule_panel.body.text.contains("PHARMACODYNAMICS"), "Today's Schedule displays event")
 	check(dorm.hud.calendar_panel.body.text.contains("MANDATORY"), "Calendar shows mandatory event")
-	dorm.hud.menu_tabs.current_tab = 2
+	dorm.hud.menu_tabs.current_tab = dorm.hud.settings.get_index()
 	check(dorm.hud.settings.is_visible_in_tree(), "Settings remains accessible in menu")
 	dorm.hud.menu_tabs.current_tab = 1
 	check(dorm.hud.calendar_panel.is_visible_in_tree(), "Calendar tab accessible")

@@ -8,11 +8,15 @@ const LINES := [
 	{"speaker": "sam", "text": "Hey, you heading to pharm?"},
 	{"speaker": "alex", "text": "Yeah. See you in Hall A."},
 ]
+## Where Sam waits on the quad, beside a bench west of the round plaza.
+const SAM_POSITION := Vector3(-6, 0, -4.6)
 ## Origin of Alex's saved seat in Hall A: row 2, centre section (see lecture_hall.gd ALEX_SEAT).
 const HALL_SEAT := Vector3(-1.84, 0.76, 1.04)
 const GRAPHS := {
 	"campus": {
-		"points": [Vector3(-5, 0, 3), Vector3(-1, 0, 2), Vector3(3.5, 0, 1.1), Vector3(8, 0, 1.1), Vector3(8, 0, -4.8)],
+		# Out of Cedar Residence, along the east-west path to Sam by the plaza,
+		# then north across the quad to the Learning Center doors.
+		"points": [Vector3(-19, 0, -1.8), Vector3(-12, 0, -2), Vector3(-6, 0, -3.2), Vector3(-1.2, 0, -8.5), Vector3(0, 0, -22.6)],
 		"edges": [[0, 1], [1, 2], [2, 3], [3, 4]],
 	},
 	"lecture_building": {

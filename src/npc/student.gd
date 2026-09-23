@@ -2,6 +2,7 @@ extends Node3D
 ## Scene-local view of persistent NPC state. Does not own the schedule or reset it.
 const SitSequence = preload("res://player/sit_sequence.gd")
 const Seat = preload("res://world/seat.gd")
+const Route = preload("res://data/npc_route.gd")
 @export var actor_id := "alex"
 @export var world_zone := "campus"
 ## Optional chair the actor sits in when the schedule reaches SEATED.
@@ -62,7 +63,7 @@ func _sync(on_screen := false) -> void:
 		global_position = seat.point(Seat.SIT_POINT)
 		appearance.rotation.y = seat.seated_yaw()
 	else:
-		position = NPCSchedule.actor_position if actor_id == "alex" else Vector3(3.5, 0, -0.5)
+		position = NPCSchedule.actor_position if actor_id == "alex" else Route.SAM_POSITION
 		var direction := NPCSchedule.facing if actor_id == "alex" else Vector3.BACK
 		appearance.rotation.y = atan2(-direction.x, -direction.z)
 	if seated != was_seated:

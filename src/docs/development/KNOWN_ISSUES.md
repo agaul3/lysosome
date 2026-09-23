@@ -17,3 +17,4 @@ See `MILESTONES_5_6_ACCEPTANCE.md` for current validation results.
 - The question bank holds the 12-question lecture set plus two remediation items. Human medical-content review is required before educational release.
 - The configured lecture is a one-off event. Subsequent dates show no scheduled event; repeated daily academic calendars remain future content.
 - NPC blockers are simple capsules. Moving NPCs push the player aside rather than steering around them.
+- Campus buildings other than the residence and the Learning Center are scenery (no interiors). Cars are static props. Relief lettering uses Godot's built-in font, because the Outfit variable font fails TextMesh triangulation.

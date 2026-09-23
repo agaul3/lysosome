@@ -1,5 +1,10 @@
 extends Node3D
-## Compact Southern California-inspired academic courtyard; all geometry is original.
+## Medical-school campus: a Harvard-style central quad (lawn panels, cross
+## paths, round plaza, tree rows) framed by a modern stacked Learning Center
+## (north), Cedar Residence (west), a café pavilion (east), a classical
+## Anatomy Hall and a medical-centre tower in the background, and parking to
+## the south. Buildings live in buildings.gd, planting in flora.gd; geometry
+## is merged per material (mesh_kit.gd) so the larger map stays fast.
 const Geometry = preload("res://world/geometry.gd")
 const Endpoint = preload("res://world/interactable.gd")
 const Camera = preload("res://world/exploration_camera.gd")
@@ -7,6 +12,22 @@ const Player = preload("res://player/player.tscn")
 const HUD = preload("res://ui/dorm_ui.gd")
 const StudentScene = preload("res://npc/student.tscn")
 const Config = preload("res://data/campus_config.gd")
+const MeshKit = preload("res://world/campus/mesh_kit.gd")
+const Buildings = preload("res://world/campus/buildings.gd")
+const Flora = preload("res://world/campus/flora.gd")
+
+const PATH := Color("dcd6c9")
+const PLAZA := Color("e4dfd3")
+const COURT := Color("d6d0c3")
+const ASPHALT := Color("7c8084")
+const CURB := Color("c9c4b8")
+const WOOD := Color("a57a52")
+const POST := Color("4a5156")
+## Lawn panels of the quad (x0, z0, x1, z1), also used for grass tufts.
+const LAWNS := [[-12.0, -12.0, -1.5, -3.5], [1.5, -12.0, 12.0, -3.5], [-12.0, -0.5, -1.5, 8.0], [1.5, -0.5, 12.0, 8.0]]
+const PLAZA_CENTER := Vector3(0, 0, -2)
+const PLAZA_RADIUS := 4.5
+
 var player: CharacterBody3D
 var camera: Camera3D
 var hud: CanvasLayer
@@ -19,83 +40,260 @@ var campus_environment: Environment
 
 func _ready() -> void:
 	_build_ground()
+	_build_paving()
+	Buildings.learning_center(self)
+	Buildings.residence(self)
+	Buildings.medical_center(self)
+	Buildings.anatomy_hall(self)
+	Buildings.pavilion(self)
+	_build_signs()
+	_build_props()
+	_build_parking()
+	_build_planting()
 	_build_grass()
-	_build_buildings()
-	_build_courtyard()
-	_build_details()
+	_build_context()
+	_build_bounds()
+	_build_people()
 	_build_interactions()
 	_build_lighting()
 	player = Player.instantiate()
 	player.position = Config.SPAWNS.get(AppState.campus_entry, Config.SPAWNS.dorm)
 	add_child(player)
 	camera = Camera.new()
-	camera.view_size = 19.5
-	camera.follow_min = Vector2(-6, -5)
-	camera.follow_max = Vector2(6, 5)
+	camera.view_size = Config.CAMERA_VIEW
+	camera.follow_min = Config.CAMERA_MIN
+	camera.follow_max = Config.CAMERA_MAX
 	add_child(camera)
 	camera.follow(player)
 	player.movement_camera = camera
 	hud = HUD.new()
 	hud.location_title = "MEDICAL SCHOOL  /  STUDENT COMMONS"
-	hud.objective_text = "Morning • Follow the path to the Learning Center / Lecture Hall A"
+	hud.objective_text = "Morning • Cross the quad to the Learning Center / Lecture Hall A"
 	add_child(hud)
 	hud.bind_player(player)
 
+# --- Ground ---------------------------------------------------------------------------
+
 func _build_ground() -> void:
-	var ground := Geometry.box(self, "Ground", Vector3(28, 0.3, 24), Vector3(0, -0.15, 0), Color("70ab75"), true)
+	var ground := Geometry.box(self, "Ground", Vector3(240, 0.3, 240), Vector3(0, -0.15, 0), Color("5f9a3f"), true)
 	var lawn := ShaderMaterial.new()
 	lawn.shader = preload("res://assets/grass.gdshader")
 	ground.get_child(0).material_override = lawn
-	Geometry.box(self, "MainWalk", Vector3(23, 0.03, 4), Vector3(0, 0.02, 2), Color("eedbb8"))
-	Geometry.box(self, "ResidenceWalk", Vector3(5, 0.035, 4), Vector3(-5.8, 0.025, 5), Color("eedbb8"))
-	Geometry.box(self, "LectureWalk", Vector3(4, 0.035, 10), Vector3(8, 0.025, -1), Color("eedbb8"))
-	for boundary in [
-		["NorthBoundary", Vector3(28, 1.0, 0.3), Vector3(0, 0.5, -12)],
-		["SouthBoundary", Vector3(28, 1.0, 0.3), Vector3(0, 0.5, 12)],
-		["WestBoundary", Vector3(0.3, 1.0, 24), Vector3(-14, 0.5, 0)],
-		["EastBoundary", Vector3(0.3, 1.0, 24), Vector3(14, 0.5, 0)],
-	]:
-		Geometry.box(self, boundary[0], boundary[1], boundary[2], Color("3f725e"), true)
 
-## Areas without lawn: paths, building footprints, planter, directory, bench,
-## boundary walls and palm trunks (x0, z0, x1, z1).
-const NO_GRASS := [
-	[-11.6, -0.1, 11.6, 4.1], [-8.4, 2.9, -3.2, 7.1], [5.9, -6.1, 10.1, 4.1],
-	[-13.2, 0.8, -7.7, 8.2], [1.8, -11.2, 12.2, -5.3], [-4.3, -5.0, 0.7, -1.4],
-	[-4.5, 3.6, -2.5, 4.9], [0.2, -1.4, 3.2, -0.3], [3.0, -1.0, 4.0, 0.0],
-]
-const PALMS := [Vector3(-3, 0, -3.3), Vector3(-0.8, 0, -3), Vector3(11.7, 0, 6.8), Vector3(-5.8, 0, -8.3)]
+## Paths, plazas, forecourts and parking surfaces. Each layer sits a few
+## millimetres above the one below so overlaps never z-fight.
+func _build_paving() -> void:
+	var kit := MeshKit.new()
+	var slab := func(x0: float, z0: float, x1: float, z1: float, top: float, color: Color) -> void:
+		kit.box("paving", Vector3((x0 + x1) / 2.0, top / 2.0, (z0 + z1) / 2.0), Vector3(x1 - x0, top, z1 - z0), color)
+	# Quad: perimeter walk, cross axes, round plaza.
+	slab.call(-15, -15, 15, -12, 0.03, PATH)
+	slab.call(-15, 8, 15, 11, 0.03, PATH)
+	slab.call(-15, -12, -12, 8, 0.03, PATH)
+	slab.call(12, -12, 15, 8, 0.03, PATH)
+	slab.call(-1.5, -12, 1.5, 8, 0.035, PATH)
+	slab.call(-1.5, 11, 1.5, 14, 0.035, PATH)
+	slab.call(-12, -3.5, 12, -0.5, 0.04, PATH)
+	slab.call(-22, -3.5, -15, -0.5, 0.04, PATH)
+	slab.call(15, -3.5, 20.5, -0.5, 0.04, PATH)
+	kit.cylinder("paving", PLAZA_CENTER, PLAZA_CENTER + Vector3(0, 0.05, 0), PLAZA_RADIUS, PLAZA, 40)
+	kit.cylinder("paving", PLAZA_CENTER + Vector3(0, 0.05, 0), PLAZA_CENTER + Vector3(0, 0.055, 0), PLAZA_RADIUS - 0.25, PLAZA.darkened(0.04), 40)
+	# Learning Center plaza, residence forecourt, medical forecourt, café terrace.
+	slab.call(-17, -24.7, 17, -15, 0.03, PLAZA) # Runs under the facade: no grass gap.
+	slab.call(-22, -7, -15, 4, 0.032, COURT)
+	slab.call(17, -22, 36, -14, 0.03, PLAZA)
+	slab.call(15, -11, 20.5, 5, 0.034, Color("cfc6b5"))
+	slab.call(-20, -24, -15, -15, 0.03, PLAZA)
+	# Sidewalk and parking to the south, street beyond.
+	slab.call(-26, 11, 26, 14, 0.03, PATH)
+	slab.call(-25, 14, 25, 26, 0.02, ASPHALT)
+	slab.call(-40, 27, 40, 35, 0.02, ASPHALT.darkened(0.15))
+	slab.call(-40, 26, 40, 27, 0.05, CURB)
+	slab.call(-40, 35, 40, 37, 0.05, CURB)
+	for index in range(16):
+		var x := -37.5 + index * 5.0
+		slab.call(x, 30.9, x + 2.4, 31.1, 0.025, Color("d8d3c2"))
+	# Parking bays: low-contrast stall lines.
+	for row in [[14.8, 19.0], [21.6, 25.8]]:
+		for index in range(19):
+			var x := -22.5 + index * 2.6
+			slab.call(x - 0.05, row[0], x + 0.05, row[1], 0.024, Color("b3b6b7"))
+	kit.commit(self, "Paving", false)
 
-func _grass_allowed(x: float, z: float) -> bool:
-	if absf(x) > 13.6 or absf(z) > 11.6:
-		return false
-	for area in NO_GRASS:
-		if x > area[0] and x < area[2] and z > area[1] and z < area[3]:
-			return false
-	for palm in PALMS:
-		if Vector2(x - palm.x, z - palm.z).length() < 0.3:
-			return false
-	return true
+# --- Signage ----------------------------------------------------------------------------
 
-## Dense, short turf tufts over the lawn, tinted in the same vivid greens as
-## the ground shader so they add pile depth rather than separate clumps.
+func _build_signs() -> void:
+	Buildings.letters(self, "LEARNING CENTER", Vector3(8, 0.42, -17.0), 0.0, 0.5, Color("3a4247"))
+	Buildings.letters(self, "SCHOOL OF MEDICINE", Vector3(-8, 0.42, -17.0), 0.0, 0.42, Color("3a4247"))
+	Buildings.letters(self, "LECTURE HALL A", Vector3(0, 4.25, -19.8), 0.0, 0.22, Color("3a4247"), 0.03)
+	Buildings.letters(self, "CEDAR RESIDENCE", Vector3(-18.8, 3.3, -2), PI / 2, 0.22, Color("3a4247"), 0.03)
+	Buildings.letters(self, "UNIVERSITY MEDICAL CENTER", Vector3(26, 5.3, -18.7), 0.0, 0.26, Color("3a4247"), 0.03)
+	Buildings.letters(self, "CAFÉ", Vector3(19.0, 3.95, -3), -PI / 2, 0.3, Color("3a4247"), 0.03)
+
+# --- Street furniture, planters and the directory -------------------------------------
+
+func _build_props() -> void:
+	var kit := MeshKit.new()
+	var stone := Color("cfc9bc")
+	var soil := Color("7a6450") # Light bark mulch.
+	# Learning Center plaza planters (raised, seat-height walls).
+	for x0 in [-12.0, 4.0]:
+		kit.solid_box("facade", Vector3(x0 + 4, 0.38, -19), Vector3(8, 0.76, 4), stone)
+		kit.box("facade", Vector3(x0 + 4, 0.77, -19), Vector3(7.6, 0.04, 3.6), soil)
+		kit.box("wood", Vector3(x0 + 4, 0.8, -16.85), Vector3(7.2, 0.08, 0.34), Color.WHITE)
+	# Round planter at the heart of the quad.
+	kit.cylinder("facade", PLAZA_CENTER, PLAZA_CENTER + Vector3(0, 0.55, 0), 1.9, stone, 28)
+	kit.cylinder("facade", PLAZA_CENTER + Vector3(0, 0.55, 0), PLAZA_CENTER + Vector3(0, 0.58, 0), 1.75, soil, 28)
+	var plaza_collider := StaticBody3D.new()
+	plaza_collider.name = "PlazaPlanterCollision"
+	var round_shape := CollisionShape3D.new()
+	round_shape.shape = CylinderShape3D.new()
+	round_shape.shape.radius = 1.9
+	round_shape.shape.height = 1.2
+	round_shape.position = PLAZA_CENTER + Vector3(0, 0.6, 0)
+	plaza_collider.add_child(round_shape)
+	add_child(plaza_collider)
+	# Benches around the quad (timber slats on dark steel frames).
+	for bench in [[Vector3(-6, 0, -5.8), 0.0], [Vector3(6, 0, -5.8), 0.0], [Vector3(-6, 0, 1.8), PI], [Vector3(6, 0, 1.8), PI],
+			[Vector3(-13.5, 0, -8), PI / 2], [Vector3(13.5, 0, 4), -PI / 2], [Vector3(-19.5, 0, 2.6), PI]]:
+		_bench(kit, bench[0], bench[1])
+	# Lamp posts along the perimeter walk.
+	for point in [Vector3(-15.3, 0, -9), Vector3(-15.3, 0, 5), Vector3(15.3, 0, -9), Vector3(15.3, 0, 5), Vector3(-6, 0, 11.3), Vector3(6, 0, 11.3), Vector3(-6, 0, -15.3), Vector3(6, 0, -15.3)]:
+		kit.cylinder("metal", point, point + Vector3(0, 4.2, 0), 0.06, POST)
+		kit.box("metal", point + Vector3(0, 4.3, 0), Vector3(0.5, 0.12, 0.22), POST)
+		kit.box("facade", point + Vector3(0, 4.22, 0), Vector3(0.42, 0.03, 0.16), Color("fffbe8"))
+		kit.solid(point + Vector3(0, 1, 0), Vector3(0.14, 2, 0.14))
+	# Campus directory kiosk outside the residence, facing the quad path.
+	var kiosk := Vector3(-17, 0, 3)
+	kit.solid_box("metal", kiosk + Vector3(0, 1.1, 0), Vector3(1.6, 2.2, 0.18), Color("35484f"))
+	kit.box("facade", kiosk + Vector3(0, 1.15, 0.1), Vector3(1.36, 1.2, 0.02), Color("efe9da"))
+	for index in range(5):
+		kit.box("facade", kiosk + Vector3(-0.45 + index * 0.22, 1.4 - (index % 2) * 0.35, 0.115), Vector3(0.16, 0.12, 0.01), [Color("6f9f8c"), Color("d9a15a"), Color("8a9fc4")][index % 3])
+	Geometry.wall_sign(self, "CAMPUS DIRECTORY", kiosk + Vector3(0, 1.95, 0.09), 0.0, 24, 0.0075)
+	# Café terrace tables with umbrellas.
+	for point in [Vector3(17, 0, -8), Vector3(17, 0, -4.8), Vector3(17, 0, 1.2), Vector3(18.6, 0, 3.4)]:
+		kit.cylinder("metal", point, point + Vector3(0, 0.74, 0), 0.04, POST)
+		kit.cylinder("facade", point + Vector3(0, 0.74, 0), point + Vector3(0, 0.77, 0), 0.45, Color("f1efe9"), 14)
+		kit.cylinder("metal", point, point + Vector3(0, 2.3, 0), 0.025, Color("d8dcde"))
+		kit.cylinder("facade", point + Vector3(0, 2.2, 0), point + Vector3(0, 2.35, 0), 1.3, Color("f4efe4"), 12)
+		kit.solid(point + Vector3(0, 0.5, 0), Vector3(0.9, 1.0, 0.9))
+	kit.commit(self, "StreetFurniture")
+
+func _bench(kit: MeshKit, position: Vector3, yaw: float) -> void:
+	var basis := Basis(Vector3.UP, yaw)
+	for index in range(4):
+		kit.box("wood", position + basis * Vector3(0, 0.45, -0.18 + index * 0.12), Vector3(1.8, 0.05, 0.1), Color.WHITE, basis)
+	for side in [-1, 1]:
+		kit.box("metal", position + basis * Vector3(side * 0.75, 0.22, 0), Vector3(0.06, 0.44, 0.5), POST, basis)
+	kit.box("wood", position + basis * Vector3(0, 0.75, 0.22), Vector3(1.8, 0.3, 0.05), Color.WHITE, basis)
+	kit.solid(position + Vector3(0, 0.4, 0), (basis * Vector3(1.9, 0.8, 0.6)).abs())
+
+# --- Parking -----------------------------------------------------------------------------
+
+func _build_parking() -> void:
+	var kit := MeshKit.new()
+	var colours := [Color("f2f2f0"), Color("c3c8cc"), Color("4a6484"), Color("b8443c"), Color("4b5156"), Color("8a979d")]
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 11
+	for row in [[16.9, 0.0], [23.7, PI]]:
+		for index in range(18):
+			if rng.randf() < 0.35 or absf(-21.2 + index * 2.6) < 2.5:
+				continue
+			_car(kit, Vector3(-21.2 + index * 2.6, 0, row[0]), row[1] + rng.randf_range(-0.04, 0.04), colours[rng.randi() % colours.size()])
+	# Planted islands between the bays.
+	for x in [-24.3, 24.3]:
+		kit.solid_box("facade", Vector3(x, 0.1, 20), Vector3(1.2, 0.2, 11.5), CURB)
+	kit.commit(self, "Parking")
+
+func _car(kit: MeshKit, position: Vector3, yaw: float, colour: Color) -> void:
+	var basis := Basis(Vector3.UP, yaw)
+	kit.box("metal", position + basis * Vector3(0, 0.55, 0), Vector3(1.8, 0.6, 4.3), colour, basis)
+	kit.box("metal", position + basis * Vector3(0, 1.05, 0.25), Vector3(1.6, 0.5, 2.2), colour, basis)
+	kit.box("glass", position + basis * Vector3(0, 1.06, 0.25), Vector3(1.62, 0.4, 2.0), Color.WHITE, basis)
+	for side in [-1, 1]:
+		for end in [-1, 1]:
+			kit.cylinder("metal", position + basis * Vector3(side * 0.8, 0.33, end * 1.35), position + basis * Vector3(side * 0.92, 0.33, end * 1.35), 0.33, Color("1b1d1f"), 10)
+	kit.solid(position + Vector3(0, 0.7, 0), (basis * Vector3(1.9, 1.4, 4.4)).abs())
+
+# --- Planting ----------------------------------------------------------------------------
+
+func _build_planting() -> void:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 42
+	var place := func(points: Array, low: float, high: float) -> Array:
+		return points.map(func(p: Vector3) -> Array: return [p, rng.randf_range(low, high), rng.randf() * TAU])
+	# Shade-tree rows along the quad, and trees at the plaza corners.
+	var shade := []
+	for z in [-12.0, -7.0, 3.0, 8.0]:
+		shade.append(Vector3(-17, 0, z))
+		shade.append(Vector3(17, 0, z))
+	shade.append_array([Vector3(-19, 0, -19), Vector3(-27, 0, 12.5), Vector3(-33, 0, 12.5), Vector3(30, 0, 9), Vector3(34, 0, -10)])
+	Flora.plant(self, "shade", place.call(shade, 0.95, 1.2))
+	# Flowering trees: medical-centre frontage, residence forecourt, plaza centre.
+	var flowering := [Vector3(19, 0, -16.5), Vector3(23.5, 0, -16.5), Vector3(28.5, 0, -16.5), Vector3(33, 0, -16.5), Vector3(-20, 0, -6.2), Vector3(-20, 0, 3.4), PLAZA_CENTER + Vector3(0, 0.55, 0)]
+	Flora.plant(self, "flowering", place.call(flowering, 0.9, 1.1))
+	# Ornamentals in the plaza planters and the parking islands.
+	var ornamental := [Vector3(-10, 0.76, -19), Vector3(-6, 0.76, -19), Vector3(6, 0.76, -19), Vector3(10, 0.76, -19), Vector3(-24.3, 0.2, 16.5), Vector3(-24.3, 0.2, 23.5), Vector3(24.3, 0.2, 16.5), Vector3(24.3, 0.2, 23.5)]
+	Flora.plant(self, "ornamental", place.call(ornamental, 0.9, 1.15))
+	# Columnar trees framing the Anatomy Hall portico and the residence corners.
+	Flora.plant(self, "columnar", place.call([Vector3(-35, 0, -22.6), Vector3(-23, 0, -22.6), Vector3(-21.2, 0, 10.2), Vector3(-21.2, 0, -13.2), Vector3(16.2, 0, -14.4), Vector3(-16.2, 0, -14.4)], 0.95, 1.1))
+	# Foundation shrubs, bed edges and planter fill.
+	var shrubs := []
+	for x in range(-13, 14, 2):
+		if absf(x) > 3:
+			shrubs.append(Vector3(x, 0, -23.4))
+	for z in range(-11, 9, 2):
+		if z < -6 or z > 2:
+			shrubs.append(Vector3(-21.4, 0, z))
+	for angle in range(0, 360, 40):
+		shrubs.append(PLAZA_CENTER + Vector3(cos(deg_to_rad(angle)) * 1.25, 0.55, sin(deg_to_rad(angle)) * 1.25))
+	for x in [-11.0, -8.5, -3.5, 3.5, 8.5, 11.0]:
+		shrubs.append(Vector3(x, 0.76, -20.4))
+	for x in range(18, 35, 3):
+		shrubs.append(Vector3(x, 0, -21.4))
+	# Fill the plaza planters and the pavilion's green roof with low planting.
+	for planter_x in [-8.0, 8.0]:
+		for index in range(10):
+			shrubs.append(Vector3(planter_x + rng.randf_range(-3.3, 3.3), 0.76, -19 + rng.randf_range(-1.4, 1.4)))
+	for index in range(14):
+		shrubs.append(Vector3(rng.randf_range(20.5, 29.5), 4.12, rng.randf_range(-9.2, 3.2)))
+	Flora.plant(self, "shrub", place.call(shrubs, 0.7, 1.15), false)
+	# Low hedges edging the parking lot (gap at the central axis).
+	var hedges := []
+	for index in range(11):
+		hedges.append(Vector3(-23.5 + index * 2.05, 0, 14.1))
+		hedges.append(Vector3(2.9 + index * 2.05, 0, 14.1))
+	Flora.plant(self, "hedge", hedges.map(func(p: Vector3) -> Array: return [p, 1.0, 0.0]))
+	# Flower beds: blossoms in the planters and around the plaza.
+	var blossoms := []
+	var tints := []
+	var palette := [Color("f6e6ef"), Color("f5c542"), Color("e8708a"), Color("c9a4e8"), Color("ffffff")]
+	var beds := [[Vector3(-8, 0.77, -19), Vector2(3.6, 1.6)], [Vector3(8, 0.77, -19), Vector2(3.6, 1.6)], [PLAZA_CENTER + Vector3(0, 0.58, 0), Vector2(1.5, 1.5)], [Vector3(-20, 0, -1.5), Vector2(0.4, 3.0)], [Vector3(26, 0, -15.2), Vector2(7.0, 0.5)]]
+	for bed in beds:
+		for index in range(70):
+			var offset := Vector3(rng.randf_range(-bed[1].x, bed[1].x), 0, rng.randf_range(-bed[1].y, bed[1].y))
+			if bed[0] == PLAZA_CENTER + Vector3(0, 0.58, 0) and offset.length() > 1.6:
+				continue
+			blossoms.append([bed[0] + offset, rng.randf_range(0.8, 1.4), rng.randf() * TAU])
+			tints.append(palette[rng.randi() % palette.size()])
+	Flora.plant(self, "blossom", blossoms, false, tints)
+
+## Dense short turf tufts on the lawn panels only.
 func _build_grass() -> void:
 	var rng := RandomNumberGenerator.new()
-	rng.seed = 20260921 # Deterministic layout between runs and captures.
+	rng.seed = 20260921
 	var transforms: Array[Transform3D] = []
 	var colors: Array[Color] = []
-	var attempts := 0
-	while transforms.size() < 18000 and attempts < 60000:
-		attempts += 1
-		var x := rng.randf_range(-13.6, 13.6)
-		var z := rng.randf_range(-11.6, 11.6)
-		if not _grass_allowed(x, z):
-			continue
-		var size := rng.randf_range(0.5, 0.8)
-		var tuft_basis := Basis(Vector3.UP, rng.randf() * TAU).scaled(Vector3(size, size * rng.randf_range(0.28, 0.4), size))
-		transforms.append(Transform3D(tuft_basis, Vector3(x, 0.0, z)))
-		var tone := rng.randf()
-		colors.append(Color("2f7a1f").lerp(Color("6db43a"), tone))
+	for lawn in LAWNS:
+		var area: float = (lawn[2] - lawn[0]) * (lawn[3] - lawn[1])
+		for index in range(int(area * 42)):
+			var x := rng.randf_range(lawn[0] + 0.1, lawn[2] - 0.1)
+			var z := rng.randf_range(lawn[1] + 0.1, lawn[3] - 0.1)
+			if Vector2(x - PLAZA_CENTER.x, z - PLAZA_CENTER.z).length() < PLAZA_RADIUS + 0.1:
+				continue
+			var size := rng.randf_range(0.5, 0.8)
+			transforms.append(Transform3D(Basis(Vector3.UP, rng.randf() * TAU).scaled(Vector3(size, size * rng.randf_range(0.28, 0.4), size)), Vector3(x, 0, z)))
+			colors.append(Color("2f7a1f").lerp(Color("6db43a"), rng.randf()))
 	var tufts := MultiMesh.new()
 	tufts.transform_format = MultiMesh.TRANSFORM_3D
 	tufts.use_colors = true
@@ -104,14 +302,14 @@ func _build_grass() -> void:
 	for index in range(transforms.size()):
 		tufts.set_instance_transform(index, transforms[index])
 		tufts.set_instance_color(index, colors[index])
-	var tuft_instance := MultiMeshInstance3D.new()
-	tuft_instance.name = "GrassTufts"
-	tuft_instance.multimesh = tufts
-	tuft_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	var blade_material := ShaderMaterial.new()
-	blade_material.shader = preload("res://assets/grass_blades.gdshader")
-	tuft_instance.material_override = blade_material
-	add_child(tuft_instance)
+	var instance := MultiMeshInstance3D.new()
+	instance.name = "GrassTufts"
+	instance.multimesh = tufts
+	instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	var blades := ShaderMaterial.new()
+	blades.shader = preload("res://assets/grass_blades.gdshader")
+	instance.material_override = blades
+	add_child(instance)
 
 ## One tuft: five tapered blades leaning out from a shared root.
 static func _tuft_mesh() -> ArrayMesh:
@@ -125,114 +323,62 @@ static func _tuft_mesh() -> ArrayMesh:
 		var height := 0.2 + 0.12 * fmod(blade * 0.618, 1.0)
 		var root := out * 0.03
 		var tip_point := out * (0.07 + (0.03 if blade % 2 else 0.0)) + Vector3(0, height, 0)
-		var normal := (out + Vector3.UP).normalized()
-		tool.set_normal(normal)
+		tool.set_normal((out + Vector3.UP).normalized())
 		tool.add_vertex(root - side)
 		tool.add_vertex(root + side)
 		tool.add_vertex(tip_point)
 	return tool.commit()
 
-func _build_buildings() -> void:
-	Geometry.box(self, "Residence", Vector3(5, 3.7, 7), Vector3(-10.5, 1.85, 4.5), Color("efc998"), true)
-	Geometry.box(self, "ResidenceRoof", Vector3(5.2, 0.16, 7.2), Vector3(-10.5, 3.78, 4.5), Color("bd6949"))
-	_build_residence_facade()
-	Geometry.box(self, "LearningCenter", Vector3(10, 4.5, 5), Vector3(7, 2.25, -8.5), Color("e5ddca"), true)
-	Geometry.box(self, "CenterRoof", Vector3(10.4, 0.2, 5.4), Vector3(7, 4.58, -8.5), Color("b2b6ad"))
-	_build_learning_center_facade()
-	Geometry.box(self, "EntryCanopy", Vector3(4, 0.16, 2.1), Vector3(8, 3.15, -5.35), Color("c6ae88"))
-	# Signs are mounted on the building: name above the glazing, hall name on the canopy fascia.
-	Geometry.wall_sign(self, "LEARNING CENTER", Vector3(7, 3.72, -5.93), 0.0, 36, 0.013)
-	Geometry.box(self, "CanopyFascia", Vector3(2.4, 0.34, 0.06), Vector3(8, 3.4, -4.33), Color("365d65"))
-	Geometry.wall_sign(self, "LECTURE HALL A", Vector3(8, 3.4, -4.295), 0.0, 26, 0.009)
+# --- Surroundings ------------------------------------------------------------------------
 
-## East face of Cedar Residence (x = -8). Trim frames the openings instead of
-## running across them; every layer sits at its own depth to avoid z-fighting.
-func _build_residence_facade() -> void:
-	var face := -8.0
-	var trim := Color("fff0d2")
-	Geometry.box(self, "ResidencePlinth", Vector3(0.08, 0.34, 7.0), Vector3(face + 0.04, 0.17, 4.5), Color("c9a57c"))
-	Geometry.box(self, "ResidenceCornice", Vector3(0.1, 0.18, 7.0), Vector3(face + 0.05, 3.55, 4.5), trim)
-	for z in [1.06, 7.94]:
-		Geometry.box(self, "ResidenceCorner", Vector3(0.09, 3.2, 0.12), Vector3(face + 0.045, 1.94, z), trim)
-	# Door: recessed leaf inside a proud frame, with a small canopy and step.
-	Geometry.box(self, "ResidenceDoor", Vector3(0.04, 2.2, 1.2), Vector3(face + 0.02, 1.1, 5), Color("537b76"))
-	Geometry.box(self, "ResidenceDoorGlass", Vector3(0.02, 0.9, 0.5), Vector3(face + 0.05, 1.55, 5), Color("8ba9b1"))
-	Geometry.box(self, "ResidenceDoorHandle", Vector3(0.05, 0.05, 0.16), Vector3(face + 0.07, 1.05, 5.38), Color("d8c9a8"))
-	for z in [4.33, 5.67]:
-		Geometry.box(self, "ResidenceDoorJamb", Vector3(0.1, 2.35, 0.14), Vector3(face + 0.05, 1.175, z), trim)
-	Geometry.box(self, "ResidenceDoorHead", Vector3(0.1, 0.14, 1.48), Vector3(face + 0.05, 2.35, 5), trim)
-	Geometry.box(self, "ResidenceAwning", Vector3(0.7, 0.08, 1.9), Vector3(face + 0.35, 2.62, 5), Color("bd6949"))
-	# Building name mounted on the wall between the awning and the cornice.
-	Geometry.wall_sign(self, "CEDAR RESIDENCE", Vector3(face + 0.012, 3.05, 5), PI / 2, 30, 0.01)
-	for z in [2.2, 7.0]:
-		Geometry.box(self, "ResidenceWindow", Vector3(0.03, 1.1, 1.1), Vector3(face + 0.015, 2, z), Color("8ba9b1"))
-		Geometry.box(self, "WindowMuntin", Vector3(0.02, 1.1, 0.05), Vector3(face + 0.04, 2, z), trim)
-		Geometry.box(self, "WindowMuntin", Vector3(0.02, 0.05, 1.1), Vector3(face + 0.04, 2, z), trim)
-		for offset in [-0.6, 0.6]:
-			Geometry.box(self, "WindowFrame", Vector3(0.08, 1.3, 0.1), Vector3(face + 0.04, 2, z + offset), trim)
-		Geometry.box(self, "WindowHead", Vector3(0.08, 0.1, 1.3), Vector3(face + 0.04, 2.6, z), trim)
-		Geometry.box(self, "WindowSill", Vector3(0.16, 0.08, 1.4), Vector3(face + 0.08, 1.4, z), trim)
+## Distant city blocks beyond the campus edge so the view never ends in void.
+func _build_context() -> void:
+	var kit := MeshKit.new()
+	var blocks := [
+		[Vector3(-30, 0, -52), Vector3(22, 28, 14)], [Vector3(-4, 0, -54), Vector3(18, 40, 16)], [Vector3(20, 0, -50), Vector3(20, 22, 12)],
+		[Vector3(44, 0, -38), Vector3(12, 30, 18)], [Vector3(-54, 0, -30), Vector3(14, 24, 22)], [Vector3(-56, 0, 2), Vector3(12, 16, 26)],
+		[Vector3(-20, 0, 48), Vector3(24, 10, 12)], [Vector3(12, 0, 48), Vector3(20, 12, 12)],
+	]
+	for block in blocks:
+		var center: Vector3 = block[0] + Vector3(0, block[1].y / 2.0, 0)
+		kit.box("glass", center, block[1], Color.WHITE)
+		kit.box("facade", center + Vector3(0, block[1].y / 2.0 + 0.3, 0), block[1] + Vector3(0.4, 0.6, 0.4), Color("e9e7e1"))
+	kit.commit(self, "Skyline")
+	# A line of street trees along the far side of the road.
+	var trees := []
+	for index in range(12):
+		trees.append([Vector3(-36 + index * 6.5, 0, 36.2), 1.0, float(index)])
+	Flora.plant(self, "shade", trees, false)
 
-## South face of the Learning Center (z = -6): glazed bays, a framed double
-## door in its own bay, and sills that stop at the door frame.
-func _build_learning_center_facade() -> void:
-	var face := -6.0
-	Geometry.box(self, "GlassFacade", Vector3(8.9, 2.5, 0.04), Vector3(7, 1.75, face + 0.03), Color("4c9db1"))
-	for x in [2.55, 4.25, 5.75, 10.25, 11.45]:
-		Geometry.box(self, "Mullion", Vector3(0.08, 2.55, 0.08), Vector3(x, 1.75, face + 0.08), Color("ede9db"))
-	for bay in [[2.55, 7.05], [8.95, 11.45]]:
-		var width: float = bay[1] - bay[0]
-		var center: float = (bay[0] + bay[1]) / 2.0
-		Geometry.box(self, "FacadeSill", Vector3(width, 0.1, 0.16), Vector3(center, 0.45, face + 0.1), Color("faf0d8"))
-		Geometry.box(self, "GlassReflection", Vector3(0.13, 2.1, 0.01), Vector3(center - width * 0.2, 1.85, face + 0.055), Color("92d1dc"))
-	# Door bay: frame proud of the glass, two tinted leaves with push bars.
-	for x in [7.1, 8.9]:
-		Geometry.box(self, "EntryJamb", Vector3(0.12, 2.6, 0.16), Vector3(x, 1.3, face + 0.1), Color("ede9db"))
-	Geometry.box(self, "EntryHeader", Vector3(1.92, 0.16, 0.16), Vector3(8, 2.62, face + 0.1), Color("ede9db"))
-	for x in [7.58, 8.42]:
-		Geometry.box(self, "LectureEntry", Vector3(0.78, 2.46, 0.05), Vector3(x, 1.25, face + 0.09), Color("365d65"))
-		Geometry.box(self, "EntryPushBar", Vector3(0.5, 0.05, 0.04), Vector3(x, 1.05, face + 0.14), Color("c9d4cf"))
-	Geometry.box(self, "EntryStile", Vector3(0.06, 2.46, 0.07), Vector3(8, 1.25, face + 0.1), Color("ede9db"))
+## Invisible edges of the walkable campus.
+func _build_bounds() -> void:
+	var body := StaticBody3D.new()
+	body.name = "CampusBounds"
+	for bound in [[Vector3(0, 1.5, -37.5), Vector3(80, 3, 1)], [Vector3(0, 1.5, 26.5), Vector3(80, 3, 1)], [Vector3(-39.5, 1.5, -5), Vector3(1, 3, 66)], [Vector3(36.5, 1.5, -5), Vector3(1, 3, 66)]]:
+		var shape := CollisionShape3D.new()
+		shape.shape = BoxShape3D.new()
+		shape.shape.size = bound[1]
+		shape.position = bound[0]
+		body.add_child(shape)
+	add_child(body)
 
-func _build_courtyard() -> void:
-	Geometry.box(self, "Planter", Vector3(4.6, 0.65, 3.2), Vector3(-1.8, 0.325, -3.2), Color("cf8967"), true)
-	Geometry.box(self, "PlanterSoil", Vector3(4.3, 0.05, 2.9), Vector3(-1.8, 0.68, -3.2), Color("385c42"))
-	for point in PALMS:
-		_palm(point)
-	Geometry.box(self, "Bench", Vector3(2.6, 0.5, 0.75), Vector3(1.7, 0.25, -0.8), Color("b87743"), true)
-	Geometry.box(self, "BenchBack", Vector3(2.6, 0.55, 0.12), Vector3(1.7, 0.7, -1.1), Color("b87743"))
-	Geometry.box(self, "Noticeboard", Vector3(1.6, 1.85, 0.2), Vector3(-3.5, 0.925, 4), Color("496d6b"), true)
-	Geometry.box(self, "NoticePaper", Vector3(1.35, 1.12, 0.03), Vector3(-3.5, 1.12, 4.12), Color("ece1c7"))
-	# Header plate on top of the directory board, above the map.
-	Geometry.box(self, "DirectoryHeader", Vector3(1.9, 0.34, 0.2), Vector3(-3.5, 2.02, 4), Color("3d5c5a"))
-	Geometry.wall_sign(self, "CAMPUS DIRECTORY", Vector3(-3.5, 2.02, 4.105), 0.0, 26, 0.0095)
+# --- People and interactions -------------------------------------------------------------
+
+func _build_people() -> void:
 	for id in ["alex", "sam"]:
 		var actor := StudentScene.instantiate()
 		actor.actor_id = id
 		actor.world_zone = "campus"
 		add_child(actor)
 	NPCSchedule.start()
-	# Wayfinding post at the edge of the walk instead of a label over the path.
-	for x in [0.15, 2.25]:
-		Geometry.box(self, "SignPost", Vector3(0.08, 1.45, 0.08), Vector3(x, 0.725, 4.55), Color("4a5a5f"), true)
-	Geometry.box(self, "SignPanel", Vector3(2.3, 0.44, 0.05), Vector3(1.2, 1.3, 4.55), Color("2c4a50"))
-	Geometry.wall_sign(self, "LEARNING CENTER  →", Vector3(1.2, 1.3, 4.578), 0.0, 28, 0.0105)
-
-func _palm(position: Vector3) -> void:
-	Geometry.box(self, "PalmTrunk", Vector3(0.32, 3.3, 0.32), position + Vector3(0, 1.65, 0), Color("9f8056"), true)
-	for index in range(6):
-		var angle := index * TAU / 6
-		var frond := Geometry.sphere(self, Vector3(2.7, 0.14, 0.7), position + Vector3(cos(angle) * 0.65, 3.3, sin(angle) * 0.65), Color("368b63"))
-		frond.rotation.y = -angle
-		frond.rotation.z = 0.16
 
 func _build_interactions() -> void:
-	dorm_door = _endpoint("ResidenceInteraction", "Enter dorm", "", Vector3(-7.15, 1, 5))
+	dorm_door = _endpoint("ResidenceInteraction", "Enter Cedar Residence", "", Config.RESIDENCE_DOOR)
 	dorm_door.activated.connect(AppState.enter_dorm)
-	lecture_door = _endpoint("LectureEntryInteraction", "Enter Learning Center", "", Vector3(8, 1, -4.8))
+	lecture_door = _endpoint("LectureEntryInteraction", "Enter Learning Center", "", Config.LEARNING_CENTER_DOOR)
 	lecture_door.activated.connect(AppState.enter_lecture_building)
-	noticeboard = _endpoint("DirectoryInteraction", "Read campus directory", "Learning Center / Lecture Hall A: follow the main walk east, then turn toward the glass entrance. Cedar Residence is to the west.", Vector3(-3.5, 1, 4.65))
-	student = _endpoint("StudentInteraction", "Talk to student", "Morning! Hall A is inside the Learning Center. Follow this path, then look for the glass doors.", Vector3(3.5, 1, 0.15))
+	noticeboard = _endpoint("DirectoryInteraction", "Read campus directory", "Learning Center / Lecture Hall A: cross the quad to the north, past the round plaza. Cedar Residence faces the quad on the west side; the café is to the east.", Vector3(-17, 1, 3.7))
+	student = _endpoint("StudentInteraction", "Talk to student", "Morning! Hall A is in the Learning Center, the white building at the top of the quad. Head through the glass doors under the canopy.", Config.SAM_POSITION + Vector3(0, 1, 0.75))
 
 func _endpoint(node_name: String, title: String, response: String, position: Vector3) -> Node3D:
 	var endpoint := Endpoint.new()
@@ -243,6 +389,8 @@ func _endpoint(node_name: String, title: String, response: String, position: Vec
 	add_child(endpoint)
 	return endpoint
 
+# --- Lighting ---------------------------------------------------------------------------
+
 func _build_lighting() -> void:
 	var sky := WorldEnvironment.new()
 	var environment := Environment.new()
@@ -251,6 +399,12 @@ func _build_lighting() -> void:
 	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	environment.ambient_light_color = Config.MORNING.ambient_color
 	environment.ambient_light_energy = Config.MORNING.ambient_energy
+	# Filmic tone mapping keeps white facades bright without clipping, as in renders.
+	environment.tonemap_mode = Environment.TONE_MAPPER_FILMIC
+	environment.tonemap_exposure = 1.05
+	environment.glow_enabled = true
+	environment.glow_intensity = 0.25
+	environment.glow_bloom = 0.04
 	campus_environment = environment
 	sky.environment = environment
 	add_child(sky)
@@ -259,6 +413,7 @@ func _build_lighting() -> void:
 	sun.light_color = Config.MORNING.sun_color
 	sun.light_energy = Config.MORNING.sun_energy
 	Geometry.configure_shadows(sun)
+	sun.directional_shadow_max_distance = 70.0
 	add_child(sun)
 	GameClock.minute_changed.connect(_update_daylight)
 	_update_daylight()
@@ -271,15 +426,3 @@ func _update_daylight() -> void:
 	sun.rotation_degrees.x = -10.0 - 60.0 * daylight
 	campus_environment.ambient_light_energy = 0.18 + 0.38 * sqrt(daylight)
 	campus_environment.background_color = Color("172a46").lerp(Color("75bfdf"), sqrt(daylight))
-
-func _build_details() -> void:
-	# Visual-only details preserve established collision and walking routes.
-	for index in range(16):
-		var x := -3.8 + (index % 8) * 0.55
-		var z := -4.2 + (index / 8) * 1.8
-		Geometry.sphere(self, Vector3(0.6, 0.5, 0.55), Vector3(x, 0.83, z), Color("3c986b") if index % 2 else Color("69b66b"))
-		Geometry.sphere(self, Vector3(0.14, 0.15, 0.14), Vector3(x, 1.08, z), Color("f8ca65") if index % 3 else Color("de7898"))
-	for z in [-0.03, 4.03]:
-		Geometry.box(self, "WalkBorder", Vector3(23, 0.05, 0.12), Vector3(0, 0.04, z), Color("faf0d4"))
-	for x in [5.2, 10.8]:
-		Geometry.potted_plant(self, Vector3(x, 0, -5.1))

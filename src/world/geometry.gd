@@ -90,8 +90,9 @@ static func wall_sign(parent: Node3D, text: String, position: Vector3, yaw: floa
 	var label := preload("res://ui/world_nameplate.gd").new()
 	label.mounted = true
 	label.text = text
-	label.position = position
 	label.rotation.y = yaw
+	# Stand 2 cm proud of the surface so letters, plate and wall never z-fight.
+	label.position = position + Basis(Vector3.UP, yaw) * Vector3(0, 0, 0.02)
 	label.font_size = font_size
 	label.pixel_size = pixel_size
 	parent.add_child(label)

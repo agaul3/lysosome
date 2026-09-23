@@ -20,6 +20,7 @@ var key_prompts: Array[Control] = []
 var menu_tabs: TabContainer
 var schedule_panel: VBoxContainer
 var calendar_panel: VBoxContainer
+var knowledge_panel: VBoxContainer
 var objective_label: Label
 var progression: VBoxContainer
 var help_row: HBoxContainer
@@ -131,8 +132,8 @@ func _ready() -> void:
 	add_child(message_timer)
 	settings_backdrop = PanelContainer.new()
 	settings_backdrop.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-	settings_backdrop.position = Vector2(-250, -215)
-	settings_backdrop.size = Vector2(500, 430)
+	settings_backdrop.position = Vector2(-250, -245)
+	settings_backdrop.size = Vector2(500, 490)
 	root.add_child(settings_backdrop)
 	var margin := MarginContainer.new()
 	for side in ["left", "right", "top", "bottom"]:
@@ -149,6 +150,10 @@ func _ready() -> void:
 	calendar_panel.name = "Calendar"
 	menu_tabs.add_child(calendar_panel)
 	calendar_panel.closed.connect(func() -> void: set_settings_open(false))
+	knowledge_panel = preload("res://ui/knowledge_panel.gd").new()
+	knowledge_panel.name = "Knowledge"
+	menu_tabs.add_child(knowledge_panel)
+	knowledge_panel.closed.connect(func() -> void: set_settings_open(false))
 	settings = SettingsPanel.new()
 	settings.name = "Settings"
 	menu_tabs.add_child(settings)
@@ -225,9 +230,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 func _refresh_clock() -> void:
-	clock_label.text = GameClock.display_time() + "\n" + GameClock.display_date()
-	clock_label.text = clock_label.text.replace("\n", "
-")
+	# Date on the first line, time beneath it.
+	clock_label.text = GameClock.display_date() + "\n" + GameClock.display_time()
 
 func _arrival_feedback(record: Dictionary) -> void:
 	var arrival := Time.get_datetime_dict_from_unix_time(int(record.arrival_time))

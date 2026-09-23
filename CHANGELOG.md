@@ -4,7 +4,49 @@
 
 **Project:** Godot 4.7.2, Compatibility renderer. Open `src/project.godot`. The authoritative product requirements are in `src/docs/design/medical_school_rpg_spec.md` (also snapshotted as `src/PROJECT_SPEC.md`). Run-specific instructions live in `src/docs/prompts/` and `src/docs/development/`. User instructions in the current task take precedence over this handoff.
 
-**Current state:** Milestones 1–6 are implemented and committed. Milestones 1–8 are complete. Milestone 9 (Knowledge interface) is next. The more recent visual, room, and UI improvements below sit on top of Milestones 1–6. (This note originally said the work was uncommitted; it has since been committed — see the 2026-09-23 documentation entry above.)
+**Current state:** Milestones 1–6 are implemented and committed. Milestones 1–9 are complete. Milestone 10 (UI + polish, including save/load) is next. The more recent visual, room, and UI improvements below sit on top of Milestones 1–6. (This note originally said the work was uncommitted; it has since been committed — see the 2026-09-23 documentation entry above.)
+
+## 2026-09-23 11:45 PDT — Milestone 9: Knowledge interface; HUD tweaks
+
+**HUD tweaks (user request).** The level card now reads "Lvl n" instead of "LV n". The top-right clock card shows the date on the first line and the time below it.
+
+**Milestone 9.**
+- **`education/knowledge/knowledge.gd`:** accuracy = correct ÷ attempted, safe at zero. `tree()` builds discipline → topic → subtopic from the question bank's taxonomy plus `AcademicSession.topic_statistics`, so unattempted areas still show and new disciplines need no code. `from_history()` independently recounts from `question_history`, and `recent()` lists the latest answers.
+- **Knowledge tab** (`ui/knowledge_panel.gd`) in the player menu: an overall summary, then an indented row for each level with its name, an accuracy bar, the percentage and correct/attempted ("—" when not yet attempted), followed by the six most recent answers. It refreshes after every answer and whenever it's opened. The menu is slightly taller to fit.
+- **Taxonomy:** subtopics now match the lecture's topics, in lecture order. Seed items were reassigned to Potency, Efficacy and Competitive antagonism, and the bank file is ordered by subtopic.
+- **Tests and records:** new `knowledge_test.gd` (17 checks): zero state, increments, recalculation, hierarchy and order, future-discipline support, and a row-by-row comparison of the displayed statistics with a recount from the question history. The acceptance record is `src/docs/development/MILESTONE_9_ACCEPTANCE.md`. `academic_test.gd` now finds the Settings tab by index rather than position.
+
+**Verification:** foundation 54, dorm 67, campus 39, NPC 37, academic 77, visual motion 23, room polish 26, seating 147, lecture 118, progression 34, knowledge 17 — all passing (639 checks). Import and `git diff --check` are clean. Captures of the campus (several views), the Knowledge page and the new top-right HUD were inspected; the campus holds about 60 FPS on the M1.
+
+## 2026-09-23 11:38 PDT — Campus redesign (modern buildings, larger map, quad, planting); sign glitch fix
+
+Committed and pushed Milestone 8 first (`9121157`).
+
+**Sign glitch (user report: "Learning Center" letters glitching through the sign).** The wayfinding sign's lettering sat 3 mm in front of its panel and its backing plate ended up inside the panel, so the letters z-fought. Every mounted sign (`Geometry.wall_sign`) now stands 2 cm proud of its surface, with the plate 8 mm behind the letters. The campus's big names are now real 3D relief letters (`TextMesh`, using the built-in font because the variable UI font fails TextMesh triangulation), standing clear of their walls.
+
+**Campus redesign (user references: modern stacked academic building, UNLV School of Medicine, Harvard Medical School quad, Harbor-UCLA Medical Center).** The map grows from 28 × 24 m to about 75 × 63 m walkable, with streets and a skyline beyond.
+- **Layout** (`world/campus/campus.gd`):
+  - a central quad of four lawn panels with a perimeter walk, a north–south axis and an east–west path;
+  - a round plaza with a raised planter and a flowering tree, benches and lamp posts;
+  - the Learning Center plaza with seat-height planters, one lettered "LEARNING CENTER" and one "SCHOOL OF MEDICINE";
+  - the residence forecourt with the campus directory, the medical-centre forecourt, and the café terrace with tables and umbrellas;
+  - a south sidewalk, a parking lot with parked cars and planted islands, and a street.
+- **Buildings** (`world/campus/buildings.gd`):
+  - **Learning Center:** glazed podium with columns and a green roof terrace behind a glass balustrade; three offset floor plates wrapped in white vertical fins; a timber-soffit entry canopy; roof plant.
+  - **Cedar Residence:** four storeys, cream render, framed punched windows with orange fins, a projecting grey glazed bay, a red accent core, a glazed lobby, timber canopy and rooftop solar panels.
+  - **University Medical Center:** a glazed podium with a timber canopy on slim columns, and a ten-storey tower of light and dark vertical panels.
+  - **Anatomy Hall:** classical stone, window rows, cornice, a six-column portico with steps, and relief lettering.
+  - **Café pavilion:** glazed, with a planted green roof and timber fascia.
+- **Rendering:**
+  - Detail is merged per material by `world/campus/mesh_kit.gd`, so each building is a few draw calls.
+  - `assets/glass.gdshader` draws curtain walls procedurally: mullion grid, floor spandrels, a sky-reflection gradient with Fresnel, and varied panes, some with warm interiors.
+  - `assets/facade.gdshader` grounds matte surfaces with a soft base gradient.
+  - Filmic tone mapping and subtle glow; the shadow distance is raised to 70 m.
+- **Planting** (`world/campus/flora.gd` and `assets/foliage.gdshader`): instanced species built from leaf clusters with crown-oriented normals for soft volumes, gentle sway and a touch of light through the leaves. Species are shade trees (quad rows), pink flowering trees (medical frontage, residence, plaza), columnar trees (framing the portico and corners), ornamental trees (planters and parking islands), foundation shrubs, parking hedges, and flower-bed blossoms. The turf tufts now cover only the lawn panels. The hall still runs at about 60 FPS on the M1.
+- **Gameplay data:**
+  - New spawns and doors in `data/campus_config.gd`, which also holds the camera framing and bounds.
+  - Alex's route runs from the residence along the east–west path to Sam (now waiting by a bench west of the plaza, `Route.SAM_POSITION`), then north to the Learning Center doors.
+  - The campus, NPC and visual-motion tests were updated for the new coordinates. The collision probes cover the four map edges plus the Learning Center, the plaza planter and the residence.
 
 ## 2026-09-23 10:33 PDT — Milestone 8: progression feedback
 
@@ -13,7 +55,7 @@ Committed and pushed Milestone 7 first (`0cd1e27`).
 - **Level curve:** `education/progression/level_curve.gd` is the only place level maths happens, configured by `level_curve` in `data/academic_config.json`. XP from level L to L+1 is round(80 × 1.3^(L−1)), giving thresholds of 80, 184, 319 and 495. Overflow carries over, one award can cross several levels, negative balances count as 0, and the level never decreases. It looks up `GameClock` at runtime so it compiles even when preloaded early.
 - **AcademicSession:** all XP changes now go through `add_xp(delta, reason)`, which emits `xp_changed`, `level_up(from, to)` and `streak_changed`. It tracks `level`, `streak` and `best_streak`, and exposes `level_progress()` and `streak_visible()` (threshold 10, configurable).
 - **HUD** (`ui/progression_hud.gd`, in the shared HUD's top bar next to the clock):
-  - a compact "LV n" card with an XP bar and "into / needed XP" (plus "owed" when the balance is negative);
+  - a compact "Lvl n" card with an XP bar and "into / needed XP" (plus "owed" when the balance is negative);
   - a tweened bar that fills, empties and continues through level-ups;
   - floating "+N XP" (or red "−5 XP") values that rise and fade beside the bar, clear of medical content;
   - a "10x STREAK" chip that only appears at 10 or more in a row, pulses on each correct answer and hides on a miss;
@@ -219,5 +261,5 @@ Committed the previous change set first (`a20e234`).
 
 1. Read the product spec and the relevant milestone/run document before beginning another milestone. Read this file from top to bottom for the current architecture and user preferences.
 2. Inspect `git status --short` before editing and preserve any uncommitted work you find.
-3. Run tests with `/Applications/Godot.app/Contents/MacOS/Godot --headless --path src --script res://tests/<suite>.gd`. Existing suites are `foundation_test.gd`, `dorm_test.gd`, `campus_test.gd`, `npc_test.gd`, `academic_test.gd`, `visual_motion_test.gd`, `room_polish_test.gd`, `seating_test.gd`, `lecture_test.gd`, and `progression_test.gd`. Use `--path src --editor --import --quit` to validate import. Run graphical capture when visual behavior changes.
+3. Run tests with `/Applications/Godot.app/Contents/MacOS/Godot --headless --path src --script res://tests/<suite>.gd`. Existing suites are `foundation_test.gd`, `dorm_test.gd`, `campus_test.gd`, `npc_test.gd`, `academic_test.gd`, `visual_motion_test.gd`, `room_polish_test.gd`, `seating_test.gd`, `lecture_test.gd`, `progression_test.gd`, and `knowledge_test.gd`. Use `--path src --editor --import --quit` to validate import. Run graphical capture when visual behavior changes.
 4. Update this file with a new timestamped section at the top for each future change set. Preserve the user's preferences: plain floor surfaces, subtle wood grain, a small HUD with unboxed keycap prompts, physically plausible character motion around furniture, and the UIC-style raked auditorium for Hall A.
