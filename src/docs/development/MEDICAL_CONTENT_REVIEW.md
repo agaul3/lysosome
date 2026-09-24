@@ -135,3 +135,69 @@ Twelve scored lecture questions (the three seeds, the visualization prediction a
 ## Flashcard study adapter — September 23, 2026
 
 The starter flashcard deck derives 13 standalone records directly from `QuestionBank`, preserving prompt, exact correct answer, explanation, learning objective and source question ID. Multiple-choice distractors are hidden to require free recall. `pd_viz_competitive_01` is excluded because its prompt depends on the lecture graph. No new medical assertions or proprietary questions were authored for this feature. Existing human-review requirements above still apply, including review of the adapted free-recall wording. Personal Basic/Cloze notes are labelled personal content and are not medically validated; their self-ratings do not count toward graded knowledge accuracy.
+
+# Physician shadowing — hospital_orientation_01 (Milestone 11, September 24, 2026)
+
+All shadowing narration (`education/shadowing/hospital_orientation_01.json`), the seven etiquette questions (`education/questions/hospital_orientation.json`) and the fictional chart shown in the EHR (`ui/ehr_chart.gd`) are original, AI-assisted prototype content. They were written from general knowledge and have **not** been checked against sources in this session. A human reviewer should confirm them before any educational release.
+
+Suggested references for the reviewer:
+- the WHO "My 5 Moments for Hand Hygiene";
+- the CDC/HICPAC Guideline for Isolation Precautions (contact precautions);
+- the HIPAA Privacy Rule's minimum-necessary standard, and local EHR access policies;
+- the IDSA/ATS community-acquired pneumonia guideline (for the scripted patient's course).
+
+The session teaches professional conduct and hospital orientation only. There is no history taking, examination, diagnosis or treatment decision, and the student never acts on the patient.
+
+## Questions (discipline Clinical Skills, topic Hospital Orientation)
+
+| ID | Objective | Answer | Review note |
+|---|---|---|---|
+| ho_charge_nurse_01 | The charge nurse's coordinating role | a: coordinates nursing assignments, bed flow and staffing for the shift | Role scope varies by institution; wording is deliberately general. |
+| ho_hand_hygiene_01 | Hand hygiene entering and leaving a room | b: in and out of the room, and before/after patient or environment contact | "Foam in, foam out" is a common teaching phrase. The explanation notes that gloves don't replace hand hygiene and that soiled hands need soap and water. Confirm against the WHO 5 Moments. |
+| ho_rounds_position_01 | Where an observer stands on rounds | b: foot of the bed or back of the room | A teaching convention, not a rule. The explanation also says never to sit on the patient's bed. |
+| ho_contact_precautions_01 | Contact-precaution signage and PPE | b: hand hygiene, gown and gloves per the sign, removed before leaving | Doffing is described as "at the doorway". Confirm the local doffing sequence and location wording. |
+| ho_privacy_elevator_01 | No patient discussion in public spaces | b: move the conversation somewhere private | The explanation says room number, age or diagnosis can identify a patient. Confirm the tone. |
+| ho_chart_review_01 | What pre-rounding chart review is for | b: catch up on changes: vitals, results, nursing notes, orders | The explanation says notes are written fresh each day and orders come from licensed prescribers. Check this for over-generalisation. |
+| ho_ehr_access_01 | Role-limited EHR access | b: only the charts of patients you are involved with | The explanation says every access is logged and audited, and that photos of patient information and shared logins are never appropriate. |
+
+## Narration claims to review
+
+- **Arrival and roles:** the student shadows (observes) and does not examine patients or write in the chart; the Information desk and floor directories help with wayfinding.
+- **Elevators:** patients on beds or stretchers have priority, and public spaces are not for patient discussion.
+- **The unit:**
+  - it has 32 beds, and the team has 14 patients (illustrative numbers);
+  - the nurses station is the hub (charting, calls, telemetry);
+  - nurses spend more time at the bedside and often notice changes first.
+- **EHR:**
+  - the banner identifies the patient (name, age, room, allergies, code status), and you confirm the chart before reading;
+  - vitals trends and flagged results;
+  - nursing and overnight notes;
+  - orders and the medication record.
+- **The scripted patient, Mr. Reyes (67):**
+  - community-acquired pneumonia, day 3;
+  - no fever for 24 h, SpO₂ 95% on room air, white count down from 14 to about 11;
+  - plan: continue antibiotics, walk twice with nursing, discharge tomorrow if improving.
+  - *Review:* this is a plausible, uncomplicated course written for illustration, not a management recommendation. No antibiotic names or doses are given anywhere.
+- **Before entering a room:** check the door sign, knock, introduce yourself, clean your hands. On rounds, the resident presents, the attending confirms the plan with the patient, and consent is asked for the student to observe.
+- **Isolation:** contact precautions need gown and gloves; droplet and airborne precautions need different equipment; ask the nurse when unsure.
+- **Professionalism:** be on time, silence your phone, observe without blocking, save questions for after the room, and thank the team.
+
+## Fictional EHR chart values (ui/ehr_chart.gd)
+
+- **Patient:** "REYES, Daniel", 67, MRN DEMO-0412. Allergies: none known. Code status: full code.
+- **Vitals, last 24 h:** temperature 38.4 → 36.8 °C; heart rate 102 → 80; respiratory rate 24 → 16; blood pressure about 120/75; SpO₂ from 92% on 2 L to 96% on room air.
+- **Labs:**
+
+  | Test | Values | Reference range |
+  |---|---|---|
+  | WBC | 14.2 → 12.6 → 11.2 (flagged H) | 4.0–11.0 |
+  | CRP | 96 → 48 mg/L (flagged H) | — |
+  | Hemoglobin | 13.9 / 13.6 / 13.8 g/dL | 13.5–17.5 |
+  | Platelets | 241 / 238 / 252 ×10⁹/L | 150–400 |
+  | Sodium | 136 / 136 / 137 mmol/L | 135–145 |
+  | Creatinine | 1.1 / 1.0 / 1.0 mg/dL | 0.7–1.3 |
+
+  Only WBC and CRP are out of range, and both are flagged.
+- **Other results:** blood cultures show no growth at 48 h; the chest X-ray shows right lower lobe consolidation.
+- **Notes:** one nursing note and one progress note, both non-specific about antibiotics.
+- **Status:** these values are illustrative and are not tied to any real patient. Their internal consistency should be reviewed. Reference ranges vary by laboratory.

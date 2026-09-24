@@ -40,7 +40,8 @@ func cards() -> Array:
 		# Presentation-only prompts require a graph/slide and cannot stand alone.
 		if q.id == "pd_viz_competitive_01":
 			continue
-		result.append({"id": "bank:" + q.id, "note": "bank:" + q.id, "deck": DEFAULT_DECK,
+		# One deck per discipline and topic, e.g. Medicine::Pharmacology::Pharmacodynamics.
+		result.append({"id": "bank:" + q.id, "note": "bank:" + q.id, "deck": "Medicine::%s::%s" % [q.discipline, q.topic],
 			"front": q.prompt, "back": q.choices.get(q.correct_answer, q.correct_answer),
 			"extra": q.explanation, "tags": q.subtopic, "objective": q.learning_objective, "source": q.id})
 	for id in notes:

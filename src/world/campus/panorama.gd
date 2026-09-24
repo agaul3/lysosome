@@ -13,6 +13,7 @@ func _ready() -> void:
 	Buildings.medical_center(self)
 	Buildings.anatomy_hall(self)
 	Buildings.pavilion(self)
+	Buildings.hospital(self)
 	_build_signs()
 	_build_props()
 	_build_parking()

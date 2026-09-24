@@ -349,3 +349,82 @@ static func pavilion(parent: Node3D) -> void:
 			kit.cylinder("metal", Vector3(x, 0, z), Vector3(x, 3.75, z), 0.1, Color("d8dcde"))
 	door(kit, Vector3(20.46, 0, -3), 2.2, -PI / 2)
 	kit.commit(parent, "CafePavilion")
+
+# --- University Hospital ---------------------------------------------------------------
+
+## Across the street from the parking lot and the quad: a two-storey podium
+## x[-32,24] z[44,70] (glazed, with a white spandrel band and fins on the
+## upper floor) and an inpatient tower x[-16,8] z[56,70] set back from the
+## street. The main entrance faces east onto a drop-off plaza, under a timber
+## canopy, so it faces the overhead camera; the tower is held low and far
+## enough back that it never hides the parking lot or the crosswalk.
+const HOSPITAL_ENTRANCE := Vector3(27.5, 0, 50)
+static func hospital(parent: Node3D) -> void:
+	var kit := MeshKit.new()
+	var podium_top := 8.4
+	# Podium: core, full glazing, plinth, spandrel band and parapet.
+	kit.solid(Vector3(-4, podium_top / 2.0, 57), Vector3(56, podium_top, 26))
+	kit.box("facade", Vector3(-4, podium_top / 2.0, 57), Vector3(55.4, podium_top, 25.4), STONE)
+	kit.box("glass", Vector3(-4, 3.9, 57), Vector3(56, 7.4, 26), Color.WHITE)
+	kit.box("facade", Vector3(-4, 0.15, 57), Vector3(56.3, 0.3, 26.3), Color("b9b4a8"))
+	kit.box("facade", Vector3(-4, 4.15, 57), Vector3(56.4, 0.7, 26.4), WHITE)
+	kit.box("facade", Vector3(-4, podium_top - 0.2, 57), Vector3(56.6, 0.8, 26.6), WHITE)
+	# Ground-floor mullions and upper-floor fins along the street (north) and entrance (east) faces.
+	for index in range(29):
+		var x := -31.5 + index * 2.0
+		kit.box("metal", Vector3(x, 1.95, 43.96), Vector3(0.1, 3.6, 0.1), DARK)
+	for index in range(47):
+		var x := -31.6 + index * 1.2
+		kit.box("facade", Vector3(x, 6.2, 43.8), Vector3(0.09, 3.2, 0.42), FIN)
+	for index in range(22):
+		var z := 44.6 + index * 1.2
+		if z > 45.2 and z < 54.8:
+			continue # The entrance pavilion stands here.
+		kit.box("facade", Vector3(24.2, 6.2, z), Vector3(0.42, 3.2, 0.09), FIN)
+	for index in range(13):
+		var z := 45.0 + index * 2.0
+		if z > 45.2 and z < 54.8:
+			continue
+		kit.box("metal", Vector3(24.04, 1.95, z), Vector3(0.1, 3.6, 0.1), DARK)
+	# Entrance pavilion: a double-height glass box projecting toward the plaza.
+	kit.solid(Vector3(25.75, podium_top / 2.0, 50), Vector3(3.5, podium_top, 9))
+	kit.box("glass", Vector3(25.75, 3.9, 50), Vector3(3.5, 7.6, 9), Color.WHITE)
+	kit.box("facade", Vector3(25.8, podium_top - 0.15, 50), Vector3(3.9, 0.5, 9.4), WHITE)
+	for z in [45.6, 47.3, 52.7, 54.4]:
+		kit.box("metal", Vector3(27.52, 3.9, z), Vector3(0.1, 7.6, 0.1), DARK)
+	kit.box("metal", Vector3(27.52, 3.4, 50), Vector3(0.1, 0.12, 9.0), DARK)
+	door(kit, HOSPITAL_ENTRANCE, 3.2, PI / 2)
+	# Drop-off canopy over the lane: white slab with a timber soffit, on slim
+	# columns beyond the lane's far edge.
+	kit.box("facade", Vector3(31.85, 4.6, 50), Vector3(8.7, 0.4, 8.6), WHITE)
+	kit.box("wood", Vector3(31.85, 4.38, 50), Vector3(8.5, 0.06, 8.4), Color.WHITE)
+	for point in [Vector3(35.9, 0, 46.2), Vector3(35.9, 0, 53.8)]:
+		kit.cylinder("metal", point, point + Vector3(0, 4.4, 0), 0.13, Color("d8dcde"))
+		kit.solid(point + Vector3(0, 1.5, 0), Vector3(0.3, 3.0, 0.3))
+	# Inpatient tower (Levels 3–8): glazing behind light and dark vertical panels.
+	var tower_height := 19.5
+	var tower_centre := Vector3(-4, podium_top + tower_height / 2.0, 63)
+	kit.solid(tower_centre, Vector3(24, tower_height, 14))
+	kit.box("glass", tower_centre, Vector3(23.6, tower_height, 13.6), Color.WHITE)
+	for index in range(48):
+		var x := -15.75 + index * 0.5
+		var shade := Color("d3d6d8") if index % 3 != 1 else Color("6b747a")
+		for z in [55.95, 70.05]:
+			kit.box("facade", Vector3(x, tower_centre.y, z), Vector3(0.16, tower_height, 0.3), shade)
+	for index in range(28):
+		var z := 56.25 + index * 0.5
+		var shade := Color("d3d6d8") if index % 3 != 1 else Color("6b747a")
+		kit.box("facade", Vector3(8.05, tower_centre.y, z), Vector3(0.3, tower_height, 0.16), shade)
+	for level in range(6):
+		kit.box("facade", Vector3(-4, podium_top + 3.25 * (level + 1), 63), Vector3(24.3, 0.22, 14.3), Color("e3e5e6"))
+	kit.box("facade", Vector3(-4, podium_top + tower_height + 0.4, 63), Vector3(24.4, 0.8, 14.4), WHITE)
+	kit.box("metal", Vector3(-8, podium_top + tower_height + 1.2, 64), Vector3(6, 1.2, 4), Color("c9cdd0"))
+	# Green roof on the podium in front of the tower, and rooftop plant.
+	kit.box("facade", Vector3(-4, podium_top + 0.22, 49.5), Vector3(54, 0.12, 10), Color("5d8a45"))
+	kit.box("metal", Vector3(16, podium_top + 0.7, 64), Vector3(5, 1.2, 3), Color("c9cdd0"))
+	kit.commit(parent, "UniversityHospital")
+	# Name on the street parapet (seen from the campus), the canopy and the tower.
+	letters(parent, "UNIVERSITY HOSPITAL", Vector3(-4, 7.95, 43.7), PI, 0.72, Color("3a4247"))
+	letters(parent, "UNIVERSITY HOSPITAL", Vector3(36.22, 4.56, 50), PI / 2, 0.26, Color("3a4247"), 0.03)
+	letters(parent, "MAIN ENTRANCE", Vector3(27.62, 3.1, 50), PI / 2, 0.16, Color("3a4247"), 0.03)
+	letters(parent, "UNIVERSITY HOSPITAL", Vector3(8.2, podium_top + tower_height - 1.4, 63), PI / 2, 0.9, Color("3a4247"))

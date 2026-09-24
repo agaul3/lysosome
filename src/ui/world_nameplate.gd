@@ -5,6 +5,9 @@ extends Label3D
 ## sit in the scene instead of covering whatever is behind them.
 const FONT = preload("res://assets/outfit_medium.tres")
 var mounted := false
+## Plate and lettering colours (set before the label enters the tree).
+var plate_color := Color("18343c")
+var text_color := Color("f1f6f2")
 var backing: MeshInstance3D
 var previous_text := ""
 
@@ -12,7 +15,7 @@ func _ready() -> void:
 	font = FONT
 	font_size = maxi(font_size, 24)
 	outline_size = 0
-	modulate = Color("f1f6f2")
+	modulate = text_color
 	billboard = BaseMaterial3D.BILLBOARD_DISABLED if mounted else BaseMaterial3D.BILLBOARD_ENABLED
 	no_depth_test = not mounted
 	double_sided = not mounted
@@ -22,7 +25,7 @@ func _ready() -> void:
 	backing.mesh = QuadMesh.new()
 	var material := StandardMaterial3D.new()
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	material.albedo_color = Color("18343c")
+	material.albedo_color = plate_color
 	material.billboard_mode = BaseMaterial3D.BILLBOARD_DISABLED if mounted else BaseMaterial3D.BILLBOARD_ENABLED
 	material.no_depth_test = not mounted
 	if mounted:
@@ -40,6 +43,6 @@ func _process(_delta: float) -> void:
 
 func _resize() -> void:
 	previous_text = text
-	var extent := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
+	var extent := font.get_multiline_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size) if "\n" in text else font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
 	backing.mesh.size = (extent + Vector2(24, 12)) * pixel_size
 	backing.visible = not text.is_empty()

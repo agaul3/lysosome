@@ -3,7 +3,7 @@ extends "res://ui/menu/menu_page.gd"
 ## data/campus_map.gd, with the student's position (live on campus, or the
 ## building they are in), today's class destination and the entrances.
 const MapData = preload("res://data/campus_map.gd")
-const MAP_SIZE := Vector2(584, 340)
+const MAP_SIZE := Vector2(584, 400)
 var hud: CanvasLayer
 var canvas: Control
 var time := 0.0
@@ -26,7 +26,7 @@ func refresh() -> void:
 	var legend := HBoxContainer.new()
 	legend.add_theme_constant_override("separation", 18)
 	legend.add_child(_legend_item(UI.ACCENT, "You are here"))
-	legend.add_child(_legend_item(UI.REWARD, "Today's class"))
+	legend.add_child(_legend_item(UI.REWARD, "Next on today's schedule"))
 	legend.add_child(_legend_item(UI.TEXT, "Entrance"))
 	var where := UI.label(_where_text(), UI.SIZE_LABEL, UI.TEXT_MUTED, 500)
 	where.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -47,7 +47,7 @@ func _legend_item(color: Color, text: String) -> Control:
 
 func _where_text() -> String:
 	var scene := AppState.location_key()
-	var names := {"dorm": "In your room, Cedar Residence", "campus": "Outdoors, Student Commons", "lecture_building": "Inside the Learning Center", "lecture_hall": "In Lecture Hall A"}
+	var names := {"dorm": "In your room, Cedar Residence", "campus": "Outdoors, Student Commons", "lecture_building": "Inside the Learning Center", "lecture_hall": "In Lecture Hall A", "hospital": "Inside University Hospital"}
 	return names.get(scene, "")
 
 func _process(delta: float) -> void:
@@ -75,6 +75,7 @@ func _draw_map() -> void:
 	for area in MapData.PLAZAS + MapData.PATHS:
 		canvas.draw_rect(_rect(area), Color("3c5157"))
 	canvas.draw_rect(_rect(MapData.PARKING), Color("2a373c"))
+	canvas.draw_rect(_rect(MapData.STREET), Color("23302f"))
 	var plaza := _to_map(MapData.PLAZA_CENTER.x, MapData.PLAZA_CENTER.y)
 	var scale := _to_map(1, 0).x - _to_map(0, 0).x
 	canvas.draw_circle(plaza, MapData.PLAZA_RADIUS * scale, Color("46595e"))
@@ -82,7 +83,12 @@ func _draw_map() -> void:
 	var parking := _rect(MapData.PARKING)
 	canvas.draw_string(UI.font(500), parking.get_center() + Vector2(-22, 4), "Parking", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, UI.TEXT_FAINT)
 	canvas.draw_string(UI.font(500), _to_map(-11.5, 7.2), "The Quad", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(UI.TEXT, 0.55))
-	var destination := "" if AcademicSession.lectures_completed.has("pharmacodynamics_01") else "learning_center"
+	# Today's next place: class first, then shadowing at the hospital.
+	var destination := "learning_center"
+	var note := "Lecture Hall A · 8:00"
+	if AcademicSession.lectures_completed.has("pharmacodynamics_01"):
+		destination = "" if AcademicSession.lectures_completed.has("hospital_orientation_01") else "hospital"
+		note = "Shadowing · 9:00"
 	for id in MapData.BUILDINGS:
 		var entry: Array = MapData.BUILDINGS[id]
 		var rect := _rect([entry[1], entry[2], entry[3], entry[4]])
@@ -92,7 +98,8 @@ func _draw_map() -> void:
 		var width := font.get_string_size(name, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x
 		canvas.draw_string(font, rect.get_center() + Vector2(-width / 2.0, 4), name, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, UI.TEXT if id == destination else UI.TEXT_MUTED)
 		if id == destination:
-			canvas.draw_string(UI.font(500), rect.get_center() + Vector2(-38, 20), "Lecture Hall A · 8:00", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, UI.REWARD)
+			var note_width := UI.font(500).get_string_size(note, HORIZONTAL_ALIGNMENT_LEFT, -1, 11).x
+			canvas.draw_string(UI.font(500), rect.get_center() + Vector2(-note_width / 2.0, 20), note, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, UI.REWARD)
 	for entrance in MapData.ENTRANCES:
 		var point := _to_map(entrance[1], entrance[2])
 		canvas.draw_circle(point, 3.5, UI.TEXT)

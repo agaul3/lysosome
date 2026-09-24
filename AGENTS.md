@@ -8,6 +8,7 @@ This repository contains the `rpg_med` medical-school RPG. The Godot project is 
 - Primary language: GDScript.
 - Milestones 1–10 are complete; the v0.1 vertical slice is feature-complete.
 - Development has continued beyond Milestone 10 with courtyard-life improvements, first-person view, visual refinements, and review fixes.
+- Milestone 11 (University Hospital, physician shadowing) is implemented; see `src/docs/development/MILESTONE_11_ACCEPTANCE.md`.
 - `CHANGELOG.md` at the repository root is the running handoff log and the best source for the latest implemented state.
 - `PROJECT_HANDOFF.md` provides cross-agent project context.
 - `CLAUDE.md` contains Claude-specific standing instructions; shared project rules in this file apply to Codex.

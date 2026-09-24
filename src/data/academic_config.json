@@ -19,6 +19,17 @@
       "mandatory": true,
       "late_grace_seconds": 0,
       "late_penalty": 5
+    },
+    {
+      "id": "hospital_orientation_01",
+      "title": "PHYSICIAN SHADOWING",
+      "date": "2026-09-21",
+      "hour": 9,
+      "minute": 0,
+      "location": "University Hospital",
+      "mandatory": true,
+      "late_grace_seconds": 300,
+      "late_penalty": 5
     }
   ],
   "level_curve": {

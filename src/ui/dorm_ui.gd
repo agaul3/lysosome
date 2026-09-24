@@ -95,8 +95,9 @@ func _ready() -> void:
 	AcademicSession.attendance_recorded.connect(_arrival_feedback)
 	AppState.view_changed.connect(_on_view_changed)
 	AcademicSession.level_up.connect(_announce_unlocks)
-	AcademicSession.lecture_completed.connect(func(_id: String) -> void:
-		show_message("Unlocked in your closet: %s (Legendary)" % ", ".join(Clothing.legendary_names()), 8.0))
+	AcademicSession.lecture_completed.connect(func(id: String) -> void:
+		if id == Clothing.FIRST_LECTURE:
+			show_message("Unlocked in your closet: %s (Legendary)" % ", ".join(Clothing.legendary_names()), 8.0))
 	_refresh_clock()
 	_refresh_context()
 
@@ -313,6 +314,12 @@ func _show_response(target: Node3D) -> void:
 		message_timer.start()
 	_refresh_context()
 
+## Scenes with several areas (the hospital's floors) update the location line.
+func set_location(text: String) -> void:
+	location_title = text
+	if is_instance_valid(location_label):
+		location_label.text = text.to_upper()
+
 func set_objective(text: String) -> void:
 	auto_objective = false
 	objective_text = text
@@ -373,7 +380,11 @@ func _refresh_clock() -> void:
 func _arrival_feedback(record: Dictionary) -> void:
 	var arrival := Time.get_datetime_dict_from_unix_time(int(record.arrival_time))
 	var time := "%d:%02d %s" % [12 if arrival.hour % 12 == 0 else arrival.hour % 12, arrival.minute, "AM" if arrival.hour < 12 else "PM"]
-	message.text = ("Late arrival at %s — −%d XP. Penalty recorded once." % [time, absi(record.xp_delta)]) if record.late else "Arrived on time for Pharmacodynamics."
+	var title := "class"
+	for event in GameClock.config.events:
+		if event.id == record.event_id:
+			title = String(event.title).capitalize()
+	message.text = ("Late arrival at %s — −%d XP. Penalty recorded once." % [time, absi(record.xp_delta)]) if record.late else "Arrived on time for %s." % title
 	message_timer.start(10.0)
 	schedule_panel.refresh()
 	calendar_panel.refresh()

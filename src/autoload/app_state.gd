@@ -10,15 +10,17 @@ signal look_changed(look: Dictionary)
 const Presets = preload("res://data/character_presets.gd")
 const Looks = preload("res://data/looks.gd")
 const Clothing = preload("res://data/clothing.gd")
-const PHASE_BY_SCENE := {"dorm": 2, "campus": 3, "lecture_building": 4, "lecture_hall": 5}
+const PHASE_BY_SCENE := {"dorm": 2, "campus": 3, "lecture_building": 4, "lecture_hall": 5, "hospital": 6}
 const SCENES := {
 	"title": "res://ui/start_screen.tscn",
 	"dorm": "res://world/dorm/dorm.tscn",
 	"campus": "res://world/campus/campus.tscn",
 	"lecture_building": "res://world/lecture_building/lecture_building.tscn",
 	"lecture_hall": "res://world/lecture_hall/lecture_hall.tscn",
+	"hospital": "res://world/hospital/hospital.tscn",
 }
-enum Phase { TITLE, CHARACTER_SELECT, DORM, CAMPUS, LECTURE_BUILDING, LECTURE_HALL }
+enum Phase { TITLE, CHARACTER_SELECT, DORM, CAMPUS, LECTURE_BUILDING, LECTURE_HALL, HOSPITAL }
+const WORLD_PHASES := [Phase.DORM, Phase.CAMPUS, Phase.LECTURE_BUILDING, Phase.LECTURE_HALL, Phase.HOSPITAL]
 var phase: Phase = Phase.TITLE
 ## Preset the look started from, or "custom" once built in the creator.
 var selected_character: String = Presets.DEFAULT_ID
@@ -58,7 +60,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 func in_world() -> bool:
-	return phase in [Phase.DORM, Phase.CAMPUS, Phase.LECTURE_BUILDING, Phase.LECTURE_HALL]
+	return phase in WORLD_PHASES
 
 ## Scene key of the current world location (used by the save file).
 func location_key() -> String:
@@ -139,7 +141,7 @@ func leave_dorm() -> void:
 func enter_campus(entry: String = "dorm") -> void:
 	if transitioning:
 		return
-	campus_entry = entry if entry in ["dorm", "lecture_building"] else "dorm"
+	campus_entry = entry if entry in ["dorm", "lecture_building", "hospital"] else "dorm"
 	_request_transition("campus", Phase.CAMPUS)
 
 func enter_lecture_building() -> void:
@@ -150,8 +152,13 @@ func enter_lecture_hall() -> void:
 	if phase == Phase.LECTURE_BUILDING:
 		_request_transition("lecture_hall", Phase.LECTURE_HALL)
 
+## University Hospital, across the street from the campus.
+func enter_hospital() -> void:
+	if phase == Phase.CAMPUS:
+		_request_transition("hospital", Phase.HOSPITAL)
+
 func return_to_title() -> void:
-	if phase in [Phase.DORM, Phase.CAMPUS, Phase.LECTURE_BUILDING, Phase.LECTURE_HALL]:
+	if phase in WORLD_PHASES:
 		_request_transition("title", Phase.TITLE)
 	else:
 		_set_phase(Phase.TITLE)
@@ -188,5 +195,5 @@ func _set_phase(next_phase: Phase) -> void:
 	if phase == next_phase:
 		return
 	phase = next_phase
-	GameClock.running = phase in [Phase.DORM, Phase.CAMPUS, Phase.LECTURE_BUILDING, Phase.LECTURE_HALL]
+	GameClock.running = phase in WORLD_PHASES
 	phase_changed.emit(phase)

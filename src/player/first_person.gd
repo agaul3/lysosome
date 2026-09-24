@@ -119,6 +119,11 @@ func look(amount: Vector2) -> void:
 		var around := clampf(wrapf(yaw - body_yaw(), -PI, PI), -SEATED_YAW_RANGE, SEATED_YAW_RANGE)
 		yaw = wrapf(body_yaw() + around, -PI, PI)
 
+## Eases the view toward a point (a scene turning the student to a speaker).
+func turn_toward(point: Vector3, weight: float) -> void:
+	if active and not is_body_driven():
+		_face(point, weight)
+
 func _face(point: Vector3, weight: float) -> void:
 	var to := point - camera.global_position if camera.is_inside_tree() else point - current_eye
 	if to.length() < 0.01:

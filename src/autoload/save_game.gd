@@ -12,7 +12,7 @@ extends Node
 ## game state is touched, so a damaged file can never half-apply.
 signal saved(summary: Dictionary)
 const VERSION := 1
-const LOCATIONS := ["dorm", "campus", "lecture_building", "lecture_hall"]
+const LOCATIONS := ["dorm", "campus", "lecture_building", "lecture_hall", "hospital"]
 var path := "user://savegame.json"
 var last_error := ""
 ## Autosaves are skipped while this is false (e.g. before a game has begun).
@@ -111,7 +111,7 @@ func summary(data: Dictionary = {}) -> Dictionary:
 		data = read()
 	if data.is_empty():
 		return {}
-	var names := {"dorm": "Cedar Residence", "campus": "Student Commons", "lecture_building": "Learning Center", "lecture_hall": "Lecture Hall A"}
+	var names := {"dorm": "Cedar Residence", "campus": "Student Commons", "lecture_building": "Learning Center", "lecture_hall": "Lecture Hall A", "hospital": "University Hospital"}
 	var start := Time.get_unix_time_from_datetime_string(GameClock.config.start_datetime)
 	var moment := Time.get_datetime_dict_from_unix_time(int(start + float(data.clock.elapsed_seconds)))
 	var hour: int = int(moment.hour) % 12

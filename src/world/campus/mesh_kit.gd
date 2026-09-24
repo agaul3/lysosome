@@ -11,6 +11,8 @@ extends RefCounted
 ##   metal  — satin metal panels, frames and fittings
 ##   paving — ground surfaces (plazas, paths, parking)
 ##   tinted — plain tinted, reflective glass for doors (no curtain-wall grid)
+##   light  — unshaded colour: daylight in windows, light fixtures, screens
+##   wood / walnut — oak or darker walnut grain (vertex colour ignored)
 static var _materials := {}
 var tools := {}
 var solids: Array = []
@@ -24,6 +26,11 @@ static func material(kind: String) -> Material:
 			var glass := ShaderMaterial.new()
 			glass.shader = preload("res://assets/glass.gdshader")
 			result = glass
+		"light":
+			var light := StandardMaterial3D.new()
+			light.vertex_color_use_as_albedo = true
+			light.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+			result = light
 		"tinted":
 			var tinted := StandardMaterial3D.new()
 			tinted.vertex_color_use_as_albedo = true
@@ -31,10 +38,11 @@ static func material(kind: String) -> Material:
 			tinted.metallic_specular = 0.9
 			tinted.roughness = 0.07
 			result = tinted
-		"wood":
+		"wood", "walnut":
 			var wood := ShaderMaterial.new()
 			wood.shader = preload("res://assets/wood.gdshader")
-			wood.set_shader_parameter("wood_color", Color(0.74, 0.52, 0.32))
+			# "walnut": the darker veneer of the hospital's feature walls and desks.
+			wood.set_shader_parameter("wood_color", Color(0.74, 0.52, 0.32) if kind == "wood" else Color(0.42, 0.27, 0.16))
 			result = wood
 		_:
 			var facade := ShaderMaterial.new()

@@ -4,7 +4,96 @@
 
 **Project:** Godot 4.7.2, Compatibility renderer. Open `src/project.godot`. The authoritative product requirements are in `src/docs/design/medical_school_rpg_spec.md` (also snapshotted as `src/PROJECT_SPEC.md`). Run-specific instructions live in `src/docs/prompts/` and `src/docs/development/`. User instructions in the current task take precedence over this handoff.
 
-**Current state:** Milestones 1–6 are implemented and committed. Milestones 1–10 are complete: the v0.1 vertical slice is feature-complete per the spec. Remaining work is human medical review and any new scope from the user. The more recent visual, room, and UI improvements below sit on top of Milestones 1–6. (This note originally said the work was uncommitted; it has since been committed — see the 2026-09-23 documentation entry above.)
+**Current state:** Milestones 1–6 are implemented and committed. Milestones 1–10 are complete: the v0.1 vertical slice is feature-complete per the spec. Milestone 11 (University Hospital, physician shadowing) is implemented and committed (see the 2026-09-24 entry). Remaining work is human medical review and any new scope from the user. The more recent visual, room, and UI improvements below sit on top of Milestones 1–6. (This note originally said the work was uncommitted; it has since been committed — see the 2026-09-23 documentation entry above.)
+
+## 2026-09-24 06:51 PDT — Milestone 11: University Hospital and physician shadowing
+
+User request (Milestone 11 run):
+- Build a big, modern, realistic academic hospital across the street from the parking lot and the quad (about the size of the two context blocks combined).
+- The hospital needs these spaces:
+  - exterior arrival;
+  - lobby/atrium;
+  - security, reception and information;
+  - elevators and a waiting zone;
+  - a main corridor and a nurses station;
+  - a physician workroom;
+  - 2–3 patient rooms;
+  - a support/orientation area;
+  - inaccessible corridors that imply more of the building.
+- Make it navigable in both camera modes.
+- Build a guided shadowing flow: arrive, meet the physician, orientation, follow, logistics, workflow and rounds, etiquette, complete. It needs wayfinding, signage and objectives; physician meet/follow/dialogue; etiquette moments; and a lightweight EHR introduction.
+- Out of scope: patient history, examination or diagnosis gameplay; full clinicals; a full EHR; multi-floor simulation; branching; procedural generation. Reuse existing systems, add targeted tests, and update the docs.
+
+Committed and pushed at the user's request (2026-09-24 07:25 PDT). The previous round (computers and Anki) was committed and pushed as `2dca803` before this work; its entry below still says "Not committed".
+
+**Scope note.** The spec lists hospital wards and patients as outside v0.1. This run's explicit request overrides that. Patients are observed scenery only: no patient interaction, history, examination or diagnosis.
+
+**Getting there** (`world/campus/buildings.gd` `hospital()`, `campus.gd`, `data/campus_config.gd`).
+- **The building:** it stands across the street, replacing the two grey context blocks. A 56 × 26 m two-storey podium (glass, white spandrels and fins) carries an inpatient tower set back from the street and capped near 28 m, so the overhead camera never loses the parking lot, the crossing or the plaza behind it. "UNIVERSITY HOSPITAL" appears on the street parapet, the canopy and the tower.
+- **The entrance:** it faces east onto a drop-off plaza (the side the overhead camera sees): a glass pavilion with a real door assembly, a timber-soffit canopy over the drop-off lane, and a waiting car.
+- **The way over:** the sidewalk continues east of the parking lot to a path, a zebra crossing and the plaza. A wayfinding pylon marks the turn. The street trees leave a gap at the crossing, and bounds open only there.
+- **Camera and wayfinding:** the campus camera follows farther south (`CAMERA_MAX` z 46). The campus directory mentions the hospital. Campus entry `hospital` spawns at its door.
+
+**Inside: two floors in one scene** (`world/hospital/`).
+- **Level 1 atrium** (`hospital_lobby.gd`):
+  - a 9 m glass front with automatic sliding doors, a skylight and a ring pendant over the curved Information desk (receptionist);
+  - a security podium (guard), a directory totem, and a walnut elevator bank with a floor directory;
+  - a carpeted lounge with armchairs, a curved sofa, seated visitors and indoor trees; the Atrium Café (barista) and a gift shop (closed until 10:00);
+  - a mezzanine and grand stair (roped off, "Level 2 by elevator");
+  - corridors that end at staff doors to the Emergency Department and the Outpatient Clinics;
+  - three visitors strolling (the campus pedestrian, now with a per-scene path graph).
+- **Level 4, 4 West Internal Medicine** (`hospital_unit.gd`):
+  - an elevator lobby with a closed staff door;
+  - a 36 m corridor with handrails and floor labels;
+  - patient rooms 410–415: 412 has the rounds patient and resident, 413 is empty, 414 is under contact precautions, and the rest have patients behind drawn curtains. Each has a bathroom, headwall, monitor, window, chair and whiteboard;
+  - the nurses station (charting desks, telemetry and census boards, slatted ceiling, mustard accent wall, nurses at work) with Priya, the charge nurse;
+  - the team workroom (workstation island, the EHR workstation, the team board and a student orientation board), clean supply and a family lounge;
+  - 4 East beyond closed double doors, with its corridor continuing.
+- **How it is built:** a `HospitalKit` builds each floor for both views at once. The first-person layer has full-height walls, columns, ceilings, lights and high signs; the overhead layer has the same walls and columns cut to 1.05 m with a dark cap. One full-height collider set means both views walk the same building. Shared furniture is in `hospital_props.gd`.
+- **Furniture fits the figures:** seats are low to suit the stylised figures, and the bed's head section is hinged so reclined patients lie on it without clipping.
+- **Elevator:** a working car per floor. Call it (or use the panel inside), step in, and the doors close. A short fade later you step out upstairs, with the physician if she is riding along. It works freely once the session is over.
+- **Per floor:** camera bounds and the HUD location line follow the floor you are on.
+
+**Dr. Okafor and the session** (`npc/physician.gd`, `education/shadowing/`, `world/hospital/shadowing_session.gd`).
+- **Script as data:** the session is a data script with 9 stops, validated like the lecture script. Its format is documented in `education/shadowing/README.md`.
+- **The physician:**
+  - she waits at the Information desk (before 9:00 with Pharmacodynamics still to attend, she sends you to class);
+  - meeting her records attendance for the new mandatory 9:00 "Physician Shadowing" event, with the usual late penalty;
+  - she walks her route and waits if you fall behind ("Stay with me."), says "Excuse me." if you block her, turns to you and gestures while talking. You hold still while she talks and turn to her.
+- **Stops, in order:**
+  - Welcome;
+  - the elevators (a privacy check, then ride up together);
+  - 4 West;
+  - the nurses station (introduce yourself to Priya; the charge-nurse check);
+  - the workroom EHR (close-up on the chart: banner, vitals, results, notes; chart-review and EHR-access checks);
+  - room 412 (a hand-hygiene check, foam in at the dispenser, the observer-position check);
+  - bedside rounds (stand on the marked spot at the foot of the bed; the resident presents; the attending asks the patient's consent and confirms the plan; foam out);
+  - the isolation door (the contact-precautions check);
+  - professional habits wrap-up.
+- **Results:** the 7 etiquette checks are real bank questions (Clinical Skills / Hospital Orientation) with stable attempt ids. They award XP, appear in Knowledge, and become flashcards (bank decks are now per topic). Each stop's takeaway is added to Lecture Notes. A summary card closes the session.
+- **The EHR** (`ui/ehr_chart.gd`): a small read-only chart for one fictional patient, drawn onto the workroom monitor. The camera eases in and frames it between the HUD and the dialogue card.
+
+**Supporting changes.**
+- **AppState:** a `HOSPITAL` phase, `enter_hospital()` and `WORLD_PHASES`.
+- **SaveGame:** the `hospital` location.
+- **Objectives:** after class they point to the hospital, then report the day complete.
+- **HUD:** `set_location()`; the arrival message names the right event; the legendary-coat notice shows only for the first lecture.
+- **Menus:** the map draws the street, the crossing and the hospital, with the next destination highlighted. The notes page shows shadowing takeaways.
+- **Question bank:** loads multiple files atomically.
+- **MeshKit:** `light` and `walnut` kinds.
+- **World nameplate:** plate and text colours, and multi-line sizing.
+- **First person:** `turn_toward()`.
+- **Presets:** new staff and patient presets.
+
+**Tests.**
+- **New:** `tests/hospital_test.gd`, 108 checks, 0 failures. It covers the data; the walk across the street; the full session with real movement (following and lagging, the elevator, the charge nurse, the EHR, hand hygiene, the observer mark, 7 answers, the summary, notes, XP and Knowledge); first person on both floors; a free elevator ride; saving; and leaving.
+- **Updated:** `academic_test` (the combined bank) and `knowledge_test` (the second discipline).
+- **Regression:** all other suites pass.
+- **Graphical:** captures in both views led to a muted palette, cutaway columns, walnut finishes, steel elevator doors and the EHR framing.
+
+**Docs.**
+- New: `src/docs/development/MILESTONE_11_ACCEPTANCE.md`.
+- Updated: `ARCHITECTURE.md`, `KNOWN_ISSUES.md` (hospital limitations), `MEDICAL_CONTENT_REVIEW.md` (all shadowing content awaits human review), `src/README.md`, `CLAUDE.md`, `AGENTS.md` and `PROJECT_HANDOFF.md`.
 
 ## 2026-09-23 23:21 PDT — In-world computer screens, pixel-art wallpapers, rebuilt Windows/macOS shells and Anki UI
 

@@ -70,6 +70,35 @@ const EXTRAS: Array[Dictionary] = [
 		"build": "classic", "skin": "4f3126", "hair_style": "curly", "hair_color": "1f1c20", "eye_style": "narrow", "eye_color": "35231a",
 		"brows": "bold", "mouth": "neutral", "facial_hair": "none", "cheeks": "none", "height": 1.04,
 		"outfit": {"head": "", "eyewear": "", "outerwear": "black_puffer", "top": "black_tee", "bottom": "black_joggers", "shoes": "white_sneakers", "neck": "", "back": "slate_backpack"}}},
+	# University Hospital staff and the patient on 4 West (Milestone 11).
+	{"id": "okafor", "name": "Dr. Maya Okafor", "description": "Attending physician · Internal Medicine", "look": {
+		"build": "slim", "skin": "704b3b", "hair_style": "bun", "hair_color": "1f1c20", "eye_style": "calm", "eye_color": "35231a",
+		"brows": "straight", "mouth": "smile", "facial_hair": "none", "cheeks": "none", "height": 1.02,
+		"outfit": {"head": "", "eyewear": "rect_glasses", "outerwear": "long_white_coat", "top": "black_turtleneck", "bottom": "charcoal_trousers", "shoes": "brown_loafers", "neck": "stethoscope", "back": ""}}},
+	{"id": "resident", "name": "Dr. Leo Martin", "description": "Resident physician (PGY-2)", "look": {
+		"build": "classic", "skin": "e3b08c", "hair_style": "short", "hair_color": "5b3b27", "eye_style": "classic", "eye_color": "3d6fc4",
+		"brows": "straight", "mouth": "neutral", "facial_hair": "stubble", "cheeks": "none", "height": 1.03,
+		"outfit": {"head": "", "eyewear": "", "outerwear": "short_white_coat", "top": "ceil_scrub_top", "bottom": "ceil_scrub_pants", "shoes": "blue_runners", "neck": "stethoscope", "back": ""}}},
+	{"id": "charge_nurse", "name": "Priya Shah, RN", "description": "Charge nurse · 4 West", "look": {
+		"build": "slim", "skin": "a5764f", "hair_style": "ponytail", "hair_color": "1f1c20", "eye_style": "lashes", "eye_color": "35231a",
+		"brows": "soft", "mouth": "smile", "facial_hair": "none", "cheeks": "none", "height": 0.97,
+		"outfit": {"head": "", "eyewear": "", "outerwear": "", "top": "indigo_scrub_top", "bottom": "indigo_scrub_pants", "shoes": "hospital_clogs", "neck": "student_lanyard", "back": ""}}},
+	{"id": "nurse", "name": "Nurse", "description": "Registered nurse", "look": {
+		"build": "classic", "skin": "d29d78", "hair_style": "short", "hair_color": "3a2a22", "eye_style": "round", "eye_color": "8a6a35",
+		"brows": "soft", "mouth": "neutral", "facial_hair": "none", "cheeks": "none", "height": 1.0,
+		"outfit": {"head": "", "eyewear": "", "outerwear": "", "top": "indigo_scrub_top", "bottom": "indigo_scrub_pants", "shoes": "white_sneakers", "neck": "student_lanyard", "back": ""}}},
+	{"id": "security", "name": "Security officer", "description": "Hospital security", "look": {
+		"build": "classic", "skin": "8d5a44", "hair_style": "buzz", "hair_color": "1f1c20", "eye_style": "narrow", "eye_color": "35231a",
+		"brows": "bold", "mouth": "neutral", "facial_hair": "goatee", "cheeks": "none", "height": 1.05,
+		"outfit": {"head": "", "eyewear": "", "outerwear": "navy_quarter_zip", "top": "white_tee", "bottom": "charcoal_trousers", "shoes": "black_hightops", "neck": "student_lanyard", "back": ""}}},
+	{"id": "reception", "name": "Information desk", "description": "Welcome desk volunteer", "look": {
+		"build": "slim", "skin": "f0c7a8", "hair_style": "bob", "hair_color": "b9b6b0", "eye_style": "round", "eye_color": "7d8a96",
+		"brows": "soft", "mouth": "smile", "facial_hair": "none", "cheeks": "blush", "height": 0.96,
+		"outfit": {"head": "", "eyewear": "round_glasses", "outerwear": "plum_cardigan", "top": "white_tee", "bottom": "slate_trousers", "shoes": "brown_loafers", "neck": "student_lanyard", "back": ""}}},
+	{"id": "patient", "name": "Patient", "description": "Inpatient, room 412", "look": {
+		"build": "classic", "skin": "e3b08c", "hair_style": "short", "hair_color": "b9b6b0", "eye_style": "calm", "eye_color": "7d8a96",
+		"brows": "soft", "mouth": "neutral", "facial_hair": "stubble", "cheeks": "none", "height": 1.0,
+		"outfit": {"head": "", "eyewear": "", "outerwear": "", "top": "grey_henley", "bottom": "grey_joggers", "shoes": "white_sneakers", "neck": "", "back": ""}}},
 	{"id": "sand", "name": "Sand", "description": "Red flannel · beard", "look": {
 		"build": "classic", "skin": "e3b08c", "hair_style": "buzz", "hair_color": "5b3b27", "eye_style": "calm", "eye_color": "8a6a35",
 		"brows": "straight", "mouth": "neutral", "facial_hair": "beard", "cheeks": "none", "height": 1.03,

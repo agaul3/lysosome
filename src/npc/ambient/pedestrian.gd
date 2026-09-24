@@ -14,6 +14,10 @@ const NODES := [
 	Vector2(0, -5.3), Vector2(3.3, -2), Vector2(0, 1.3), Vector2(-3.3, -2),
 ]
 const EDGES := [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 0], [1, 8], [8, 9], [9, 10], [10, 11], [11, 8], [3, 9], [5, 10], [7, 11]]
+## The graph this walker uses: the quad by default; another scene (the
+## hospital lobby) sets its own before adding the walker.
+var nodes: Array = NODES
+var edges: Array = EDGES
 var figure: Node3D
 var rng := RandomNumberGenerator.new()
 var speed := 1.3
@@ -39,9 +43,9 @@ func _ready() -> void:
 	figure.name = "Figure"
 	add_child(figure)
 	speed = rng.randf_range(1.15, 1.45)
-	from_node = rng.randi() % NODES.size()
+	from_node = rng.randi() % nodes.size()
 	to_node = _next(from_node, -1)
-	path_point = NODES[from_node].lerp(NODES[to_node], rng.randf())
+	path_point = nodes[from_node].lerp(nodes[to_node], rng.randf())
 	figure.position = Vector3(path_point.x, 0, path_point.y)
 
 ## `preset` names a look; empty dresses the passer-by in a random one.
@@ -63,7 +67,7 @@ func lane_clear(point: Vector2) -> bool:
 
 func neighbours(node: int) -> Array:
 	var result: Array = []
-	for edge in EDGES:
+	for edge in edges:
 		if edge[0] == node:
 			result.append(edge[1])
 		elif edge[1] == node:
@@ -82,7 +86,7 @@ func _process(delta: float) -> void:
 	var before := Vector2(figure.position.x, figure.position.z)
 	var moved := 0.0
 	phone = move_toward(phone, 1.0 if pause > 0.0 else 0.0, delta * 3.0)
-	var target: Vector2 = NODES[to_node]
+	var target: Vector2 = nodes[to_node]
 	var offset := target - path_point
 	var forward := offset.normalized() if offset.length() > 0.01 else Vector2(-sin(figure.rotation.y), -cos(figure.rotation.y))
 	var side := Vector2(-forward.y, forward.x)
@@ -135,7 +139,7 @@ func _process(delta: float) -> void:
 		figure.shoulders[1].rotation = Vector3(lerpf(figure.shoulders[1].rotation.x, 1.35, phone), 0, -0.3 * phone)
 		figure.spine.rotation.x = -0.12 * phone
 
-## Distance from a point to the nearest path segment (tests use it).
+## Distance from a point to the nearest segment of the quad paths (tests use it).
 static func distance_to_paths(point: Vector2) -> float:
 	var best := INF
 	for edge in EDGES:

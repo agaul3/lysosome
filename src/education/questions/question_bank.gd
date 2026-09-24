@@ -1,21 +1,44 @@
 extends Node
 ## Shared JSON database for future lecture and study clients. Grading is independent of UI.
 const DEFAULT_PATH := "res://education/questions/pharmacodynamics.json"
+## Every content file the game loads at start: the Pharmacodynamics lecture and
+## the Hospital Orientation shadowing session (Clinical Skills).
+const PATHS := [DEFAULT_PATH, "res://education/questions/hospital_orientation.json"]
 const TYPES := ["Recall", "Conceptual", "Application", "Clinical Application", "Interpretation", "Synthesis"]
 var records: Dictionary = {}
 var last_error := ""
 
 func _ready() -> void:
-	if not load_file(DEFAULT_PATH):
+	if not load_files(PATHS):
 		push_error(last_error)
 
 func load_file(path: String) -> bool:
-	if not FileAccess.file_exists(path):
-		last_error = "Question file not found"
-		return false
-	return load_json(FileAccess.get_file_as_string(path))
+	return load_files([path])
+
+## Loads several question files as one bank. All of them are parsed and
+## validated first (IDs must be unique across files), then the bank is
+## replaced in one step, so a bad file never leaves a half-loaded bank.
+func load_files(paths: Array) -> bool:
+	var candidate: Dictionary = {}
+	for path in paths:
+		if not FileAccess.file_exists(path):
+			last_error = "Question file not found: " + String(path)
+			return false
+		if not _parse_into(FileAccess.get_file_as_string(path), candidate):
+			return false
+	records = candidate
+	last_error = ""
+	return true
 
 func load_json(text: String) -> bool:
+	var candidate: Dictionary = {}
+	if not _parse_into(text, candidate):
+		return false
+	records = candidate # Atomic replacement: a bad import never corrupts the loaded bank.
+	last_error = ""
+	return true
+
+func _parse_into(text: String, candidate: Dictionary) -> bool:
 	var parser := JSON.new()
 	if parser.parse(text) != OK:
 		last_error = "Invalid JSON: " + parser.get_error_message()
@@ -24,7 +47,6 @@ func load_json(text: String) -> bool:
 	if not data is Dictionary or data.get("version") != 1 or not data.get("questions") is Array:
 		last_error = "Expected version 1 and a questions array"
 		return false
-	var candidate: Dictionary = {}
 	for question in data.questions:
 		var error := validate(question)
 		if not error.is_empty():
@@ -34,8 +56,6 @@ func load_json(text: String) -> bool:
 			last_error = "Duplicate question ID: " + question.id
 			return false
 		candidate[question.id] = question.duplicate(true)
-	records = candidate # Atomic replacement: a bad import never corrupts the loaded bank.
-	last_error = ""
 	return true
 
 func validate(question: Variant) -> String:

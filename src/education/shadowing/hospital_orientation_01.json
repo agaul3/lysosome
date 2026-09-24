@@ -1,0 +1,160 @@
+{
+  "version": 1,
+  "id": "hospital_orientation_01",
+  "title": "Hospital orientation",
+  "unit": "4 West · Internal Medicine",
+  "speakers": {
+    "okafor": "Dr. Maya Okafor",
+    "martin": "Dr. Leo Martin · Resident",
+    "priya": "Priya Shah · Charge nurse",
+    "patient": "Mr. Reyes"
+  },
+  "lines": {
+    "too_early": "Good morning, I'm Dr. Okafor. Our shadowing session starts at 9:00, after your Pharmacodynamics lecture. Go to class first, then meet me right here.",
+    "on_time": "Right on time. That matters on the wards more than almost anything.",
+    "late": "You're a few minutes late. It happens, but on the wards being on time matters: the team rounds whether you're there or not. Let's get going.",
+    "after": "Good to see you again. 4 West is on Level 4; you know the way now. Keep those habits going.",
+    "wait": "Stay with me."
+  },
+  "stops": [
+    {
+      "id": "meet",
+      "at": "info_desk",
+      "route": [],
+      "topic": "Welcome",
+      "objective": "Meet Dr. Okafor at the Information desk",
+      "takeaway": "Shadowing means observing: watch, listen, and save your questions for the right moment. The Information desk and the floor directories are how you find your way.",
+      "steps": [
+        {"say": "Welcome to University Hospital. I'm one of the attending physicians on Internal Medicine, and you're with my team this morning."},
+        {"say": "Today you're shadowing. You watch, listen and ask good questions. You won't examine patients or write in the chart on your own; that comes later in your training."},
+        {"say": "Every hospital feels like a maze at first. The Information desk and the directories on each floor are your friends, and the elevators behind us serve every inpatient floor."},
+        {"say": "Our team is on 4 West, Internal Medicine. Stay close and follow me to the elevators."}
+      ]
+    },
+    {
+      "id": "elevators",
+      "at": "elevator_l1",
+      "route": ["lobby_mid"],
+      "topic": "Getting around",
+      "objective": "Follow Dr. Okafor to the elevators",
+      "takeaway": "Elevators, hallways and the café are public spaces: no patient details there. Patients on beds and stretchers have priority in the elevators.",
+      "steps": [
+        {"say": "Visitor elevators are here; the staff and patient-transport cars are at the end. If a patient on a bed or stretcher needs the car, they go first and we wait for the next one."},
+        {"say": "One rule for elevators, hallways and the café: they're public spaces."},
+        {"question": "ho_privacy_elevator_01", "lead": "Quick check"},
+        {"action": "board", "target": "unit", "objective": "Step into the elevator with Dr. Okafor"}
+      ]
+    },
+    {
+      "id": "unit",
+      "at": "unit_doors",
+      "route": ["unit_car_door", "unit_lobby"],
+      "topic": "4 West",
+      "objective": "Follow Dr. Okafor onto 4 West",
+      "takeaway": "An inpatient unit is organized around its nurses station, with patient rooms along the corridors and the team workroom close by.",
+      "steps": [
+        {"say": "Level 4: 4 West, Internal Medicine. Thirty-two beds; our team is caring for fourteen patients today."},
+        {"say": "Units are built around the nurses station, with patient rooms along the corridors and our workroom nearby. Let me show you."}
+      ]
+    },
+    {
+      "id": "station",
+      "at": "station",
+      "route": ["corridor_west"],
+      "topic": "Nurses station",
+      "objective": "Follow Dr. Okafor to the nurses station",
+      "takeaway": "The nurses station is the unit's hub. Introduce yourself to the charge nurse when you arrive; nurses coordinate the unit and spend the most time at the bedside.",
+      "steps": [
+        {"say": "This is the nurses station, the hub of the unit. Nurses chart, take calls, watch the telemetry monitors and coordinate the day from here."},
+        {"say": "The board shows every room with its nurse, team and discharge plan. Nurses spend far more time at the bedside than we do; they often notice first when something changes."},
+        {"say": "Priya is our charge nurse today. It's good practice to introduce yourself whenever you arrive on a unit."},
+        {"action": "talk", "target": "charge_nurse", "objective": "Introduce yourself to Priya, the charge nurse", "reply": "Welcome to 4 West! If you ever lose your team, ask at the station. And please: clean hands, phone on silent."},
+        {"question": "ho_charge_nurse_01", "lead": "Quick check"}
+      ]
+    },
+    {
+      "id": "workroom",
+      "at": "workroom_desk",
+      "route": ["corridor_mid", "workroom_door", "workroom_in"],
+      "topic": "Team workroom · EHR",
+      "objective": "Follow Dr. Okafor to the team workroom",
+      "takeaway": "The EHR is the shared record of notes, orders, results and medications. Chart review before rounds catches what changed; open only the charts you are involved with.",
+      "steps": [
+        {"say": "Our team workroom. Before rounds we pre-round: we review each patient's chart so we know what changed overnight."},
+        {"ehr": "open"},
+        {"say": "This is the electronic health record, the EHR. Every note, order, result and medication lives here, and the whole care team works from the same chart."},
+        {"ehr": "banner"},
+        {"say": "The banner at the top identifies the patient: name, age, room, allergies and code status. Always confirm you're in the right chart before you read anything."},
+        {"ehr": "vitals"},
+        {"say": "Vital signs and their trends. Mr. Reyes in 412 came in with a fever; he has had a normal temperature for twenty-four hours."},
+        {"ehr": "results"},
+        {"say": "Results. His white blood cell count is down from 14 to 11. New and abnormal results are flagged so they aren't missed."},
+        {"ehr": "notes"},
+        {"say": "Nursing and overnight notes tell the story between the numbers, and the orders and medication record show what is actually being done."},
+        {"question": "ho_chart_review_01", "lead": "Quick check"},
+        {"question": "ho_ehr_access_01", "lead": "One more"},
+        {"ehr": "close"}
+      ]
+    },
+    {
+      "id": "room_412",
+      "at": "room412_door",
+      "route": ["workroom_in", "workroom_door", "corridor_rooms"],
+      "topic": "Before entering a room",
+      "objective": "Follow Dr. Okafor to room 412",
+      "takeaway": "Before every room: read the door sign, knock, introduce yourself and clean your hands (foam in, foam out).",
+      "steps": [
+        {"say": "Time to round on Mr. Reyes. Before any room: check the door for precaution signs, knock, and clean your hands."},
+        {"question": "ho_hand_hygiene_01", "lead": "Quick check"},
+        {"action": "sanitize", "target": "dispenser_412", "objective": "Clean your hands at the dispenser beside room 412 (foam in)"},
+        {"question": "ho_rounds_position_01", "lead": "Before we go in"},
+        {"say": "Exactly. Follow me in and stand at the foot of the bed."}
+      ]
+    },
+    {
+      "id": "bedside",
+      "at": "room412_bedside",
+      "route": ["room412_inside"],
+      "topic": "Bedside rounds",
+      "objective": "Follow Dr. Okafor into room 412",
+      "takeaway": "On rounds the resident presents, the attending confirms the plan with the patient, and the student observes from the foot of the bed.",
+      "steps": [
+        {"action": "stand", "target": "observer_412", "objective": "Stand at the foot of the bed"},
+        {"say": "Good morning, Mr. Reyes. This is a first-year medical student shadowing me today. Is it all right if they observe?"},
+        {"speaker": "patient", "say": "Of course. Morning, Doc. I actually slept last night."},
+        {"speaker": "martin", "say": "Mr. Reyes is sixty-seven, admitted two days ago with community-acquired pneumonia. No fever for twenty-four hours, oxygen saturation ninety-five percent on room air, white count down to eleven."},
+        {"speaker": "martin", "say": "Plan: continue his antibiotics, walk twice today with nursing, and aim for discharge tomorrow if he keeps improving."},
+        {"say": "I agree. Mr. Reyes, what questions do you have for us?"},
+        {"speaker": "patient", "say": "Just when I can go home."},
+        {"say": "If today goes like yesterday, tomorrow. We'll check in again this afternoon. Thank you."},
+        {"action": "sanitize", "target": "dispenser_412_in", "objective": "Clean your hands on the way out (foam out)"}
+      ]
+    },
+    {
+      "id": "isolation",
+      "at": "isolation_414",
+      "route": ["room412_inside", "room412_door", "corridor_east"],
+      "topic": "Isolation precautions",
+      "objective": "Follow Dr. Okafor down the corridor",
+      "takeaway": "Read isolation signs before entering. Contact precautions: clean your hands, then gown and gloves, removed at the doorway.",
+      "steps": [
+        {"say": "Look at the door of room 414. The yellow Contact Precautions sign means anyone going in needs a gown and gloves; the cart beside the door has them."},
+        {"question": "ho_contact_precautions_01", "lead": "Quick check"},
+        {"say": "Different signs mean different equipment: contact, droplet, airborne. When in doubt, ask the patient's nurse before you go in."}
+      ]
+    },
+    {
+      "id": "wrap_up",
+      "at": "wrap_up",
+      "route": ["corridor_east_back"],
+      "topic": "Professionalism",
+      "objective": "Follow Dr. Okafor back toward the workroom",
+      "takeaway": "Be on time, silence your phone, observe without blocking, save questions for after the room, and thank the team.",
+      "steps": [
+        {"say": "That's a morning on the floor. A few habits make a student welcome on any team."},
+        {"say": "Be on time. Phone on silent. Stand where you can see without blocking anyone. Save your questions for after we leave the room, then ask all of them."},
+        {"say": "And thank the nurses on your way out. You did well today. Come back to 4 West any time; you know the way now."}
+      ]
+    }
+  ]
+}

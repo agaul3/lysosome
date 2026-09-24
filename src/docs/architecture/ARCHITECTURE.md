@@ -1,4 +1,4 @@
-# Architecture — Milestones 1–10 (v0.1 slice)
+# Architecture — Milestones 1–11
 
 ## Application and scenes
 
@@ -236,3 +236,50 @@ On arrival, the rig applies the preference deferred, after the scene's own camer
 - **Windows and icons:** `ui/computer/os_window.gd` is the draggable app-window frame for each OS; `ui/computer/os_kit.gd` holds system fonts, style boxes and the original 16×16 pixel icons.
 - **Wallpapers:** `assets/pixel_wallpaper.gdshader` pixelates the photo wallpapers (crop/patch uniforms remove the desktop screenshot's baked UI).
 - **Anki:** `ui/computer/anki_app.gd` is the shared study client, laid out like desktop Anki. DormUI coordinates movement/input ownership, first-person pointer release, backpack/seat gating and the temporary `world/laptop.gd` prop. Seats expose an optional authored `laptop_surface`; auditorium seats use a deployable tray. The dorm desk opens the PC; Inventory and the seated L prompt open the laptop. Café study chairs reuse the existing collision-aware seating system. The lecture explicitly ignores inputs while a computer owns them. Design decisions and current compatibility boundaries are in `docs/development/FLASHCARD_SYSTEM.md`.
+
+## University Hospital and physician shadowing — Milestone 11 (September 24, 2026)
+
+**Scene and phase.** AppState gains a `HOSPITAL` phase and the `hospital` scene key, and SaveGame lists `hospital` as a location. Campus entry `hospital` spawns at the building's east entrance. `AppState.enter_hospital()` is reached from the campus door endpoint; the hospital's front doors return to campus.
+
+**Exterior.** `Buildings.hospital()` builds the hospital across the street from the parking lot, replacing the two context blocks that stood there:
+- a two-storey podium (x −32…24, z 44…70);
+- an inpatient tower set back to z ≥ 56 and capped near 28 m, so from the overhead camera it never covers the parking lot, the crossing or the plaza;
+- an entrance pavilion and drop-off canopy on the east face, which the camera sees.
+
+`campus.gd` adds a sidewalk, a path and a zebra crossing (`CampusConfig.CROSSWALK_X`), the entrance plaza with a drop-off lane (`HOSPITAL_PLAZA`), and bounds that open only at the crossing. It also adds a wayfinding pylon, a gap in the street trees and a larger `CAMERA_MAX`. The campus map (`data/campus_map.gd`) draws the street, the crossing and the hospital.
+
+**Two floors in one scene.** `world/hospital/hospital.tscn` (`hospital.gd`) builds the Level 1 atrium (`hospital_lobby.gd`) at the origin and 4 West (`hospital_unit.gd`) 140 m east. `hospital.gd` also:
+- tracks which floor the student is on from position, setting camera bounds and framing per floor and updating the HUD location (`DormUI.set_location`);
+- runs a working elevator car per floor: `call_elevator(zone, companion)` opens the doors, and once the student (and companion) are inside it closes them, fades, and moves both to the other car with their offsets rotated into its frame.
+
+**Builders.** The builders are static layout scripts. They lay geometry into a `HospitalKit` (`hospital_kit.gd`) and call back into the scene for nodes: `add_sign`, `add_figure`, `add_endpoint`, `add_dispenser`, `add_doors`, `add_elevator_call`, `set_anchor` and `add_ehr_screen`.
+- **Layers:** the kit merges geometry into three MeshKit layers. `always` holds floors, furniture and far walls. `fp` holds full-height walls, columns, ceilings, lights and high signs. `tp` holds the overhead cutaway, with walls and columns cut to 1.05 m and a dark cap.
+- **Collision:** colliders are always full height. `apply_view` toggles `fp` and `tp` with `AppState.first_person`, so both views walk the same building.
+- **Floor:** one floor collider spans both floors.
+- **Props:** `hospital_props.gd` holds shared furniture. Seats are low (0.34–0.38 m) to match the rig's seated hips. The bed's raised head section hinges at `BED_HINGE`/`BED_TILT`, and `patient_hip()` gives where a patient's hips rest.
+- **Doors:** `sliding_doors.gd` is the automatic entrance and the elevator leaves. Its collider is solid only while closed.
+- **Materials:** MeshKit gains the `walnut` wood kind (darker veneer) and the `light` kind (unshaded vertex colour).
+
+**Figures.** Staff, visitors and patients reuse the Minecraft rig (`Appearance`) with presets from `data/character_presets.gd` (okafor, resident, charge_nurse, nurse, security, reception, patient). Standing figures get the shared NPC blocker, seated ones take the seat height, and patients lie reclined on the bed's head section by a hip pivot. Lobby visitors are `pedestrian.gd` walkers on a lobby path graph (`nodes`/`edges` are now per instance, defaulting to the quad).
+
+**The physician.** `npc/physician.gd` (Dr. Okafor) walks a list of anchor points in straight legs, which the layout keeps clear. She is solid to the player.
+- **Keeping the student with her:** she waits and says "Stay with me." when the student falls more than 6.5 m behind.
+- **Personal space:** she pauses rather than walk into a student standing directly ahead, and says "Excuse me." if kept waiting.
+- **Talking:** she faces whoever she is talking to and gestures while a line types. Speech bubbles are the only floating labels.
+
+**Shadowing as data.** `education/shadowing/hospital_orientation_01.json` is validated by `shadowing_script.gd`; the format is in `education/shadowing/README.md`. `world/hospital/shadowing_session.gd` runs it.
+- **Meeting:** the student meets Dr. Okafor at the Information desk. Before 9:00, with the lecture not yet attended, she sends them to class. Otherwise `AcademicSession.record_arrival` records attendance for the mandatory 9:00 event in `academic_config.json`, with the usual late penalty.
+- **Stops:** each stop walks its route, waits until the student is within 3.4 m, then plays its steps in order:
+  - `say` lines in the reused `LectureUI` card;
+  - bank questions through the reused `QuestionBeat`, graded by `QuestionBank.submit` with attempt ids `<script>:<question>`;
+  - player actions: `board` the elevator, `talk` to an NPC, `sanitize` at a dispenser, `stand` on a floor marker;
+  - EHR moments.
+- **Holding still:** the student holds still during lines and questions and turns toward the speaker (`FirstPerson.turn_toward` in first person).
+- **Notes:** each stop's takeaway is saved through `notes_progress` and shown on the Lecture Notes page.
+- **Completion:** it is stored in `lectures_completed` like a lecture. `lecture_completed` fires, but the legendary-coat notice is limited to the first lecture.
+
+**EHR.** `ui/ehr_chart.gd` draws a small read-only chart for one fictional patient: banner, menu, and summary, vitals, results and notes panels, plus a focus outline. It renders in a SubViewport onto the workroom monitor. `Hospital.open_ehr()` eases a `LectureCamera` to `ehr_pose()`, which frames the screen between the HUD and the dialogue card, and hides the student's figure.
+
+**Questions and knowledge.** `QuestionBank` loads every file in `PATHS` atomically (`load_files`); `hospital_orientation.json` adds seven Clinical Skills / Hospital Orientation questions. Knowledge therefore shows a second discipline, and the flashcard collection files bank cards under `Medicine::<discipline>::<topic>`. Objectives (`data/objectives.gd`) continue after class to the hospital session, then report the day complete.
+
+**Verification.** `tests/hospital_test.gd` checks the data, walks from campus across the street, and runs the whole session with real movement. It then checks first person on both floors, a free elevator ride, saving in the hospital and leaving for campus.

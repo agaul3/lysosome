@@ -133,7 +133,8 @@ func attendance_tests() -> void:
 	academics.reset()
 
 func question_tests() -> void:
-	check(bank.records.size() == 14, "Pharmacodynamics bank loaded (12 lecture questions + 2 remediation follow-ups)")
+	var production: int = bank.records.size()
+	check(production == 14 + bank.for_lecture("hospital_orientation_01").size() and bank.for_lecture("hospital_orientation_01").size() == 7, "Bank loads every content file: Pharmacodynamics (12 lecture + 2 remediation) and Hospital Orientation (7)")
 	check(bank.for_lecture("pharmacodynamics_01").size() == 14, "Shared lecture filter")
 	var q: Dictionary = bank.get_question("pd_potency_01")
 	var outcome: Dictionary = bank.grade(q.id, "a")
@@ -157,7 +158,7 @@ func question_tests() -> void:
 	check(bank.get_question(q.id).choices.a != "changed", "Question access returns independent data")
 	var valid_json := JSON.stringify({"version":1,"questions":[q]})
 	check(not bank.load_json("{"), "Malformed JSON rejected")
-	check(bank.records.size() == 14, "Malformed import preserves old bank")
+	check(bank.records.size() == production, "Malformed import preserves old bank")
 	for field in ["prompt", "correct_answer", "learning_objective", "choices", "xp_reward"]:
 		var bad := q.duplicate(true)
 		bad.erase(field)
@@ -179,7 +180,8 @@ func question_tests() -> void:
 	check(bank.grade(q.id, "  MAXIMAL   EFFICACY ").correct, "Short answer normalizes case/spacing")
 	check(not bank.grade(q.id, "efficacyish").correct, "No fuzzy/AI grading")
 	check(bank.grade(q.id, "efficacy").xp_reward == 30, "Explicit reward override")
-	check(bank.load_file(bank.DEFAULT_PATH), "Restore production bank")
+	check(not bank.load_files([bank.DEFAULT_PATH, "res://missing.json"]) and bank.records.size() == 1, "A missing content file leaves the loaded bank unchanged")
+	check(bank.load_files(bank.PATHS) and bank.records.size() == production, "Restore production bank")
 	academics.reset()
 	var start := Time.get_unix_time_from_datetime_string("2026-09-21T08:00:01")
 	academics.record_arrival("pharmacodynamics_01", start)

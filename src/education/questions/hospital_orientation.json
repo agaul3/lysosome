@@ -1,0 +1,152 @@
+{
+  "version": 1,
+  "questions": [
+    {
+      "id": "ho_charge_nurse_01",
+      "discipline": "Clinical Skills",
+      "topic": "Hospital Orientation",
+      "subtopic": "Care team roles",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "On an inpatient unit, what is the charge nurse's main role during a shift?",
+      "choices": {
+        "a": "Coordinating the unit's nursing assignments, bed flow and staffing for the shift",
+        "b": "Writing the physician team's admission orders",
+        "c": "Serving as the attending physician for the unit's patients",
+        "d": "Running the hospital's billing and insurance office"
+      },
+      "correct_answer": "a",
+      "explanation": "The charge nurse coordinates the unit for the shift: nursing assignments, admissions and discharges, bed flow and escalation. Physicians write medical orders; the charge nurse is often the best first contact for unit logistics.",
+      "learning_objective": "Describe the charge nurse's coordinating role on an inpatient unit.",
+      "xp_reward": null,
+      "lecture_id": "hospital_orientation_01",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "ho_hand_hygiene_01",
+      "discipline": "Clinical Skills",
+      "topic": "Hospital Orientation",
+      "subtopic": "Infection prevention",
+      "question_type": "Application",
+      "difficulty_tier": 1,
+      "prompt": "You are about to follow your team into a patient's room. When should you clean your hands?",
+      "choices": {
+        "a": "Only if your hands look dirty",
+        "b": "On the way in and on the way out of the room, and before and after touching the patient or their surroundings",
+        "c": "Once at the start of the day, then gloves take over",
+        "d": "Only after touching the patient"
+      },
+      "correct_answer": "b",
+      "explanation": "Clean your hands entering and leaving every room (\"foam in, foam out\"), and before and after contact with the patient or their surroundings. Gloves do not replace hand hygiene, and visibly soiled hands need soap and water rather than alcohol rub.",
+      "learning_objective": "Apply the hand-hygiene moments when entering and leaving a patient's room.",
+      "xp_reward": null,
+      "lecture_id": "hospital_orientation_01",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "ho_rounds_position_01",
+      "discipline": "Clinical Skills",
+      "topic": "Hospital Orientation",
+      "subtopic": "Rounds etiquette",
+      "question_type": "Application",
+      "difficulty_tier": 1,
+      "prompt": "During bedside rounds, where should a shadowing student usually stand?",
+      "choices": {
+        "a": "At the head of the bed, beside the patient's face",
+        "b": "Near the foot of the bed or the back of the room: able to observe without blocking the team or the patient",
+        "c": "In the doorway, holding the door open",
+        "d": "Sitting on the edge of the patient's bed"
+      },
+      "correct_answer": "b",
+      "explanation": "A shadowing student observes from the foot of the bed or the back of the room. That keeps the path to the patient clear for the team, leaves the patient space, and still lets you see and hear. Never sit on a patient's bed.",
+      "learning_objective": "Choose an observer position that respects the patient and the team during rounds.",
+      "xp_reward": null,
+      "lecture_id": "hospital_orientation_01",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "ho_contact_precautions_01",
+      "discipline": "Clinical Skills",
+      "topic": "Hospital Orientation",
+      "subtopic": "Infection prevention",
+      "question_type": "Application",
+      "difficulty_tier": 1,
+      "prompt": "A patient's door has a Contact Precautions sign. If your team asks you to come in, what should you do?",
+      "choices": {
+        "a": "Walk in quickly and avoid touching anything",
+        "b": "Clean your hands, put on a gown and gloves as the sign directs, and remove them before leaving the room",
+        "c": "Wear a surgical mask only",
+        "d": "Nothing extra; the precautions apply only to nurses"
+      },
+      "correct_answer": "b",
+      "explanation": "Contact precautions mean a gown and gloves for anyone entering, with hand hygiene before putting them on and after taking them off at the doorway. Always read the door sign first; other precaution types need different equipment.",
+      "learning_objective": "Recognize contact-precaution signage and the protective equipment it requires.",
+      "xp_reward": null,
+      "lecture_id": "hospital_orientation_01",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "ho_privacy_elevator_01",
+      "discipline": "Clinical Skills",
+      "topic": "Hospital Orientation",
+      "subtopic": "Patient privacy",
+      "question_type": "Application",
+      "difficulty_tier": 1,
+      "prompt": "In a crowded elevator, a resident asks you what you thought of the patient you just saw. What is the best response?",
+      "choices": {
+        "a": "Summarize the case quietly",
+        "b": "Suggest you talk it through somewhere private, such as the team workroom",
+        "c": "Share only the diagnosis and room number",
+        "d": "Share the case but leave out the patient's name"
+      },
+      "correct_answer": "b",
+      "explanation": "Elevators, hallways and cafeterias are public spaces. Save patient discussion for a private area; details like a room number, age or diagnosis can identify someone even without a name.",
+      "learning_objective": "Protect patient privacy by keeping clinical discussion out of public spaces.",
+      "xp_reward": null,
+      "lecture_id": "hospital_orientation_01",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "ho_chart_review_01",
+      "discipline": "Clinical Skills",
+      "topic": "Hospital Orientation",
+      "subtopic": "EHR and chart review",
+      "question_type": "Conceptual",
+      "difficulty_tier": 1,
+      "prompt": "What is the main purpose of reviewing a patient's chart in the EHR before rounds?",
+      "choices": {
+        "a": "To copy yesterday's note forward unchanged",
+        "b": "To catch up on what changed since the last visit: vital signs, new results, nursing notes and orders",
+        "c": "To change the patient's medication orders",
+        "d": "To print the chart to take home"
+      },
+      "correct_answer": "b",
+      "explanation": "Chart review prepares the team to see the patient: overnight events, vital-sign trends, new labs and imaging, nursing notes and current orders. Notes are written fresh for each day, orders come from licensed prescribers, and charts never leave the hospital.",
+      "learning_objective": "Explain what chart review contributes to the daily workflow of an inpatient team.",
+      "xp_reward": null,
+      "lecture_id": "hospital_orientation_01",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "ho_ehr_access_01",
+      "discipline": "Clinical Skills",
+      "topic": "Hospital Orientation",
+      "subtopic": "Patient privacy",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "Which use of your student EHR access is appropriate?",
+      "choices": {
+        "a": "Looking up a classmate who was admitted last night",
+        "b": "Opening only the charts of patients you are involved with, as your role allows",
+        "c": "Photographing a lab table to study at home",
+        "d": "Letting a friend use your login to finish a task"
+      },
+      "correct_answer": "b",
+      "explanation": "Access the records you need for the patients you are involved with, and nothing more. Every chart opened is logged and audited; photographs of patient information and shared logins are never appropriate.",
+      "learning_objective": "Describe appropriate, role-limited use of EHR access.",
+      "xp_reward": null,
+      "lecture_id": "hospital_orientation_01",
+      "format": "multiple_choice"
+    }
+  ]
+}

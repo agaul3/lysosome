@@ -1,4 +1,4 @@
-# Known issues — Milestones 5–6
+# Known issues — Milestones 5–11
 
 - Physical controller hardware has not been tested. Bindings and injected controller events are covered by automated tests.
 - Volume and fullscreen settings are not stored in the save (they are per-session preferences). There is no music or ambience.
@@ -44,3 +44,23 @@ See `MILESTONES_5_6_ACCEPTANCE.md` for current validation results.
 - Both simulated desktop environments and the shared offline study collection are functional. This is classic Anki-style scheduling, with deliberate differences (real-time UTC rollover, no fuzz/learning-ahead), not exact compatibility with Anki or FSRS. AnkiWeb, .apkg import/export, undo, rich-media cards and full OS window management remain unimplemented. The desktops are simulations: window resizing by dragging edges, multiple desktops, a working browser, file management and Launchpad are not implemented; menu-bar menus other than the Mac fruit menu are decorative. Screen text is legible at the default window size but small on very small windows. The system font falls back to Helvetica/Arial when Segoe UI or San Francisco isn't installed.
 - Flashcard starter content retains the shared question bank's pending human medical review. Study XP rewards participation; self-rated recall never changes graded knowledge accuracy.
 - Physical controller hardware and real multi-day use remain manual checks. See [FLASHCARD_SYSTEM.md](FLASHCARD_SYSTEM.md) for access instructions and design ideas.
+
+## University Hospital and shadowing (Milestone 11, September 24, 2026)
+
+- **Scope.** The hospital is a partial slice: the Level 1 atrium and one inpatient unit (4 West). The Emergency Department, Outpatient Clinics, Level 2 mezzanine, 4 East and the other patient rooms are closed doors, roped stairs or scenery. Only Level 1 and Level 4 are reachable by elevator; the directory lists eight floors.
+- **Patients are observed scenery.** No history, examination, diagnosis or EHR entry, by design. Patients and staff other than Dr. Okafor are static figures. The charge nurse turns to face you when you talk to her.
+- **The EHR is a read-only illustration for one fictional patient,** driven by the session. Outside the session, the workstation only shows a message.
+- **The session is one-off.** It is the 9:00 event on 2026-09-21. Attendance is recorded when you meet Dr. Okafor; after the lecture you can meet her early without waiting. Completing it once records the results; there is no replay mode.
+- **Saving and resuming.**
+  - A save made mid-session resumes at the hospital entrance with the session waiting to start again. Answers already given keep their results and XP (stable attempt ids).
+  - A save made on 4 West also resumes at the entrance.
+- **Dr. Okafor's movement.**
+  - She walks straight lines between authored anchors and does not path-find. If you stand directly in her way she waits (and says "Excuse me.") rather than stepping around you.
+  - Lobby visitors do not avoid her, so they can briefly overlap.
+- **The elevator** is a fade-and-teleport between two stacked cars. There is no ride animation, and the doors of the other cars are decorative.
+- **Overhead cutaway.** Tall atrium walls on the far (north and west) sides stay full height. Ceilings, high signs and the ring pendant appear only in first person.
+- **Campus side.**
+  - The hospital's campus footprint has no interior at campus scale. Its east entrance leads into the separate hospital scene, whose glass front faces the camera, so inside and outside orientations differ.
+  - Only the crossing, the plaza and the entrance are walkable across the street.
+- **Visitor looks are random** each visit.
+- **Medical content.** All shadowing content, including the seven questions and the chart values, awaits human review (see `MEDICAL_CONTENT_REVIEW.md`).

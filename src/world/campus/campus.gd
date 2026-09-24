@@ -53,6 +53,7 @@ var camera: Camera3D
 var hud: CanvasLayer
 var dorm_door: Node3D
 var lecture_door: Node3D
+var hospital_door: Node3D
 var noticeboard: Node3D
 var student: Node3D
 var sun: DirectionalLight3D
@@ -67,6 +68,7 @@ func _ready() -> void:
 	Buildings.medical_center(self)
 	Buildings.anatomy_hall(self)
 	Buildings.pavilion(self)
+	Buildings.hospital(self)
 	_build_signs()
 	_build_props()
 	_build_parking()
@@ -145,6 +147,19 @@ func _build_paving() -> void:
 	slab.call(-40, 27, 40, 35, 0.02, ASPHALT.darkened(0.15))
 	slab.call(-40, 26, 40, 27, 0.05, CURB)
 	slab.call(-40, 35, 40, 37, 0.05, CURB)
+	# To University Hospital: the sidewalk runs on east of the parking, a path
+	# leads south to a zebra crossing, and the far side opens onto the
+	# hospital's entrance plaza with a drop-off lane under the canopy.
+	slab.call(26, 11, 30.5, 14, 0.03, PATH)
+	slab.call(Config.CROSSWALK_X.x, 14, Config.CROSSWALK_X.y, 26, 0.03, PATH)
+	for index in range(8):
+		var z := 27.45 + index * 1.0
+		slab.call(Config.CROSSWALK_X.x + 0.1, z, Config.CROSSWALK_X.y - 0.1, z + 0.5, 0.025, Color("e9e6dc"))
+	slab.call(-32, 37, 24, 44, 0.03, PLAZA)
+	var plaza: Rect2 = Config.HOSPITAL_PLAZA
+	slab.call(plaza.position.x, plaza.position.y, plaza.end.x, plaza.end.y, 0.035, PLAZA)
+	slab.call(31.6, 35, 35.4, 37, 0.055, ASPHALT)
+	slab.call(31.6, 37, 35.4, 56.5, 0.04, ASPHALT)
 	for index in range(16):
 		var x := -37.5 + index * 5.0
 		slab.call(x, 30.9, x + 2.4, 31.1, 0.025, Color("d8d3c2"))
@@ -224,6 +239,13 @@ func _build_props() -> void:
 			plan.call(-0.3 + (row % 2) * 0.62, 0.92 - (row / 2) * 0.12, 0.5, 0.035, Color("7d8a90"))
 			plan.call(-0.58 + (row % 2) * 0.62, 0.92 - (row / 2) * 0.12, 0.05, 0.05, [Color("c3cacd"), Color("e3d4ad"), Color("d8d1c2"), Color("b8c6cf")][row])
 		Geometry.wall_sign(self, "CAMPUS DIRECTORY", kiosk + Vector3(0, 2.05, face * 0.105), 0.0 if face > 0 else PI, 22, 0.0058)
+	# Wayfinding pylon where the sidewalk turns toward the hospital crossing,
+	# with a face toward walkers coming along the sidewalk and one toward the street.
+	var pylon := Vector3(31.3, 0, 12.4)
+	kit.solid_box("metal", pylon + Vector3(0, 1.1, 0), Vector3(0.2, 2.2, 1.1), Color("2f3d44"))
+	kit.box("metal", pylon + Vector3(0, 0.05, 0), Vector3(0.34, 0.1, 1.25), Color("262f34"))
+	for face in [-1.0, 1.0]:
+		Geometry.wall_sign(self, "University Hospital\nMain entrance ·\nacross the street", pylon + Vector3(face * 0.105, 1.45, 0), face * PI / 2, 22, 0.0052)
 	# Café terrace tables with umbrellas.
 	for point in [Vector3(17, 0, -4.8), Vector3(17, 0, 1.2), Vector3(18.6, 0, 3.4)]:
 		kit.cylinder("metal", point, point + Vector3(0, 0.74, 0), 0.04, POST)
@@ -260,6 +282,8 @@ func _build_parking() -> void:
 	# Planted islands between the bays.
 	for x in [-24.3, 24.3]:
 		kit.solid_box("facade", Vector3(x, 0.1, 20), Vector3(1.2, 0.2, 11.5), CURB)
+	# A car waiting in the hospital drop-off lane.
+	_car(kit, Vector3(33.5, 0, 51.5), PI, Color("f2f2f0"))
 	kit.commit(self, "Parking")
 
 func _car(kit: MeshKit, position: Vector3, yaw: float, colour: Color) -> void:
@@ -396,7 +420,7 @@ func _build_context() -> void:
 	var blocks := [
 		[Vector3(-30, 0, -52), Vector3(22, 28, 14)], [Vector3(-4, 0, -54), Vector3(18, 40, 16)], [Vector3(20, 0, -50), Vector3(20, 22, 12)],
 		[Vector3(44, 0, -38), Vector3(12, 30, 18)], [Vector3(-54, 0, -30), Vector3(14, 24, 22)], [Vector3(-56, 0, 2), Vector3(12, 16, 26)],
-		[Vector3(-20, 0, 48), Vector3(24, 10, 12)], [Vector3(12, 0, 48), Vector3(20, 12, 12)],
+		[Vector3(-72, 0, 98), Vector3(18, 14, 20)], [Vector3(80, 0, 104), Vector3(20, 16, 14)],
 	]
 	for block in blocks:
 		var center: Vector3 = block[0] + Vector3(0, block[1].y / 2.0, 0)
@@ -406,14 +430,33 @@ func _build_context() -> void:
 	# A line of street trees along the far side of the road.
 	var trees := []
 	for index in range(12):
-		trees.append([Vector3(-36 + index * 6.5, 0, 36.2), 1.0, float(index)])
+		var x := -36 + index * 6.5
+		if x > 26.0:
+			continue # The crossing and the drop-off lane stay open.
+		trees.append([Vector3(x, 0, 36.2), 1.0, float(index)])
 	Flora.plant(self, "shade", trees, false)
 
 ## Invisible edges of the walkable campus.
 func _build_bounds() -> void:
 	var body := StaticBody3D.new()
 	body.name = "CampusBounds"
-	for bound in [[Vector3(0, 1.5, -37.5), Vector3(80, 3, 1)], [Vector3(0, 1.5, 26.5), Vector3(80, 3, 1)], [Vector3(-39.5, 1.5, -5), Vector3(1, 3, 66)], [Vector3(36.5, 1.5, -5), Vector3(1, 3, 66)]]:
+	var cross: Vector2 = Config.CROSSWALK_X
+	var plaza: Rect2 = Config.HOSPITAL_PLAZA
+	var bounds := [
+		[Vector3(0, 1.5, -37.5), Vector3(80, 3, 1)],
+		[Vector3(-39.5, 1.5, -5), Vector3(1, 3, 66)],
+		# South edge, open at the crossing; the crossing's sides; the hospital plaza.
+		[Vector3((-40.0 + cross.x) / 2.0, 1.5, 26.5), Vector3(cross.x + 40.0, 3, 1)],
+		[Vector3((cross.y + 40.0) / 2.0, 1.5, 26.5), Vector3(40.0 - cross.y, 3, 1)],
+		[Vector3(cross.x - 0.5, 1.5, 31.8), Vector3(1, 3, 10.6)],
+		[Vector3(cross.y + 0.5, 1.5, 31.8), Vector3(1, 3, 10.6)],
+		[Vector3((plaza.position.x + cross.x) / 2.0, 1.5, 36.5), Vector3(cross.x - plaza.position.x, 3, 1)],
+		[Vector3((cross.y + plaza.end.x) / 2.0, 1.5, 36.5), Vector3(plaza.end.x - cross.y, 3, 1)],
+		[Vector3(plaza.position.x - 0.5, 1.5, 40.5), Vector3(1, 3, 7)],
+		[Vector3((plaza.position.x + plaza.end.x) / 2.0, 1.5, plaza.end.y + 0.5), Vector3(plaza.size.x + 1, 3, 1)],
+		[Vector3(36.5, 1.5, 11), Vector3(1, 3, 98)],
+	]
+	for bound in bounds:
 		var shape := CollisionShape3D.new()
 		shape.shape = BoxShape3D.new()
 		shape.shape.size = bound[1]
@@ -487,7 +530,9 @@ func _build_interactions() -> void:
 	dorm_door.activated.connect(AppState.enter_dorm)
 	lecture_door = _endpoint("LectureEntryInteraction", "Enter Learning Center", "", Config.LEARNING_CENTER_DOOR)
 	lecture_door.activated.connect(AppState.enter_lecture_building)
-	noticeboard = _endpoint("DirectoryInteraction", "Read campus directory", "Learning Center / Lecture Hall A: cross the quad to the north, past the round plaza. Cedar Residence faces the quad on the west side; the café is to the east.", Vector3(-17, 1, 2.3))
+	hospital_door = _endpoint("HospitalEntryInteraction", "Enter University Hospital", "", Config.HOSPITAL_DOOR)
+	hospital_door.activated.connect(AppState.enter_hospital)
+	noticeboard = _endpoint("DirectoryInteraction", "Read campus directory", "Learning Center / Lecture Hall A: cross the quad to the north, past the round plaza. Cedar Residence faces the quad on the west side; the café is to the east. University Hospital: across the street to the south; follow the sidewalk east of the parking lot to the crossing.", Vector3(-17, 1, 2.3))
 	student = _endpoint("StudentInteraction", "Talk to student", "Morning! Hall A is in the Learning Center, the white building at the top of the quad. Head through the glass doors under the canopy.", Config.SAM_POSITION + Vector3(0, 1, 0.75))
 
 func _endpoint(node_name: String, title: String, response: String, position: Vector3) -> Node3D:
