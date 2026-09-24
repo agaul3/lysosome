@@ -44,7 +44,7 @@ func title_tests() -> void:
 	screen.new_game_button.pressed.emit()
 	await ticks(2)
 	var selection: Control = screen.selection_panel
-	check(selection.visible and selection.preset_buttons.size() == 4, "Character setup shows four presets")
+	check(selection.visible and selection.preset_buttons.size() == 8, "Character setup shows eight presets")
 	selection.preset_buttons[2].grab_focus()
 	await ticks(2)
 	check(state.selected_character == Presets.PRESETS[2].id and selection.preview.preset_id == Presets.PRESETS[2].id, "Focusing a preset card selects it and updates the preview")

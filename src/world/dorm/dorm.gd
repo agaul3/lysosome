@@ -11,6 +11,7 @@ var hud: CanvasLayer
 var desk: Node3D
 var bed: Node3D
 var exit_door: Node3D
+var closet: Node3D
 ## Walls cut away for the overhead camera, and the ceiling: first person shows the whole room.
 var cutaway: Array[MeshInstance3D] = []
 var first_person_only: Array[Node3D] = []
@@ -107,22 +108,58 @@ func _build_furniture() -> void:
 	Geometry.box(self, "Desktop", Vector3(3.12, 0.08, 1.2), Vector3(1.65, 0.94, -3.55), Color("dec39a"))
 	Geometry.box(self, "Chair", Vector3(0.7, 0.6, 0.7), Vector3(1.65, 0.3, -2.45), Color("475e65"), true)
 	Geometry.box(self, "ChairBack", Vector3(0.7, 0.65, 0.12), Vector3(1.65, 0.8, -2.16), Color("475e65"))
-	Geometry.box(self, "LaptopBase", Vector3(0.65, 0.05, 0.44), Vector3(1.65, 1.01, -3.45), Color("465563"))
-	Geometry.box(self, "LaptopScreen", Vector3(0.65, 0.45, 0.05), Vector3(1.65, 1.23, -3.68), Color("314959"))
-	Geometry.box(self, "ScreenGlow", Vector3(0.55, 0.34, 0.02), Vector3(1.65, 1.23, -3.645), Color("9abbb2"))
+	Geometry.box(self, "PCBase", Vector3(0.42, 0.035, 0.28), Vector3(1.65, 0.995, -3.65), Color("424953"))
+	Geometry.box(self, "PCStand", Vector3(0.07, 0.24, 0.06), Vector3(1.65, 1.12, -3.72), Color("656e7b"))
+	Geometry.box(self, "PCMonitor", Vector3(0.96, 0.56, 0.045), Vector3(1.65, 1.47, -3.72), Color("252f3f"))
+	Geometry.box(self, "PCDisplay", Vector3(0.89, 0.49, 0.006), Vector3(1.65, 1.47, -3.693), Color("2564ad"))
+	for dx in [-1, 1]:
+		for dy in [-1, 1]:
+			Geometry.box(self, "WindowsTile", Vector3(0.1, 0.1, 0.003), Vector3(1.65 + dx * 0.058, 1.47 + dy * 0.058, -3.688), Color("badcfb"))
+	Geometry.box(self, "PCKeyboard", Vector3(0.64, 0.025, 0.21), Vector3(1.65, 0.994, -3.22), Color("434f62"))
+	Geometry.box(self, "PCMouse", Vector3(0.07, 0.03, 0.12), Vector3(2.1, 1.0, -3.22), Color("667184"))
+	Geometry.box(self, "PCTower", Vector3(0.26, 0.45, 0.48), Vector3(0.78, 1.205, -3.64), Color("334153"))
 	for book_index in range(3):
 		Geometry.box(self, "MedicalTextbook", Vector3(0.46, 0.09, 0.58), Vector3(2.55, 1.03 + book_index * 0.09, -3.5), Color(["827c9b", "b7775d", "647b72"][book_index]))
 	Geometry.box(self, "LampBase", Vector3(0.25, 0.07, 0.25), Vector3(0.4, 1.01, -3.7), Color("d9b971"))
 	Geometry.box(self, "LampStem", Vector3(0.045, 0.5, 0.045), Vector3(0.4, 1.26, -3.7), Color("d9b971"))
 	Geometry.sphere(self, Vector3(0.34, 0.22, 0.34), Vector3(0.4, 1.55, -3.7), Color("f1d4a0"))
-	desk = _interaction("DeskInteraction", "Use study desk", "Your pharmacology notes are open to pharmacodynamics.\nStudy sessions will be available in a later milestone.", Vector3(2.3, 1.05, -2.78))
+	desk = _interaction("DeskInteraction", "Use study desk PC", "", Vector3(2.3, 1.05, -2.78))
+	desk.activated.connect(func() -> void: hud.open_computer("windows"))
 	Geometry.box(self, "Bookshelf", Vector3(1.4, 1.8, 0.65), Vector3(-3.55, 0.9, -3.96), Color("957959"), true)
 	for row in range(3):
 		for index in range(5):
 			Geometry.box(self, "BookSpine", Vector3(0.17, 0.36, 0.36), Vector3(-4.02 + index * 0.23, 0.35 + row * 0.54, -3.57), Color(["597d7c", "b98c65", "e3cba4", "777b94", "9ba48a"][index]))
+	_build_wardrobe()
 	Geometry.box(self, "Noticeboard", Vector3(1.65, 0.88, 0.08), Vector3(2.65, 2.05, -4.33), Color("ab8c68"))
 	# Lettering pinned flat to the board, so it follows the board's perspective.
 	Geometry.wall_sign(self, "FIRST YEAR", Vector3(2.65, 2.3, -4.285), 0.0, 26, 0.009)
+
+## Oak wardrobe on the west wall: two doors (the left one mirrored), long
+## handles, a crown and plinth. Interacting opens the closet (clothes and mirror).
+func _build_wardrobe() -> void:
+	var front := -4.9 + 0.62
+	Geometry.box(self, "Wardrobe", Vector3(0.62, 2.1, 1.36), Vector3(-4.9 + 0.31, 1.05, 2.05), Color("a9845e"), true)
+	Geometry.box(self, "WardrobeCrown", Vector3(0.68, 0.06, 1.44), Vector3(-4.9 + 0.34, 2.13, 2.05), Color("8a6a4f"))
+	Geometry.box(self, "WardrobePlinth", Vector3(0.6, 0.08, 1.3), Vector3(-4.9 + 0.3, 0.04, 2.05), Color("4a3a2e"))
+	for side in [-1, 1]:
+		var z: float = 2.05 + side * 0.335
+		Geometry.box(self, "WardrobeDoor", Vector3(0.02, 1.9, 0.64), Vector3(front + 0.01, 1.08, z), Color("b99268"))
+		Geometry.box(self, "WardrobeHandle", Vector3(0.03, 0.34, 0.025), Vector3(front + 0.035, 1.12, 2.05 + side * 0.06), Color("3a3f44"))
+	# A stylised mirror (no real reflections in this renderer): pale silvered
+	# glass with two diagonal shine streaks.
+	var mirror := Geometry.box(self, "WardrobeMirror", Vector3(0.012, 1.5, 0.48), Vector3(front + 0.025, 1.12, 2.05 - 0.335), Color.WHITE)
+	var glass := StandardMaterial3D.new()
+	glass.albedo_color = Color("cfdde2")
+	glass.roughness = 0.35
+	glass.emission_enabled = true
+	glass.emission = Color("9fb3ba")
+	glass.emission_energy_multiplier = 0.25
+	mirror.get_child(0).material_override = glass
+	for streak in [[0.2, 0.05], [0.45, 0.025]]:
+		var shine := Geometry.box(self, "MirrorShine", Vector3(0.004, 0.46, streak[1]), Vector3(front + 0.033, 1.12 + streak[0], 2.05 - 0.335 - 0.06 + streak[0] * 0.2), Color("f4f8f9"))
+		shine.rotation.x = 0.7
+	closet = _interaction("ClosetInteraction", "Open closet", "", Vector3(front + 0.5, 1, 2.05))
+	closet.activated.connect(func() -> void: hud.open_closet())
 
 func _interaction(node_name: String, title: String, response: String, position: Vector3) -> Node3D:
 	var endpoint := Interactable.new()
@@ -160,7 +197,7 @@ func _apply_wood() -> void:
 		if not child is Node3D:
 			continue
 		var label := str(child.get_meta("geometry_label", child.name))
-		if label not in ["Floor", "Bed", "Desk", "Desktop", "Bookshelf", "Noticeboard"] and not label.begins_with("DeskLeg"):
+		if label not in ["Floor", "Bed", "Desk", "Desktop", "Bookshelf", "Noticeboard", "Wardrobe", "WardrobeDoor"] and not label.begins_with("DeskLeg"):
 			continue
 		var mesh := child.get_child(0) as MeshInstance3D
 		if mesh == null:

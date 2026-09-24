@@ -33,6 +33,7 @@ The player is a medical student. Real medical learning should drive XP, levels, 
 - Milestone 10 (UI + Polish) — complete; see `src/docs/development/MILESTONE_10_ACCEPTANCE.md`.
 - After Milestone 10: ambient courtyard life (students on benches, a dog walker, strolling students); see `CHANGELOG.md`.
 - After Milestone 10: an optional first-person view (Settings or Cmd+F); see `CHANGELOG.md`.
+- After Milestone 10: Minecraft-style characters, a character creator, 63 clothing items, a dorm closet and an equipment-style inventory; see `CHANGELOG.md`.
 
 Verify against `git log` rather than trusting this list.
 

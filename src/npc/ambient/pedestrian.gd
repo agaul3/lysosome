@@ -44,8 +44,12 @@ func _ready() -> void:
 	path_point = NODES[from_node].lerp(NODES[to_node], rng.randf())
 	figure.position = Vector3(path_point.x, 0, path_point.y)
 
+## `preset` names a look; empty dresses the passer-by in a random one.
 func setup(preset: String, target_player: Node3D, keep_clear: Array = []) -> void:
-	figure.apply_preset(preset)
+	if preset.is_empty():
+		figure.apply_look(preload("res://data/looks.gd").random(rng))
+	else:
+		figure.apply_preset(preset)
 	# After the preset: apply_preset rebuilds the figure's children.
 	Student.make_blocker(figure)
 	player = target_player

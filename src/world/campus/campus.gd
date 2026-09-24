@@ -89,6 +89,7 @@ func _ready() -> void:
 	camera.follow(player)
 	player.movement_camera = camera
 	_build_ambient_life()
+	_build_study_table()
 	hud = HUD.new()
 	add_child(hud)
 	hud.bind_player(player)
@@ -224,7 +225,7 @@ func _build_props() -> void:
 			plan.call(-0.58 + (row % 2) * 0.62, 0.92 - (row / 2) * 0.12, 0.05, 0.05, [Color("c3cacd"), Color("e3d4ad"), Color("d8d1c2"), Color("b8c6cf")][row])
 		Geometry.wall_sign(self, "CAMPUS DIRECTORY", kiosk + Vector3(0, 2.05, face * 0.105), 0.0 if face > 0 else PI, 22, 0.0058)
 	# Café terrace tables with umbrellas.
-	for point in [Vector3(17, 0, -8), Vector3(17, 0, -4.8), Vector3(17, 0, 1.2), Vector3(18.6, 0, 3.4)]:
+	for point in [Vector3(17, 0, -4.8), Vector3(17, 0, 1.2), Vector3(18.6, 0, 3.4)]:
 		kit.cylinder("metal", point, point + Vector3(0, 0.74, 0), 0.04, POST)
 		kit.cylinder("facade", point + Vector3(0, 0.74, 0), point + Vector3(0, 0.77, 0), 0.45, Color("f1efe9"), 14)
 		kit.cylinder("metal", point, point + Vector3(0, 2.3, 0), 0.025, Color("d8dcde"))
@@ -474,7 +475,7 @@ func _build_ambient_life() -> void:
 	for bench in BENCHES:
 		var front: Vector3 = bench[0] + Basis(Vector3.UP, bench[1]) * Vector3(0, 0, -0.2)
 		keep_clear.append([Vector2(front.x, front.z), 1.15])
-	for preset in ["clay", "sage", "ochre"]:
+	for preset in ["", "", ""]: # Random looks: a different crowd each visit.
 		var walker := preload("res://npc/ambient/pedestrian.gd").new()
 		walker.name = "Pedestrian"
 		add_child(walker)
@@ -550,3 +551,27 @@ func _update_daylight() -> void:
 	sky_material.ground_bottom_color = Color("1d2a2e").lerp(Color("6f8a78"), day)
 	sky_material.sky_energy_multiplier = 0.55 + 0.45 * day
 	campus_environment.fog_light_color = sky_material.sky_horizon_color
+
+## Two usable table seats; the authored surface keeps laptops above the table.
+func _build_study_table() -> void:
+	# Replace the northern umbrella table with a study nook. The entrance path
+	# at z=-3.5..-0.5 stays empty; chairs face across the terrace, away from trees.
+	var centre := Vector3(17.8, 0, -9.4)
+	var basis := Basis(Vector3.UP, PI / 2)
+	var nook := Node3D.new()
+	nook.name = "StudyTableNook"
+	nook.position = centre
+	nook.rotation.y = PI / 2
+	add_child(nook)
+	Geometry.box(nook, "StudyTable", Vector3(1.4, 0.06, 0.8), Vector3(0, 0.76, 0), Color("baa486"), true)
+	for x in [-0.58, 0.58]:
+		for z in [-0.3, 0.3]:
+			Geometry.box(nook, "StudyTableLeg", Vector3(0.05, 0.73, 0.05), Vector3(x, 0.365, z), Color("485058"), true)
+	for side in [-1, 1]:
+		var seat := preload("res://world/seat.gd").new()
+		seat.name = "CafeStudySeat" + str(side)
+		seat.position = centre + basis * Vector3(0, 0, side * 1.15)
+		seat.rotation.y = PI / 2 + (0.0 if side == 1 else PI)
+		seat.laptop_surface = Vector3(0, 0.795, -0.98)
+		add_child(seat)
+		seat.sit_requested.connect(player.seating.request)

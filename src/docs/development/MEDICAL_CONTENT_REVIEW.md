@@ -131,3 +131,7 @@ Twelve scored lecture questions (the three seeds, the visualization prediction a
 - Answer: a — High affinity with low intrinsic activity: it displaces the full agonist but activates the receptor less.
 - Explanation: Buprenorphine is a high-affinity partial agonist at mu-opioid receptors. It displaces the full agonist and produces less receptor activation, so the net effect falls abruptly: precipitated withdrawal. This is why buprenorphine is usually started once mild withdrawal has begun.
 - Human review: Precipitated withdrawal scenario; explanation mentions starting buprenorphine once mild withdrawal has begun (general principle, no protocol or doses). Clinician review required.
+
+## Flashcard study adapter — September 23, 2026
+
+The starter flashcard deck derives 13 standalone records directly from `QuestionBank`, preserving prompt, exact correct answer, explanation, learning objective and source question ID. Multiple-choice distractors are hidden to require free recall. `pd_viz_competitive_01` is excluded because its prompt depends on the lecture graph. No new medical assertions or proprietary questions were authored for this feature. Existing human-review requirements above still apply, including review of the adapted free-recall wording. Personal Basic/Cloze notes are labelled personal content and are not medically validated; their self-ratings do not count toward graded knowledge accuracy.

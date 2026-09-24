@@ -1,5 +1,4 @@
 extends CharacterBody3D
-const Presets = preload("res://data/character_presets.gd")
 @export var speed: float = 3.2
 @export var sprint_speed: float = 5.8
 ## Seconds to reach full sprint speed or settle back to a walk.
@@ -24,8 +23,9 @@ var first_person: Node3D
 @onready var interaction: Node3D = $Interaction
 
 func _ready() -> void:
-	appearance.apply_preset(AppState.selected_character)
+	appearance.apply_look(AppState.player_look)
 	_add_silhouette()
+	AppState.look_changed.connect(_on_look_changed)
 	current_speed = speed
 	collision_mask |= 4 # Also collide with NPCs (layer 3); interaction rays stay world-only.
 	seating = preload("res://player/seating.gd").new()
@@ -37,6 +37,17 @@ func _ready() -> void:
 	# Seated in a row, the chair back would trigger the silhouette; hide it then.
 	# In first person there is nothing of the player to see through scenery.
 	seating.state_changed.connect(func(state: int) -> void: set_silhouette(state == 0 and not first_person.active))
+
+## New clothes or hair: rebuild the figure in place, keeping its pose and view state.
+func _on_look_changed(look: Dictionary) -> void:
+	var facing: float = appearance.rotation.y
+	var blend: float = appearance.sit_blend
+	appearance.apply_look(look)
+	appearance.rotation.y = facing
+	appearance.set_sit_blend(blend)
+	_add_silhouette()
+	set_silhouette(seating.state == 0 and not first_person.active)
+	first_person.set_head_hidden(first_person.active)
 
 ## When scenery hides the player, show a faint accent silhouette through it.
 ## Uses the stencil x-ray mode, so the character's own overlapping parts never

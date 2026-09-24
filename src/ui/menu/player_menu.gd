@@ -5,7 +5,6 @@ extends Control
 signal close_requested
 const UI = preload("res://ui/style/ui_style.gd")
 const Icon = preload("res://ui/style/icon.gd")
-const Presets = preload("res://data/character_presets.gd")
 const PANEL_SIZE := Vector2(904, 584)
 const SIDEBAR_WIDTH := 232.0
 ## [node name, sidebar label, icon, page title, page subtitle]
@@ -17,7 +16,7 @@ const PAGES := [
 	["Knowledge", "Knowledge", "knowledge", "Knowledge", "Accuracy = correct answers ÷ attempted questions"],
 	["Notes", "Lecture Notes", "notes", "Lecture Notes", "Key points from the lectures you've attended"],
 	["Achievements", "Achievements", "achievements", "Achievements", "Milestones in your first year"],
-	["Inventory", "Inventory", "inventory", "Inventory", "What you're carrying"],
+	["Inventory", "Inventory", "inventory", "Inventory", "Clothing and equipment · select a slot, then an item to wear"],
 	["Settings", "Settings", "settings", "Settings", "Audio, display and controls"],
 ]
 var hud: CanvasLayer
@@ -30,6 +29,7 @@ var level_label: Label
 var xp_label: Label
 var xp_bar: Control
 var identity_name: Label
+var portrait: SubViewportContainer
 var backdrop: ColorRect
 var open_tween: Tween
 
@@ -79,10 +79,16 @@ func _sidebar() -> Control:
 	var identity := HBoxContainer.new()
 	identity.add_theme_constant_override("separation", 10)
 	column.add_child(identity)
+	# A live portrait of the student, redrawn when their look changes.
 	var monogram := PanelContainer.new()
-	monogram.add_theme_stylebox_override("panel", UI.box(Color(UI.ACCENT, 0.14), 10, Color(UI.ACCENT, 0.5), 1, Vector4(8, 8, 8, 8)))
-	monogram.add_child(Icon.new("person", 20, UI.ACCENT))
+	monogram.add_theme_stylebox_override("panel", UI.box(Color(UI.ACCENT, 0.14), 10, Color(UI.ACCENT, 0.5), 1, Vector4(2, 2, 2, 2)))
+	portrait = preload("res://ui/character_preview.gd").new(Vector2i(40, 40), "portrait", false)
+	monogram.add_child(portrait)
 	identity.add_child(monogram)
+	portrait.ready.connect(func() -> void: portrait.show_look(AppState.player_look))
+	AppState.look_changed.connect(func(look: Dictionary) -> void:
+		if is_instance_valid(portrait):
+			portrait.show_look(look))
 	var who := VBoxContainer.new()
 	who.add_theme_constant_override("separation", 0)
 	identity.add_child(who)
@@ -233,8 +239,7 @@ func close() -> void:
 func _refresh_identity() -> void:
 	if not is_instance_valid(level_label):
 		return
-	var data := Presets.get_preset(AppState.selected_character)
-	identity_name.text = data.name
+	identity_name.text = AppState.display_name()
 	var progress: Dictionary = AcademicSession.level_progress()
 	level_label.text = "Lvl %d" % progress.level
 	xp_label.text = "%d / %d XP" % [progress.into, progress.needed]

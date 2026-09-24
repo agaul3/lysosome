@@ -5,7 +5,11 @@ signal phase_changed(phase: Phase)
 signal transition_failed(error: Error)
 ## First-person view on or off (Settings, Cmd+F / Ctrl+F, or the controller's View button).
 signal view_changed(first_person: bool)
+## The student's appearance or outfit changed (creator, closet or inventory).
+signal look_changed(look: Dictionary)
 const Presets = preload("res://data/character_presets.gd")
+const Looks = preload("res://data/looks.gd")
+const Clothing = preload("res://data/clothing.gd")
 const PHASE_BY_SCENE := {"dorm": 2, "campus": 3, "lecture_building": 4, "lecture_hall": 5}
 const SCENES := {
 	"title": "res://ui/start_screen.tscn",
@@ -16,7 +20,13 @@ const SCENES := {
 }
 enum Phase { TITLE, CHARACTER_SELECT, DORM, CAMPUS, LECTURE_BUILDING, LECTURE_HALL }
 var phase: Phase = Phase.TITLE
+## Preset the look started from, or "custom" once built in the creator.
 var selected_character: String = Presets.DEFAULT_ID
+## The student's complete look (data/looks.gd) and the name they go by.
+var player_look: Dictionary = Presets.look_of(Presets.DEFAULT_ID)
+var player_name: String = Presets.get_preset(Presets.DEFAULT_ID).name
+## True once the player has typed a name; until then it follows the preset.
+var name_customized := false
 var transitioning := false
 var campus_entry := "dorm"
 ## View preference for this session (like volume and fullscreen, not saved).
@@ -25,10 +35,13 @@ var first_person := false
 var look_sensitivity := 1.0
 
 func start_new_game() -> void:
+	Flashcards.reset()
 	NPCSchedule.reset()
 	GameClock.reset()
 	AcademicSession.reset()
-	selected_character = Presets.DEFAULT_ID
+	player_name = ""
+	name_customized = false
+	select_character(Presets.DEFAULT_ID)
 	campus_entry = "dorm"
 	_set_phase(Phase.CHARACTER_SELECT)
 
@@ -65,11 +78,56 @@ func continue_game() -> bool:
 	_request_transition(scene, PHASE_BY_SCENE[scene] as Phase)
 	return true
 
+## Chooses a preset look. The name follows the preset unless the player typed their own.
 func select_character(id: String) -> bool:
 	if not Presets.is_valid(id):
 		return false
 	selected_character = id
+	player_look = Presets.look_of(id)
+	if not name_customized:
+		player_name = _preset_name(id)
+	look_changed.emit(player_look)
 	return true
+
+## A look built in the creator.
+func set_custom_look(look: Dictionary) -> void:
+	selected_character = "custom"
+	player_look = Looks.sanitize(look)
+	player_look.preset = "custom"
+	look_changed.emit(player_look)
+
+## Changes the current look (hair, clothes…) without changing where it started.
+func set_look(look: Dictionary) -> void:
+	var preset: String = player_look.get("preset", selected_character)
+	player_look = Looks.sanitize(look)
+	player_look.preset = preset
+	look_changed.emit(player_look)
+
+## Puts on an unlocked item (or clears an optional slot with ""). False if not allowed.
+func equip(slot: String, item_id: String) -> bool:
+	if not Clothing.SLOTS.has(slot):
+		return false
+	if item_id == "":
+		if Clothing.REQUIRED.has(slot):
+			return false
+	elif Clothing.slot_of(item_id) != slot or not Clothing.unlocked(item_id):
+		return false
+	var look := player_look.duplicate(true)
+	look.outfit[slot] = item_id
+	set_look(look)
+	return true
+
+## `typed` marks a name the player entered themselves (it then stops following the preset).
+func set_player_name(value: String, typed := false) -> void:
+	player_name = value.strip_edges().left(20)
+	if typed:
+		name_customized = not player_name.is_empty()
+
+func display_name() -> String:
+	return player_name if not player_name.strip_edges().is_empty() else _preset_name(selected_character)
+
+func _preset_name(id: String) -> String:
+	return Presets.get_preset(id).name if Presets.is_valid(id) else "Student"
 
 func enter_dorm() -> void:
 	_request_transition("dorm", Phase.DORM)

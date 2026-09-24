@@ -12,6 +12,8 @@ const KeyPrompt = preload("res://ui/key_prompt.gd")
 const Objectives = preload("res://data/objectives.gd")
 const PlayerMenu = preload("res://ui/menu/player_menu.gd")
 const SettingsPanel = preload("res://ui/settings_panel.gd")
+const WardrobePanel = preload("res://ui/wardrobe_panel.gd")
+const Clothing = preload("res://data/clothing.gd")
 var player: CharacterBody3D
 var root: Control
 var prompt: Label
@@ -39,6 +41,13 @@ var progression: VBoxContainer
 var help_row: HBoxContainer
 ## Small centre dot in the first-person view.
 var crosshair: Control
+## The closet overlay (dorm), built on first use.
+var closet: Control
+var closet_open := false
+var computer: CanvasLayer
+var computer_open := false
+var laptop_model: Node3D
+var laptop_hint: Button
 ## False once a scene sets its own objective (e.g. during the lecture).
 var auto_objective := true
 ## Set while another overlay (the lecture) owns the bottom of the screen.
@@ -64,9 +73,30 @@ func _ready() -> void:
 	_build_bottom()
 	_build_menu()
 	_build_crosshair()
+	laptop_hint = Button.new()
+	laptop_hint.custom_minimum_size = Vector2(164, 32)
+	for style in ["normal", "hover", "pressed"]:
+		laptop_hint.add_theme_stylebox_override(style, StyleBoxEmpty.new())
+	var laptop_row := HBoxContainer.new()
+	laptop_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	laptop_row.add_theme_constant_override("separation", 8)
+	laptop_hint.add_child(laptop_row)
+	var laptop_key := KeyPrompt.new()
+	laptop_key.key = "L"
+	laptop_key.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	laptop_row.add_child(laptop_key)
+	laptop_row.add_child(_outlined("Open laptop", UI.SIZE_BODY, UI.TEXT))
+	laptop_hint.set_anchors_preset(Control.PRESET_CENTER_RIGHT)
+	laptop_hint.position = Vector2(-188, -90)
+	laptop_hint.visible = false
+	laptop_hint.pressed.connect(open_laptop)
+	root.add_child(laptop_hint)
 	GameClock.minute_changed.connect(_refresh_clock)
 	AcademicSession.attendance_recorded.connect(_arrival_feedback)
 	AppState.view_changed.connect(_on_view_changed)
+	AcademicSession.level_up.connect(_announce_unlocks)
+	AcademicSession.lecture_completed.connect(func(_id: String) -> void:
+		show_message("Unlocked in your closet: %s (Legendary)" % ", ".join(Clothing.legendary_names()), 8.0))
 	_refresh_clock()
 	_refresh_context()
 
@@ -90,7 +120,39 @@ func _build_crosshair() -> void:
 
 func _process(_delta: float) -> void:
 	if is_instance_valid(player):
-		crosshair.visible = AppState.first_person and not settings_open and not suppress_context and player.seating.state == player.seating.State.FREE
+		laptop_hint.visible = can_use_laptop() and not computer_open and not settings_open and not closet_open
+		if computer_open and is_instance_valid(laptop_model) and not can_use_laptop():
+			computer.close()
+		crosshair.visible = AppState.first_person and not settings_open and not closet_open and not computer_open and not suppress_context and player.seating.state == player.seating.State.FREE
+
+## Levelling up can unlock rarer clothes; say which.
+func _announce_unlocks(from_level: int, to_level: int) -> void:
+	var names := Clothing.unlocked_by_level(from_level, to_level)
+	if not names.is_empty():
+		show_message("New in your closet: %s" % ", ".join(names.slice(0, 4)) + (" and %d more" % (names.size() - 4) if names.size() > 4 else ""), 8.0)
+
+## Opens the closet (clothes and mirror). Movement pauses while it is open.
+func open_closet(tab := 0) -> void:
+	if not is_instance_valid(closet):
+		closet = WardrobePanel.new()
+		closet.name = "Closet"
+		root.add_child(closet)
+		closet.closed.connect(close_closet)
+	closet_open = true
+	player.movement_enabled = false
+	player.interaction.enabled = false
+	_show_target(current_target if is_instance_valid(current_target) else null)
+	closet.open(tab)
+
+func close_closet() -> void:
+	if not closet_open:
+		return
+	closet_open = false
+	if is_instance_valid(closet) and closet.visible:
+		closet.close()
+	player.movement_enabled = true
+	player.interaction.enabled = not player.seating.stand_locked
+	_show_target(current_target if is_instance_valid(current_target) else null)
 
 func _on_view_changed(first_person: bool) -> void:
 	show_message("First-person view" if first_person else "Third-person view", 2.5)
@@ -213,7 +275,9 @@ func _build_menu() -> void:
 	menu.add_page(knowledge_panel)
 	menu.add_page(preload("res://ui/menu/notes_page.gd").new())
 	menu.add_page(preload("res://ui/menu/achievements_page.gd").new())
-	menu.add_page(preload("res://ui/menu/inventory_page.gd").new())
+	var inventory := preload("res://ui/menu/inventory_page.gd").new()
+	inventory.laptop_requested.connect(open_laptop)
+	menu.add_page(inventory)
 	var settings_scroll := ScrollContainer.new()
 	settings_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	settings = SettingsPanel.new(true)
@@ -238,7 +302,7 @@ func bind_player(value: CharacterBody3D) -> void:
 func _show_target(target: Node3D) -> void:
 	current_target = target
 	prompt.text = ""
-	if is_instance_valid(target) and not settings_open:
+	if is_instance_valid(target) and not settings_open and not closet_open and not computer_open:
 		context_key.key = "X" if player.interaction.using_controller else "E"
 		prompt.text = target.display_name
 	_refresh_context()
@@ -270,8 +334,8 @@ func _clear_message() -> void:
 	_refresh_context()
 
 func _refresh_context() -> void:
-	message_card.visible = not settings_open and not suppress_context and not message.text.is_empty()
-	prompt_row.visible = not settings_open and not suppress_context and not prompt.text.is_empty()
+	message_card.visible = not settings_open and not closet_open and not computer_open and not suppress_context and not message.text.is_empty()
+	prompt_row.visible = not settings_open and not closet_open and not computer_open and not suppress_context and not prompt.text.is_empty()
 
 ## Opens or closes the player menu. The world keeps running either way.
 func set_settings_open(value: bool) -> void:
@@ -285,8 +349,16 @@ func set_settings_open(value: bool) -> void:
 		menu.close()
 
 func _unhandled_input(event: InputEvent) -> void:
+	if computer_open:
+		return
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_L and not closet_open:
+		open_laptop()
+		get_viewport().set_input_as_handled()
+		return
 	if event.is_action_pressed("open_menu") or event.is_action_pressed("cancel"):
-		if not event.is_echo():
+		if closet_open:
+			close_closet()
+		elif not event.is_echo():
 			set_settings_open(not settings_open)
 		get_viewport().set_input_as_handled()
 
@@ -312,3 +384,51 @@ func _device_changed(controller: bool) -> void:
 	for index in range(key_prompts.size()):
 		key_prompts[index].key = keys[index]
 	_show_target(current_target if is_instance_valid(current_target) else null)
+
+## Backpack availability is derived from equipment, so it cannot drift from the outfit.
+func can_use_laptop() -> bool:
+	if not is_instance_valid(player) or not Flashcards.has_laptop() or player.seating.state != player.seating.State.SEATED:
+		return false
+	var seat: Node3D = player.seating.seat
+	return is_instance_valid(seat) and (seat.style == "auditorium" or seat.laptop_surface != Vector3.INF)
+
+func open_laptop() -> void:
+	if computer_open or closet_open:
+		return
+	if not can_use_laptop():
+		if settings_open:
+			set_settings_open(false)
+		show_message("Wear a backpack and sit at a study table or in a lecture seat to use your laptop.", 6.0)
+		return
+	if settings_open:
+		set_settings_open(false)
+	var seat: Node3D = player.seating.seat
+	laptop_model = preload("res://world/laptop.gd").new()
+	laptop_model.name = "StudentLaptop"
+	laptop_model.with_tray = seat.style == "auditorium"
+	laptop_model.position = Vector3(0, 0.68, -0.62) if seat.style == "auditorium" else seat.laptop_surface
+	seat.add_child(laptop_model)
+	open_computer("macos")
+
+func open_computer(os_style := "windows") -> void:
+	if computer_open or closet_open:
+		return
+	if settings_open:
+		set_settings_open(false)
+	computer_open = true
+	player.movement_enabled = false
+	player.interaction.enabled = false
+	computer = preload("res://ui/computer/desktop.gd").new()
+	computer.os_style = os_style
+	computer.closed.connect(close_computer)
+	add_child(computer)
+	_show_target(null)
+
+func close_computer() -> void:
+	computer_open = false
+	if is_instance_valid(laptop_model):
+		laptop_model.queue_free()
+		laptop_model = null
+	player.movement_enabled = true
+	player.interaction.enabled = not player.seating.stand_locked and player.seating.state in [player.seating.State.FREE, player.seating.State.SEATED]
+	_show_target(player.interaction.target if is_instance_valid(player.interaction.target) else null)

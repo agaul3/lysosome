@@ -39,7 +39,7 @@ func _ready() -> void:
 func _build_lunch() -> void:
 	# Sandwich in the right hand, lunch box and a drink on the bench beside.
 	hand_prop = Node3D.new()
-	hand_prop.position = Vector3(0, -0.46, -0.04)
+	hand_prop.position = Vector3(0, -0.5, -0.1)
 	figure.shoulders[1].add_child(hand_prop)
 	Geometry.box(hand_prop, "Bread", Vector3(0.12, 0.035, 0.1), Vector3(0, 0.03, 0), Color("e3c28c"))
 	Geometry.box(hand_prop, "Filling", Vector3(0.125, 0.02, 0.105), Vector3(0, 0.0, 0), Color("6aa84f"))
@@ -54,7 +54,7 @@ func _build_reading() -> void:
 	var book := Node3D.new()
 	book.name = "Book"
 	# Between the hands (arms raised ~1.1 rad), tilted up toward the face.
-	book.position = Vector3(0, 0.34, -0.38)
+	book.position = Vector3(0, 0.33, -0.44)
 	book.rotation.x = -1.05
 	figure.spine.add_child(book)
 	var cover := Color(["8b3a3a", "2f5d7c", "5c6b3a", "6b4f7d"][rng.randi() % 4])
@@ -74,7 +74,7 @@ func _build_notes() -> void:
 	Geometry.box(figure.pelvis, "Notebook", Vector3(0.22, 0.015, 0.28), Vector3(0.02, 0.1, -0.22), Color("f4efe2"))
 	Geometry.box(figure.pelvis, "NotebookCover", Vector3(0.23, 0.01, 0.29), Vector3(0.02, 0.09, -0.22), Color("2f5d7c"))
 	hand_prop = Node3D.new()
-	hand_prop.position = Vector3(0, -0.45, -0.02)
+	hand_prop.position = Vector3(0, -0.5, -0.08)
 	figure.shoulders[1].add_child(hand_prop)
 	var pen := Geometry.box(hand_prop, "Pen", Vector3(0.012, 0.012, 0.14), Vector3(0, 0.02, -0.03), Color("1d3557"))
 	pen.rotation.x = 0.6
@@ -103,8 +103,9 @@ func _process(delta: float) -> void:
 			left.rotation = Vector3(0.55, 0, 0.05)
 			spine.rotation = Vector3(-0.04 - 0.05 * ease + sin(time * 9.0) * 0.012 * ease, glance * (1.0 - ease), 0)
 		"reading":
-			left.rotation = Vector3(1.1, 0, -0.05)
-			right.rotation = Vector3(1.1 + 0.25 * ease, 0, 0.05 + 0.15 * ease)
+			# Hands come in to hold the book from both sides.
+			left.rotation = Vector3(1.1, 0, 0.3)
+			right.rotation = Vector3(1.1 + 0.25 * ease, 0, -0.3 + 0.15 * ease)
 			spine.rotation = Vector3(-0.14, glance * 0.3, 0)
 			# Page turn: a page sweeps from right to left while the right hand lifts.
 			page.visible = gesture > 0.01

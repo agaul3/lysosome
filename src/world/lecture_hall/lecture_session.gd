@@ -118,7 +118,7 @@ func advance() -> void:
 		runner.advance()
 
 func _unhandled_input(event_input: InputEvent) -> void:
-	if event_input.is_echo() or hall.hud.settings_open:
+	if event_input.is_echo() or hall.hud.settings_open or hall.hud.computer_open:
 		return
 	if state == State.WAITING and event_input.is_action_pressed("confirm"):
 		wait_for_class()
@@ -162,7 +162,10 @@ func _on_activity_finished() -> void:
 ## add XP but are not scored), record the result and show the summary.
 func _on_finished() -> void:
 	summary = tally()
+	var first_time: bool = not AcademicSession.lectures_completed.has(runner.script_data.id)
 	AcademicSession.lectures_completed[runner.script_data.id] = summary.duplicate()
+	if first_time:
+		AcademicSession.lecture_completed.emit(runner.script_data.id)
 	professor.set_line("audience")
 	professor.set_speaking(false)
 	ui.show_summary("Lecture complete  ·  " + runner.script_data.title, [

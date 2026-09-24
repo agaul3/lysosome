@@ -30,3 +30,17 @@ See `MILESTONES_5_6_ACCEPTANCE.md` for current validation results.
   - Campus buildings other than the residence and the Learning Center still have no interiors. The Anatomy Hall's doors can be reached but not opened yet; the seminar on the lobby display is not yet an event.
   - Steps up to the Anatomy Hall collide as a smooth ramp, so feet can hover up to about 7 cm over the treads, as on Hall A's aisles.
   - The Cmd+F binding is fixed (not remappable).
+- Characters and clothing:
+  - Clothing is painted onto the character's pixel skin and its overlay shell. Only backpacks, buns, ponytails and cap brims are separate boxes. Long coats paint their skirts on the upper legs rather than hanging free.
+  - Items unlock by level (rare Lvl 2, epic Lvl 3) or by finishing the first lecture. There is no shop, currency or drop system yet, and every unlocked item counts as owned. Outfit stats are cosmetic.
+  - The closet is only in the dorm; the Inventory's equipment sheet works anywhere.
+  - Skins are generated procedurally; custom skin files can't be imported.
+  - Seated short characters' feet can hover up to about 5 cm above the floor; tall characters' feet reach it.
+  - Saves from before this change load with their preset's new look.
+  - First person still shows no hands or arms.
+
+## Computer / flashcard scope (September 23, 2026)
+
+- Both simulated desktop environments and the shared offline study collection are functional. This is classic Anki-style scheduling, with deliberate differences (real-time UTC rollover, no fuzz/learning-ahead), not exact compatibility with Anki or FSRS. AnkiWeb, .apkg import/export, undo, rich-media cards and full OS window management remain unimplemented.
+- Flashcard starter content retains the shared question bank's pending human medical review. Study XP rewards participation; self-rated recall never changes graded knowledge accuracy.
+- Physical controller hardware and real multi-day use remain manual checks. See [FLASHCARD_SYSTEM.md](FLASHCARD_SYSTEM.md) for access instructions and design ideas.

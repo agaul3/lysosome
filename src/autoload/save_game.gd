@@ -1,7 +1,8 @@
 extends Node
 ## One local save slot (spec §35): versioned JSON in user://.
 ##
-## Persists the selected character, level/XP, question history, attempt and
+## Persists the student's look (appearance and outfit) and name, the preset
+## it started from, level/XP, question history, attempt and
 ## correct counts, topic statistics, streaks, game date and time, current
 ## location, lecture completion and notes progress, attendance (lateness) and
 ## the autonomous NPC event, so a reload resumes exactly where the student was.
@@ -36,6 +37,8 @@ func snapshot() -> Dictionary:
 		"version": VERSION,
 		"saved_at": Time.get_unix_time_from_system(),
 		"selected_character": AppState.selected_character,
+		"look": AppState.player_look,
+		"name": AppState.player_name,
 		"location": {"scene": AppState.location_key(), "campus_entry": AppState.campus_entry},
 		"clock": {"elapsed_seconds": GameClock.elapsed_seconds},
 		"academic": {
@@ -52,6 +55,7 @@ func snapshot() -> Dictionary:
 			"notes_progress": AcademicSession.notes_progress,
 		},
 		"npc": NPCSchedule.snapshot(),
+		"flashcards": Flashcards.snapshot(),
 	}
 
 ## Writes the current game. Returns false (with last_error) on failure.
@@ -117,6 +121,7 @@ func summary(data: Dictionary = {}) -> Dictionary:
 		"time": "%d:%02d %s" % [12 if hour == 0 else hour, moment.minute, "AM" if moment.hour < 12 else "PM"],
 		"date": GameClock.format_date(moment.year, moment.month, moment.day),
 		"character": String(data.selected_character),
+		"name": String(data.get("name", "")) if not String(data.get("name", "")).is_empty() else preload("res://data/character_presets.gd").get_preset(String(data.selected_character)).name,
 	}
 
 ## Applies a validated save to every system. Returns false if unreadable.
@@ -124,6 +129,13 @@ func apply(data: Dictionary) -> bool:
 	if data.is_empty():
 		return false
 	AppState.selected_character = data.selected_character
+	var Presets := preload("res://data/character_presets.gd")
+	AppState.player_look = preload("res://data/looks.gd").sanitize(data.look) if data.has("look") else Presets.look_of(String(data.selected_character))
+	if not data.has("look"):
+		AppState.player_look.preset = String(data.selected_character)
+	AppState.player_name = String(data.get("name", Presets.get_preset(String(data.selected_character)).name))
+	AppState.name_customized = true
+	AppState.look_changed.emit(AppState.player_look)
 	AppState.campus_entry = data.location.campus_entry
 	GameClock.elapsed_seconds = float(data.clock.elapsed_seconds)
 	var academic: Dictionary = data.academic
@@ -139,6 +151,7 @@ func apply(data: Dictionary) -> bool:
 	AcademicSession.attendance = academic.attendance
 	AcademicSession.lectures_completed = academic.lectures_completed
 	AcademicSession.notes_progress = academic.notes_progress
+	Flashcards.restore(data.get("flashcards", {}))
 	NPCSchedule.restore(data.npc)
 	GameClock.minute_changed.emit()
 	return true
@@ -152,8 +165,17 @@ static func validate(data: Variant) -> String:
 	for key in ["selected_character", "location", "clock", "academic", "npc"]:
 		if not data.has(key):
 			return "Save file is missing '%s'." % key
-	if not preload("res://data/character_presets.gd").is_valid(String(data.selected_character)):
+	if data.has("flashcards"):
+		var flashcard_error := preload("res://education/flashcards/collection.gd").validate(data.flashcards)
+		if not flashcard_error.is_empty():
+			return flashcard_error
+	var character := String(data.selected_character)
+	if not preload("res://data/character_presets.gd").is_valid(character) and not (character == "custom" and data.has("look")):
 		return "Save file has an unknown character."
+	if data.has("look") and not preload("res://data/looks.gd").is_valid(data.look):
+		return "Save file has an invalid appearance."
+	if data.has("name") and typeof(data.name) != TYPE_STRING:
+		return "Save file has an invalid name."
 	if typeof(data.location) != TYPE_DICTIONARY or not LOCATIONS.has(data.location.get("scene", "")):
 		return "Save file has an unknown location."
 	if typeof(data.clock) != TYPE_DICTIONARY or typeof(data.clock.get("elapsed_seconds")) not in [TYPE_FLOAT, TYPE_INT] or float(data.clock.elapsed_seconds) < 0.0:

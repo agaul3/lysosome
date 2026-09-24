@@ -45,9 +45,9 @@ const WOOD_COLOR := Color(0.52, 0.35, 0.21)
 ## Seat key "row:x" -> classmate look. Alex's saved seat is separate.
 const CLASSMATES := {
 	"0:-0.92": "teal", "0:1.84": "plum", "0:5.88": "sage",
-	"1:-2.76": "clay", "1:0.92": "sage", "1:-5.88": "plum",
-	"2:0.00": "teal", "2:2.76": "clay", "2:4.96": "plum",
-	"3:-1.84": "sage", "3:1.84": "teal", "3:-6.80": "clay",
+	"1:-2.76": "coral", "1:0.92": "navy", "1:-5.88": "mint",
+	"2:0.00": "cobalt", "2:2.76": "clay", "2:4.96": "slate",
+	"3:-1.84": "russet", "3:1.84": "ivory", "3:-6.80": "sand",
 	"4:0.92": "plum", "4:5.88": "teal",
 }
 const ALEX_SEAT := "2:-1.84"

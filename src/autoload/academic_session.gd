@@ -5,6 +5,8 @@ signal answer_recorded(result: Dictionary)
 ## XP moved by `delta` for `reason` ("answer", "late"); `before`/`after` are totals.
 signal xp_changed(before: int, after: int, delta: int, reason: String)
 signal level_up(from_level: int, to_level: int)
+## A lecture was completed for the first time (unlocks the legendary coat).
+signal lecture_completed(lecture_id: String)
 signal streak_changed(streak: int)
 const LevelCurve = preload("res://education/progression/level_curve.gd")
 var attendance: Dictionary = {}

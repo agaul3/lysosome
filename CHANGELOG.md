@@ -6,6 +6,94 @@
 
 **Current state:** Milestones 1–6 are implemented and committed. Milestones 1–10 are complete: the v0.1 vertical slice is feature-complete per the spec. Remaining work is human medical review and any new scope from the user. The more recent visual, room, and UI improvements below sit on top of Milestones 1–6. (This note originally said the work was uncommitted; it has since been committed — see the 2026-09-23 documentation entry above.)
 
+## 2026-09-23 22:15 PDT — Dorm PC, backpack laptop and Anki-style flashcard study
+
+User request: brainstorm and implement medical flashcard study through a Windows-style dorm PC and a MacBook/macOS-style laptop carried with a backpack, including use while seated at tables or during lectures. Demo login is **player1 / 122333** on both devices. Existing uncommitted character, wardrobe and inventory work was preserved. No commit or push.
+
+- Replaced the dorm's decorative laptop with a desktop PC, monitor, tower, keyboard and mouse. Its existing walk-up study-desk interaction opens a working login and desktop.
+- Backpack equipment provides laptop access in Inventory and a compact **L / Open laptop** prompt at eligible seats. Added two usable café study-table chairs, and lecture seating deploys a laptop on a writing tray. Closing packs it away and preserves the lecture seat lock. Computer input blocks exploration and lecture shortcuts, while the world keeps running; first-person mouse capture is released.
+- Added one shared offline collection with 13 standalone pharmacodynamics cards derived from the existing QuestionBank, plus editable Basic/Cloze personal notes, hinted/multiple cloze deletions, sibling burial, search, suspension, leeches, history and options. The graph-dependent lecture item is excluded. Card answers and explanations stay hidden until reveal; recall buttons remain visible while long content scrolls.
+- Implemented a deterministic classic Anki-style scheduler: new/learning/review/relearning states, Again/Hard/Good/Easy, 1m/10m learning steps, graduation, ease floor, overdue credit, interval previews, daily new limit, and persisted due dates. Uses real wall time and UTC days independently of the accelerated game clock.
+- Study XP: **+2 per card per day**, up to **100/day**, after at least three seconds of study. All ratings earn equally, including honest forgetting; repeated learning steps cannot pay twice. Self-ratings never inflate graded medical accuracy or lecture streaks.
+- Extended validated saves with an optional collection; older saves still load and New Game resets it. Added design/brainstorm notes in `src/docs/development/FLASHCARD_SYSTEM.md`; updated architecture, medical review, known issues, README and acceptance expectations.
+
+**Verification:** `flashcard_test.gd` **68 checks**, passing in a graphical Godot run. Covers scheduler behavior, XP cap/repeats, Cloze, validation, save continuity, wrong/correct login, both computers, backpack and seating eligibility, real café seating, active-lecture keyboard isolation and first-person controls. Regression suites: dorm **87**, save **37**, UI **60**, wardrobe **74**, seating **147**, lecture **118**, progression **34**, knowledge **17**, campus **40**, first person **58**, full acceptance **47** — **719 regression checks, all passing**. The full acceptance test was updated to close the new PC before continuing the former placeholder interaction route. Graphical captures inspected: Windows login/desktop, Mac login/desktop, deck list, review/reveal, note editor, Browse, Stats, Options and café/lecture laptop close-ups. Import and whitespace checks clean.
+
+**Boundaries:** this is an Anki-style implementation, not an exact Anki port: no FSRS, AnkiWeb, .apkg import/export, add-ons, media notes, undo or fuzz. The two OS environments are in-game simulations. Human medical review, physical controller hardware and extended real multi-day study remain manual work. The design note separates implemented behavior from future ideas.
+
+## 2026-09-23 20:16 PDT — Minecraft-style characters, character creator, clothing, closet and equipment inventory
+
+User request: re-create the characters so they look like Minecraft character models (reference skins provided). Add deeper customization, rebuild the Inventory UI as a clothing equipment sheet (reference RPG equipment screen provided), and add new clothing items such as a rare Patagonia jacket and a white jacket. The customization covers:
+- a new-character menu with a preset *or* a build-your-own look: hair style and colour, eye style and colour, slight height changes;
+- an interactive closet for changing clothes and appearance.
+
+Not yet committed; the previous round was committed and pushed as `70531dc`.
+
+**Characters** (`player/appearance.gd`, new `character/`).
+- **Rig:** every figure — the player, Alex and Sam, classmates, the professor, bench students, passers-by and the dog walker — is now a Minecraft-style rig. It has six textured boxes: head, torso, two arms, and two legs split at the knee so sitting still bends them.
+- **Skin:** one painted 64×64 pixel skin in the standard Minecraft layout (`skin_layout.gd`).
+  - **Base layer:** skin, face, top, bottoms, shoes and lanyard.
+  - **Overlay shell,** about 0.25 px larger: hair volume, outerwear, stethoscope, scarf, backpack straps, hats and glasses.
+  - **Extra boxes:** buns, ponytails, cap brims and backpacks.
+- **Painter** (`skin_painter.gd`): draws everything procedurally, with seeded pixel noise and hand shading, so a look always paints identically. It includes ribbed knits, denim seams, flannel checks, quilted puffers, high-pile fleece, lapels, zips, pockets, brass buttons, soles and laces.
+- **Meshes** (`rig_mesh.gd`): cached box meshes whose UVs follow the atlas.
+- **Proportions:** the rig keeps the old joint heights that seating and routes depend on — hips at 0.64 m, knees halfway down the leg, a 0.37 m seated hip height — and stands 32 px (1.71 m) tall.
+- **Build and height:** slim builds have 3-pixel arms. Height scales the figure from 0.94 to 1.06 (161–181 cm); seated hips still meet the chair at any height.
+- **Eyes:** the first-person eye point moved to the painted eyes.
+
+**Looks and presets.**
+- **Looks** (`data/looks.gd`): a look is plain JSON-safe data. It sets the build, 10 skin tones, 10 hair styles, 13 hair colours, 6 eye styles, 7 eye colours, brows, mouth, cheeks (freckles, blush), facial hair (stubble to full beard), height, and an eight-slot outfit. Looks are sanitized and validated, and `Looks.random()` dresses crowds.
+- **Presets** (`data/character_presets.gd`): eight presets, including three modelled on the reference skins — *Cobalt* (open blue hoodie), *Russet* (maroon crewneck and shades) and *Navy* (navy tee and dark jeans). There are also eight extras for faculty and classmates, among them a white-coated professor and Dr. Nyugen in a blazer, shirt, tie and glasses.
+- **Crowds:** Hall A's classmates now use varied looks, and passers-by and the dog walker get a random look each visit.
+
+**Clothing** (`data/clothing.gd`). 63 items across eight slots: head, eyewear, outerwear, top, neck, back, bottom and shoes.
+- **Examples:** the **rare Patagonia Retro Fleece** (cream pile, teal chest pocket with an orange logo, snap placket) and the **White Jacket**. Also a puffer, a varsity jacket, a denim jacket, a bomber, a rain shell, hoodies, scrubs, an oxford and tie, flannel, sneakers, boots, clogs, beanies, caps, a scrub cap, glasses, aviators, a stethoscope, a scarf and backpacks.
+- **Rarity** (common, uncommon, rare, epic, legendary) sets when an item unlocks: rare at Lvl 2, epic at Lvl 3, and the legendary Long White Coat for completing the first lecture (a new `AcademicSession.lecture_completed` signal). The HUD names new clothes when they unlock.
+- **Stats:** each item has cosmetic style, comfort and warmth values.
+- **Equipping:** `AppState.equip()` refuses locked items and won't leave the top, bottom or shoes empty.
+
+**Character creator** (`ui/character_selection.gd`, with `ui/look_editor.gd`, `ui/option_row.gd` and `ui/character_preview.gd`).
+- **Name:** there is a name field; the name follows the chosen preset until you type one.
+- **Presets tab:** eight preset cards, each with a rendered portrait.
+- **Create your own tab:** stepper rows for build, skin, height (cm and feet/inches), hair, eyes, brows, mouth, cheeks and facial hair, plus a starting outfit from the unlocked clothes. Rows step with ←/→ or the arrow buttons, and colours are clickable swatches.
+- **Randomize** button.
+- **Preview:** a large turntable preview you can drag to turn.
+
+**Closet** (`ui/wardrobe_panel.gd`). An oak wardrobe with a mirrored door now stands on the dorm's west wall; "Open closet" opens an overlay.
+- **Clothes tab:** the equipment sheet.
+- **Mirror tab:** the full appearance editor.
+- **Behaviour:** changes apply to the student live. Movement pauses (and in first person the mouse is freed) while it is open. Esc, Tab or Done closes it.
+
+**Inventory** (`ui/menu/inventory_page.gd`, `ui/equipment_view.gd`). An RPG equipment sheet in the style of the reference:
+- slots around the student (head, eyewear, outerwear and top on the left; neck, back, bottom and shoes on the right);
+- an item card with rarity, description, stat pips and requirement;
+- the items for the selected slot, with rarity-coloured borders, lock badges and a tick on the worn item;
+- outfit totals.
+
+Items have pixel-art icons drawn in their own colours (`ui/item_icon.gd`).
+
+**Menu and save.**
+- **Menu:** the sidebar shows a live portrait of the student next to their name, and the Overview and Continue use that name.
+- **Save:** the save now stores the look and name. Older saves without them still load, with the preset's new look; a save with an unknown item or an invalid look is rejected.
+
+**Tests.**
+- **New `wardrobe_test.gd` (74 checks):**
+  - skin layers and colours;
+  - rig joints, build and height, including seated height;
+  - look sanitizing, validation and random looks;
+  - the catalogue and its rarities;
+  - the creator (presets, portraits, editor rows, unlocked-only outfit, custom looks, height preview, randomize, typed names, a look reaching the game);
+  - the closet (real walk-up and E, movement pause, wearing the White Jacket, the locked fleece and its requirement text, slot rules, mirror restyling that keeps the outfit, Esc);
+  - the inventory (worn slots, the Lvl 2 unlock and notice, wearing the fleece, totals, the legendary coat after the lecture);
+  - save, reload and Continue restoring the exact look and name, legacy saves, and rejection of broken saves.
+- **Updated tests:** `dorm_test` checks the painted skin for all eight presets (now 87 checks); `ui_test` expects eight presets.
+- **Also fixed while testing:** item icons that were offset by centre anchoring; the closet mirror overwriting a newly equipped jacket; the Presets tab bouncing a custom look back to the editor.
+
+**Verification:**
+- **Tests:** foundation 54, dorm 87, campus 40, NPC 37, academic 77, visual motion 23, room polish 26, seating 147, lecture 118, progression 34, knowledge 17, save 37, UI 60, acceptance 47, ambient 30, first person 58, wardrobe 74 — all passing (966 checks). Seating, the lecture, NPC routes and first person work unchanged on the new rig.
+- **Captures inspected:** the full preset lineup (front, back, three-quarter, face close-ups), the creator's two tabs and a randomized look, the dorm wardrobe (third and first person), both closet tabs, the inventory with the fleece worn, the menu portrait, campus crowds and Hall A's classmates.
+- Import and `git diff --check` are clean.
+
 ## 2026-09-23 18:55 PDT — First-person review fixes: head shadow, real doors, Anatomy Hall entrance, lobby, glitches
 
 The user reviewed the world in first person and asked for these fixes before committing and pushing.

@@ -82,8 +82,13 @@ func _run() -> void:
 		current_scene.selection_panel.enter_button.pressed.emit()
 		await acquire_dorm()
 		check(player.appearance.preset_id == preset.id, "Appearance reaches gameplay: " + preset.id)
+		# The preset's top is painted on the torso of the character's pixel skin.
 		var torso: MeshInstance3D = player.appearance.get_node("Body/Pelvis/Spine/Torso").get_child(0)
-		check(torso.material_override.albedo_color.is_equal_approx(Color(preset.shirt)), "Preset material applied")
+		var top: Dictionary = load("res://data/clothing.gd").item(preset.look.outfit.top)
+		var front: Rect2i = load("res://character/skin_layout.gd").face("body", "front")
+		var painted: Color = player.appearance.skin_image.get_pixel(front.position.x + 1, front.position.y + 7)
+		var worn: Color = top.colors[0]
+		check(torso.material_override.albedo_texture != null and absf(painted.r - worn.r) + absf(painted.g - worn.g) + absf(painted.b - worn.b) < 0.4, "Preset skin applied: " + top.name)
 		state.return_to_title()
 		await scene_changed
 		await ticks(2)
@@ -102,7 +107,9 @@ func _run() -> void:
 	await press_interact(true)
 	await ticks(15)
 	check(activations == 1, "One press activates once; echo and holding do not repeat")
-	check(dorm.hud.message.text.contains("pharmacodynamics"), "Desk response displayed")
+	check(dorm.hud.computer_open and not player.movement_enabled, "Desk opens the PC login and holds movement")
+	dorm.hud.computer.close()
+	await ticks(2)
 	await walk_to(Vector3(2.3, 0, 0.8))
 	check(dorm.hud.prompt.text.is_empty(), "Prompt disappears outside range")
 	await walk_to(Vector3(-1.2, 0, 0.8))

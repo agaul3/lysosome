@@ -180,6 +180,34 @@ On arrival, the rig applies the preference deferred, after the scene's own camer
 
 **Doors and lobby display.** `Buildings.door()` builds glazed entrances with a proud portal and framed leaves; door glass uses MeshKit's `tinted` material, not the curtain-wall shader. `Buildings.classical_door()` serves the Anatomy Hall. The lobby display renders `ui/seminar_flyer.gd` in a SubViewport, and the flyer renders the speaker's headshot in its own `own_world_3d` SubViewport (`SeminarFlyer.build_headshot()`).
 
+### Characters, looks, clothing, closet and inventory
+
+**Rig.** `player/appearance.gd` builds a Minecraft-style rig from a look.
+- `apply_look(look)`, or `apply_preset(id)` for presets and extras.
+- **Nodes:** Body → Pelvis (0.64 m) → Spine, with Torso, Head, the shoulders `shoulders[0..1]`, and hips → knees `hips[]` / `knees[]`. Each holds a cached box mesh from `character/rig_mesh.gd`, all sharing one material with the look's skin texture (nearest filtering, alpha scissor for the overlay shell).
+- **Skin sharing:** `Appearance._skin()` caches painted skins by look, so identical looks share an Image.
+- **Height:** `height_scale` scales the node; `set_sit_blend()` divides the seated hip height by it, so every figure sits on the same chair.
+
+**Skin.**
+- **Layout:** `character/skin_layout.gd` defines the 64×64 atlas and the face orientation that the mesh builder and painter share.
+- **Painter:** `character/skin_painter.gd` paints skin, face, hair and clothing in layers (base, then the overlay shell) from item `kind`s and colours.
+
+**Data.**
+- `data/looks.gd`: options, sanitize, validation, random looks.
+- `data/clothing.gd`: the item catalogue, slots, rarities, unlock requirements (`requirement()`, `unlocked()`), outfit stats.
+- `data/character_presets.gd`: preset and extra looks.
+
+**State.**
+- **Fields:** `AppState.player_look`, `player_name`, and `selected_character` (a preset id, or "custom").
+- **Signal:** `look_changed(look)` is emitted by `select_character()`, `set_custom_look()`, `set_look()` and `equip()`. The player, the menu portrait, the closet and the equipment sheet listen to it and rebuild.
+- **Save:** SaveGame saves `look` and `name` and validates them with `Looks.is_valid()`.
+
+**UI.**
+- `ui/character_preview.gd`: a character in its own `SubViewport` world (full-body turntable or portrait).
+- `ui/look_editor.gd`: rows of `ui/option_row.gd`.
+- `ui/equipment_view.gd`: the slot sheet, item grid, item card and totals, with `ui/item_icon.gd` icons. It is used by the Inventory page and the closet (`ui/wardrobe_panel.gd`).
+- **Closet in the HUD:** `DormUI.open_closet()` / `close_closet()` pause movement and interaction. The dorm's `ClosetInteraction` calls it.
+
 ### Knowledge interface (Milestone 9)
 
 `Knowledge` (static) turns the question bank's records and `AcademicSession.topic_statistics` into a discipline → topic → subtopic tree. Paths are `Discipline`, `Discipline/Topic` and `Discipline/Topic/Subtopic`, the same keys `commit_answer` writes. `KnowledgePanel` renders the tree in the player menu and rebuilds it on `answer_recorded` or when shown. `Knowledge.from_history()` recounts from `question_history` for verification. There is no separate mastery store: statistics remain session state until save/load.
@@ -196,3 +224,9 @@ On arrival, the rig applies the preference deferred, after the scene's own camer
 **Transitions.** `Transition` (CanvasLayer 100) is awaited by `AppState` to cover before `change_scene_to_file` and reveals after `scene_changed`.
 
 **Title.** `start_screen.gd` renders `world/campus/panorama.gd` (a subclass of the campus that builds only scenery) in a SubViewport.
+
+## Computers and flashcards — September 23, 2026
+
+`education/flashcards/scheduler.gd` is a pure classic Anki-style scheduler; `education/flashcards/collection.gd` is the `Flashcards` autoload. The collection adapts standalone shared QuestionBank records without changing their schema and owns personal Basic/Cloze notes, schedules, review history, day limits, burial, suspension and bounded rating-neutral study XP. It uses wall time, independently of GameClock. SaveGame persists and validates the optional collection, and AppState clears it on New Game. Self-ratings do not enter the graded AcademicSession question ledger.
+
+`ui/computer/desktop.gd` owns Windows-style/macOS-style login and desktops. `ui/computer/anki_app.gd` is their shared study client. DormUI coordinates movement/input ownership, first-person pointer release, backpack/seat gating and the temporary `world/laptop.gd` prop. Seats expose an optional authored `laptop_surface`; auditorium seats use a deployable tray. The dorm desk opens the PC; Inventory and the seated L prompt open the laptop. Café study chairs reuse the existing collision-aware seating system. The lecture explicitly ignores inputs while a computer owns them. Design decisions and current compatibility boundaries are in `docs/development/FLASHCARD_SYSTEM.md`.

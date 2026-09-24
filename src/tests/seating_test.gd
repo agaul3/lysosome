@@ -114,7 +114,7 @@ func sit_from(seat: Node3D, expected: String, from: Vector3) -> void:
 	check(player.interaction.target == seat.interactable, "Own seat targeted for standing")
 	player.seating.request(seat)
 	await wait_state(player.seating.State.FREE, seat)
-	check(player.global_position.distance_to(seat.point(Seat.EXIT_POINT)) < 0.01 and player.appearance.sit_blend == 0.0, "Stands up clear of the seat after " + expected)
+	check(player.seating._is_clear(player.global_position) and player.appearance.sit_blend == 0.0, "Stands up clear of furniture after " + expected)
 	check(not player.external_control and seat.is_free(), "Control and seat released after " + expected)
 	await ticks(100) # Let the camera finish returning before the next case.
 

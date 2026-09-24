@@ -47,7 +47,11 @@ func request(target: Node3D) -> void:
 func stand_up() -> void:
 	if state != State.SEATED or stand_locked:
 		return
-	_begin(State.RISING, SitSequence.plan_rise(seat))
+	var plan := SitSequence.plan_rise(seat, _exit_clear, approach)
+	if plan.is_empty():
+		notice.emit("The way out is blocked. Wait for some space beside your chair.")
+		return
+	_begin(State.RISING, plan)
 
 func _begin(next: State, steps: Array) -> void:
 	state = next
@@ -135,3 +139,26 @@ func _is_clear(point: Vector3) -> bool:
 	query.collision_mask = player.collision_mask
 	query.margin = 0.02
 	return player.get_world_3d().direct_space_state.intersect_shape(query, 1).is_empty()
+
+## The initial rise is authored inside the chair's clearance. Sweep every exit
+## against other furniture/NPCs, and require the final capsule to clear the chair too.
+func _exit_clear(destination: Vector3) -> bool:
+	if not _is_clear(destination):
+		return false
+	var shape: CollisionShape3D = player.get_node("CollisionShape3D")
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = shape.shape
+	var start: Vector3 = seat.point(preload("res://world/seat.gd").PRE_SIT)
+	query.transform = Transform3D(Basis.IDENTITY, start + shape.position + Vector3(0, 0.05, 0))
+	query.motion = destination - start
+	query.collision_mask = player.collision_mask
+	query.margin = 0.02
+	var excluded: Array[RID] = []
+	for body in seat.find_children("*", "PhysicsBody3D", true, false):
+		excluded.append(body.get_rid())
+	query.exclude = excluded
+	var space := player.get_world_3d().direct_space_state
+	# cast_motion ignores initial overlaps; reject those explicitly.
+	if not space.intersect_shape(query, 1).is_empty():
+		return false
+	return space.cast_motion(query)[0] >= 1.0

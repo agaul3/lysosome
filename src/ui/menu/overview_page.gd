@@ -3,7 +3,6 @@ extends "res://ui/menu/menu_page.gd"
 ## knowledge at a glance, and the save status.
 const Objectives = preload("res://data/objectives.gd")
 const Knowledge = preload("res://education/knowledge/knowledge.gd")
-const Presets = preload("res://data/character_presets.gd")
 signal open_page(index: int)
 var save_status: Label
 
@@ -26,7 +25,7 @@ func refresh() -> void:
 	hero_column.add_theme_constant_override("separation", 6)
 	hero.add_child(hero_column)
 	var greeting := "Good morning" if now.hour < 12 else ("Good afternoon" if now.hour < 18 else "Good evening")
-	hero_column.add_child(UI.label("%s, %s" % [greeting, Presets.get_preset(AppState.selected_character).name], UI.SIZE_HEADING - 2, UI.TEXT, 600))
+	hero_column.add_child(UI.label("%s, %s" % [greeting, AppState.display_name()], UI.SIZE_HEADING - 2, UI.TEXT, 600))
 	hero_column.add_child(UI.label("%s · %s · %s, Week %d" % [GameClock.display_date(), GameClock.display_time(), now.semester, now.academic_week], UI.SIZE_LABEL, UI.TEXT_MUTED, 500))
 	var objective := HBoxContainer.new()
 	objective.add_theme_constant_override("separation", 8)

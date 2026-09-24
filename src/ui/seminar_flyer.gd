@@ -9,7 +9,6 @@ extends Control
 const UI = preload("res://ui/style/ui_style.gd")
 const Icon = preload("res://ui/style/icon.gd")
 const Appearance = preload("res://player/appearance.gd")
-const Geometry = preload("res://world/geometry.gd")
 const SIZE := Vector2(1320, 900)
 const NAVY := Color("16395c")
 const SLATE := Color("4b6173")
@@ -192,9 +191,9 @@ static func build_headshot() -> SubViewport:
 	var figure: Node3D = Appearance.new()
 	figure.name = "Speaker"
 	studio.add_child(figure)
+	# The look carries the charcoal blazer, oxford shirt and tie, and glasses.
 	figure.apply_preset("nyugen")
 	figure.rotation.y = 0.28
-	_dress(figure)
 	var key := DirectionalLight3D.new()
 	key.rotation_degrees = Vector3(-28, 200, 0)
 	key.light_energy = 1.05
@@ -208,31 +207,8 @@ static func build_headshot() -> SubViewport:
 	studio.add_child(halo)
 	var camera := Camera3D.new()
 	camera.fov = 24.0
-	var eye := Vector3(0.12, 1.47, -2.05)
-	camera.transform = Transform3D(Basis.looking_at(Vector3(0, 1.4, 0) - eye, Vector3.UP), eye)
+	var eye := Vector3(0.12, 1.5, -2.05)
+	camera.transform = Transform3D(Basis.looking_at(Vector3(0, 1.42, 0) - eye, Vector3.UP), eye)
 	camera.current = true
 	studio.add_child(camera)
 	return viewport
-
-## Shirt collar, tie and blazer lapels over the torso, and thin-framed glasses.
-static func _dress(figure: Node3D) -> void:
-	var spine: Node3D = figure.spine
-	var up := Vector3(0, -figure.HIP_HEIGHT, 0)
-	Geometry.box(spine, "Shirt", Vector3(0.15, 0.22, 0.01), up + Vector3(0, 1.12, -0.153), Color("f1f2ef"))
-	Geometry.box(spine, "Tie", Vector3(0.05, 0.21, 0.012), up + Vector3(0, 1.105, -0.158), Color("6b2f3a"))
-	Geometry.box(spine, "TieKnot", Vector3(0.06, 0.04, 0.014), up + Vector3(0, 1.205, -0.158), Color("5a2630"))
-	for side in [-1, 1]:
-		var collar := Geometry.box(spine, "Collar", Vector3(0.07, 0.05, 0.012), up + Vector3(side * 0.045, 1.215, -0.157), Color("f7f7f4"))
-		collar.rotation.z = side * 0.5
-		var lapel := Geometry.box(spine, "Lapel", Vector3(0.09, 0.3, 0.014), up + Vector3(side * 0.1, 1.09, -0.157), Color("2b3138"))
-		lapel.rotation.z = side * 0.32
-	var frame := Color("1f2326")
-	var eye_y := 1.5
-	for side in [-1, 1]:
-		var x: float = side * 0.085
-		Geometry.box(spine, "GlassesTop", Vector3(0.12, 0.012, 0.01), up + Vector3(x, eye_y + 0.035, -0.205), frame)
-		Geometry.box(spine, "GlassesBottom", Vector3(0.12, 0.01, 0.01), up + Vector3(x, eye_y - 0.035, -0.205), frame)
-		for edge in [-1, 1]:
-			Geometry.box(spine, "GlassesSide", Vector3(0.01, 0.07, 0.01), up + Vector3(x + edge * 0.055, eye_y, -0.205), frame)
-		Geometry.box(spine, "GlassesArm", Vector3(0.01, 0.01, 0.2), up + Vector3(side * 0.2, eye_y + 0.03, -0.1), frame)
-	Geometry.box(spine, "GlassesBridge", Vector3(0.05, 0.01, 0.01), up + Vector3(0, eye_y + 0.02, -0.206), frame)

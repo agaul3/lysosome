@@ -41,6 +41,8 @@ const AUDITORIUM_WIDTH := 0.8
 const AUDITORIUM_PITCH := 0.92
 ## Row seats: func(from: Vector3, seat: Node3D) -> PackedVector3Array, ending at
 ## this seat's FRONT_POINT. Supplied by the room, which owns the walkway graph.
+## Authored table position in seat-local coordinates; auditorium seats deploy a tray.
+var laptop_surface := Vector3.INF
 var navigator: Callable
 
 func _ready() -> void:

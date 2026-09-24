@@ -24,6 +24,7 @@ QuestionBank="*res://education/questions/question_bank.gd"
 Sfx="*res://autoload/sfx.gd"
 Transition="*res://autoload/transition.gd"
 SaveGame="*res://autoload/save_game.gd"
+Flashcards="*res://education/flashcards/collection.gd"
 
 [display]
 

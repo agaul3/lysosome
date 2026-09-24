@@ -1,68 +1,60 @@
 extends VBoxContainer
-## Character setup (spec §9.2): a turntable preview beside four preset cards.
+## Character creator (spec §9.2, extended): name your student, then either
+## pick one of eight presets (each card shows a rendered portrait) or build
+## your own look — build, skin, height, hair, eyes, brows, mouth, cheeks,
+## facial hair and a starting outfit — with a large turntable preview.
+## Everything can be changed again later at the closet in your room.
 signal cancelled
 const UI = preload("res://ui/style/ui_style.gd")
 const Icon = preload("res://ui/style/icon.gd")
 const Presets = preload("res://data/character_presets.gd")
-const Appearance = preload("res://player/appearance.gd")
+const Looks = preload("res://data/looks.gd")
+const CharacterPreview = preload("res://ui/character_preview.gd")
+const LookEditor = preload("res://ui/look_editor.gd")
+const WIDTH := 960.0
 var preset_buttons: Array[Button] = []
+var mode_buttons: Array[Button] = []
 var enter_button: Button
 var back_button: Button
+var randomize_button: Button
+var name_edit: LineEdit
+## The figure in the large preview (an Appearance node).
 var preview: Node3D
+var preview_widget: SubViewportContainer
 var preview_name: Label
 var preview_description: Label
+var presets_view: Control
+var create_view: ScrollContainer
+var editor: VBoxContainer
+var mode := "presets"
+var rng := RandomNumberGenerator.new()
 
 func _ready() -> void:
-	add_theme_constant_override("separation", 12)
-	add_child(UI.label("New game", UI.SIZE_CAPTION, UI.ACCENT, 600, true))
-	add_child(UI.label("Choose your student", UI.SIZE_HEADING + 4, UI.TEXT, 600))
-	add_child(UI.paragraph("Pick how you look on campus. It's cosmetic — every student starts with the same schedule.", 440, UI.SIZE_BODY, UI.TEXT_MUTED))
+	rng.randomize()
+	custom_minimum_size.x = WIDTH
+	add_theme_constant_override("separation", 10)
+	var heading := HBoxContainer.new()
+	heading.add_theme_constant_override("separation", 14)
+	add_child(heading)
+	var titles := VBoxContainer.new()
+	titles.add_theme_constant_override("separation", 0)
+	titles.add_child(UI.label("New game", UI.SIZE_CAPTION, UI.ACCENT, 600, true))
+	titles.add_child(UI.label("Create your student", UI.SIZE_HEADING + 4, UI.TEXT, 600))
+	heading.add_child(titles)
 	var body := HBoxContainer.new()
-	body.add_theme_constant_override("separation", 14)
+	body.add_theme_constant_override("separation", 18)
 	add_child(body)
-	body.add_child(_build_preview())
-	var list := VBoxContainer.new()
-	list.add_theme_constant_override("separation", 8)
-	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	body.add_child(list)
-	for preset in Presets.PRESETS:
-		var button := Button.new()
-		button.toggle_mode = true
-		button.theme_type_variation = "CardButton"
-		button.custom_minimum_size = Vector2(0, 54)
-		button.text = ""
-		button.pressed.connect(func() -> void:
-			Sfx.play("ui_move")
-			select_preset(preset.id))
-		button.focus_entered.connect(select_preset.bind(preset.id))
-		var row := HBoxContainer.new()
-		row.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		row.offset_left = 14
-		row.offset_right = -12
-		row.add_theme_constant_override("separation", 10)
-		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		var swatches := HBoxContainer.new()
-		swatches.add_theme_constant_override("separation", -5)
-		swatches.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		for key in ["skin", "hair", "shirt"]:
-			var colour := Color(preset[key])
-			var dot := Control.new()
-			dot.custom_minimum_size = Vector2(18, 18)
-			dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			dot.draw.connect(func() -> void:
-				dot.draw_circle(Vector2(9, 9), 9, UI.SURFACE_RAISED)
-				dot.draw_circle(Vector2(9, 9), 7.5, colour))
-			swatches.add_child(dot)
-		row.add_child(swatches)
-		var text := VBoxContainer.new()
-		text.add_theme_constant_override("separation", -1)
-		text.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		text.add_child(UI.label(preset.name, UI.SIZE_BODY, UI.TEXT, 600))
-		text.add_child(UI.label(preset.description, UI.SIZE_CAPTION, UI.TEXT_MUTED, 400))
-		row.add_child(text)
-		button.add_child(row)
-		list.add_child(button)
-		preset_buttons.append(button)
+	var left := VBoxContainer.new()
+	left.add_theme_constant_override("separation", 10)
+	left.custom_minimum_size.x = 560
+	body.add_child(left)
+	left.add_child(_top_row())
+	presets_view = _presets_grid()
+	left.add_child(presets_view)
+	create_view = _create_panel()
+	left.add_child(create_view)
+	body.add_child(_preview_card())
+	preview = preview_widget.figure
 	var actions := HBoxContainer.new()
 	actions.add_theme_constant_override("separation", 10)
 	add_child(actions)
@@ -71,96 +63,189 @@ func _ready() -> void:
 	back_button.custom_minimum_size = Vector2(110, 46)
 	back_button.pressed.connect(func() -> void: cancelled.emit())
 	actions.add_child(back_button)
+	actions.add_child(UI.label("You can change your look any time at the closet in your room.", UI.SIZE_LABEL, UI.TEXT_FAINT, 400))
+	actions.get_child(1).size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	actions.get_child(1).size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	enter_button = Button.new()
 	enter_button.text = "Begin your first morning"
 	enter_button.theme_type_variation = "PrimaryButton"
-	enter_button.custom_minimum_size = Vector2(0, 46)
-	enter_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	enter_button.custom_minimum_size = Vector2(300, 46)
 	enter_button.pressed.connect(func() -> void:
 		Sfx.play("ui_confirm")
+		if not name_edit.text.strip_edges().is_empty():
+			AppState.set_player_name(name_edit.text)
 		AppState.enter_dorm())
 	actions.add_child(enter_button)
-	select_preset(AppState.selected_character)
+	AppState.look_changed.connect(_on_look_changed)
+	set_mode("presets")
+	select_preset(AppState.selected_character if Presets.is_valid(AppState.selected_character) else Presets.DEFAULT_ID)
 
-func _build_preview() -> Control:
+func _top_row() -> Control:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 10)
+	var label := UI.label("Name", UI.SIZE_LABEL, UI.TEXT_MUTED, 600)
+	label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(label)
+	name_edit = LineEdit.new()
+	name_edit.name = "NameField"
+	name_edit.custom_minimum_size = Vector2(200, 38)
+	name_edit.max_length = 20
+	name_edit.placeholder_text = "Your name"
+	name_edit.text = AppState.display_name()
+	name_edit.text_changed.connect(func(text: String) -> void:
+		AppState.set_player_name(text, true)
+		preview_name.text = AppState.display_name())
+	name_edit.text_submitted.connect(func(_text: String) -> void: enter_button.grab_focus())
+	row.add_child(name_edit)
+	row.add_child(UI.spacer(0, 0, true))
+	for entry in [["presets", "Presets"], ["create", "Create your own"]]:
+		var button := Button.new()
+		button.text = entry[1]
+		button.toggle_mode = true
+		button.theme_type_variation = "NavButton"
+		button.custom_minimum_size = Vector2(0, 38)
+		button.pressed.connect(func() -> void:
+			Sfx.play("ui_move")
+			set_mode(entry[0])
+			_focus_mode_content())
+		row.add_child(button)
+		mode_buttons.append(button)
+	return row
+
+func _presets_grid() -> Control:
+	var grid := GridContainer.new()
+	grid.columns = 2
+	grid.add_theme_constant_override("h_separation", 10)
+	grid.add_theme_constant_override("v_separation", 10)
+	for preset in Presets.PRESETS:
+		var button := Button.new()
+		button.toggle_mode = true
+		button.theme_type_variation = "CardButton"
+		button.custom_minimum_size = Vector2(275, 78)
+		button.text = ""
+		button.pressed.connect(func() -> void:
+			Sfx.play("ui_move")
+			select_preset(preset.id))
+		button.focus_entered.connect(select_preset.bind(preset.id))
+		var row := HBoxContainer.new()
+		row.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		row.offset_left = 8
+		row.offset_right = -10
+		row.offset_top = 6
+		row.offset_bottom = -6
+		row.add_theme_constant_override("separation", 12)
+		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var portrait_frame := PanelContainer.new()
+		portrait_frame.add_theme_stylebox_override("panel", UI.box(Color(UI.INK, 0.5), 8, UI.LINE_SOFT, 1, Vector4(0, 0, 0, 0)))
+		portrait_frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var portrait := CharacterPreview.new(Vector2i(62, 62), "portrait", false)
+		portrait_frame.add_child(portrait)
+		row.add_child(portrait_frame)
+		var text := VBoxContainer.new()
+		text.add_theme_constant_override("separation", 0)
+		text.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		text.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		text.add_child(UI.label(preset.name, UI.SIZE_BODY, UI.TEXT, 600))
+		text.add_child(UI.label(preset.description, UI.SIZE_CAPTION, UI.TEXT_MUTED, 400))
+		row.add_child(text)
+		button.add_child(row)
+		grid.add_child(button)
+		preset_buttons.append(button)
+		portrait.ready.connect(portrait.show_preset.bind(preset.id))
+	return grid
+
+func _create_panel() -> ScrollContainer:
+	var scroll := ScrollContainer.new()
+	scroll.custom_minimum_size = Vector2(560, 344)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	var column := VBoxContainer.new()
+	column.add_theme_constant_override("separation", 8)
+	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(column)
+	var tools := HBoxContainer.new()
+	tools.add_theme_constant_override("separation", 8)
+	column.add_child(tools)
+	randomize_button = Button.new()
+	randomize_button.text = "Randomize"
+	randomize_button.custom_minimum_size = Vector2(130, 36)
+	randomize_button.pressed.connect(func() -> void:
+		Sfx.play("ui_confirm")
+		editor.randomize_look(rng))
+	tools.add_child(randomize_button)
+	var hint := UI.label("← → change a row · ↑ ↓ move between rows", UI.SIZE_CAPTION, UI.TEXT_FAINT, 400)
+	hint.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	tools.add_child(hint)
+	editor = LookEditor.new(true)
+	editor.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	editor.look_changed.connect(func(look: Dictionary) -> void: AppState.set_custom_look(look))
+	column.add_child(editor)
+	return scroll
+
+func _preview_card() -> Control:
 	var card := PanelContainer.new()
-	card.add_theme_stylebox_override("panel", UI.box(Color(UI.SURFACE, 0.85), 12, UI.LINE_SOFT, 1, Vector4(0, 0, 0, 12)))
-	card.custom_minimum_size = Vector2(190, 0)
+	card.add_theme_stylebox_override("panel", UI.box(Color(UI.SURFACE, 0.85), 12, UI.LINE_SOFT, 1, Vector4(0, 8, 0, 12)))
+	card.custom_minimum_size = Vector2(370, 0)
 	var column := VBoxContainer.new()
 	column.add_theme_constant_override("separation", 2)
 	card.add_child(column)
-	var container := SubViewportContainer.new()
-	container.custom_minimum_size = Vector2(190, 210)
-	container.stretch = true
-	container.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	column.add_child(container)
-	var viewport := SubViewport.new()
-	viewport.size = Vector2i(190, 210)
-	viewport.own_world_3d = true
-	viewport.transparent_bg = true
-	viewport.msaa_3d = Viewport.MSAA_4X
-	container.add_child(viewport)
-	var environment_node := WorldEnvironment.new()
-	var environment := Environment.new()
-	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	environment.ambient_light_color = Color("dfe8ec")
-	environment.ambient_light_energy = 0.75
-	environment.tonemap_mode = Environment.TONE_MAPPER_FILMIC
-	environment_node.environment = environment
-	viewport.add_child(environment_node)
-	# A soft plinth for the figure to stand on.
-	var plinth := MeshInstance3D.new()
-	var disc := CylinderMesh.new()
-	disc.top_radius = 0.62
-	disc.bottom_radius = 0.66
-	disc.height = 0.06
-	plinth.mesh = disc
-	var plinth_material := StandardMaterial3D.new()
-	plinth_material.albedo_color = Color("22404a")
-	plinth.material_override = plinth_material
-	plinth.position.y = -0.03
-	viewport.add_child(plinth)
-	preview = Appearance.new()
-	viewport.add_child(preview)
-	var camera := Camera3D.new()
-	viewport.add_child(camera)
-	var eye := Vector3(0, 1.25, -3.6)
-	camera.transform = Transform3D(Basis.looking_at(Vector3(0, 0.85, 0) - eye), eye)
-	camera.fov = 34
-	var light := DirectionalLight3D.new()
-	light.rotation_degrees = Vector3(-35, 150, 0)
-	light.light_energy = 0.95
-	viewport.add_child(light)
-	var rim := DirectionalLight3D.new()
-	rim.rotation_degrees = Vector3(-20, -20, 0)
-	rim.light_energy = 0.35
-	rim.light_color = Color("9ce0d4")
-	viewport.add_child(rim)
+	preview_widget = CharacterPreview.new(Vector2i(370, 330), "full", true)
+	column.add_child(preview_widget)
 	preview_name = UI.label("", UI.SIZE_TITLE, UI.TEXT, 600)
 	preview_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	column.add_child(preview_name)
-	preview_description = UI.label("First-year student", UI.SIZE_CAPTION, UI.TEXT_MUTED, 500)
+	preview_description = UI.label("", UI.SIZE_CAPTION, UI.TEXT_MUTED, 500)
 	preview_description.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	column.add_child(preview_description)
+	var hint := UI.label("Drag to turn", UI.SIZE_CAPTION, UI.TEXT_FAINT, 400)
+	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	column.add_child(hint)
 	return card
 
-func _process(delta: float) -> void:
-	if visible and is_instance_valid(preview):
-		preview.rotation.y += delta * 0.6
+func set_mode(next: String) -> void:
+	mode = next
+	presets_view.visible = mode == "presets"
+	create_view.visible = mode == "create"
+	for i in range(mode_buttons.size()):
+		mode_buttons[i].set_pressed_no_signal((i == 0) == (mode == "presets"))
+	if mode == "create":
+		editor.set_look(AppState.player_look)
+
+## After switching tabs: the editor's first row, or the chosen preset's card.
+## A custom look is never replaced just by returning to the Presets tab.
+func _focus_mode_content() -> void:
+	if mode == "create":
+		editor.first_row().grab_focus()
+		return
+	for i in range(Presets.PRESETS.size()):
+		if Presets.PRESETS[i].id == AppState.selected_character:
+			preset_buttons[i].grab_focus()
 
 func select_preset(id: String) -> void:
 	if not AppState.select_character(id):
 		return
-	if not is_instance_valid(preview):
-		return
-	if preview.preset_id != id:
-		preview.apply_preset(id)
-	var data := Presets.get_preset(id)
-	preview_name.text = data.name
+	if is_instance_valid(name_edit) and name_edit.text != AppState.display_name():
+		name_edit.text = AppState.display_name()
 	for index in range(preset_buttons.size()):
 		preset_buttons[index].set_pressed_no_signal(Presets.PRESETS[index].id == id)
 
+func _on_look_changed(look: Dictionary) -> void:
+	if not is_instance_valid(preview_widget):
+		return
+	preview_widget.show_look(look)
+	preview = preview_widget.figure
+	preview_name.text = AppState.display_name()
+	var description: String = Presets.get_preset(AppState.selected_character).description if Presets.is_valid(AppState.selected_character) else "Your own look"
+	preview_description.text = "%s · %s" % [description, LookEditor._height_text(float(look.height))]
+	if mode == "presets" and not Presets.is_valid(AppState.selected_character):
+		for button in preset_buttons:
+			button.set_pressed_no_signal(false)
+
 func focus_selection() -> void:
+	if not Presets.is_valid(AppState.selected_character):
+		set_mode("create")
+		editor.first_row().grab_focus()
+		return
+	set_mode("presets")
 	select_preset(AppState.selected_character)
 	var index := 0
 	for i in range(Presets.PRESETS.size()):

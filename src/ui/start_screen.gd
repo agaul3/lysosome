@@ -180,7 +180,7 @@ func _refresh_continue() -> void:
 	continue_button.visible = available
 	continue_detail.visible = available
 	if available:
-		var name: String = preload("res://data/character_presets.gd").get_preset(summary.character).name
+		var name: String = summary.name
 		continue_detail.text = "%s · Lvl %d · %s · %s, %s" % [name, summary.level, summary.location, summary.date, summary.time]
 	new_game_button.theme_type_variation = "" if available else "PrimaryButton"
 	UI.pad_left(new_game_button, 48)

@@ -55,7 +55,9 @@ func play_slice() -> void:
 	check(player.position.distance_to(start) > 1.0, "5 · Moves with WASD")
 	await walk_to(Vector3(2.3, 0, -1.8))
 	await press_interact()
-	check(dorm.hud.message.text.length() > 0, "6 · Interacts with a dorm object")
+	check(dorm.hud.computer_open, "6 · Opens the dorm study computer")
+	dorm.hud.computer.close()
+	await ticks(2)
 	# 7–9: menu, schedule, time keeps moving.
 	var clock := root.get_node("GameClock")
 	var before: float = clock.now_seconds()

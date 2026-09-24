@@ -36,7 +36,7 @@ func _ready() -> void:
 	walker = Appearance.new()
 	walker.name = "Walker"
 	add_child(walker)
-	walker.apply_preset(["plum", "teal", "clay"][rng.randi() % 3])
+	walker.apply_look(preload("res://data/looks.gd").random(rng))
 	Student.make_blocker(walker)
 	dog = Dog.new()
 	dog.name = "Dog"
@@ -244,7 +244,7 @@ func _keep_out(point: Vector2) -> Vector2:
 
 func hand_position() -> Vector3:
 	var shoulder: Node3D = walker.shoulders[1]
-	return shoulder.to_global(Vector3(0, -0.44, 0))
+	return shoulder.to_global(Vector3(0, -0.5, 0))
 
 ## Straight between hand and collar, sagging more the slacker it is.
 func _update_leash() -> void:

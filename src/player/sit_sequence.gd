@@ -115,11 +115,20 @@ static func _approach_points(option: String, local: Vector3) -> Array:
 		_:
 			return [Vector3(Seat.BACK_CORNER.x * side, 0, Seat.BACK_CORNER.z), side_point]
 
-static func plan_rise(seat: Node3D) -> Array:
-	return [
-		{"kind": "rise", "from": seat.point(Seat.SIT_POINT), "to": seat.point(Seat.PRE_SIT)},
-		{"kind": "step", "to": seat.point(Seat.EXIT_POINT), "lateral": false},
-	]
+## Prefer the usual forward exit, but a table may require stepping sideways.
+## The player supplies a capsule sweep that ignores only the chair being left.
+static func plan_rise(seat: Node3D, exit_clear: Callable = Callable(), approach := "") -> Array:
+	var side := -1.0 if approach.ends_with("left") else 1.0
+	var exits := [Seat.EXIT_POINT, Vector3(side * 0.82, 0, Seat.PRE_SIT.z), Vector3(-side * 0.82, 0, Seat.PRE_SIT.z)]
+	for point in exits:
+		var target: Vector3 = seat.point(point)
+		if exit_clear.is_valid() and not exit_clear.call(target):
+			continue
+		return [
+			{"kind": "rise", "from": seat.point(Seat.SIT_POINT), "to": seat.point(Seat.PRE_SIT)},
+			{"kind": "step", "to": target, "lateral": point != Seat.EXIT_POINT},
+		]
+	return []
 
 func start(plan: Array) -> void:
 	steps = plan
