@@ -125,6 +125,30 @@ func integration_checks() -> void:
 	var pc: CanvasLayer = dorm.hud.computer
 	check(dorm.hud.computer_open and pc.os_style == "windows" and not player.movement_enabled and not player.interaction.enabled, "Dorm desk opens Windows login and blocks world controls")
 	check(pc.screen == "lock" and pc.wallpaper.texture == pc.WINDOWS_LOCK, "Windows opens on supplied lock image")
+	check(pc.wallpaper.material is ShaderMaterial and pc.wallpaper.material.shader == preload("res://assets/pixel_wallpaper.gdshader"), "The lock photo is drawn as pixel art")
+	check(dorm.pc_screen.material_override.albedo_texture == pc.viewport.get_texture(), "The OS is drawn on the monitor in the world, not over the whole view")
+	await ticks(3)
+	var view := root.get_viewport().get_camera_3d()
+	check(view == pc.camera, "The camera moves in to the monitor")
+	var quad: Vector2 = dorm.pc_screen.mesh.size
+	var top_left := view.unproject_position(dorm.pc_screen.to_global(Vector3(-quad.x / 2, quad.y / 2, 0)))
+	var bottom_right := view.unproject_position(dorm.pc_screen.to_global(Vector3(quad.x / 2, -quad.y / 2, 0)))
+	var window := Vector2(root.get_viewport().get_visible_rect().size)
+	var fraction := (bottom_right.y - top_left.y) / window.y
+	check(fraction > 0.45 and fraction < 0.8 and top_left.x > 0.0 and bottom_right.x < window.x, "The screen fills most of the view with the room still visible (%d%% tall)" % int(fraction * 100))
+	var click := InputEventMouseButton.new()
+	click.button_index = MOUSE_BUTTON_LEFT
+	# Input events arrive in window pixels (the root viewport's stretch maps them to game coordinates).
+	click.position = root.get_viewport().get_final_transform() * view.unproject_position(dorm.pc_screen.global_position)
+	click.pressed = true
+	Input.parse_input_event(click)
+	await ticks(1)
+	var release := click.duplicate()
+	release.pressed = false
+	Input.parse_input_event(release)
+	await ticks(3)
+	check(pc.screen == "login", "Clicking the monitor in the world reaches the lock screen")
+	pc.show_lock()
 	await capture("windows_lock")
 	await send_key(KEY_ENTER)
 	check(pc.screen == "login", "Enter opens sign-in from lock screen")
@@ -165,7 +189,7 @@ func integration_checks() -> void:
 	pc.app.editor_fields.front.text = "What does a flashcard ask you to do?"
 	pc.app.editor_fields.back.text = "Recall before revealing."
 	pc.app._save_editor()
-	check(collection.notes.size() == 1 and pc.app.page == "decks", "Note editor saves usable card")
+	check(collection.notes.size() == 1 and pc.app.page == "editor" and pc.app.editor_fields.front.text.is_empty(), "Add saves a usable note and stays open for the next, as in Anki")
 	pc.app.show_browser()
 	pc.app.search.text = "Recall before revealing"
 	pc.app._browser_results()

@@ -6,6 +6,90 @@
 
 **Current state:** Milestones 1–6 are implemented and committed. Milestones 1–10 are complete: the v0.1 vertical slice is feature-complete per the spec. Remaining work is human medical review and any new scope from the user. The more recent visual, room, and UI improvements below sit on top of Milestones 1–6. (This note originally said the work was uncommitted; it has since been committed — see the 2026-09-23 documentation entry above.)
 
+## 2026-09-23 23:21 PDT — In-world computer screens, pixel-art wallpapers, rebuilt Windows/macOS shells and Anki UI
+
+User request:
+- Improve the Windows PC's lock and home screens, keeping the same images but pixelated to match the game and less blurry.
+- Improve the UI of both the PC and the MacBook.
+- Don't fill the whole screen when using a computer: zoom in a little so the surroundings stay visible, like using a computer in real life.
+- Get familiar with the Codex changes (commit `93eb0b6`) and polish the Anki UI.
+
+Not committed.
+
+**Pixel-art wallpapers** (`assets/pixel_wallpaper.gdshader`).
+- **Photos:** the two supplied 738×414 photos are now re-rendered as crisp pixel art rather than stretched (the cause of the blur). Each 320×180 cell averages the photo beneath it, colours snap to a small palette, and a light ordered dither keeps gradients smooth.
+- **Desktop photo cleanup:** it was a screenshot, so the shader crops its baked-in taskbar and covers the baked-in desktop icons with nearby sky. The real taskbar and icons replace them.
+- **Mac wallpaper:** pixelated to match (`macos_wallpaper.gdshader`).
+- **Idle monitor:** shows the pixel lock photo (`assets/pixel_screen.gdshader`).
+
+**The screen stays in the world** (`ui/computer/desktop.gd`, rebuilt).
+- **Rendering:** the OS now renders into a SubViewport drawn on the device's own screen: a new `PCScreen` quad on the dorm monitor, and a 16:10 `Screen` quad on the laptop lid.
+- **Camera:** it eases in (the generalised lecture camera, now able to start from any perspective or orthographic camera) to a point square to the screen and slightly above it. The screen fills about 60% of the view's height, leaving the desk, keyboard, window and room (or the café) visible around it. The player's head is hidden while zoomed in. Stepping away eases back out, and the laptop packs away only after that.
+- **Input:** the mouse is ray-traced onto the screen quad and forwarded (clicks, drags, hover), and keys are forwarded. Nothing reaches the world.
+- **Resolution:** the layout is 1024×576 (PC) and 1024×640 (Mac), rendered up to 2× sharper on large windows so text stays legible at the zoom.
+- **HUD:** walking hints hide while the computer is in use, replaced by a small "Esc Step away" hint. A floating-panel fallback remains for callers without a world screen.
+- **Hall A:** stays whole while zoomed in at a laptop. A lecture that starts while the laptop is open begins once the view returns (`LectureSession` now also handles `STARTING`).
+
+**Windows 10–style shell.**
+- **Lock screen:** the clock and date sit bottom-left. Any key or click opens sign-in.
+- **Sign-in:** an avatar, the name, User name and Password fields with an attached → button, Windows' own error text, "Sign-in options", the account tile at bottom-left, and network, accessibility and power icons (power shuts down).
+- **Desktop:**
+  - Recycle Bin, This PC and Anki icons (single click selects, double click opens);
+  - a real taskbar: Start, "Type here to search", Task View, File Explorer, Browser, and Anki with a running/active underline; the tray with Wi-Fi, volume and a two-line clock;
+  - the Start menu: a rail with account/lock, Documents, Settings and Power; an A–Z app list; Study tiles.
+- **Windows:** draggable, with minimise, maximise (or double-click the title bar) and a red-on-hover close (`ui/computer/os_window.gd`). File Explorer, the browser (offline), Settings and the Recycle Bin open small native windows.
+
+**macOS-style shell.**
+- **Lock/login:** the date and large clock at top, then avatar, name, Name and Password pills with an → button. A wrong password shakes the fields. Sleep, Restart and Shut Down.
+- **Desktop:**
+  - a menu bar with a pixel fruit menu (About This Mac, System Settings, Lock Screen, Log Out, Shut Down), the active app's name and its menus (Finder's, or Anki's File/Edit/View/Tools/Help), battery, Wi-Fi, search and the clock;
+  - a translucent Dock: Finder, Launchpad, Safari, Notes, Anki, System Settings and Trash. Icons grow on hover and show their names; running apps get a dot.
+- **Windows:** traffic lights with hover glyphs.
+
+**Icons and fonts** (`ui/computer/os_kit.gd`).
+- **Icons:** all app and tray icons are original 16×16 pixel art, nearest-filtered, matching the game.
+- **Fonts:** the OS uses the host's system UI font when installed (Segoe UI / San Francisco), otherwise Helvetica or Arial. Card text uses Arial, like Anki's default card style.
+
+**Anki, rebuilt to look and behave like desktop Anki** (`ui/computer/anki_app.gd`). It uses the same collection, scheduler and XP as Codex's version.
+- **Toolbar:** Decks · Add · Browse · Stats · Sync; Sync explains the collection is offline.
+- **Deck list:** a collapsible tree (Medicine › Pharmacology › Pharmacodynamics, Personal) with New/Learn/Due columns in blue, red and green (zeros greyed), a gear per deck (Options), "Studied N cards today", today's study XP, and Get Shared / Create Deck / Import File.
+- **Overview:** New / Learning / To Review counts, Study Now (S or Enter), description, and Options / Custom Study / Description.
+- **Reviewer:**
+  - the card centred in Arial;
+  - the answer under a rule, with the explanation and source below;
+  - a bottom bar with Edit, the remaining counts (the current queue underlined), Show Answer, and More (Bury -, Suspend @, Edit E);
+  - after reveal, Again / Hard / Good / Easy with Anki-format intervals above them (<1m, <6m, <10m, 4d).
+- **Toasts:** "+2 XP", "Card buried.", and the leech notice.
+- **Finished deck:** "Congratulations! You have finished this deck for now." with when the next card is due.
+- **Add:** Type (Basic/Cloze), Deck, a […] Cloze button that wraps the selection in the next cloze number, Front/Back/Extra fields (Text/Back Extra for Cloze) and Tags. Ctrl/⌘+Enter or Add saves. As in Anki, the window stays open for the next note ("Added."); editing returns to Browse.
+- **Browse:**
+  - sidebar filters: Whole Collection, Due Today, card states, decks, tags;
+  - a search box that understands `is:new/learn/review/due/suspended`, `deck:"…"`, `tag:…` and free words;
+  - a table (Sort Field, Card, Due, Deck, Reviews) with selection;
+  - a preview pane with Suspend/Unsuspend and Edit Note or Card Info.
+- **Stats:** Today (studied, again count, learn/review/relearn), Future Due (30 days), Card Counts (New, Learning, Young, Mature, Suspended), Answer Buttons and Reviews (30 days), with "No data" when empty.
+- **Deck Options:** Daily Limits (editable new cards/day), New Cards, Lapses and Advanced, showing the scheduler's actual settings; Save.
+
+**Tests:** `flashcard_test.gd` now has 78 checks. New checks:
+- the lock photo is pixel art;
+- the OS draws onto the monitor, not over the view;
+- the camera moves in and the screen fills 45–80% of the view's height with the room visible;
+- a real mouse click on the monitor in the world reaches the lock screen.
+
+The Add expectation now follows Anki: the window stays open after adding.
+
+**Fixed in Codex's commit (`93eb0b6`).**
+- **Symptom:** `seating_test` failed 25 of 152 checks on the committed code, although the Codex entry reported it passing.
+- **Cause:** the new stand-up sweep (`Seating._exit_clear`) rejected any overlap at the rise point. A chair tucked under a table (Hall A's front table chairs) starts inside the table's clearance, so every exit failed and the player could never stand up.
+- **Fix:** the sweep now ignores only the furniture the chair already sits against. The destination must still be clear, and the path must not cross anything else.
+
+**Also:** the lecture's Space/E overlay hides while the laptop is open, since those keys go to the laptop.
+
+**Verification:**
+- **Tests:** flashcard 78, foundation 54, dorm 87, campus 40, NPC 37, academic 77, visual motion 23, room polish 26, seating 147, lecture 118, progression 34, knowledge 17, save 37, UI 60, acceptance 47, ambient 30, first person 58, wardrobe 74, café exit 33 — all passing (1,077 checks).
+- **Graphical captures inspected:** the idle and zoomed dorm monitor; the Windows lock, sign-in, desktop and Start menu; Anki's deck list, overview, question, answer, Browse, Stats and Add on the PC; the café laptop's Mac lock, login, desktop, Anki and system menu; the lecture-seat laptop; the return to the room view.
+- Import and `git diff --check` are clean.
+
 ## 2026-09-23 22:15 PDT — Dorm PC, backpack laptop and Anki-style flashcard study
 
 User request: brainstorm and implement medical flashcard study through a Windows-style dorm PC and a MacBook/macOS-style laptop carried with a backpack, including use while seated at tables or during lectures. Demo login is **player1 / 122333** on both devices. Existing uncommitted character, wardrobe and inventory work was preserved. No commit or push.

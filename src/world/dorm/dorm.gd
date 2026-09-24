@@ -12,6 +12,8 @@ var desk: Node3D
 var bed: Node3D
 var exit_door: Node3D
 var closet: Node3D
+## The desk PC's display surface.
+var pc_screen: MeshInstance3D
 ## Walls cut away for the overhead camera, and the ceiling: first person shows the whole room.
 var cutaway: Array[MeshInstance3D] = []
 var first_person_only: Array[Node3D] = []
@@ -108,13 +110,22 @@ func _build_furniture() -> void:
 	Geometry.box(self, "Desktop", Vector3(3.12, 0.08, 1.2), Vector3(1.65, 0.94, -3.55), Color("dec39a"))
 	Geometry.box(self, "Chair", Vector3(0.7, 0.6, 0.7), Vector3(1.65, 0.3, -2.45), Color("475e65"), true)
 	Geometry.box(self, "ChairBack", Vector3(0.7, 0.65, 0.12), Vector3(1.65, 0.8, -2.16), Color("475e65"))
-	Geometry.box(self, "PCBase", Vector3(0.42, 0.035, 0.28), Vector3(1.65, 0.995, -3.65), Color("424953"))
-	Geometry.box(self, "PCStand", Vector3(0.07, 0.24, 0.06), Vector3(1.65, 1.12, -3.72), Color("656e7b"))
+	Geometry.box(self, "PCBase", Vector3(0.42, 0.035, 0.26), Vector3(1.65, 0.995, -3.72), Color("424953"))
+	Geometry.box(self, "PCStand", Vector3(0.07, 0.3, 0.05), Vector3(1.65, 1.15, -3.775), Color("656e7b"))
 	Geometry.box(self, "PCMonitor", Vector3(0.96, 0.56, 0.045), Vector3(1.65, 1.47, -3.72), Color("252f3f"))
-	Geometry.box(self, "PCDisplay", Vector3(0.89, 0.49, 0.006), Vector3(1.65, 1.47, -3.693), Color("2564ad"))
-	for dx in [-1, 1]:
-		for dy in [-1, 1]:
-			Geometry.box(self, "WindowsTile", Vector3(0.1, 0.1, 0.003), Vector3(1.65 + dx * 0.058, 1.47 + dy * 0.058, -3.688), Color("badcfb"))
+	# The display is a flat quad the computer draws into (idle: the pixel lock screen).
+	pc_screen = MeshInstance3D.new()
+	pc_screen.name = "PCScreen"
+	pc_screen.mesh = QuadMesh.new()
+	pc_screen.mesh.size = Vector2(0.89, 0.5)
+	pc_screen.position = Vector3(1.65, 1.47, -3.6955)
+	pc_screen.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	var idle := ShaderMaterial.new()
+	idle.shader = preload("res://assets/pixel_screen.gdshader")
+	idle.set_shader_parameter("image", preload("res://assets/windows_lock.png"))
+	pc_screen.material_override = idle
+	add_child(pc_screen)
+	Geometry.box(self, "PCPowerLight", Vector3(0.012, 0.006, 0.004), Vector3(2.07, 1.205, -3.695), Color("7fe0a8"))
 	Geometry.box(self, "PCKeyboard", Vector3(0.64, 0.025, 0.21), Vector3(1.65, 0.994, -3.22), Color("434f62"))
 	Geometry.box(self, "PCMouse", Vector3(0.07, 0.03, 0.12), Vector3(2.1, 1.0, -3.22), Color("667184"))
 	Geometry.box(self, "PCTower", Vector3(0.26, 0.45, 0.48), Vector3(0.78, 1.205, -3.64), Color("334153"))
@@ -124,7 +135,7 @@ func _build_furniture() -> void:
 	Geometry.box(self, "LampStem", Vector3(0.045, 0.5, 0.045), Vector3(0.4, 1.26, -3.7), Color("d9b971"))
 	Geometry.sphere(self, Vector3(0.34, 0.22, 0.34), Vector3(0.4, 1.55, -3.7), Color("f1d4a0"))
 	desk = _interaction("DeskInteraction", "Use study desk PC", "", Vector3(2.3, 1.05, -2.78))
-	desk.activated.connect(func() -> void: hud.open_computer("windows"))
+	desk.activated.connect(func() -> void: hud.open_computer("windows", pc_screen))
 	Geometry.box(self, "Bookshelf", Vector3(1.4, 1.8, 0.65), Vector3(-3.55, 0.9, -3.96), Color("957959"), true)
 	for row in range(3):
 		for index in range(5):

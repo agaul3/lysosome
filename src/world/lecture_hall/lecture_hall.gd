@@ -242,8 +242,9 @@ func _build_interior_shell(depth: float, mid_z: float) -> void:
 
 func _process(_delta: float) -> void:
 	var fade := 0.0
-	if AppState.first_person:
-		fade = 1.0 # Walking the hall in first person, the room is whole.
+	var viewing := get_viewport().get_camera_3d()
+	if AppState.first_person or (is_instance_valid(viewing) and viewing != camera and viewing != lecture_camera):
+		fade = 1.0 # First person, or close in at a laptop: the room is whole.
 	elif is_instance_valid(lecture_camera) and lecture_camera.current:
 		fade = clampf((lecture_camera.blend - 0.6) / 0.3, 0.0, 1.0)
 	for mesh in interior_meshes:

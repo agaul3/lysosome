@@ -158,7 +158,11 @@ func _exit_clear(destination: Vector3) -> bool:
 		excluded.append(body.get_rid())
 	query.exclude = excluded
 	var space := player.get_world_3d().direct_space_state
-	# cast_motion ignores initial overlaps; reject those explicitly.
-	if not space.intersect_shape(query, 1).is_empty():
-		return false
+	# A chair tucked under a table starts its rise inside the table's
+	# clearance; that furniture is the thing being stepped away from, so it
+	# is excluded. The destination itself must still be clear (checked above),
+	# and the sweep must not cross anything else.
+	for hit in space.intersect_shape(query, 8):
+		excluded.append(hit.rid)
+	query.exclude = excluded
 	return space.cast_motion(query)[0] >= 1.0

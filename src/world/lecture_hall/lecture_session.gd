@@ -93,6 +93,9 @@ func _process(_delta: float) -> void:
 		_set_state(State.STARTING)
 		if hall.lecture_view_ready():
 			_begin()
+	elif state == State.STARTING and hall.lecture_view_ready():
+		# Class started while the view was elsewhere (e.g. the laptop was open).
+		_begin()
 
 ## Fast-forwards the academic clock (and the autonomous NPC event, by the
 ## equivalent real time) to the start of class.

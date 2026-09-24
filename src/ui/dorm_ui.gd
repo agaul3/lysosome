@@ -408,9 +408,10 @@ func open_laptop() -> void:
 	laptop_model.with_tray = seat.style == "auditorium"
 	laptop_model.position = Vector3(0, 0.68, -0.62) if seat.style == "auditorium" else seat.laptop_surface
 	seat.add_child(laptop_model)
-	open_computer("macos")
+	open_computer("macos", laptop_model.screen)
 
-func open_computer(os_style := "windows") -> void:
+## Opens a computer on `screen` (the world display it draws onto).
+func open_computer(os_style := "windows", screen: MeshInstance3D = null) -> void:
 	if computer_open or closet_open:
 		return
 	if settings_open:
@@ -420,15 +421,33 @@ func open_computer(os_style := "windows") -> void:
 	player.interaction.enabled = false
 	computer = preload("res://ui/computer/desktop.gd").new()
 	computer.os_style = os_style
+	computer.player = player
+	computer.screen_mesh = screen
 	computer.closed.connect(close_computer)
 	add_child(computer)
+	# The computer shows its own "step away" hint; the walking controls (and
+	# the lecture's Space/E prompts, whose keys now go to the computer) don't apply.
+	help_row.visible = false
+	var lecture_overlay: Variant = get_parent().get("lecture_ui")
+	if lecture_overlay is CanvasLayer:
+		lecture_overlay.visible = false
 	_show_target(null)
 
 func close_computer() -> void:
 	computer_open = false
+	help_row.visible = not player.seating.stand_locked
+	var lecture_overlay: Variant = get_parent().get("lecture_ui")
+	if lecture_overlay is CanvasLayer:
+		lecture_overlay.visible = true
 	if is_instance_valid(laptop_model):
-		laptop_model.queue_free()
+		# The laptop is packed away once the camera has eased back out.
+		var model := laptop_model
 		laptop_model = null
+		var view: Camera3D = computer.camera if is_instance_valid(computer) else null
+		if is_instance_valid(view) and not view.is_queued_for_deletion():
+			view.tree_exited.connect(model.queue_free)
+		else:
+			model.queue_free()
 	player.movement_enabled = true
 	player.interaction.enabled = not player.seating.stand_locked and player.seating.state in [player.seating.State.FREE, player.seating.State.SEATED]
 	_show_target(player.interaction.target if is_instance_valid(player.interaction.target) else null)
