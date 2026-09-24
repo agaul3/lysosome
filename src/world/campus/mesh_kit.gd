@@ -10,6 +10,7 @@ extends RefCounted
 ##   wood   — warm timber soffits and cladding (wood grain shader)
 ##   metal  — satin metal panels, frames and fittings
 ##   paving — ground surfaces (plazas, paths, parking)
+##   tinted — plain tinted, reflective glass for doors (no curtain-wall grid)
 static var _materials := {}
 var tools := {}
 var solids: Array = []
@@ -23,6 +24,13 @@ static func material(kind: String) -> Material:
 			var glass := ShaderMaterial.new()
 			glass.shader = preload("res://assets/glass.gdshader")
 			result = glass
+		"tinted":
+			var tinted := StandardMaterial3D.new()
+			tinted.vertex_color_use_as_albedo = true
+			tinted.metallic = 0.55
+			tinted.metallic_specular = 0.9
+			tinted.roughness = 0.07
+			result = tinted
 		"wood":
 			var wood := ShaderMaterial.new()
 			wood.shader = preload("res://assets/wood.gdshader")
@@ -70,8 +78,8 @@ func solid_box(kind: String, center: Vector3, size: Vector3, color: Color) -> vo
 	box(kind, center, size, color)
 	solid(center, size)
 
-func solid(center: Vector3, size: Vector3) -> void:
-	solids.append([center, size])
+func solid(center: Vector3, size: Vector3, basis := Basis.IDENTITY) -> void:
+	solids.append([center, size, basis])
 
 ## Cylinder between two points (columns, posts, lamp poles, trunks).
 func cylinder(kind: String, a: Vector3, b: Vector3, radius: float, color: Color, segments := 10) -> void:
@@ -116,6 +124,7 @@ func commit(parent: Node3D, label: String, shadows := true) -> MeshInstance3D:
 			shape.shape = BoxShape3D.new()
 			shape.shape.size = entry[1]
 			shape.position = entry[0]
+			shape.basis = entry[2] if entry.size() > 2 else Basis.IDENTITY
 			body.add_child(shape)
 		parent.add_child(body)
 	return instance

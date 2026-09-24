@@ -76,8 +76,8 @@ func menu_tests() -> void:
 	var names: Array = []
 	for index in range(tabs.get_tab_count()):
 		names.append(tabs.get_tab_title(index))
-	check(names == ["Today", "Calendar", "Knowledge", "Settings"], "Knowledge page in the player menu %s" % str(names))
-	tabs.current_tab = 2
+	check(names == ["Overview", "Today", "Calendar", "Map", "Knowledge", "Notes", "Achievements", "Inventory", "Settings"], "Knowledge page in the player menu %s" % str(names))
+	hud.menu.show_page(4)
 	await ticks(3)
 	var panel: Node = hud.knowledge_panel
 	check(panel.summary.text.begins_with("Accuracy ="), "Fresh game explains accuracy before any attempts")
@@ -95,7 +95,7 @@ func menu_tests() -> void:
 	check(shown_match, "Displayed statistics match question history at every level")
 	check(panel.value_labels["Pharmacology/Pharmacodynamics"].text == "67%   2/3", "Pharmacodynamics shows 67% (2/3)")
 	check(panel.summary.text == "Overall: 2 of 3 correct (67%)", "Overall summary matches")
-	check(panel.recent_box.get_child_count() == 3 and panel.recent_box.get_child(0).text.begins_with("Missed"), "Recent answers show the latest result first")
+	check(panel.recent_box.get_child_count() == 3 and panel.recent_box.get_child(0).get_child(1).text.begins_with("Missed"), "Recent answers show the latest result first")
 	check(panel.value_labels["Pharmacology/Pharmacodynamics/Efficacy"].text.begins_with("—"), "Subtopics without attempts stay unattempted")
 	await capture("knowledge")
 	hud.set_settings_open(false)

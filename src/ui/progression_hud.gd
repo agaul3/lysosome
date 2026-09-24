@@ -5,10 +5,11 @@ extends VBoxContainer
 ## - a streak chip that appears only from 10 consecutive correct answers,
 ## - a brief, larger level-up banner with a particle burst and soft flash.
 ## All values come from AcademicSession; nothing here changes progression.
-const KeyFont = preload("res://assets/outfit_medium.tres")
-const BAR_SIZE := Vector2(110, 6)
-const FILL := Color("f0a36f")
-const GOLD := Color("ffd27a")
+const UI = preload("res://ui/style/ui_style.gd")
+const Icon = preload("res://ui/style/icon.gd")
+const BAR_SIZE := Vector2(118, 5)
+const FILL := UI.REWARD
+const GOLD := UI.REWARD
 var card: PanelContainer
 var level_label: Label
 var xp_label: Label
@@ -37,7 +38,8 @@ func _ready() -> void:
 	row.add_theme_constant_override("separation", 8)
 	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	card.add_child(row)
-	level_label = _label(15, GOLD)
+	row.add_child(Icon.new("spark", 15, GOLD))
+	level_label = _label(15, GOLD, "", 600)
 	row.add_child(level_label)
 	var stack := VBoxContainer.new()
 	stack.add_theme_constant_override("separation", 2)
@@ -48,12 +50,16 @@ func _ready() -> void:
 	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	bar.draw.connect(_draw_bar)
 	stack.add_child(bar)
-	xp_label = _label(11, Color("b9d3cf"))
+	xp_label = _label(11, UI.TEXT_MUTED)
 	stack.add_child(xp_label)
 	streak_chip = _card()
 	streak_chip.size_flags_horizontal = Control.SIZE_SHRINK_END
-	streak_label = _label(13, GOLD)
-	streak_chip.add_child(streak_label)
+	var streak_row := HBoxContainer.new()
+	streak_row.add_theme_constant_override("separation", 6)
+	streak_chip.add_child(streak_row)
+	streak_row.add_child(Icon.new("flame", 14, GOLD))
+	streak_label = _label(13, GOLD, "", 600)
+	streak_row.add_child(streak_label)
 	add_child(streak_chip)
 	float_layer = Control.new()
 	float_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -68,25 +74,10 @@ func _ready() -> void:
 	_on_streak(AcademicSession.streak, false)
 
 func _card() -> PanelContainer:
-	var panel := PanelContainer.new()
-	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.06, 0.15, 0.19, 0.72)
-	style.set_corner_radius_all(6)
-	style.content_margin_left = 10
-	style.content_margin_right = 10
-	style.content_margin_top = 4
-	style.content_margin_bottom = 5
-	panel.add_theme_stylebox_override("panel", style)
-	return panel
+	return UI.hud_card()
 
-func _label(font_size: int, color: Color, text := "") -> Label:
-	var label := Label.new()
-	label.text = text
-	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	label.add_theme_font_override("font", KeyFont)
-	label.add_theme_font_size_override("font_size", font_size)
-	label.add_theme_color_override("font_color", color)
+func _label(font_size: int, color: Color, text := "", weight := 500) -> Label:
+	var label := UI.label(text, font_size, color, weight)
 	return label
 
 func _refresh_labels() -> void:
@@ -127,7 +118,7 @@ func _on_xp_changed(before: int, after: int, delta: int, reason: String) -> void
 func _float_value(delta: int) -> void:
 	if delta == 0:
 		return
-	var label := _label(16, Color("bff0cc") if delta > 0 else Color("f6a99a"), ("+%d XP" % delta) if delta > 0 else ("−%d XP" % -delta))
+	var label := _label(16, UI.REWARD if delta > 0 else UI.DANGER, ("+%d XP" % delta) if delta > 0 else ("−%d XP" % -delta), 600)
 	label.add_theme_color_override("font_outline_color", Color("10252d"))
 	label.add_theme_constant_override("outline_size", 5)
 	label.name = "FloatingXP"
@@ -169,8 +160,10 @@ func _build_overlay() -> void:
 	banner = PanelContainer.new()
 	banner.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.07, 0.14, 0.18, 0.92)
-	style.border_color = GOLD
+	style.bg_color = Color(UI.SURFACE, 0.95)
+	style.border_color = Color(GOLD, 0.8)
+	style.shadow_color = Color(0, 0, 0, 0.35)
+	style.shadow_size = 16
 	style.set_border_width_all(2)
 	style.set_corner_radius_all(10)
 	style.content_margin_left = 28
@@ -190,10 +183,10 @@ func _build_overlay() -> void:
 	stack.alignment = BoxContainer.ALIGNMENT_CENTER
 	stack.add_theme_constant_override("separation", 0)
 	banner.add_child(stack)
-	banner_title = _label(34, GOLD, "LEVEL UP")
+	banner_title = UI.label("Level up", 32, GOLD, 700, true)
 	banner_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	stack.add_child(banner_title)
-	banner_levels = _label(18, Color("f1f6f2"))
+	banner_levels = _label(17, UI.TEXT, "", 500)
 	banner_levels.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	stack.add_child(banner_levels)
 	burst = CPUParticles2D.new()
@@ -210,8 +203,8 @@ func _build_overlay() -> void:
 	burst.scale_amount_min = 2.5
 	burst.scale_amount_max = 5.0
 	var ramp := Gradient.new()
-	ramp.set_color(0, Color(1.0, 0.86, 0.5, 1.0))
-	ramp.set_color(1, Color(1.0, 0.6, 0.35, 0.0))
+	ramp.set_color(0, Color(UI.REWARD, 1.0))
+	ramp.set_color(1, Color(UI.ACCENT, 0.0))
 	burst.color_ramp = ramp
 	root.add_child(burst)
 	banner.hide()

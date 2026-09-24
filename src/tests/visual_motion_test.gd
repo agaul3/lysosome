@@ -85,6 +85,10 @@ func sprint_checks() -> void:
 	var visual: Node3D = player.appearance
 	var bindings := InputMap.action_get_events("sprint")
 	check(bindings.any(func(e): return e is InputEventJoypadButton) and not bindings.any(func(e): return e is InputEventKey), "Keyboard sprint is double-tap; controller keeps L3")
+	# Measure on an empty lawn: the ambient dog walker roams this one and
+	# pedestrians use the paths the sprint crosses, so clear them away.
+	for walker in [dorm.dog_walker] + dorm.pedestrians:
+		walker.queue_free()
 	player.position = Vector3(8, 0.05, 4.5)
 	await ticks(3)
 	hold("move_left")

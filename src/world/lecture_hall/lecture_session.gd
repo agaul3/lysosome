@@ -40,7 +40,7 @@ func setup(target_hall: Node3D, target_ui: CanvasLayer, target_slide: Control, v
 	ui.typing_changed.connect(professor.set_speaking)
 	player.seating.state_changed.connect(_on_seating)
 	player.interaction.device_changed.connect(ui.set_controller)
-	hall.lecture_camera.transition_finished.connect(_on_camera_settled)
+	hall.view_settled.connect(_on_view_settled)
 	activity = CompetitiveActivity.new()
 	activity.name = "CompetitiveActivity"
 	add_child(activity)
@@ -73,7 +73,7 @@ func _on_seating(seating_state: int) -> void:
 			return
 		if class_has_started():
 			_set_state(State.STARTING)
-			if hall.lecture_camera.in_lecture_view():
+			if hall.lecture_view_ready():
 				_begin()
 		else:
 			_set_state(State.WAITING)
@@ -84,14 +84,14 @@ func _on_seating(seating_state: int) -> void:
 	elif state == State.COMPLETE and seating_state != player.seating.State.SEATED:
 		ui.hide_all()
 
-func _on_camera_settled(entered: bool) -> void:
-	if entered and state == State.STARTING:
+func _on_view_settled() -> void:
+	if state == State.STARTING:
 		_begin()
 
 func _process(_delta: float) -> void:
 	if state == State.WAITING and class_has_started():
 		_set_state(State.STARTING)
-		if hall.lecture_camera.in_lecture_view():
+		if hall.lecture_view_ready():
 			_begin()
 
 ## Fast-forwards the academic clock (and the autonomous NPC event, by the
@@ -136,7 +136,9 @@ func _unhandled_input(event_input: InputEvent) -> void:
 		advance()
 		get_viewport().set_input_as_handled()
 
-func _on_segment(segment: Dictionary, _index: int) -> void:
+func _on_segment(segment: Dictionary, index: int) -> void:
+	var lecture: String = runner.script_data.id
+	AcademicSession.notes_progress[lecture] = maxi(int(AcademicSession.notes_progress.get(lecture, 0)), index + 1)
 	slide.show_slide(segment.slide, 0)
 	ui.show_topic(runner.progress_label())
 	hall.hud.set_objective("Pharmacodynamics  ·  " + segment.topic)
@@ -200,6 +202,7 @@ func _finish_lecture() -> void:
 	hall.hud.show_message("Class dismissed. Your results are in the schedule menu.", 6.0)
 	hall.hud.schedule_panel.refresh()
 	hall.hud.calendar_panel.refresh()
+	SaveGame.autosave()
 
 func _show_title_slide() -> void:
 	var first: Dictionary = runner.segments()[0]

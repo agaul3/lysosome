@@ -1,4 +1,4 @@
-# Architecture — Milestones 1–9
+# Architecture — Milestones 1–10 (v0.1 slice)
 
 ## Application and scenes
 
@@ -141,6 +141,58 @@ Player sprint: `player.gd` watches movement-action presses in `_unhandled_input`
 `world/campus/campus.gd` assembles the campus from three helpers. `mesh_kit.gd` (MeshKit) merges boxes and cylinders per material kind (facade, glass, wood, metal, paving), with vertex colour, into one `ArrayMesh`, and collects box colliders onto one `StaticBody3D`. `buildings.gd` holds one static builder per building plus `letters()` for relief signage (TextMesh). `flora.gd` builds cached species meshes and places them with `MultiMeshInstance3D`, adding trunk or hedge colliders. Layout constants that other systems depend on live in `data/campus_config.gd`: spawns, door positions, Sam's position (via `npc_route.gd`) and camera bounds. The glass, facade and foliage shaders are in `assets/`.
 
 
+### Ambient campus life
+
+`campus.gd` `_build_ambient_life()` adds scripted background figures. Each is self-contained, reuses the stylized `Appearance` figure, and randomizes its own timing (`rng.randomize()`). None is saved, and the title panorama builds none.
+
+- **`npc/ambient/bench_student.gd`** sits on a bench from `BENCHES`, placed by `BENCH_STUDENTS` (bench index, seat offset, activity, preset). The activity is `lunch`, `reading` or `notes`: props on the figure's bones, and a gesture blend (a bite, a page turn, looking up) on a random timer. `gestures_done` counts completed gestures for the tests.
+- **`npc/ambient/dog_walker.gd`** owns a walker figure, a `dog.gd` rig and a segmented leash.
+  - **Inputs:** `region` (a `Rect2` in world x/z) and `avoid` circles.
+  - **Walker:** wanders between random allowed points.
+  - **Dog:** runs a small mood machine (`Mood`).
+  - **Constraints:** `_constrain_dog()` keeps the dog within `LEASH` of the walker, inside the region and out of the circles.
+  - **Rig:** `dog.gd` only poses itself from `speed`, `sniffing`, `sitting`, `bowing` and `wag_rate`.
+- **`npc/ambient/pedestrian.gd`** walks a waypoint graph (`NODES`/`EDGES`) of the quad paths.
+  - **Position:** its place on the graph is `path_point`; the figure stands `aside` metres to one side.
+  - **Yielding:** near the player it picks a clear side, checked against `obstacles`, i.e. circles for the benches and the planter passed in by the campus. It then walks on in that lane.
+  - **Tests:** `distance_to_paths()` supports them.
+
+The walker, the dog and the pedestrians carry `Student.make_blocker()` capsules on the NPC layer. The blocker must be added after `apply_preset()`, which frees the figure's children. Seated students are covered by the bench collider plus a `SeatedFeetColliders` box per occupied bench.
+
+### First-person view
+
+`AppState.first_person` (session preference) and `view_changed` drive it. `AppState._unhandled_input` handles the `toggle_view` action (Cmd+F / Ctrl+F by autoremap, controller Back) in any world scene. Settings sets it with `set_first_person()`.
+
+**The rig** (`player/first_person.gd`, the player's `FirstPerson` child) owns a top-level perspective camera.
+- **Eyes:** `_physics_process` records the eye point after the player and seating have moved the body. The point is `Appearance.EYE` on the spine; standing, it is blended 45% from a steady height. `_process` interpolates it by `Engine.get_physics_interpolation_fraction()` and applies `yaw`/`pitch`.
+- **Head hiding:** the player's `Appearance.head_parts` go on render layer 20 (`HEAD_LAYER`), which only this camera's cull mask excludes.
+- **Mouse:** captured when `wants_capture()`, i.e. active and `player.movement_enabled`, which the menu clears.
+- **Player hooks:** `Player.world_direction()` uses `view_basis()` while the rig is active, and the body's yaw follows the view.
+- **Seated behaviour:** during the scripted sit and rise the view follows the body. Seated, look is limited to `SEATED_YAW_RANGE` around the seat, and `focus(point)` settles the view.
+- **Interaction:** the rig sets `Interaction.view_forward`, which weights candidates by facing and drops those behind.
+
+**Scenes** connect `AppState.view_changed` to `apply_view(first_person)`.
+- **Dorm and lobby:** restore their `cutaway` wall meshes and show `first_person_only` nodes (ceiling, lights, decor, the lobby's south doors).
+- **Campus:** switches the environment to `BG_SKY`.
+- **Hall A:** keeps its interior shell at full opacity. `_on_view_changed` uses `LectureCamera.show_pose()` / `stop()` when seated. `LectureSession` waits on `hall.lecture_view_ready()` / `view_settled` rather than on the lecture camera.
+
+On arrival, the rig applies the preference deferred, after the scene's own camera has made itself current. In first person the player's `Appearance.head_parts` render as shadow only, so the head's shadow stays.
+
+**Doors and lobby display.** `Buildings.door()` builds glazed entrances with a proud portal and framed leaves; door glass uses MeshKit's `tinted` material, not the curtain-wall shader. `Buildings.classical_door()` serves the Anatomy Hall. The lobby display renders `ui/seminar_flyer.gd` in a SubViewport, and the flyer renders the speaker's headshot in its own `own_world_3d` SubViewport (`SeminarFlyer.build_headshot()`).
+
 ### Knowledge interface (Milestone 9)
 
 `Knowledge` (static) turns the question bank's records and `AcademicSession.topic_statistics` into a discipline → topic → subtopic tree. Paths are `Discipline`, `Discipline/Topic` and `Discipline/Topic/Subtopic`, the same keys `commit_answer` writes. `KnowledgePanel` renders the tree in the player menu and rebuilds it on `answer_recorded` or when shown. `Knowledge.from_history()` recounts from `question_history` for verification. There is no separate mastery store: statistics remain session state until save/load.
+
+
+### UI system, player menu, save/load and transitions (Milestone 10)
+
+**Design system.** `ui/style/ui_style.gd` (static) owns the palette, type scale, font weights and the shared Theme. Every UI root sets `theme = UI.theme()`. Components come from its factories (`label`, `paragraph`, `card`, `hud_card`, `chip`, `box`, `pad_left`). `ui/style/icon.gd` draws the line icons.
+
+**HUD and menu.** `ui/dorm_ui.gd` builds the HUD and owns a `PlayerMenu` (`ui/menu/player_menu.gd`). The menu hosts nine pages in a hidden-tab `TabContainer` (`menu_tabs`), in `PlayerMenu.PAGES` order; the sidebar's `NavButton`s call `show_page`. Pages extend `ui/menu/menu_page.gd` (a scrolling column with `refresh()` and `summary_text()`) and rebuild from live state when shown or when relevant signals fire. The HUD keeps its earlier public fields (`schedule_panel`, `calendar_panel`, `knowledge_panel`, `settings`, `set_settings_open`, and others) so scenes and tests are unaffected. Objectives come from `data/objectives.gd`; map layout comes from `data/campus_map.gd`.
+
+**Save and load.** `SaveGame` serializes AppState, GameClock, AcademicSession and NPCSchedule state into one versioned JSON document. `save()` writes a temp file, validates it, then renames it over the old save. `read()` validates without side effects. `apply()` mutates the autoloads. `AppState.continue_game()` combines read, apply and a transition to the saved scene. `AppState._commit_transition()` autosaves after every successful world arrival, and `LectureSession` autosaves after class.
+
+**Transitions.** `Transition` (CanvasLayer 100) is awaited by `AppState` to cover before `change_scene_to_file` and reveals after `scene_changed`.
+
+**Title.** `start_screen.gd` renders `world/campus/panorama.gd` (a subclass of the campus that builds only scenery) in a SubViewport.

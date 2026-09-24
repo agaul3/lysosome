@@ -4,6 +4,7 @@ extends CanvasLayer
 ## handled by the lecture session; this node only presents.
 signal typing_changed(typing: bool)
 const KeyPrompt = preload("res://ui/key_prompt.gd")
+const UI = preload("res://ui/style/ui_style.gd")
 const CHARACTERS_PER_SECOND := 55.0
 var root: Control
 var card: PanelContainer
@@ -38,19 +39,16 @@ func _ready() -> void:
 	root = Control.new()
 	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var theme := Theme.new()
-	theme.default_font = preload("res://assets/outfit_medium.tres")
-	theme.default_font_size = 15
-	root.theme = theme
+	root.theme = UI.theme()
 	add_child(root)
 	card = _card(Vector2(620, 0))
 	_pin_bottom(card, 620)
 	var stack := VBoxContainer.new()
 	stack.add_theme_constant_override("separation", 2)
 	card.add_child(stack)
-	speaker = _label(12, Color("f0a36f"))
+	speaker = UI.label("", 11, UI.ACCENT, 600, true)
 	stack.add_child(speaker)
-	text = _label(16, Color("f1f6f2"))
+	text = _label(16, UI.TEXT)
 	text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	text.custom_minimum_size = Vector2(596, 44)
 	stack.add_child(text)
@@ -61,7 +59,7 @@ func _ready() -> void:
 	continue_key = KeyPrompt.new()
 	continue_key.key = "E"
 	continue_row.add_child(continue_key)
-	continue_row.add_child(_label(12, Color("b9d3cf"), "Continue"))
+	continue_row.add_child(_label(12, UI.TEXT_MUTED, "Continue"))
 	activity_row = HBoxContainer.new()
 	activity_row.alignment = BoxContainer.ALIGNMENT_END
 	activity_row.add_theme_constant_override("separation", 6)
@@ -71,9 +69,9 @@ func _ready() -> void:
 	var question_stack := VBoxContainer.new()
 	question_stack.add_theme_constant_override("separation", 4)
 	question_card.add_child(question_stack)
-	question_lead = _label(12, Color("f0a36f"))
+	question_lead = UI.label("", 11, UI.ACCENT, 600, true)
 	question_stack.add_child(question_lead)
-	question_prompt = _label(15, Color("f1f6f2"))
+	question_prompt = _label(16, UI.TEXT)
 	question_prompt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	question_prompt.custom_minimum_size.x = 596
 	question_stack.add_child(question_prompt)
@@ -83,13 +81,13 @@ func _ready() -> void:
 		var key := KeyPrompt.new()
 		key.key = str(index + 1)
 		row.add_child(key)
-		var choice := _label(14, Color("d9e6e2"))
+		var choice := _label(15, UI.TEXT_MUTED)
 		choice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		choice.custom_minimum_size.x = 560
 		row.add_child(choice)
 		question_stack.add_child(row)
 		choice_rows.append(row)
-	feedback = _label(14, Color("f1f6f2"))
+	feedback = _label(14, UI.TEXT)
 	feedback.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	feedback.custom_minimum_size.x = 596
 	question_stack.add_child(feedback)
@@ -99,14 +97,14 @@ func _ready() -> void:
 	question_stack.add_child(question_hint)
 	topic_chip = _card(Vector2.ZERO)
 	_pin(topic_chip, 0.5, 0.0, 0.0, 12.0, Control.GROW_DIRECTION_END)
-	topic_label = _label(12, Color("d9e6e2"))
+	topic_label = _label(12, UI.TEXT_MUTED)
 	topic_chip.add_child(topic_label)
 	waiting_card = _card(Vector2.ZERO)
 	_pin_bottom(waiting_card, 0.0)
 	var waiting_stack := VBoxContainer.new()
 	waiting_stack.alignment = BoxContainer.ALIGNMENT_CENTER
 	waiting_card.add_child(waiting_stack)
-	waiting_label = _label(15, Color("f1f6f2"))
+	waiting_label = _label(15, UI.TEXT)
 	waiting_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	waiting_stack.add_child(waiting_label)
 	var keys := HBoxContainer.new()
@@ -116,14 +114,14 @@ func _ready() -> void:
 	wait_key = KeyPrompt.new()
 	wait_key.key = "Space"
 	keys.add_child(wait_key)
-	keys.add_child(_label(13, Color("d9e6e2"), "Wait for class"))
+	keys.add_child(_label(13, UI.TEXT_MUTED, "Wait for class"))
 	var gap := Control.new()
 	gap.custom_minimum_size.x = 12
 	keys.add_child(gap)
 	stand_key = KeyPrompt.new()
 	stand_key.key = "E"
 	keys.add_child(stand_key)
-	keys.add_child(_label(13, Color("d9e6e2"), "Stand up"))
+	keys.add_child(_label(13, UI.TEXT_MUTED, "Stand up"))
 	hide_all()
 
 ## Anchors a panel to one point of the screen with explicit anchors and
@@ -147,24 +145,17 @@ func _card(minimum: Vector2) -> PanelContainer:
 	var panel := PanelContainer.new()
 	panel.custom_minimum_size = minimum
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.05, 0.12, 0.16, 0.82)
-	style.set_corner_radius_all(6)
-	style.content_margin_left = 12
-	style.content_margin_right = 12
-	style.content_margin_top = 6
-	style.content_margin_bottom = 6
+	var style := UI.box(Color(UI.SURFACE, 0.94), 12, Color(1, 1, 1, 0.07), 1, Vector4(18, 12, 18, 12))
+	style.shadow_color = Color(0, 0, 0, 0.3)
+	style.shadow_size = 12
 	panel.add_theme_stylebox_override("panel", style)
 	root.add_child(panel)
 	return panel
 
+## Text roles map onto the shared type scale; colour picks the weight.
 func _label(size: int, color: Color, value := "") -> Label:
-	var label := Label.new()
-	label.text = value
-	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	label.add_theme_font_size_override("font_size", size)
-	label.add_theme_color_override("font_color", color)
-	return label
+	var weight := 600 if color in [UI.ACCENT, UI.REWARD] else 500
+	return UI.label(value, size, color, weight)
 
 func hide_all() -> void:
 	question_card.hide()
@@ -236,7 +227,7 @@ func _set_controls(row: HBoxContainer, controls: Array) -> void:
 		var key := KeyPrompt.new()
 		key.key = control[0]
 		row.add_child(key)
-		row.add_child(_label(12, Color("b9d3cf"), control[1]))
+		row.add_child(_label(12, UI.TEXT_MUTED, control[1]))
 
 ## choices: Array of [key, text] in display order.
 func show_question(prompt: String, choices: Array, lead := "") -> void:
@@ -282,21 +273,21 @@ func show_feedback(correct: bool, chosen_key: String, correct_key: String, expla
 		var label := row.get_child(1) as Label
 		row.modulate.a = 1.0
 		if choice_keys[index] == correct_key:
-			label.add_theme_color_override("font_color", Color("8fe0a8"))
+			label.add_theme_color_override("font_color", UI.SUCCESS)
 		elif choice_keys[index] == chosen_key:
-			label.add_theme_color_override("font_color", Color("f08a7a"))
+			label.add_theme_color_override("font_color", UI.DANGER)
 		else:
 			row.hide()
 	var verdict := ("Correct  +%d XP" % xp) if correct else "Not quite"
 	feedback.text = verdict + " — " + explanation
-	feedback.add_theme_color_override("font_color", Color("bff0cc") if correct else Color("f6c1b8"))
+	feedback.add_theme_color_override("font_color", UI.SUCCESS if correct else UI.DANGER)
 	feedback.show()
 	_set_controls(question_hint, [["E", "Continue"]])
 
 func _highlight() -> void:
 	for index in range(choice_rows.size()):
 		var label := choice_rows[index].get_child(1) as Label
-		label.add_theme_color_override("font_color", Color("ffffff") if index == selected else Color("aebfbd"))
+		label.add_theme_color_override("font_color", UI.TEXT if index == selected else UI.TEXT_MUTED)
 		choice_rows[index].modulate.a = 1.0 if index == selected else 0.85
 
 func finish_typing() -> void:

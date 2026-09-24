@@ -35,19 +35,74 @@ static func letters(parent: Node3D, text: String, position: Vector3, yaw: float,
 	material.roughness = 0.4
 	material.metallic = 0.5
 	instance.material_override = material
+	# Thin relief letters' shadows read as a ghost copy on the wall from eye level.
+	instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	instance.rotation.y = yaw
 	# Letters stand proud of the wall by half their depth plus 1 cm.
 	instance.position = position + Basis(Vector3.UP, yaw) * Vector3(0, 0, depth / 2.0 + 0.01)
 	parent.add_child(instance)
 	return instance
 
-## Glazed double door in a frame, set in a wall facing +Z (rotated by yaw about `center`).
+## Glazed double entrance door set in a wall facing +Z (rotated by yaw about
+## `center`, which sits on the wall face at ground level). A dark metal portal
+## stands proud of the facade, so the door reads apart from any curtain wall
+## around it: jambs, head and a transom bar; two framed leaves (stiles, top
+## rail, deep kick rail) with tinted glass and long pull handles on standoffs;
+## a dark vestibule behind the glass; a steel threshold.
 static func door(kit: MeshKit, center: Vector3, width: float, yaw := 0.0) -> void:
 	var basis := Basis(Vector3.UP, yaw)
-	kit.box("metal", center + basis * Vector3(0, 1.3, 0.04), Vector3(width + 0.3, 2.7, 0.1), DARK, basis)
+	var at := func(local: Vector3) -> Vector3: return center + basis * local
+	var half := width / 2.0
+	var frame := Color("2c3236")
+	var steel := Color("c9d0d3")
+	kit.box("facade", at.call(Vector3(0, 1.4, -0.02)), Vector3(width + 0.1, 2.8, 0.02), Color("20272b"), basis)
 	for side in [-1, 1]:
-		kit.box("glass", center + basis * Vector3(side * width / 4.0, 1.2, 0.1), Vector3(width / 2.0 - 0.08, 2.3, 0.04), Color.WHITE, basis)
-		kit.box("metal", center + basis * Vector3(side * 0.12, 1.1, 0.14), Vector3(0.05, 0.9, 0.04), Color("c9d0d3"), basis)
+		kit.box("metal", at.call(Vector3(side * (half + 0.09), 1.5, 0.1)), Vector3(0.18, 3.0, 0.3), frame, basis)
+	kit.box("metal", at.call(Vector3(0, 2.92, 0.1)), Vector3(width + 0.36, 0.16, 0.3), frame, basis)
+	kit.box("metal", at.call(Vector3(0, 2.5, 0.08)), Vector3(width, 0.07, 0.2), frame, basis)
+	kit.box("tinted", at.call(Vector3(0, 2.69, 0.03)), Vector3(width, 0.3, 0.03), Color("30414a"), basis)
+	for side in [-1, 1]:
+		var leaf_width := half - 0.015
+		var middle: float = side * half / 2.0
+		for edge in [-1, 1]:
+			kit.box("metal", at.call(Vector3(middle + edge * (leaf_width / 2.0 - 0.05), 1.23, 0.07)), Vector3(0.1, 2.46, 0.07), frame, basis)
+		kit.box("metal", at.call(Vector3(middle, 2.41, 0.07)), Vector3(leaf_width, 0.1, 0.07), frame, basis)
+		kit.box("metal", at.call(Vector3(middle, 0.14, 0.07)), Vector3(leaf_width, 0.28, 0.07), frame, basis)
+		kit.box("tinted", at.call(Vector3(middle, 1.32, 0.06)), Vector3(leaf_width - 0.18, 2.0, 0.02), Color("3a4d57"), basis)
+		# Pull handle near the meeting stiles, standing off the glass.
+		var handle_x: float = middle - side * (leaf_width / 2.0 - 0.17)
+		kit.box("metal", at.call(Vector3(handle_x, 1.05, 0.19)), Vector3(0.045, 0.95, 0.045), steel.lightened(0.1), basis)
+		for y in [0.66, 1.44]:
+			kit.box("metal", at.call(Vector3(handle_x, y, 0.14)), Vector3(0.022, 0.022, 0.09), steel, basis)
+	kit.box("metal", at.call(Vector3(0, 0.03, 0.12)), Vector3(width + 0.36, 0.06, 0.32), steel.darkened(0.2), basis)
+
+## Tall panelled timber double door for the classical hall: stone architrave
+## with a cornice, a glazed fanlight with bars, raised panels, brass pulls and
+## kick plates, and a stone threshold. `center` is on the wall face at the sill.
+static func classical_door(kit: MeshKit, center: Vector3, width: float, height: float, trim: Color) -> void:
+	var timber := Color("4d3222")
+	var panel := Color("5d3d29")
+	var brass := Color("c9a25a")
+	var half := width / 2.0
+	kit.box("facade", center + Vector3(0, height / 2.0 + 0.4, 0.01), Vector3(width, height + 0.8, 0.02), Color("2a211c"))
+	for side in [-1, 1]:
+		kit.box("facade", center + Vector3(side * (half + 0.16), (height + 0.8) / 2.0, 0.08), Vector3(0.32, height + 0.8, 0.16), trim)
+	kit.box("facade", center + Vector3(0, height + 0.95, 0.08), Vector3(width + 0.64, 0.3, 0.16), trim)
+	kit.box("facade", center + Vector3(0, height + 1.14, 0.12), Vector3(width + 0.9, 0.1, 0.26), trim.darkened(0.06))
+	# Fanlight over the doors.
+	kit.box("facade", center + Vector3(0, height + 0.04, 0.05), Vector3(width, 0.08, 0.08), timber)
+	kit.box("tinted", center + Vector3(0, height + 0.42, 0.03), Vector3(width - 0.06, 0.68, 0.03), Color("34454e"))
+	for bar in [-0.5, 0.0, 0.5]:
+		kit.box("facade", center + Vector3(bar * half, height + 0.42, 0.05), Vector3(0.04, 0.7, 0.04), timber)
+	for side in [-1, 1]:
+		var middle: float = side * half / 2.0
+		kit.box("facade", center + Vector3(middle, height / 2.0, 0.05), Vector3(half - 0.02, height, 0.07), timber)
+		for block in [[0.18 + 0.45, 0.9], [height - 0.2 - 0.85, 1.3]]:
+			kit.box("facade", center + Vector3(middle, block[0], 0.095), Vector3(half - 0.26, block[1], 0.02), panel)
+			kit.box("facade", center + Vector3(middle, block[0], 0.11), Vector3(half - 0.38, block[1] - 0.12, 0.012), panel.lightened(0.06))
+		kit.box("metal", center + Vector3(middle - side * (half / 2.0 - 0.14), height * 0.45, 0.13), Vector3(0.04, 0.34, 0.04), brass)
+		kit.box("metal", center + Vector3(middle, 0.12, 0.09), Vector3(half - 0.08, 0.2, 0.012), brass)
+	kit.box("facade", center + Vector3(0, -0.02, 0.2), Vector3(width + 0.5, 0.06, 0.4), trim.darkened(0.05))
 
 # --- Learning Center ---------------------------------------------------------------
 
@@ -60,7 +115,10 @@ static func learning_center(parent: Node3D) -> void:
 	# Podium: solid core, glass front and sides, white roof slab.
 	kit.solid(Vector3(0, 2.5, -30.3), Vector3(30, 5, 11.4))
 	kit.box("facade", Vector3(0, 2.5, -30.3), Vector3(29.6, 5, 11.2), STONE)
-	kit.box("glass", Vector3(0, 2.2, front - 0.55), Vector3(29.4, 4.4, 0.1), Color.WHITE)
+	# Front glazing, cut around the entrance doors (their frame stands proud of it).
+	for side in [-1, 1]:
+		kit.box("glass", Vector3(side * 8.35, 2.2, front - 0.55), Vector3(12.7, 4.4, 0.1), Color.WHITE)
+	kit.box("glass", Vector3(0, 3.7, front - 0.55), Vector3(4.0, 1.4, 0.1), Color.WHITE)
 	for side in [-1, 1]:
 		kit.box("glass", Vector3(side * 14.85, 2.2, -30), Vector3(0.1, 4.4, 11), Color.WHITE)
 	kit.box("facade", Vector3(0, 4.7, -30), Vector3(31.2, 0.6, 12.6), WHITE)
@@ -122,7 +180,9 @@ static func residence(parent: Node3D) -> void:
 	kit.box("facade", Vector3(-28, height + 0.35, -1.5), Vector3(12.3, 0.7, 21.3), WHITE)
 	# Ground floor: glazed lobby around the entry, stone plinth elsewhere.
 	kit.box("facade", Vector3(face + 0.04, 0.45, -1.5), Vector3(0.1, 0.9, 21), STONE)
-	kit.box("glass", Vector3(face + 0.06, 1.7, -2), Vector3(0.08, 3.0, 8), Color.WHITE)
+	for span in [[-6.0, -3.4], [-0.6, 2.0]]:
+		kit.box("glass", Vector3(face + 0.06, 1.7, (span[0] + span[1]) / 2.0), Vector3(0.08, 3.0, span[1] - span[0]), Color.WHITE)
+	kit.box("glass", Vector3(face + 0.06, 3.1, -2), Vector3(0.08, 0.2, 2.8), Color.WHITE)
 	door(kit, Vector3(face + 0.08, 0, -2), 2.4, PI / 2)
 	kit.box("facade", Vector3(face + 1.6, 3.3, -2), Vector3(3.2, 0.3, 8.6), WHITE)
 	kit.box("wood", Vector3(face + 1.6, 3.12, -2), Vector3(3.0, 0.05, 8.3), Color.WHITE)
@@ -137,6 +197,10 @@ static func residence(parent: Node3D) -> void:
 		for index in range(4):
 			var x := -32.5 + index * 3.0
 			_window(kit, Vector3(x, y, 9.0), 0.0, index % 2 == 0)
+			# The north end faces the Anatomy Hall lawn.
+			_window(kit, Vector3(x, y, -12.0), PI, index % 2 == 1)
+		for index in range(7):
+			_window(kit, Vector3(-34.0, y, -9.5 + index * 2.9), -PI / 2, index % 3 == 2)
 	# South end of the east face: projecting grey frame with full-height glazing.
 	kit.box("facade", Vector3(face + 0.45, height / 2.0 + 1.7, 6.8), Vector3(0.9, height - 3.4, 4.4), GREY)
 	kit.box("glass", Vector3(face + 0.92, height / 2.0 + 1.7, 6.8), Vector3(0.06, height - 3.8, 3.8), Color.WHITE)
@@ -144,9 +208,10 @@ static func residence(parent: Node3D) -> void:
 		kit.box("facade", Vector3(face + 0.98, level * storey + 0.1, 6.8), Vector3(0.1, 0.18, 4.0), GREY.darkened(0.2))
 	# Red accent column at the north-east corner, like a stair core.
 	kit.box("facade", Vector3(face + 0.3, height / 2.0 + 0.3, -11.4), Vector3(0.7, height + 0.6, 1.3), RED)
-	# Roof: parapet cap and a row of solar panels.
+	# Roof: parapet cap and a row of solar panels, set back from every edge so
+	# none overhangs the facade.
 	for index in range(6):
-		kit.box("metal", Vector3(-30.5 + index * 1.6, height + 0.95, -6), Vector3(1.4, 0.06, 2.2), Color("27394a"), Basis(Vector3.RIGHT, -0.3))
+		kit.box("metal", Vector3(-32.4 + index * 1.5, height + 0.95, -6), Vector3(1.35, 0.06, 2.2), Color("27394a"), Basis(Vector3.RIGHT, -0.3))
 	kit.commit(parent, "CedarResidence")
 
 ## A punched window: recessed glass, dark reveals, a sill and optionally an orange fin.
@@ -217,19 +282,53 @@ static func anatomy_hall(parent: Node3D) -> void:
 			kit.box("glass", Vector3(x, y, front + 0.03), Vector3(1.1, 2.3, 0.04), Color.WHITE)
 			kit.box("facade", Vector3(x, y - 1.25, front + 0.1), Vector3(1.4, 0.14, 0.2), trim)
 			kit.box("facade", Vector3(x, y + 1.3, front + 0.1), Vector3(1.4, 0.2, 0.2), trim)
-	# Portico: steps, six columns, entablature and pediment.
+	# Tall windows on the side walls too (both are seen from the lawns).
+	for level in range(3):
+		for index in range(4):
+			var z := -35.4 + index * 3.1
+			for side in [[-19.97, PI / 2], [-38.03, -PI / 2]]:
+				_classical_window(kit, Vector3(side[0], 3.2 + level * 3.6, z), side[1], trim)
+	# Portico: a raised stone floor reached by three steps across its width
+	# (colliding as one gentle ramp), handrails, six columns with a wide central
+	# bay, entablature and pediment.
+	var cx := -29.0
+	var deck_top := 0.6
+	var deck_front := front + 2.2
+	kit.box("facade", Vector3(cx, deck_top / 2.0, (front + deck_front) / 2.0), Vector3(9.8, deck_top, deck_front - front), trim)
+	# The floor's collider stops where the ramp reaches its height, so there is no lip.
+	kit.solid(Vector3(cx, deck_top / 2.0, (front + deck_front - 0.17) / 2.0), Vector3(9.8, deck_top, deck_front - 0.17 - front))
+	kit.box("facade", Vector3(cx, deck_top + 0.005, (front + deck_front) / 2.0), Vector3(9.6, 0.01, deck_front - front - 0.2), stone)
 	for step in range(3):
-		kit.solid_box("facade", Vector3(-29, 0.1 + step * 0.2, front + 2.6 - step * 0.5), Vector3(9.6 - step * 0.4, 0.2, 1.4), trim)
-	for index in range(6):
-		var x := -32.75 + index * 1.5
-		kit.cylinder("facade", Vector3(x, 0.6, front + 1.6), Vector3(x, 8.2, front + 1.6), 0.32, stone, 14)
-		kit.box("facade", Vector3(x, 8.3, front + 1.6), Vector3(0.85, 0.22, 0.85), trim)
-		kit.solid(Vector3(x, 3, front + 1.6), Vector3(0.7, 6, 0.7))
-	kit.box("facade", Vector3(-29, 8.8, front + 1.3), Vector3(9.4, 0.9, 2.6), trim)
-	kit.box("facade", Vector3(-29, 9.9, front + 1.3), Vector3(9.4, 1.4, 2.4), stone, Basis(Vector3.BACK, 0.0).scaled(Vector3(1, 1, 1)))
-	door(kit, Vector3(-29, 0.6, front + 0.02), 2.6)
+		var top := 0.15 * (step + 1)
+		var tread_front := deck_front + (3 - step) * 0.34
+		kit.box("facade", Vector3(cx, top / 2.0, tread_front - 0.17), Vector3(9.8 + (3 - step) * 0.2, top, 0.34), trim if step % 2 == 0 else trim.lightened(0.04))
+	var slope := atan2(deck_top, 1.36)
+	var ramp_basis := Basis(Vector3.RIGHT, slope)
+	var ramp_top := Vector3(cx, deck_top / 2.0, deck_front + 0.51)
+	kit.solid(ramp_top - ramp_basis.y * 0.05, Vector3(10.2, 0.1, sqrt(deck_top * deck_top + 1.36 * 1.36)), ramp_basis)
+	for x in [cx - 4.7, cx + 4.7]:
+		for post in [[deck_front + 1.2, 0.0], [deck_front - 0.1, deck_top]]:
+			kit.cylinder("metal", Vector3(x, post[1], post[0]), Vector3(x, post[1] + 0.95, post[0]), 0.025, DARK)
+		kit.cylinder("metal", Vector3(x, 0.95, deck_front + 1.2), Vector3(x, deck_top + 0.95, deck_front - 0.1), 0.028, DARK)
+	for offset in [-3.9, -2.6, -1.3, 1.3, 2.6, 3.9]:
+		var x: float = cx + offset
+		kit.box("facade", Vector3(x, deck_top + 0.1, front + 1.7), Vector3(0.82, 0.2, 0.82), trim)
+		kit.cylinder("facade", Vector3(x, deck_top + 0.2, front + 1.7), Vector3(x, 8.2, front + 1.7), 0.32, stone, 14)
+		kit.box("facade", Vector3(x, 8.3, front + 1.7), Vector3(0.85, 0.22, 0.85), trim)
+		kit.solid(Vector3(x, 3, front + 1.7), Vector3(0.7, 6, 0.7))
+	kit.box("facade", Vector3(cx, 8.8, front + 1.3), Vector3(9.4, 0.9, 2.6), trim)
+	kit.box("facade", Vector3(cx, 9.9, front + 1.3), Vector3(9.4, 1.4, 2.4), stone)
+	classical_door(kit, Vector3(cx, deck_top, front), 2.0, 3.0, trim)
 	kit.commit(parent, "AnatomyHall")
 	letters(parent, "ANATOMY HALL", Vector3(-29, 8.8, front + 2.6), 0.0, 0.5, Color("8a7f6c"), 0.04)
+
+## A tall sash window with a stone sill and head, in a wall facing +Z after `yaw`.
+static func _classical_window(kit: MeshKit, center: Vector3, yaw: float, trim: Color) -> void:
+	var basis := Basis(Vector3.UP, yaw)
+	kit.box("glass", center + basis * Vector3(0, 0, 0.0), Vector3(1.1, 2.3, 0.04), Color.WHITE, basis)
+	kit.box("facade", center + basis * Vector3(0, 0, 0.03), Vector3(1.1, 0.05, 0.03), trim, basis)
+	kit.box("facade", center + basis * Vector3(0, -1.25, 0.08), Vector3(1.4, 0.14, 0.2), trim, basis)
+	kit.box("facade", center + basis * Vector3(0, 1.3, 0.08), Vector3(1.4, 0.2, 0.2), trim, basis)
 
 # --- Café pavilion -------------------------------------------------------------------
 

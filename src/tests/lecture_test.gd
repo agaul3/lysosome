@@ -190,7 +190,7 @@ func hall_tests() -> void:
 	await ticks(2)
 	check(session.state == session.State.COMPLETE and academics.lectures_completed.has("pharmacodynamics_01"), "Lecture completion is recorded")
 	check(not player.seating.stand_locked and hall.hud.help_row.visible and not ui.card.visible, "Seat unlocks and exploration resumes after the summary")
-	check(hall.hud.schedule_panel.body.text.contains("Lecture complete • 10/12 correct"), "Schedule shows the lecture result")
+	check(hall.hud.schedule_panel.summary_text().contains("Lecture complete • 10/12 correct"), "Schedule shows the lecture result")
 	check(hall.hud.objective_text.contains("10/12"), "HUD objective shows the result")
 	await ticks(3)
 	check(hall.hud.message.text.contains("Class dismissed") and hall.hud.prompt.text == "Stand up" and hall.hud.prompt_row.visible, "Closing message with a visible stand-up prompt")

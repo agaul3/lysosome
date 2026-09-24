@@ -21,6 +21,8 @@ var streak := 0
 var best_streak := 0
 ## Lecture id -> summary {correct, attempted, accuracy, xp} once completed this session.
 var lectures_completed: Dictionary = {}
+## Lecture id -> number of segments reached (lecture notes fill in as class goes).
+var notes_progress: Dictionary = {}
 
 func reset() -> void:
 	attendance.clear()
@@ -30,6 +32,7 @@ func reset() -> void:
 	attempted = 0
 	correct = 0
 	lectures_completed.clear()
+	notes_progress.clear()
 	level = 1
 	streak = 0
 	best_streak = 0

@@ -4,7 +4,232 @@
 
 **Project:** Godot 4.7.2, Compatibility renderer. Open `src/project.godot`. The authoritative product requirements are in `src/docs/design/medical_school_rpg_spec.md` (also snapshotted as `src/PROJECT_SPEC.md`). Run-specific instructions live in `src/docs/prompts/` and `src/docs/development/`. User instructions in the current task take precedence over this handoff.
 
-**Current state:** Milestones 1–6 are implemented and committed. Milestones 1–9 are complete. Milestone 10 (UI + polish, including save/load) is next. The more recent visual, room, and UI improvements below sit on top of Milestones 1–6. (This note originally said the work was uncommitted; it has since been committed — see the 2026-09-23 documentation entry above.)
+**Current state:** Milestones 1–6 are implemented and committed. Milestones 1–10 are complete: the v0.1 vertical slice is feature-complete per the spec. Remaining work is human medical review and any new scope from the user. The more recent visual, room, and UI improvements below sit on top of Milestones 1–6. (This note originally said the work was uncommitted; it has since been committed — see the 2026-09-23 documentation entry above.)
+
+## 2026-09-23 18:55 PDT — First-person review fixes: head shadow, real doors, Anatomy Hall entrance, lobby, glitches
+
+The user reviewed the world in first person and asked for these fixes before committing and pushing.
+
+**Head shadow.** In first person the player's head and hair now render as shadow only (`SHADOWS_ONLY`) instead of being culled from the camera, which had also removed them from the shadow. The whole shadow, head included, falls on the ground. Third person restores the head.
+
+**Doors.** `Buildings.door()` is rebuilt as a real entrance assembly and used by the Learning Center, the residence, the Medical Center and the café:
+- a dark metal portal standing 0.3 m proud of the facade (jambs, head, transom bar and a tinted transom light);
+- two framed leaves (stiles, top rail, deep kick rail);
+- long steel pull handles on standoffs, and a steel threshold;
+- a dark vestibule behind.
+
+The leaf glass uses a new plain, reflective `tinted` MeshKit material, because the curtain-wall shader painted its mullion grid onto the doors. The curtain-wall glass of the Learning Center and the residence is cut back around the doors. The shrub in front of the Medical Center doors has been moved.
+
+**Anatomy Hall entrance** (accessible, not yet interactive):
+- **Portico:** a raised stone floor with three steps across its width. They collide as one gentle ramp, and the floor's collider starts where the ramp reaches full height, so there is no lip.
+- **Columns and handrails:** handrails at both ends; the columns are respaced for a 2 m clear central bay.
+- **Doors:** tall panelled timber double doors (`Buildings.classical_door()`) in a stone architrave, with a glazed fanlight, brass pulls and kick plates.
+- **Approach:** a paved apron leads to the steps.
+- **Test:** walking up with real input reaches the doors.
+
+**Blank walls and other glitches seen at eye level.**
+- **Windows:** added to the residence's north and west faces and to both side walls of the Anatomy Hall.
+- **Solar panels:** the residence's panels no longer overhang the roof edge; that overhang was the black wedge seen from below.
+- **World edge:** the ground now extends to ±280 m, and first person adds distance haze (depth fog in the horizon colour) so its edge never shows.
+- **Shadows:** first person uses a shorter shadow range with soft edges, so near shadows are no longer jagged.
+- **Flowers:** the flower row laid straight on the residence forecourt paving is removed. The Medical Center's flowers now sit in a raised stone planter.
+
+**Campus directory and bench.**
+- **Directory:** now a double-sided pylon with a campus plan (lawns, buildings, a "you are here" dot, a legend) on both faces, mirrored so each face reads north-up. Its sign fits within the pylon; it used to overhang. Its interaction point is on the north side, facing the residence entrance and the path.
+- **Bench:** the bench beside it now faces the same way.
+- **Tests:** the campus and acceptance tests read the directory from the north.
+
+**Learning Center lobby.**
+- **Feature wall:** the walnut slats leave a clean bay, so none cross the screen.
+- **Display:** a slim wall-mounted display on a bracket shows a research seminar flyer (`ui/seminar_flyer.gd`, rendered live in a SubViewport):
+  - Department of Anatomy & Cell Biology, a "Research Seminar" tab and Dr. Nyugen's studio headshot;
+  - the talk title *On-Chip Neural Induction Enhances Neural Stem Cell Commitment: Advancing a Pipeline for iPSC-Based Therapies*;
+  - 10:00 PM, Monday, September 21, 2026; Anatomy Building, Room R1023;
+  - faint cell-lattice, neural-network and microchip motifs, and a footer band.
+- **Headshot:** a live render of a new non-selectable faculty look, `nyugen`, dressed in a charcoal blazer, shirt and tie with thin-framed glasses, in a small studio with key and halo lights.
+- **Bookcases:** two free-standing double-sided oak bookcases, `LoungeBookshelf` and `LoungeBookshelfEast`. Each has end panels, a top, a recessed plinth, a back panel and five shelves per side. The books vary in size and colour, with gaps, leaning volumes, lying stacks and title bands.
+- **Reception:** the monitor now faces the staff side of the counter, with a lit screen, a keyboard, a mouse and an office chair behind the desk.
+
+**Hall A.**
+- **Right wall:** timber panelling now runs its full length, as on the left.
+- **Back wall:** fabric acoustic panels.
+- **Ceiling:** lighter. All of these fade in with the interior shell.
+
+**Tests:** `first_person_test.gd` now has 58 checks:
+- the head casts its shadow;
+- haze on and off;
+- the directory and bench facing;
+- climbing to the Anatomy Hall doors;
+- the flyer and headshot, with no slats across the display;
+- both bookcases;
+- the reception screen on the staff side.
+
+**Verification:**
+- **Tests:** foundation 54, dorm 67, campus 40, NPC 37, academic 77, visual motion 23, room polish 26, seating 147, lecture 118, progression 34, knowledge 17, save 37, UI 60, acceptance 47, ambient 30, first person 58 — all passing (872 checks).
+- **First-person captures inspected:** the shadow in four directions, the directory from both sides, the residence door and roof, the Learning Center, Medical Center and café doors, the Anatomy Hall front, side, steps and doors (reached on foot), the world edge, the lobby display, bookcases and reception from both sides, and Hall A's walls.
+- **Third-person captures inspected:** the Anatomy Hall and residence area, and the lobby.
+- Import and `git diff --check` are clean.
+
+## 2026-09-23 18:00 PDT — First-person view (Settings toggle, Cmd+F)
+
+User request: an immersive first-person perspective alongside the default third person, toggled in Settings or with Cmd+F (press again to return). Milestone 10, the courtyard life and this change set are still uncommitted.
+
+**Switching.**
+- `AppState.first_person` is the session preference, and `view_changed` announces changes. Third person remains the default.
+- **Ways to switch:**
+  - Cmd+F on macOS, Ctrl+F elsewhere: the new `toggle_view` action uses command-or-control autoremap, and plain F does nothing;
+  - the controller's View/Back button;
+  - the new "First-person view" switch in Settings (title screen and player menu), which stays in sync with the keys.
+- **Also in Settings:** a look-sensitivity slider (25–250%). The controls reference lists Camera view and Look.
+- **HUD:** a short "First-person view" / "Third-person view" notice; a ⌘F Camera keycap in the controls hint (the ⌘ is drawn as a vector, because Outfit has no ⌘ glyph); a small centre dot while walking in first person.
+
+**The view** (`player/first_person.gd`, a rig on the player).
+- **Camera:** placed at the eyes (1.5 m, at the front of the face). It follows the head bone with the walk bob softened to 45%, and positions are interpolated between physics ticks for smooth motion.
+- **Your own body:** your head is on render layer 20, which only this camera leaves out. Looking down shows your shirt, legs and shoes, and your shadow stays on the ground. The see-through silhouette is off in this view.
+- **Looking and moving:**
+  - the mouse looks, captured while no menu is open; opening the menu (Tab/Esc) frees it;
+  - the right stick also looks;
+  - W/A/S/D move relative to the view, strafing without turning, and the body faces where you look;
+  - double-tap sprint works as before.
+- **Interaction:** prefers what you are looking at and ignores what is behind you. In third person it is unchanged: the nearest visible target.
+- **Sitting and standing:** the view turns with the body and lowers as you sit. Seated, you can look about 110° either way. In Hall A the view settles on the lecture screen.
+
+**Scenes.**
+- **Dorm and lobby:** the walls cut away for the overhead camera stand at full height, and a ceiling appears.
+  - The dorm adds a room light, plus a framed print and a round clock on its south wall.
+  - The lobby adds ceiling light panels, a fill light and glazed exit doors with daylight beyond.
+  - None of these cast shadows, so the sunlight matches third person.
+- **Campus:** shows a daylight sky gradient (`ProceduralSkyMaterial`, following the clock) instead of the flat backdrop; ambient light is unchanged. Arrivals now face out of the door they came through (`Config.SPAWN_YAWS`).
+- **Relief lettering:** no longer casts shadows; at eye level the shadow looked like a ghost copy of the text.
+- **Hall A:**
+  - the ceiling and near walls stay solid in first person;
+  - seated, the view stays first person instead of handing over to the lecture camera;
+  - class begins from the first-person seat (`lecture_view_ready()` and `view_settled` replace the session's direct lecture-camera checks);
+  - Cmd+F while seated snaps between the first-person seat view and the over-the-shoulder lecture camera, mid-lecture included (`LectureCamera.show_pose()` / `stop()`).
+
+**Tests:** new `first_person_test.gd` (50 checks). It covers:
+- toggling by Cmd+F, plain F, the View button and Settings, all kept in sync;
+- camera and head hiding, eye height, and the silhouette;
+- mouse, stick and sensitivity;
+- view-relative walking, strafing and sprint, and the body facing the view;
+- interaction by gaze;
+- the menu freeing the mouse;
+- whole rooms, the campus sky and arrival facing;
+- the lobby doors;
+- Hall A: solid shell, sitting, lowered eyes, settling on the screen, look limits, the lecture starting, and switching views mid-lecture.
+
+Graphical captures of the dorm (ahead, the door, behind, looking down, walking), the campus (spawn, the quad, the dog lawn, the Learning Center), the lobby, and Hall A (walking, seated in first person, switched to third person and back) were inspected.
+
+**Verification:** foundation 54, dorm 67, campus 40, NPC 37, academic 77, visual motion 23, room polish 26, seating 147, lecture 118, progression 34, knowledge 17, save 37, UI 60, acceptance 47, ambient 30, first person 50 — all passing (864 checks). Third-person behaviour is unchanged by the existing suites. Import and `git diff --check` are clean.
+
+## 2026-09-23 13:25 PDT — Courtyard life: students on benches, a dog walker, strolling students
+
+User request: add benches to the courtyard with students eating lunch, reading or taking notes, and someone walking a dog on a leash, both moving at random within a defined grassy area, so the world feels more alive and random. Milestone 10 and this change set are still uncommitted.
+
+**Benches.**
+- Six new benches bring the total to 13: two on the north perimeter walk at (±8, −13.9), and four on the round plaza's diagonals, facing the planter.
+- `_bench()` is rebuilt at a real seat height: the slats top out at about 0.30 m, matching the seated pose.
+- Each bench has a rotated collider. `MeshKit.solid()` now accepts a basis.
+
+**Students on benches** (`npc/ambient/bench_student.gd`). Nine students sit on seven benches, set by `BENCH_STUDENTS` in `campus.gd`. They use the existing stylized figures.
+- **Lunch:** a sandwich in hand with a bite now and then; a lunch box and a drink on the bench beside them.
+- **Reading:** an open book held in both hands, with the occasional page turn.
+- **Notes:** a notebook on the lap; the pen writes in bursts, and they look up to think.
+
+Each student has their own random timing and a slow glance. Their knees and feet are solid (`SeatedFeetColliders`).
+
+**Dog walker** (`npc/ambient/dog_walker.gd`, `npc/ambient/dog.gd`) on the quad's south-east lawn (`DOG_LAWN`).
+- **Walker:** strolls to random points and pauses. While paused, the walker faces the dog, and also waits while the dog is sniffing at the end of the leash.
+- **Dog:** a procedural dog in one of four random coats. It switches between random moods: trotting to a spot, sniffing, zooming in circles round the walker, play-bowing (always followed by a zoom) and sitting. It has a diagonal trot, a wagging tail and head movement.
+- **Leash:** 2.6 m, sagging from the walker's hand to the collar. The dog can never pull past it.
+- **Bounds:** both stay on the lawn and clear of the bench on its edge, and both are solid.
+
+**Strolling students** (`npc/ambient/pedestrian.gd`). Three students walk the quad's path network, picking random junctions and sometimes stopping to check their phone.
+- **Making way:** when the player is in their way, they step to a clear side (never into a bench or the planter), walk on, then drift back to the middle of the path. With no clear side, they wait.
+- They are solid.
+
+The title-screen panorama doesn't build any of this.
+
+**Found while testing:**
+- `Appearance.apply_preset()` frees the figure's children, so an NPC's blocker must be added after its preset. Pedestrians had silently lost theirs; they now add it afterwards.
+- Pushing the dog out of the bench's keep-clear circle could stretch the leash slightly. The two constraints now alternate, with the leash taking priority. A 200,000-frame stress run across ten seeds stayed within 1 mm of both limits.
+
+**Tests:**
+- New `ambient_test.gd` (30 checks) covers:
+  - placement, seat height, facing and props for all three activities;
+  - gestures on independent timings;
+  - the plaza benches facing the planter;
+  - a minute of the dog walker, checking lawn bounds, bench clearance, leash length, attachment and sag, random targets and at least three moods;
+  - pedestrians keeping to the paths, stepping aside for the player, passing without contact and returning to the centre;
+  - solidity of all walking figures.
+- `visual_motion_test.gd` now removes the dog walker and pedestrians before its sprint measurements, which run on the dog's lawn.
+
+**Verification:** foundation 54, dorm 67, campus 40, NPC 37, academic 77, visual motion 23, room polish 26, seating 147, lecture 118, progression 34, knowledge 17, save 37, UI 60, acceptance 47, ambient 30 — all passing (814 checks). The ambient test ran five times. One run before the leash fix exposed that edge case; the run after the fix passed, alongside the stress run. Graphical captures of the quad, the bench pairs, the plaza benches, the dog in several moods and a pedestrian sidestep were inspected. The campus holds about 60 FPS with the added figures.
+
+**Note:** test scripts share one test save slot (`user://savegame_test.json`, cleared when each script starts). Run them one at a time: a `save_test` run overlapping another script fails.
+
+## 2026-09-23 12:43 PDT — Milestone 10: UI + polish, save/load, full-slice acceptance
+
+Committed and pushed the campus redesign and Milestone 9 first (`bf423c9`).
+
+**Design system (user brief: modern learning platform × polished RPG).** `ui/style/ui_style.gd` defines the palette, type scale, component styles and the shared Theme (with default, primary, navigation, card and ghost buttons). Its rules:
+- ink surfaces;
+- a single teal accent for interaction and navigation;
+- gold only for progression;
+- Outfit at four weights;
+- a focus ring offset outside buttons.
+
+`ui/style/icon.gd` is a 22-glyph vector line-icon set. Every screen now uses these.
+
+**Title screen** (`ui/start_screen.gd`).
+- **Backdrop:** a live campus panorama in its own world (`world/campus/panorama.gd` extends the campus and reuses its builders), with an ink gradient behind a clean menu column.
+- **Buttons:** Continue appears when a valid save exists and shows the character, level, location and game time. New Game asks for confirmation before replacing a save. Settings and Quit follow.
+- **Footer:** navigation hints.
+- **Character setup** (`ui/character_selection.gd`): preset cards with swatches, and a turntable preview on a plinth.
+
+**HUD** (`ui/dorm_ui.gd`, same public API):
+- a location and objective card with a pin icon;
+- the level/XP card (spark icon, "Lvl");
+- a clock card with the date above the time;
+- the unboxed prompt, message card and controls hint.
+
+The objective comes from the new `data/objectives.gd`, so every location tells a first-time player what to do next, including a countdown to class and results guidance afterwards.
+
+**Player menu** (`ui/menu/`, spec §32).
+- **Layout:** a centred panel with a sidebar (student identity, level and XP bar, nine sections with icons) and a page header. It opens on the Overview with a soft cue, supports arrow-key and controller navigation, and Tab closes it. The world keeps running behind it.
+- **Pages:**
+  - **Overview:** greeting, objective, progress ring, next class with countdown, a knowledge snapshot, and save status with "Save now".
+  - **Today:** timeline card with status chips and the result.
+  - **Calendar:** month grid with today and event markers, plus the term list.
+  - **Campus Map:** plan view from `data/campus_map.gd`, with a live position marker on campus or the containing building indoors, and the class destination.
+  - **Knowledge:** headline stats, subject tree with bars, recent answers.
+  - **Lecture Notes:** slide key points for each section reached, tracked in `AcademicSession.notes_progress`.
+  - **Achievements:** a preview of six badges derived from existing progress.
+  - **Inventory:** a preview.
+  - **Settings:** audio, display, a controls reference, and "Save now" / "Save and return to title".
+- **Tests:** pages expose `summary_text()` for tests and accessibility; the tests now use it.
+
+**Save system** (`autoload/save_game.gd`, spec §35).
+- **Slot and contents:** one versioned JSON slot in `user://`. It holds the character, XP and level, question history, counts, topic statistics, streaks, game time, location (scene and campus entry), lecture completion, notes, attendance (lateness) and the NPC event (`NPCSchedule.snapshot()` / `restore()`).
+- **Writing:** atomic (temp file, re-read and validated, then renamed).
+- **Loading:** fully validated before anything is applied (version, character, location, time, counts, NPC state). Numbers are normalized exactly, so timestamps like `…733.5` survive.
+- **When it saves:** automatically after every scene arrival and when class ends; manual saves from the Overview or Settings.
+- **Resuming:** `AppState.continue_game()` resumes at the saved location. Tests use a separate slot that is cleared per run.
+
+**Other polish.**
+- **Transitions:** fade to ink between scenes (`autoload/transition.gd`).
+- **UI sounds:** soft focus, confirm and open/close cues (`audio/sfx/ui_*.wav`, original). In headless runs Sfx records requests without starting playback, because the dummy driver leaks playbacks.
+- **Player x-ray:** a stencil x-ray silhouette when scenery hides the player, turned off while seated. A shade tree that hid the residence-door spawn was moved.
+- **Lobby:** rebuilt to match the modern Learning Center — slate floor, warm walls, a walnut slat feature wall with relief "LEARNING CENTER" and a class info screen, glazed Hall A doors with push bars and relief lettering, a white and walnut reception desk, a charcoal lounge and coffee table, filmic tone mapping.
+- **Lecture overlay:** restyled to the design system.
+- **Removed:** `ui/schedule_panel.gd` and `ui/knowledge_panel.gd`, superseded by the menu pages.
+
+**Tests:**
+- New `save_test.gd` (37 checks): round trip of every persisted field, no duplicate XP or lateness after a reload, seven kinds of damaged file, and resuming from the title.
+- New `ui_test.gd` (60 checks).
+- New `acceptance_test.gd` (47 checks): the spec's full-slice test end to end with real inputs, from launch to reload.
+- Existing tests were updated for the new menu, confirm dialog and text APIs.
+- The acceptance record is `src/docs/development/MILESTONE_10_ACCEPTANCE.md`.
 
 ## 2026-09-23 11:45 PDT — Milestone 9: Knowledge interface; HUD tweaks
 
@@ -261,5 +486,5 @@ Committed the previous change set first (`a20e234`).
 
 1. Read the product spec and the relevant milestone/run document before beginning another milestone. Read this file from top to bottom for the current architecture and user preferences.
 2. Inspect `git status --short` before editing and preserve any uncommitted work you find.
-3. Run tests with `/Applications/Godot.app/Contents/MacOS/Godot --headless --path src --script res://tests/<suite>.gd`. Existing suites are `foundation_test.gd`, `dorm_test.gd`, `campus_test.gd`, `npc_test.gd`, `academic_test.gd`, `visual_motion_test.gd`, `room_polish_test.gd`, `seating_test.gd`, `lecture_test.gd`, `progression_test.gd`, and `knowledge_test.gd`. Use `--path src --editor --import --quit` to validate import. Run graphical capture when visual behavior changes.
+3. Run tests with `/Applications/Godot.app/Contents/MacOS/Godot --headless --path src --script res://tests/<suite>.gd`. Existing suites are `foundation_test.gd`, `dorm_test.gd`, `campus_test.gd`, `npc_test.gd`, `academic_test.gd`, `visual_motion_test.gd`, `room_polish_test.gd`, `seating_test.gd`, `lecture_test.gd`, `progression_test.gd`, `knowledge_test.gd`, `save_test.gd`, `ui_test.gd`, and `acceptance_test.gd`. Use `--path src --editor --import --quit` to validate import. Run graphical capture when visual behavior changes.
 4. Update this file with a new timestamped section at the top for each future change set. Preserve the user's preferences: plain floor surfaces, subtle wood grain, a small HUD with unboxed keycap prompts, physically plausible character motion around furniture, and the UIC-style raked auditorium for Hall A.

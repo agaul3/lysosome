@@ -56,6 +56,8 @@ const DOOR_Z := -6.2
 var player: CharacterBody3D
 var camera: Camera3D
 var lecture_camera: Camera3D
+## The seated view is ready for class (the lecture camera settled, or first person seated).
+signal view_settled
 var hud: CanvasLayer
 var exit_door: Node3D
 var actor: Node3D
@@ -120,9 +122,11 @@ func _ready() -> void:
 	lecture_camera.name = "LectureCamera"
 	add_child(lecture_camera)
 	player.seating.state_changed.connect(_on_seating_state)
+	lecture_camera.transition_finished.connect(func(entered: bool) -> void:
+		if entered:
+			view_settled.emit())
+	AppState.view_changed.connect(_on_view_changed)
 	hud = preload("res://ui/dorm_ui.gd").new()
-	hud.location_title = "LECTURE HALL A"
-	hud.objective_text = "Find an open seat for Pharmacodynamics"
 	add_child(hud)
 	hud.bind_player(player)
 	lecture_ui = preload("res://ui/lecture_ui.gd").new()
@@ -179,13 +183,40 @@ func _build_interior_shell(depth: float, mid_z: float) -> void:
 		["RightWallInterior", Vector3(0.12, WALL_HEIGHT, depth), Vector3(HALF_WIDTH + 0.06, WALL_HEIGHT / 2, mid_z)],
 		["BackWallInterior", Vector3(HALF_WIDTH * 2, WALL_HEIGHT, 0.12), Vector3(0, WALL_HEIGHT / 2, BACK_WALL_Z + 0.06)],
 	]
-	for piece in pieces:
+	# Finishes on those near walls, seen from the seats and in first person:
+	# timber panelling on the right wall matching the left, fabric acoustic
+	# panels on the back wall. Everything here fades in with the shell.
+	var ceiling_tone := Color(0.74, 0.72, 0.68)
+	var wall_tone := WALL_COLOR
+	var timber := Color("b98758")
+	var reveal := Color("5a3c26")
+	var fabric := Color("7c8a90")
+	# The right wall has no door, so its panelling runs the full length.
+	var run := depth - 0.4
+	var run_mid := FRONT_WALL_Z + 0.2 + run / 2.0
+	var finishes := [
+		["RightPanelling", Vector3(0.04, 3.4, run), Vector3(HALF_WIDTH - 0.02, 1.9, run_mid), timber],
+		["RightPanelCap", Vector3(0.08, 0.08, run), Vector3(HALF_WIDTH - 0.04, 3.62, run_mid), reveal],
+		["RightSkirting", Vector3(0.05, 0.12, run), Vector3(HALF_WIDTH - 0.03, 0.06, run_mid), reveal],
+	]
+	for index in range(17):
+		var z := FRONT_WALL_Z + 0.2 + (index + 0.5) * run / 17.0
+		finishes.append(["RightPanelReveal", Vector3(0.05, 3.4, 0.03), Vector3(HALF_WIDTH - 0.03, 1.9, z), reveal])
+	for index in range(6):
+		finishes.append(["AcousticPanel", Vector3(2.3, 2.0, 0.05), Vector3(-HALF_WIDTH + 1.45 + index * 2.62, 2.95, BACK_WALL_Z - 0.03), fabric])
+	var tones := {}
+	for piece in pieces + finishes:
+		var tone: Color = piece[3] if piece.size() > 3 else (ceiling_tone if piece[0] == "Ceiling" else wall_tone)
+		if not tones.has(tone):
+			var material := interior_material.duplicate() as StandardMaterial3D
+			material.albedo_color = Color(tone, 0.0)
+			tones[tone] = material
 		var mesh := MeshInstance3D.new()
 		mesh.name = piece[0]
 		mesh.mesh = BoxMesh.new()
 		mesh.mesh.size = piece[1]
 		mesh.position = piece[2]
-		mesh.material_override = interior_material
+		mesh.material_override = tones[tone]
 		mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		mesh.visible = false
 		add_child(mesh)
@@ -211,7 +242,9 @@ func _build_interior_shell(depth: float, mid_z: float) -> void:
 
 func _process(_delta: float) -> void:
 	var fade := 0.0
-	if is_instance_valid(lecture_camera) and lecture_camera.current:
+	if AppState.first_person:
+		fade = 1.0 # Walking the hall in first person, the room is whole.
+	elif is_instance_valid(lecture_camera) and lecture_camera.current:
 		fade = clampf((lecture_camera.blend - 0.6) / 0.3, 0.0, 1.0)
 	for mesh in interior_meshes:
 		mesh.visible = fade > 0.0
@@ -546,10 +579,39 @@ func _on_sit_requested(seat: Node3D) -> void:
 	player.seating.request(seat)
 
 func _on_seating_state(state: int) -> void:
-	if state == player.seating.State.SEATED:
-		lecture_camera.enter(camera, lecture_pose(player.seating.seat))
+	if state == player.seating.State.SITTING:
+		player.first_person.focus(screen_focus())
+	elif state == player.seating.State.SEATED:
+		if AppState.first_person:
+			player.first_person.focus(screen_focus())
+		else:
+			lecture_camera.enter(camera, lecture_pose(player.seating.seat))
 	elif state == player.seating.State.RISING:
 		lecture_camera.leave()
+		player.first_person.focus(Vector3.INF)
+
+## True once the seated view is ready for class to begin.
+func lecture_view_ready() -> bool:
+	if AppState.first_person:
+		return player.seating.state == player.seating.State.SEATED
+	return lecture_camera.in_lecture_view()
+
+## Switching views while seated swaps between the first-person seat view and
+## the over-the-shoulder lecture camera without a transition.
+func _on_view_changed(first_person: bool) -> void:
+	var seated: bool = player.seating.state == player.seating.State.SEATED
+	if first_person:
+		lecture_camera.stop()
+		if seated:
+			player.first_person.focus(screen_focus())
+			view_settled.emit()
+	elif seated:
+		lecture_camera.show_pose(camera, lecture_pose(player.seating.seat))
+		view_settled.emit()
+
+## Where a seated first-person view settles: the screen, a little low to take in the podium.
+func screen_focus() -> Vector3:
+	return SCREEN_CENTER + Vector3(-0.3, -0.45, 0)
 
 ## Over-the-shoulder view from a seat toward the screen and podium.
 func lecture_pose(seat: Node3D) -> Transform3D:

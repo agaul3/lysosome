@@ -39,7 +39,7 @@ func _run() -> void:
 	await acquire_world()
 	check(dorm.find_children("VendingMachine*", "StaticBody3D", true, false).size() == 2, "Two solid vending machines")
 	check(dorm.has_node("SofaBase") and dorm.has_node("LoungeBookshelf"), "Lounge furnishings present")
-	check(dorm.get_node("Floor").get_child(0).material_override.albedo_color == Color("526571"), "Solid muted carpet")
+	check(dorm.get_node("Floor").get_child(0).material_override.albedo_color == dorm.FLOOR, "Plain polished lobby floor")
 	await capture("polish-lobby")
 	state.enter_campus("dorm")
 	await acquire_world()

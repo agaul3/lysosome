@@ -42,15 +42,14 @@ func _run() -> void:
 	check(state.phase == state.Phase.CAMPUS and dorm.name == "Campus", "Dorm-to-campus transition")
 	check(player.position.distance_to(Config.SPAWNS.dorm) < 0.1, "Spawn at residence entrance")
 	check(player.appearance.preset_id == "indigo", "Appearance preserved on campus")
-	check(dorm.hud.location_title.contains("COMMONS"), "Campus location shown")
+	check(dorm.hud.location_title.contains("Commons"), "Campus location shown")
 	check(dorm.sun.light_color.is_equal_approx(Config.MORNING.sun_color), "Configured morning lighting")
 	check(dorm.camera.projection == Camera3D.PROJECTION_ORTHOGONAL, "Campus orthographic camera")
 	var original_basis: Basis = dorm.camera.global_basis
 	var original_camera: Vector3 = dorm.camera.position
-	# The directory faces the quad (south); walk round its east side.
+	# The directory faces the residence entrance and the path (north).
 	await walk_to(Vector3(-15.4, 0, 1.5))
-	await walk_to(Vector3(-15.4, 0, 4.4))
-	await walk_to(Vector3(-17, 0, 4.4))
+	await walk_to(Vector3(-17, 0, 1.6))
 	check(player.interaction.target == dorm.noticeboard, "Directory reachable")
 	await press_interact()
 	check(dorm.hud.message.text.contains("Lecture Hall A"), "Directory provides directions")
@@ -119,7 +118,10 @@ func _run() -> void:
 	await scene_changed
 	await ticks(2)
 	check(current_scene.title_panel.visible, "Title available after campus")
+	# Autosaves exist by now, so New Game asks before replacing them.
 	current_scene.new_game_button.pressed.emit()
+	check(current_scene.confirm_panel.visible and state.phase == state.Phase.TITLE, "New Game asks before replacing a save")
+	current_scene.confirm_button.pressed.emit()
 	check(state.selected_character == Presets.DEFAULT_ID and state.campus_entry == "dorm", "New Game resets character and arrival state")
 	print("CAMPUS: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures else 0)

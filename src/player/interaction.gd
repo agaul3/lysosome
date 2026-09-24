@@ -5,6 +5,8 @@ signal interacted(target: Node3D)
 signal device_changed(controller: bool)
 var target: Node3D
 var enabled := true
+## Set by the first-person view: prefer what you are looking at, ignore what is behind you.
+var view_forward := Vector3.ZERO
 var using_controller := false
 
 func _physics_process(_delta: float) -> void:
@@ -17,13 +19,22 @@ func _physics_process(_delta: float) -> void:
 	if enabled:
 		for candidate in get_tree().get_nodes_in_group("interactables"):
 			var distance := global_position.distance_to(candidate.global_position)
-			if distance > candidate.reach or distance >= nearest_distance:
+			if distance > candidate.reach:
+				continue
+			var score := distance
+			if view_forward != Vector3.ZERO:
+				var flat := Vector3(candidate.global_position.x - global_position.x, 0, candidate.global_position.z - global_position.z)
+				var facing := view_forward.dot(flat.normalized()) if flat.length() > 0.3 else 1.0
+				if facing < -0.1:
+					continue
+				score = distance * (2.0 - facing)
+			if score >= nearest_distance:
 				continue
 			var query := PhysicsRayQueryParameters3D.create(global_position, candidate.global_position, 1)
 			if not get_world_3d().direct_space_state.intersect_ray(query).is_empty():
 				continue
 			nearest = candidate
-			nearest_distance = distance
+			nearest_distance = score
 	if nearest != target:
 		if is_instance_valid(target):
 			target.set_highlighted(false)

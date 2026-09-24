@@ -11,6 +11,8 @@ const SPAWNS := {
 	"dorm": Vector3(-19.8, 0.05, -2),
 	"lecture_building": Vector3(0, 0.05, -21.8),
 }
+## Arrivals face out of the door they came through (east from the residence, south from the Learning Center).
+const SPAWN_YAWS := {"dorm": -PI / 2, "lecture_building": PI}
 const RESIDENCE_DOOR := Vector3(-21.2, 1, -2)
 const LEARNING_CENTER_DOOR := Vector3(0, 1, -23.2)
 const SAM_POSITION := Route.SAM_POSITION

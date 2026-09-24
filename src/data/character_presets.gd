@@ -13,6 +13,7 @@ const EXTRAS: Array[Dictionary] = [
 	{"id": "professor", "name": "Professor", "description": "White coat · silver hair", "skin": "c89373", "hair": "b9b6b0", "shirt": "eef1ee", "pants": "3a4148", "hair_style": 1},
 	{"id": "teal", "name": "Teal", "description": "Teal hoodie", "skin": "8d5a44", "hair": "1f1c20", "shirt": "3f8f8c", "pants": "2d3441", "hair_style": 3},
 	{"id": "plum", "name": "Plum", "description": "Plum cardigan", "skin": "f0c7a8", "hair": "c79a5b", "shirt": "7d5a86", "pants": "3b3f4a", "hair_style": 2},
+	{"id": "nyugen", "name": "Dr. Nyugen", "description": "Charcoal blazer · neat black hair", "skin": "c79a74", "hair": "1b1a1f", "shirt": "3a424b", "pants": "2b3037", "hair_style": 1},
 ]
 
 static func is_valid(id: String) -> bool:

@@ -27,6 +27,26 @@ const POST := Color("4a5156")
 const LAWNS := [[-12.0, -12.0, -1.5, -3.5], [1.5, -12.0, 12.0, -3.5], [-12.0, -0.5, -1.5, 8.0], [1.5, -0.5, 12.0, 8.0]]
 const PLAZA_CENTER := Vector3(0, 0, -2)
 const PLAZA_RADIUS := 4.5
+## Benches: [position, yaw]. Yaw turns the seat to face -Z rotated by yaw.
+## The four plaza benches sit on the diagonals, facing the planter.
+static var BENCHES := [
+	[Vector3(-6, 0, -5.8), 0.0], [Vector3(6, 0, -5.8), 0.0], [Vector3(-6, 0, 1.8), PI], [Vector3(6, 0, 1.8), PI],
+	[Vector3(-13.5, 0, -8), PI / 2], [Vector3(13.5, 0, 4), -PI / 2], [Vector3(-19.5, 0, 2.6), 0.0],
+	[Vector3(8, 0, -13.9), PI], [Vector3(-8, 0, -13.9), PI],
+	[PLAZA_CENTER + Vector3(2.4, 0, -2.4), atan2(1.0, -1.0)], [PLAZA_CENTER + Vector3(-2.4, 0, -2.4), atan2(-1.0, -1.0)],
+	[PLAZA_CENTER + Vector3(2.4, 0, 2.4), atan2(1.0, 1.0)], [PLAZA_CENTER + Vector3(-2.4, 0, 2.4), atan2(-1.0, 1.0)],
+]
+## Who sits where: [bench index, seat offset along the bench, activity, look].
+const BENCH_STUDENTS := [
+	[1, -0.45, "lunch", "teal"], [1, 0.45, "reading", "plum"],
+	[3, 0.0, "notes", "sage"],
+	[2, -0.45, "lunch", "clay"], [2, 0.45, "notes", "ochre"],
+	[5, 0.0, "reading", "indigo"],
+	[7, 0.2, "notes", "plum"],
+	[9, 0.0, "lunch", "sage"], [12, 0.0, "reading", "teal"],
+]
+## Lawn where the dog walker roams (x, z, width, depth): the quad's south-east panel.
+const DOG_LAWN := Rect2(2.2, 0.2, 9.1, 7.1)
 
 var player: CharacterBody3D
 var camera: Camera3D
@@ -37,6 +57,7 @@ var noticeboard: Node3D
 var student: Node3D
 var sun: DirectionalLight3D
 var campus_environment: Environment
+var sky_material: ProceduralSkyMaterial
 
 func _ready() -> void:
 	_build_ground()
@@ -59,6 +80,7 @@ func _ready() -> void:
 	player = Player.instantiate()
 	player.position = Config.SPAWNS.get(AppState.campus_entry, Config.SPAWNS.dorm)
 	add_child(player)
+	player.appearance.rotation.y = Config.SPAWN_YAWS.get(AppState.campus_entry, Config.SPAWN_YAWS.dorm)
 	camera = Camera.new()
 	camera.view_size = Config.CAMERA_VIEW
 	camera.follow_min = Config.CAMERA_MIN
@@ -66,16 +88,27 @@ func _ready() -> void:
 	add_child(camera)
 	camera.follow(player)
 	player.movement_camera = camera
+	_build_ambient_life()
 	hud = HUD.new()
-	hud.location_title = "MEDICAL SCHOOL  /  STUDENT COMMONS"
-	hud.objective_text = "Morning • Cross the quad to the Learning Center / Lecture Hall A"
 	add_child(hud)
 	hud.bind_player(player)
+	AppState.view_changed.connect(apply_view)
+	apply_view(AppState.first_person)
+
+## From eye level the flat backdrop reads as empty, so first person shows a
+## daylight sky gradient. Ambient light stays the configured colour either way.
+func apply_view(first_person: bool) -> void:
+	campus_environment.background_mode = Environment.BG_SKY if first_person else Environment.BG_COLOR
+	# Distance haze melts the far ground into the horizon; eye-level shadows get
+	# a shorter range (more resolution near you) and soft edges.
+	campus_environment.fog_enabled = first_person
+	sun.directional_shadow_max_distance = 42.0 if first_person else 70.0
+	sun.shadow_blur = 1.6 if first_person else 1.0
 
 # --- Ground ---------------------------------------------------------------------------
 
 func _build_ground() -> void:
-	var ground := Geometry.box(self, "Ground", Vector3(240, 0.3, 240), Vector3(0, -0.15, 0), Color("5f9a3f"), true)
+	var ground := Geometry.box(self, "Ground", Vector3(560, 0.3, 560), Vector3(0, -0.15, 0), Color("5f9a3f"), true)
 	var lawn := ShaderMaterial.new()
 	lawn.shader = preload("res://assets/grass.gdshader")
 	ground.get_child(0).material_override = lawn
@@ -104,6 +137,7 @@ func _build_paving() -> void:
 	slab.call(17, -22, 36, -14, 0.03, PLAZA)
 	slab.call(15, -11, 20.5, 5, 0.034, Color("cfc6b5"))
 	slab.call(-20, -24, -15, -15, 0.03, PLAZA)
+	slab.call(-34.4, -21.0, -20, -18.4, 0.03, PLAZA) # Apron to the Anatomy Hall steps.
 	# Sidewalk and parking to the south, street beyond.
 	slab.call(-26, 11, 26, 14, 0.03, PATH)
 	slab.call(-25, 14, 25, 26, 0.02, ASPHALT)
@@ -154,8 +188,7 @@ func _build_props() -> void:
 	plaza_collider.add_child(round_shape)
 	add_child(plaza_collider)
 	# Benches around the quad (timber slats on dark steel frames).
-	for bench in [[Vector3(-6, 0, -5.8), 0.0], [Vector3(6, 0, -5.8), 0.0], [Vector3(-6, 0, 1.8), PI], [Vector3(6, 0, 1.8), PI],
-			[Vector3(-13.5, 0, -8), PI / 2], [Vector3(13.5, 0, 4), -PI / 2], [Vector3(-19.5, 0, 2.6), PI]]:
+	for bench in BENCHES:
 		_bench(kit, bench[0], bench[1])
 	# Lamp posts along the perimeter walk.
 	for point in [Vector3(-15.3, 0, -9), Vector3(-15.3, 0, 5), Vector3(15.3, 0, -9), Vector3(15.3, 0, 5), Vector3(-6, 0, 11.3), Vector3(6, 0, 11.3), Vector3(-6, 0, -15.3), Vector3(6, 0, -15.3)]:
@@ -163,13 +196,33 @@ func _build_props() -> void:
 		kit.box("metal", point + Vector3(0, 4.3, 0), Vector3(0.5, 0.12, 0.22), POST)
 		kit.box("facade", point + Vector3(0, 4.22, 0), Vector3(0.42, 0.03, 0.16), Color("fffbe8"))
 		kit.solid(point + Vector3(0, 1, 0), Vector3(0.14, 2, 0.14))
-	# Campus directory kiosk outside the residence, facing the quad path.
+	# Raised planter for the medical-centre forecourt flowers.
+	kit.solid_box("facade", Vector3(26, 0.2, -15.2), Vector3(14.4, 0.4, 1.2), Color("d3cdbf"))
+	kit.box("facade", Vector3(26, 0.39, -15.2), Vector3(14.0, 0.04, 0.9), Color("4a3b2e"))
+	# Campus directory outside the residence: a double-sided pylon with a plan of
+	# the campus on both faces, turned toward the residence door and the path.
 	var kiosk := Vector3(-17, 0, 3)
-	kit.solid_box("metal", kiosk + Vector3(0, 1.1, 0), Vector3(1.6, 2.2, 0.18), Color("35484f"))
-	kit.box("facade", kiosk + Vector3(0, 1.15, 0.1), Vector3(1.36, 1.2, 0.02), Color("efe9da"))
-	for index in range(5):
-		kit.box("facade", kiosk + Vector3(-0.45 + index * 0.22, 1.4 - (index % 2) * 0.35, 0.115), Vector3(0.16, 0.12, 0.01), [Color("6f9f8c"), Color("d9a15a"), Color("8a9fc4")][index % 3])
-	Geometry.wall_sign(self, "CAMPUS DIRECTORY", kiosk + Vector3(0, 1.95, 0.09), 0.0, 24, 0.0075)
+	kit.solid_box("metal", kiosk + Vector3(0, 1.15, 0), Vector3(1.6, 2.3, 0.2), Color("2f3d44"))
+	kit.box("metal", kiosk + Vector3(0, 0.06, 0), Vector3(1.75, 0.12, 0.34), Color("262f34"))
+	for face in [-1.0, 1.0]:
+		var z: float = face * 0.105
+		kit.box("facade", kiosk + Vector3(0, 1.16, z), Vector3(1.38, 1.26, 0.012), Color("efeadf"))
+		# Plan (north up for whoever reads this face): the quad's four lawns and
+		# paths, the buildings around it, a "you are here" dot, and a legend.
+		var plan := func(u: float, v: float, w: float, h: float, color: Color, lift := 1.07) -> void:
+			kit.box("facade", kiosk + Vector3(u * face, v, z * lift), Vector3(w, h, 0.004), color)
+		for lawn in [[-0.12, -0.09], [0.12, -0.09], [-0.12, 0.09], [0.12, 0.09]]:
+			plan.call(0.1 + lawn[0], 1.36 + lawn[1], 0.2, 0.14, Color("8fbf73"))
+		plan.call(0.1, 1.62, 0.5, 0.1, Color("c3cacd")) # Learning Center
+		plan.call(-0.36, 1.62, 0.22, 0.1, Color("d8d1c2")) # Anatomy Hall
+		plan.call(-0.33, 1.34, 0.12, 0.36, Color("e3d4ad")) # Cedar Residence
+		plan.call(0.5, 1.33, 0.1, 0.22, Color("b8c6cf")) # Café
+		plan.call(0.5, 1.62, 0.16, 0.12, Color("aab8c2")) # Medical Center
+		plan.call(-0.2, 1.36, 0.045, 0.045, Color("d9483b"), 1.1) # You are here
+		for row in range(4):
+			plan.call(-0.3 + (row % 2) * 0.62, 0.92 - (row / 2) * 0.12, 0.5, 0.035, Color("7d8a90"))
+			plan.call(-0.58 + (row % 2) * 0.62, 0.92 - (row / 2) * 0.12, 0.05, 0.05, [Color("c3cacd"), Color("e3d4ad"), Color("d8d1c2"), Color("b8c6cf")][row])
+		Geometry.wall_sign(self, "CAMPUS DIRECTORY", kiosk + Vector3(0, 2.05, face * 0.105), 0.0 if face > 0 else PI, 22, 0.0058)
 	# Café terrace tables with umbrellas.
 	for point in [Vector3(17, 0, -8), Vector3(17, 0, -4.8), Vector3(17, 0, 1.2), Vector3(18.6, 0, 3.4)]:
 		kit.cylinder("metal", point, point + Vector3(0, 0.74, 0), 0.04, POST)
@@ -179,14 +232,17 @@ func _build_props() -> void:
 		kit.solid(point + Vector3(0, 0.5, 0), Vector3(0.9, 1.0, 0.9))
 	kit.commit(self, "StreetFurniture")
 
+## Park bench: timber slats on dark steel frames. The seat top is at 0.30 m to
+## match the stylised figures (the same height as the lecture-hall chairs).
 func _bench(kit: MeshKit, position: Vector3, yaw: float) -> void:
 	var basis := Basis(Vector3.UP, yaw)
 	for index in range(4):
-		kit.box("wood", position + basis * Vector3(0, 0.45, -0.18 + index * 0.12), Vector3(1.8, 0.05, 0.1), Color.WHITE, basis)
+		kit.box("wood", position + basis * Vector3(0, 0.275, -0.18 + index * 0.12), Vector3(1.8, 0.05, 0.1), Color.WHITE, basis)
 	for side in [-1, 1]:
-		kit.box("metal", position + basis * Vector3(side * 0.75, 0.22, 0), Vector3(0.06, 0.44, 0.5), POST, basis)
-	kit.box("wood", position + basis * Vector3(0, 0.75, 0.22), Vector3(1.8, 0.3, 0.05), Color.WHITE, basis)
-	kit.solid(position + Vector3(0, 0.4, 0), (basis * Vector3(1.9, 0.8, 0.6)).abs())
+		kit.box("metal", position + basis * Vector3(side * 0.75, 0.13, 0), Vector3(0.06, 0.26, 0.5), POST, basis)
+		kit.box("metal", position + basis * Vector3(side * 0.75, 0.45, 0.23), Vector3(0.06, 0.5, 0.05), POST, basis)
+	kit.box("wood", position + basis * Vector3(0, 0.56, 0.24), Vector3(1.8, 0.28, 0.05), Color.WHITE, basis)
+	kit.solid(position + basis * Vector3(0, 0.35, 0.02), Vector3(1.9, 0.7, 0.56), basis)
 
 # --- Parking -----------------------------------------------------------------------------
 
@@ -225,7 +281,8 @@ func _build_planting() -> void:
 	# Shade-tree rows along the quad, and trees at the plaza corners.
 	var shade := []
 	for z in [-12.0, -7.0, 3.0, 8.0]:
-		shade.append(Vector3(-17, 0, z))
+		# The west row keeps clear of the sightline from the camera to the residence door.
+		shade.append(Vector3(-17, 0, 6.0 if z == 3.0 else z))
 		shade.append(Vector3(17, 0, z))
 	shade.append_array([Vector3(-19, 0, -19), Vector3(-27, 0, 12.5), Vector3(-33, 0, 12.5), Vector3(30, 0, 9), Vector3(34, 0, -10)])
 	Flora.plant(self, "shade", place.call(shade, 0.95, 1.2))
@@ -250,7 +307,8 @@ func _build_planting() -> void:
 	for x in [-11.0, -8.5, -3.5, 3.5, 8.5, 11.0]:
 		shrubs.append(Vector3(x, 0.76, -20.4))
 	for x in range(18, 35, 3):
-		shrubs.append(Vector3(x, 0, -21.4))
+		if absf(x - 26) > 2.4: # Keep the Medical Center doors clear.
+			shrubs.append(Vector3(x, 0, -21.4))
 	# Fill the plaza planters and the pavilion's green roof with low planting.
 	for planter_x in [-8.0, 8.0]:
 		for index in range(10):
@@ -268,7 +326,7 @@ func _build_planting() -> void:
 	var blossoms := []
 	var tints := []
 	var palette := [Color("f6e6ef"), Color("f5c542"), Color("e8708a"), Color("c9a4e8"), Color("ffffff")]
-	var beds := [[Vector3(-8, 0.77, -19), Vector2(3.6, 1.6)], [Vector3(8, 0.77, -19), Vector2(3.6, 1.6)], [PLAZA_CENTER + Vector3(0, 0.58, 0), Vector2(1.5, 1.5)], [Vector3(-20, 0, -1.5), Vector2(0.4, 3.0)], [Vector3(26, 0, -15.2), Vector2(7.0, 0.5)]]
+	var beds := [[Vector3(-8, 0.77, -19), Vector2(3.6, 1.6)], [Vector3(8, 0.77, -19), Vector2(3.6, 1.6)], [PLAZA_CENTER + Vector3(0, 0.58, 0), Vector2(1.5, 1.5)], [Vector3(26, 0.4, -15.2), Vector2(6.8, 0.4)]]
 	for bed in beds:
 		for index in range(70):
 			var offset := Vector3(rng.randf_range(-bed[1].x, bed[1].x), 0, rng.randf_range(-bed[1].y, bed[1].y))
@@ -372,12 +430,63 @@ func _build_people() -> void:
 		add_child(actor)
 	NPCSchedule.start()
 
+## Students on benches (lunch, reading, notes), a dog walker on the south-east
+## lawn and a few students strolling the paths, all with randomised timing.
+var bench_students: Array[Node3D] = []
+var dog_walker: Node3D
+var pedestrians: Array[Node3D] = []
+
+func _build_ambient_life() -> void:
+	var feet := StaticBody3D.new()
+	feet.name = "SeatedFeetColliders"
+	add_child(feet)
+	var occupied := {}
+	for entry in BENCH_STUDENTS:
+		var bench: Array = BENCHES[entry[0]]
+		var basis := Basis(Vector3.UP, bench[1])
+		var student := preload("res://npc/ambient/bench_student.gd").new()
+		student.activity = entry[2]
+		student.preset = entry[3]
+		student.name = "BenchStudent"
+		# Seated origin: hips over the slats, backpack against the backrest.
+		student.position = bench[0] + basis * Vector3(entry[1], 0.02, -0.12)
+		student.rotation.y = bench[1]
+		add_child(student)
+		bench_students.append(student)
+		occupied[entry[0]] = true
+	for index in occupied:
+		# Seated knees and feet reach past the slats; keep walkers out of them.
+		var bench: Array = BENCHES[index]
+		var basis := Basis(Vector3.UP, bench[1])
+		var shape := CollisionShape3D.new()
+		shape.shape = BoxShape3D.new()
+		shape.shape.size = Vector3(1.8, 0.5, 0.34)
+		shape.position = bench[0] + basis * Vector3(0, 0.25, -0.44)
+		shape.basis = basis
+		feet.add_child(shape)
+	dog_walker = preload("res://npc/ambient/dog_walker.gd").new()
+	dog_walker.name = "DogWalker"
+	dog_walker.region = DOG_LAWN
+	dog_walker.avoid = [[Vector2(6, 1.8), 1.7]]
+	add_child(dog_walker)
+	# Places a pedestrian may not sidestep into: benches (and seated knees), the planter.
+	var keep_clear: Array = [[Vector2(PLAZA_CENTER.x, PLAZA_CENTER.z), 2.25]]
+	for bench in BENCHES:
+		var front: Vector3 = bench[0] + Basis(Vector3.UP, bench[1]) * Vector3(0, 0, -0.2)
+		keep_clear.append([Vector2(front.x, front.z), 1.15])
+	for preset in ["clay", "sage", "ochre"]:
+		var walker := preload("res://npc/ambient/pedestrian.gd").new()
+		walker.name = "Pedestrian"
+		add_child(walker)
+		walker.setup(preset, player, keep_clear)
+		pedestrians.append(walker)
+
 func _build_interactions() -> void:
 	dorm_door = _endpoint("ResidenceInteraction", "Enter Cedar Residence", "", Config.RESIDENCE_DOOR)
 	dorm_door.activated.connect(AppState.enter_dorm)
 	lecture_door = _endpoint("LectureEntryInteraction", "Enter Learning Center", "", Config.LEARNING_CENTER_DOOR)
 	lecture_door.activated.connect(AppState.enter_lecture_building)
-	noticeboard = _endpoint("DirectoryInteraction", "Read campus directory", "Learning Center / Lecture Hall A: cross the quad to the north, past the round plaza. Cedar Residence faces the quad on the west side; the café is to the east.", Vector3(-17, 1, 3.7))
+	noticeboard = _endpoint("DirectoryInteraction", "Read campus directory", "Learning Center / Lecture Hall A: cross the quad to the north, past the round plaza. Cedar Residence faces the quad on the west side; the café is to the east.", Vector3(-17, 1, 2.3))
 	student = _endpoint("StudentInteraction", "Talk to student", "Morning! Hall A is in the Learning Center, the white building at the top of the quad. Head through the glass doors under the canopy.", Config.SAM_POSITION + Vector3(0, 1, 0.75))
 
 func _endpoint(node_name: String, title: String, response: String, position: Vector3) -> Node3D:
@@ -405,6 +514,14 @@ func _build_lighting() -> void:
 	environment.glow_enabled = true
 	environment.glow_intensity = 0.25
 	environment.glow_bloom = 0.04
+	environment.fog_mode = Environment.FOG_MODE_DEPTH
+	environment.fog_depth_begin = 70.0
+	environment.fog_depth_end = 190.0
+	environment.fog_sky_affect = 0.0
+	sky_material = ProceduralSkyMaterial.new()
+	sky_material.sun_angle_max = 20.0
+	environment.sky = Sky.new()
+	environment.sky.sky_material = sky_material
 	campus_environment = environment
 	sky.environment = environment
 	add_child(sky)
@@ -426,3 +543,10 @@ func _update_daylight() -> void:
 	sun.rotation_degrees.x = -10.0 - 60.0 * daylight
 	campus_environment.ambient_light_energy = 0.18 + 0.38 * sqrt(daylight)
 	campus_environment.background_color = Color("172a46").lerp(Color("75bfdf"), sqrt(daylight))
+	var day := sqrt(daylight)
+	sky_material.sky_top_color = Color("0e1c33").lerp(Color("4f9fd0"), day)
+	sky_material.sky_horizon_color = Color("2a3d5c").lerp(Color("c9e3ee"), day)
+	sky_material.ground_horizon_color = sky_material.sky_horizon_color
+	sky_material.ground_bottom_color = Color("1d2a2e").lerp(Color("6f8a78"), day)
+	sky_material.sky_energy_multiplier = 0.55 + 0.45 * day
+	campus_environment.fog_light_color = sky_material.sky_horizon_color

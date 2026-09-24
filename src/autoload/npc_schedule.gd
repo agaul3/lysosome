@@ -34,6 +34,39 @@ func reset() -> void:
 	path_index = 0
 	stage_changed.emit(stage)
 
+## JSON-safe copy of the event state for the save file.
+func snapshot() -> Dictionary:
+	var points: Array = []
+	for point in path:
+		points.append([point.x, point.y, point.z])
+	return {
+		"stage": int(stage), "zone": zone, "position": [actor_position.x, actor_position.y, actor_position.z],
+		"facing": [facing.x, facing.y, facing.z], "speaker": dialogue_speaker, "text": dialogue_text,
+		"started": started, "seated_count": seated_count, "spoken_count": spoken_count,
+		"elapsed": elapsed, "line_index": line_index, "path": points, "path_index": path_index,
+	}
+
+func restore(data: Dictionary) -> void:
+	var vec := func(values: Array) -> Vector3: return Vector3(float(values[0]), float(values[1]), float(values[2]))
+	stage = clampi(int(data.get("stage", 0)), 0, Stage.SEATED) as Stage
+	zone = String(data.get("zone", "campus"))
+	actor_position = vec.call(data.get("position", [0, 0, 0]))
+	facing = vec.call(data.get("facing", [0, 0, -1]))
+	dialogue_speaker = String(data.get("speaker", ""))
+	dialogue_text = String(data.get("text", ""))
+	started = bool(data.get("started", false))
+	seated_count = int(data.get("seated_count", 0))
+	spoken_count = int(data.get("spoken_count", 0))
+	elapsed = float(data.get("elapsed", 0.0))
+	line_index = int(data.get("line_index", 0))
+	path = PackedVector3Array()
+	for point in data.get("path", []):
+		path.append(vec.call(point))
+	path_index = clampi(int(data.get("path_index", 0)), 0, maxi(path.size() - 1, 0))
+	if stage not in [Stage.IDLE, Stage.CONVERSATION, Stage.SEATED] and path.size() < 2:
+		stage = Stage.IDLE # Damaged walk state: restart the event rather than stall.
+	stage_changed.emit(stage)
+
 func start() -> void:
 	if not started:
 		started = true

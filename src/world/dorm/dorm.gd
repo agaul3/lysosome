@@ -11,6 +11,9 @@ var hud: CanvasLayer
 var desk: Node3D
 var bed: Node3D
 var exit_door: Node3D
+## Walls cut away for the overhead camera, and the ceiling: first person shows the whole room.
+var cutaway: Array[MeshInstance3D] = []
+var first_person_only: Array[Node3D] = []
 
 func _ready() -> void:
 	_build_room()
@@ -29,6 +32,15 @@ func _ready() -> void:
 	hud = DormUI.new()
 	add_child(hud)
 	hud.bind_player(player)
+	AppState.view_changed.connect(apply_view)
+	apply_view(AppState.first_person)
+
+func apply_view(first_person: bool) -> void:
+	for mesh in cutaway:
+		mesh.scale.y = 1.0 if first_person else 0.07
+		mesh.position.y = 0.0 if first_person else -1.3
+	for node in first_person_only:
+		node.visible = first_person
 
 func _build_room() -> void:
 	Geometry.box(self, "Floor", Vector3(10, 0.2, 9), Vector3(0, -0.1, 0), Color("c7b291"), true)
@@ -42,8 +54,36 @@ func _build_room() -> void:
 		var node := Geometry.box(self, wall[0], wall[1], wall[2], Color("f0e4cf"), true)
 		node.get_child(0).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		if wall[0] in ["SouthWall", "EastWall"]:
-			node.get_child(0).scale.y = 0.07
-			node.get_child(0).position.y = -1.3
+			cutaway.append(node.get_child(0))
+	# Ceiling with a flush light, seen only from the first-person view (no shadows,
+	# so the room is lit the same in both views).
+	for piece in [["Ceiling", Vector3(10, 0.12, 9), Vector3(0, 2.86, 0), Color("f3ede2")], ["CeilingLight", Vector3(0.7, 0.03, 0.7), Vector3(0, 2.785, 0.6), Color("fff8e8")]]:
+		var ceiling := Geometry.box(self, piece[0], piece[1], piece[2], piece[3])
+		ceiling.get_child(0).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		first_person_only.append(ceiling)
+	# The south wall only exists in first person: a framed print and a clock on it.
+	var decor := [
+		["PrintFrame", Vector3(1.3, 0.9, 0.04), Vector3(-1.4, 1.65, 4.37), Color("3b3f42")],
+		["PrintMat", Vector3(1.18, 0.78, 0.02), Vector3(-1.4, 1.65, 4.345), Color("f4efe4")],
+		["PrintField", Vector3(0.5, 0.56, 0.01), Vector3(-1.62, 1.65, 4.33), Color("5f8f88")],
+		["PrintField", Vector3(0.34, 0.3, 0.01), Vector3(-1.12, 1.78, 4.33), Color("d49a6a")],
+		["PrintField", Vector3(0.34, 0.2, 0.01), Vector3(-1.12, 1.47, 4.33), Color("2f4b5a")],
+		["ClockHand", Vector3(0.02, 0.12, 0.01), Vector3(1.9, 2.1, 4.345), Color("24313a")],
+		["ClockHand", Vector3(0.09, 0.02, 0.01), Vector3(1.935, 2.05, 4.345), Color("24313a")],
+	]
+	for piece in decor:
+		first_person_only.append(Geometry.box(self, piece[0], piece[1], piece[2], piece[3]))
+	for ring in [[0.19, Color("3b3f42"), 4.39, 4.37], [0.165, Color("f6f2ea"), 4.37, 4.355]]:
+		first_person_only.append(Geometry.cylinder_between(self, "Clock", Vector3(1.9, 2.05, ring[2]), Vector3(1.9, 2.05, ring[3]), ring[0], ring[1]))
+	# A soft room light for the enclosed view (the ceiling and the wall facing away from the sun).
+	var fill := OmniLight3D.new()
+	fill.name = "RoomLight"
+	fill.position = Vector3(0, 2.45, 0.6)
+	fill.omni_range = 7.5
+	fill.light_energy = 0.55
+	fill.light_color = Color("fff1dc")
+	add_child(fill)
+	first_person_only.append(fill)
 	Geometry.box(self, "Rug", Vector3(4.2, 0.02, 3.4), Vector3(0, 0.015, 1), Color("327f88"))
 	Geometry.box(self, "WindowFrame", Vector3(2.6, 1.55, 0.09), Vector3(0, 1.8, -4.35), Color("fff2d6"))
 	Geometry.box(self, "MorningGlass", Vector3(2.35, 1.3, 0.06), Vector3(0, 1.8, -4.28), Color("a4cbd1"))

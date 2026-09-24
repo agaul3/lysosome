@@ -45,6 +45,24 @@ func enter(from_camera: Camera3D, lecture_pose: Transform3D) -> void:
 	current = true
 	_apply()
 
+## Jumps straight to the lecture pose (switching to third person while seated).
+func show_pose(from_camera: Camera3D, lecture_pose: Transform3D) -> void:
+	exploration = from_camera
+	pose = lecture_pose
+	pose_distance = 6.0
+	_capture_exploration()
+	blend = 1.0
+	direction = 0
+	current = true
+	_apply()
+
+## Hands the view away without a transition (switching to first person).
+func stop() -> void:
+	direction = 0
+	blend = 0.0
+	if current:
+		current = false
+
 func leave() -> void:
 	if not current:
 		return

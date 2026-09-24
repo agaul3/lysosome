@@ -7,6 +7,9 @@ const HIP_HEIGHT := 0.64
 const THIGH := 0.3
 ## Hip-joint height when fully seated; chairs are built so the seat top meets the thighs.
 const SEATED_HIP_HEIGHT := 0.37
+## Eye point in spine space: standing eye height 1.5 m, at the front of the face
+## (ahead of the chest, so looking down shows the shirt front, legs and feet).
+const EYE := Vector3(0, 1.5 - HIP_HEIGHT, -0.21)
 var preset_id: String
 var hips: Array[Node3D] = []
 var knees: Array[Node3D] = []
@@ -14,6 +17,8 @@ var shoulders: Array[Node3D] = []
 var body: Node3D
 var pelvis: Node3D
 var spine: Node3D
+## Head and hair meshes (the first-person view draws the player's own as shadow only).
+var head_parts: Array[MeshInstance3D] = []
 var gait_phase := 0.0
 var gait_weight := 0.0
 ## 0 = walking gait, 1 = full sprint; blended from actual ground speed.
@@ -30,6 +35,7 @@ func apply_preset(id: String) -> void:
 	hips.clear()
 	knees.clear()
 	shoulders.clear()
+	head_parts.clear()
 	gait_weight = 0.0
 	gait_phase = 0.0
 	run_weight = 0.0
@@ -72,15 +78,15 @@ func apply_preset(id: String) -> void:
 		shoulders.append(shoulder)
 		Geometry.box(shoulder, "Sleeve", Vector3(0.17, 0.37, 0.25), Vector3(0, -0.19, 0), shirt)
 		Geometry.sphere(shoulder, Vector3(0.16, 0.24, 0.17), Vector3(0, -0.44, 0), skin)
-	Geometry.sphere(spine, Vector3(0.43, 0.48, 0.4), up + Vector3(0, 1.46, 0), skin)
-	Geometry.sphere(spine, Vector3(0.46, 0.25, 0.43), up + Vector3(0, 1.65, 0.035), hair)
+	head_parts.append(Geometry.sphere(spine, Vector3(0.43, 0.48, 0.4), up + Vector3(0, 1.46, 0), skin))
+	head_parts.append(Geometry.sphere(spine, Vector3(0.46, 0.25, 0.43), up + Vector3(0, 1.65, 0.035), hair))
 	if data.hair_style == 0:
 		for side in [-1, 1]:
-			Geometry.sphere(spine, Vector3(0.22, 0.24, 0.3), up + Vector3(side * 0.18, 1.6, 0.07), hair)
+			head_parts.append(Geometry.sphere(spine, Vector3(0.22, 0.24, 0.3), up + Vector3(side * 0.18, 1.6, 0.07), hair))
 	elif data.hair_style == 2:
-		Geometry.box(spine, "Bob", Vector3(0.46, 0.38, 0.19), up + Vector3(0, 1.44, 0.17), hair)
+		head_parts.append(Geometry.box(spine, "Bob", Vector3(0.46, 0.38, 0.19), up + Vector3(0, 1.44, 0.17), hair).get_child(0))
 	elif data.hair_style == 3:
-		Geometry.sphere(spine, Vector3(0.25, 0.25, 0.25), up + Vector3(0, 1.76, 0.15), hair)
+		head_parts.append(Geometry.sphere(spine, Vector3(0.25, 0.25, 0.25), up + Vector3(0, 1.76, 0.15), hair))
 	Geometry.box(spine, "Backpack", Vector3(0.35, 0.42, 0.17), up + Vector3(0, 0.99, 0.23), Color("384f59"))
 	Geometry.box(spine, "StudentBadge", Vector3(0.1, 0.15, 0.025), up + Vector3(-0.12, 1.07, -0.17), Color("eee9d9"))
 
