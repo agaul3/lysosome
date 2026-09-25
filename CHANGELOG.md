@@ -4,7 +4,96 @@
 
 **Project:** Godot 4.7.2, Compatibility renderer. Open `src/project.godot`. The authoritative product requirements are in `src/docs/design/medical_school_rpg_spec.md` (also snapshotted as `src/PROJECT_SPEC.md`). Run-specific instructions live in `src/docs/prompts/` and `src/docs/development/`. User instructions in the current task take precedence over this handoff.
 
-**Current state:** Milestones 1–6 are implemented and committed. Milestones 1–10 are complete: the v0.1 vertical slice is feature-complete per the spec. Milestone 11 (University Hospital, physician shadowing) is implemented and committed (see the 2026-09-24 entry). Remaining work is human medical review and any new scope from the user. The more recent visual, room, and UI improvements below sit on top of Milestones 1–6. (This note originally said the work was uncommitted; it has since been committed — see the 2026-09-23 documentation entry above.)
+**Current state:** Milestones 1–6 are implemented and committed. Milestones 1–10 are complete: the v0.1 vertical slice is feature-complete per the spec. Milestone 11 (University Hospital, physician shadowing) is implemented and committed (see the 2026-09-24 06:51 entry). The Emergency Department, with Emergency Radiology and the campus ambulance, is implemented but not yet committed (see the 2026-09-24 12:17 entry). Remaining work is human medical review and any new scope from the user. The more recent visual, room, and UI improvements below sit on top of Milestones 1–6. (This note originally said the work was uncommitted; it has since been committed — see the 2026-09-23 documentation entry above.)
+
+## 2026-09-24 12:17 PDT — Emergency Department: Level I trauma center, Emergency Radiology and the campus ambulance
+
+User request, after Milestone 11 was committed and pushed (`bf38912`):
+- Add an emergency department to the hospital, a Level 1 trauma center similar to Northwestern Memorial's in Chicago. Seven photos were supplied: the ambulance entrance, the EMERGENCY pylon, the garage, the porte-cochère, an ED room, a station and a "Pods" station.
+- It needs an ambulance outside and should feel very alive: patients arriving on stretchers pushed by EMTs, and the ER's double doors opening.
+- An ambulance should drive in and out of the ER driveway about every 5 real minutes.
+- Areas of care should be organised by how critical patients are (levels 1–5), using the labels Northwestern actually uses.
+- A second floor with MRI, CT and other imaging.
+- Security at the entrance, automatic sliding doors inside the ER, a medication/supply room, computers, TV screens with patient vitals and bay numbers, and anything else that makes it realistic.
+- Mid-task: "Make sure the automatic sliding doors are functional too."
+
+Not committed.
+
+**Acuity scale (researched).**
+- **What the sources say:** Northwestern's public pages don't name a triage scale. The US standard is the five-level Emergency Severity Index (ESI), and ESI version 3 was validated at Northwestern's Division of Emergency Medicine (Tanabe et al., *J Emerg Nurs*, 2004).
+- **The numbering:** in ESI, **Level 1 is the most critical** (1 Resuscitation, 2 Emergent, 3 Urgent, 4 Less urgent, 5 Non-urgent). That is the reverse of the numbering in the request; the game uses the real convention.
+- **Northwestern's own areas:**
+  - a Level I trauma and stroke center with about 100,000 visits a year and a "trauma half" of the department;
+  - a **Super Track** split-flow for low-complexity patients;
+  - a 15-bed **Boarder Care Unit**.
+- **Branding:** none of Northwestern's or the Chicago Fire Department's names or logos are used.
+
+**Campus** (`buildings.gd` `_emergency_front()`, `campus.gd`, `npc/ambient/ems_arrivals.gd`).
+- **The emergency front:** the hospital's south face gets a back street, a red-walled AMBULANCE ONLY bay with automatic doors, a red EMERGENCY canopy over the walk-in doors, and a red pylon. The plaza walkway continues along the building to the ED sidewalk; bounds close the street.
+- **Getting in:** "Enter the Emergency Department" leads to the ED (campus entry `ed`, and `AppState.hospital_entry`, which saves). The map marks the ED entrance.
+- **The ambulance cycle:** every 300 s (first after 25 s), an ambulance drives down the street with its lights on and backs into the bay, rear to the doors. The crew wheels the patient in, comes back 90 s later with the empty cot, and it leaves. It brakes for the student, and a second ambulance stays parked in the bay.
+
+**The Emergency Department** (`world/hospital/hospital_ed.gd`, a fourth zone of the hospital scene at x −140).
+- **Areas by ESI:**
+  - **Trauma & Resuscitation · ESI 1:** T1 & T2 in one room with an active trauma team, plus T3 and T4, by the ambulance entrance.
+  - **Acute Care · ESI 2–3:** Rooms 1–12 around the central station.
+  - **Super Track · ESI 4–5:** five recliners by the waiting room.
+- **Walk-in:** two sets of automatic doors, a metal detector, bag table and two guards, registration, three triage bays, a 24-seat waiting room, vending machines, a check-in kiosk and an ESI information board.
+- **EMS:** a vestibule with two sets of automatic doors to the ambulance garage (with a parked ambulance) and EMS check-in.
+- **Support:** a medication room behind a badge-reader door (dispensing cabinets, fridge), clean supply, decontamination, results waiting, physician workstations, doors to the Boarder Care Unit and the atrium link.
+- **Doors that work:** every room and trauma bay has a glass front with automatic sliding doors that open for whoever steps up (student, crews, patients, transport) and stay shut as people pass along the corridor. Room 11 is locked while being cleaned. Shut doors are solid.
+- **Displays:**
+  - tracking boards (bed, ESI, initials, complaint, RN/MD, status, time);
+  - the trauma board (EMS inbound with a live ETA, and the trauma bays);
+  - waiting-room screens;
+  - bedside monitors in all 16 bays with live, drifting fictional vitals and traces.
+
+**Emergency Radiology, Level 2** (`hospital_imaging.gd`).
+- **Rooms:** CT 1 and CT 2 with lead-glass control rooms, the MRI suite (Zones III and IV, RF door, ferromagnetic posts), X-ray, holding, a dim reading room, ultrasound and MRI screening.
+- **Moving parts:** scanner tables slide patients in and out, and a stretcher transport arrives from the elevator.
+
+**Life** (`world/hospital/ed_life.gd`).
+- **EMS:** a unit every 2–2.7 min: dispatch, ETA on the board, the ambulance in the garage, the crew wheeling the patient through both door sets to a bay, a handover to the bed and boards, the empty cot backed out, and the ambulance leaving.
+- **Walk-ins:** through security and registration to a seat.
+- **Triage calls:** waiting patients called through to Super Track.
+- **Discharges:** patients walk home by the exit lane beside the arch.
+- **Transport:** a wheelchair transport to radiology via the ED's second, out-of-service elevator car.
+- **Staff:** six walking the department.
+
+**New pieces.**
+- `ambulance.gd` (a Type III box ambulance that drives, reverses and brakes), `cart_crew.gd`, `route_walker.gd`, `ems_arrivals.gd`.
+- `ui/ed_display.gd`, `ui/vitals_atlas.gd` and `ui/radiology_images.gd`.
+- `sliding_doors.gd` gains `auto_group`, `auto_depth`, `locked` and `frame_color`.
+- MeshKit gains a `clear` glass kind.
+
+**Motion and clipping pass.** Scripted walkers and carts move without physics. The new `tests/ed_clearance_test.gd` sweeps every route against every box of both floors and the standing figures, and writing it found and fixed these:
+- **EMS cot and crew:** the second EMT walked beside the cot, too wide for the doors and into walls. They now guide from the foot end, in line.
+- **Leaving a bay:** the cot spun on the spot between the bed and the wall. It now backs out and turns in the corridor.
+- **Hidden transport:** a transport "upstairs" was invisible but still solid in front of the elevator.
+- **Room layout:** the portable X-ray blocked the Trauma 1 & 2 doorway. Room 12's door sat at the corridor's dead end.
+- **Arch and kiosk:** discharged patients clipped the arch post, and walk-ins cut through the kiosk screen. The arch was narrower than the figures' arm span.
+- **Staff shortcuts:** staff cut across the station's counter corners.
+- **Recliners:** the leg rests and deep cushions went through seated shins. They are now upright with the leg rest folded.
+- **Trauma board:** it poked through into the medication room.
+- **Red panel:** a red wall panel covered the ambulance doorway.
+- **Elevators:** out-of-service elevator doors were walk-through. This is fixed in `Props.elevator_frame`, so 4 West's decorative car is fixed too.
+
+**Also:**
+- **Sitting:** walkers now sit down and stand up with the rig's sit blend (turn, step back to the seat edge, lower), approaching seats along the row aisles.
+- **Giving way:** staff pedestrians step aside for crews, transports and walking patients as they do for the student.
+- **Campus crew:** the campus crew disappears fully behind the bay doors.
+
+**Tests.**
+- **New:** `tests/emergency_test.gd`, 68 checks, 0 failures. It covers the campus ambulance, every set of doors walked for real, an EMS arrival to departure, walk-ins, radiology by elevator, first person, the atrium link, saving and leaving. `tests/ed_clearance_test.gd`, 8 checks, 0 failures.
+- **Updated:**
+  - `hospital_test` expects 4 zones, and the plaza's far edge is now the street behind the hospital;
+  - `campus.ed_pedestrians` keeps the quad's `pedestrians` list unchanged.
+- **Regression:** all other suites pass. `ambient_test`'s dog-walker wander check failed once in four runs today, passes on rerun and uses unchanged code: a pre-existing intermittent check.
+- **Graphical:** captures in both views, plus zoomed close-ups of crews, doors, the handover, backing out and sitting.
+
+**Docs.**
+- New: `src/docs/development/EMERGENCY_DEPARTMENT_ACCEPTANCE.md`.
+- Updated: `ARCHITECTURE.md`, `KNOWN_ISSUES.md` (ED limitations), `MEDICAL_CONTENT_REVIEW.md` (all ED text, the ESI wording, and the fictional board and vitals data await review), `src/README.md`, `CLAUDE.md`, `AGENTS.md` and `PROJECT_HANDOFF.md`.
 
 ## 2026-09-24 06:51 PDT — Milestone 11: University Hospital and physician shadowing
 

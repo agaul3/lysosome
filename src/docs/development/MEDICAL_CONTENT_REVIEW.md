@@ -201,3 +201,88 @@ The session teaches professional conduct and hospital orientation only. There is
 - **Other results:** blood cultures show no growth at 48 h; the chest X-ray shows right lower lobe consolidation.
 - **Notes:** one nursing note and one progress note, both non-specific about antibiotics.
 - **Status:** these values are illustrative and are not tied to any real patient. Their internal consistency should be reviewed. Reference ranges vary by laboratory.
+
+# Emergency Department and Emergency Radiology (September 24, 2026)
+
+All ED and radiology text is original, AI-assisted prototype content. This covers interaction text, signs, the waiting-room and tracking-board wording, EMS call summaries, complaint and status lists, and the vitals ranges. The model is a large urban academic Level I trauma center; the user named Northwestern Memorial Hospital (Chicago) as the reference. Nothing here is a Northwestern protocol, and no Northwestern names or branding are used.
+
+**Sources checked in this session:**
+- Northwestern Medicine's ED page: a Level I trauma center and stroke center.
+- Feinberg Department of Emergency Medicine, training sites: about 100,000 visits a year, with a "trauma half" of the ED.
+- Feinberg Department of Emergency Medicine, clinical operations initiatives: the Super Track split-flow model for low-complexity patients, and a 15-bed Boarder Care Unit.
+- The Emergency Severity Index level definitions, via a secondary summary (Wikipedia's ESI article). The ESI handbook itself was not consulted.
+- Tanabe et al., *J Emerg Nurs* 2004: ESI version 3 validation work at Northwestern's Division of Emergency Medicine.
+
+Northwestern's public pages do not name their triage scale; ESI is assumed as the US standard. A human reviewer should confirm everything below before any educational release.
+
+## Triage (ESI) wording
+
+| Where | Text (summary) | Review note |
+|---|---|---|
+| ESI information board (waiting room, `ESIBoard`) | Level 1 Resuscitation: immediate life-saving care. Level 2 Emergent: high risk or severe pain; seen right away. Level 3 Urgent: stable, two or more resources (labs, imaging, IV). Level 4 Less urgent: stable, one resource. Level 5 Non-urgent: stable, no resources. "Level 1 is the most critical." | Level 2 also covers new confusion, lethargy or disorientation, and severe distress. Resource examples are simplified (in ESI, IV fluids count as a resource, but an IV line alone does not). Check this against the current ESI handbook. |
+| Waiting-room screen (`ui/ed_display.gd`) | "Patients are seen in order of medical need, not arrival time." "A triage nurse assesses everyone using the ESI." Level lines: Immediate life-saving care / High risk · seen right away / Stable · needs several tests or treatments / Stable · needs one test or treatment / Stable · no tests needed. A "current wait for less urgent care" figure (fictional: 12 + 4 min per waiting patient). "Please tell the triage nurse right away if your symptoms change or get worse." | Patient-facing simplification of resources as "tests or treatments". |
+| Tracking-board endpoint | The board lists bed, ESI level (1 most critical to 5 least), complaint, nurse, physician, status and time. Initials only, because the board is visible to passers-by. | Privacy practice varies by institution. |
+| Area names | Trauma & Resuscitation · ESI 1; Acute Care · ESI 2–3; Super Track · ESI 4–5 | Real departments do not map ESI levels to areas this strictly. Super Track often takes some ESI 3 patients, and acute rooms take ESI 1 overflow. |
+| Colours | 1 red, 2 orange, 3 yellow, 4 green, 5 blue | A game convention, not an ESI or Northwestern standard. |
+
+## Interaction text (endpoints)
+
+- **Trauma 1:**
+  - The trauma team leader is at the head of the bed, with nurses either side.
+  - Resuscitation bays have overhead lights, gases on booms, a crash cart and portable X-ray, because ESI Level 1 patients need life-saving care immediately.
+  - *Review:* team positions vary (the airway physician is typically at the head, with the team leader at the foot); confirm the wording.
+- **Trauma board:** it shows inbound EMS units (who, mechanism, triage level, ETA), so the team and bay are ready before arrival.
+- **Medication room:**
+  - Automated dispensing cabinets: badge in, pick the patient and the ordered medication, and only that drawer opens.
+  - Every removal is logged and controlled substances are counted.
+  - High-alert drugs need a second nurse to check.
+  - *Review:* independent double-check requirements are policy- and drug-specific.
+- **Super Track:** the fast lane for stable, low-complexity problems (ESI 4–5), such as sprains, small cuts, earaches and prescriptions. They are treated in chairs rather than beds, so they don't wait behind the sickest patients.
+- **Security:** everyone walks through the detector, patients and visitors alike. Weapons screening practice varies by hospital.
+- **CT scanner:**
+  - The X-ray tube spins around the ring while the table slides the patient through, building cross-sections in seconds.
+  - Trauma and stroke patients come straight from the ED; the technologist runs the scan from behind lead glass.
+- **MRI suite:**
+  - Zone III is the control area for screened people only; Zone IV is the magnet room.
+  - The magnet is always on, strong enough to pull oxygen tanks and scissors into the bore.
+  - Everyone is screened for metal and implants, and a detector at the door alarms on ferromagnetic objects.
+  - *Review:* check against the ACR four-zone model; Zone III access rules vary.
+- **Reading room:**
+  - It is kept dim so subtle findings are easier to see.
+  - Every ED scan is read here, and critical findings are phoned straight to the treating team.
+  - *Review:* "every scan is read here" is a simplification; off-hours reads may be remote.
+
+## Signs
+
+- MRI · ZONE IV / Strong magnetic field / The magnet is always on.
+- ZONE III / Screened patients and staff only.
+- MRI safety screening / Remove all metal · lockers here.
+- CT 1, CT 2, X-RAY: CAUTION · RADIATION AREA.
+- DECONTAMINATION.
+- Medication Room / Staff only · badge access.
+- All visitors are screened / Weapons are not permitted.
+- Boarder Care Unit · Pods C–F / Admitted patients awaiting beds.
+- AMBULANCE ONLY; AMBULANCE ENTRANCE · EMS ONLY; EMERGENCY.
+
+## Fictional board and monitor data (`world/hospital/ed_life.gd`)
+
+- **EMS call summaries by ESI:**
+  - 1: pedestrian struck (GCS 9), rollover crash, fall from 20 ft, cardiac arrest with ROSC in the field, respiratory failure.
+  - 2: chest pain (STEMI alert), stroke alert (onset 40 min), short of breath (SpO₂ 86%), sepsis alert (BP 84/50), head injury on blood thinners.
+  - 3: abdominal pain with vomiting, fall at home with hip pain, fever and confusion, kidney stone pain, syncope (now alert).
+  - *Review the level assignments:* hypotensive sepsis may be triaged ESI 1, "fever and confusion" is often ESI 2, and syncope depends on context.
+- **Tracking-board complaints by ESI:**
+  - 1: trauma/MVC, pedestrian struck, cardiac arrest, respiratory failure.
+  - 2: chest pain, stroke symptoms, shortness of breath, sepsis, head injury, GI bleed.
+  - 3: abdominal pain, fever, kidney stone, fall with hip pain, dizziness, vomiting.
+  - 4: ankle injury, laceration, ear pain, back strain, rash.
+  - 5: prescription refill, sore throat, wound check, minor burn.
+  - Statuses include "Resus in progress", "Trauma team at bedside", "Awaiting CT/labs/results/X-ray", "Consult pending", "Admit · boarding" and "Ready for discharge".
+- **Bedside vitals** (random within ranges, drifting slowly):
+  - ESI 1–2: HR 104–128, SpO₂ 88–94%, RR 22–30.
+  - ESI 1 only: BP about 88–104/50–64.
+  - Others: BP about 112–148/66–90; ESI 3–5: HR 64–96, SpO₂ 95–99%, RR 12–18.
+  - Traces are stylised. *Review:* ESI 2 patients are not all tachycardic and hypoxic; these ranges exist only to make sicker bays look sicker.
+- **Radiology images** (`ui/radiology_images.gd`): obviously schematic drawings (CT head, chest X-ray, CT abdomen, MRI brain), not real studies, with no findings implied.
+- **Names and numbers:** EMS units ("EMS 7", "Medic 4", …), staff initials, patient initials and ages are invented.
+

@@ -31,6 +31,10 @@ var player_name: String = Presets.get_preset(Presets.DEFAULT_ID).name
 var name_customized := false
 var transitioning := false
 var campus_entry := "dorm"
+## Where the student arrives in the hospital: "main" (the atrium) or "ed"
+## (the Emergency Department's walk-in entrance). The hospital keeps it
+## current while you move around, so a save resumes in the right part.
+var hospital_entry := "main"
 ## View preference for this session (like volume and fullscreen, not saved).
 var first_person := false
 ## Mouse / right-stick look speed multiplier for the first-person view.
@@ -45,6 +49,7 @@ func start_new_game() -> void:
 	name_customized = false
 	select_character(Presets.DEFAULT_ID)
 	campus_entry = "dorm"
+	hospital_entry = "main"
 	_set_phase(Phase.CHARACTER_SELECT)
 
 func set_first_person(enabled: bool) -> void:
@@ -141,7 +146,7 @@ func leave_dorm() -> void:
 func enter_campus(entry: String = "dorm") -> void:
 	if transitioning:
 		return
-	campus_entry = entry if entry in ["dorm", "lecture_building", "hospital"] else "dorm"
+	campus_entry = entry if entry in ["dorm", "lecture_building", "hospital", "ed"] else "dorm"
 	_request_transition("campus", Phase.CAMPUS)
 
 func enter_lecture_building() -> void:
@@ -152,9 +157,11 @@ func enter_lecture_hall() -> void:
 	if phase == Phase.LECTURE_BUILDING:
 		_request_transition("lecture_hall", Phase.LECTURE_HALL)
 
-## University Hospital, across the street from the campus.
-func enter_hospital() -> void:
-	if phase == Phase.CAMPUS:
+## University Hospital, across the street from the campus: its main
+## entrance, or the Emergency Department's walk-in entrance ("ed").
+func enter_hospital(entry := "main") -> void:
+	if phase == Phase.CAMPUS and not transitioning:
+		hospital_entry = entry if entry in ["main", "ed"] else "main"
 		_request_transition("hospital", Phase.HOSPITAL)
 
 func return_to_title() -> void:

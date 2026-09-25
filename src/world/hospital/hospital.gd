@@ -1,14 +1,18 @@
 extends Node3D
-## University Hospital (Milestone 11): the Level 1 atrium and the 4 West
-## inpatient unit. Both floors are built in this one scene, side by side
-## (the unit 140 m east of the lobby), and a working elevator car carries the
-## student between them behind a short fade, so riding up is continuous
-## with the shadowing session instead of a scene change.
+## University Hospital: the Level 1 atrium and the 4 West inpatient unit
+## (Milestone 11), and the Emergency Department with Emergency Radiology on
+## its second level. Every floor is built in this one scene, far apart (the
+## unit 140 m east of the lobby, the ED 140 m west, radiology 140 m north),
+## and working elevator cars and staff doors carry the student between them
+## behind a short fade, so moving through the building needs no scene change.
+## Only the floor the student is on is shown.
 ##
-## The builders (hospital_lobby.gd, hospital_unit.gd) lay out geometry in a
-## HospitalKit and call back into this scene for everything that is a node:
-## doors, signs, people, interactions and named anchors. The shadowing
-## session (shadowing_session.gd) drives the physician through the anchors.
+## The builders (hospital_lobby.gd, hospital_unit.gd, hospital_ed.gd,
+## hospital_imaging.gd) lay out geometry in a HospitalKit and call back into
+## this scene for everything that is a node: doors, signs, people, screens,
+## interactions and named anchors. The shadowing session
+## (shadowing_session.gd) drives the physician through the anchors;
+## ed_life.gd keeps the Emergency Department busy.
 signal ride_finished(zone: String)
 signal ehr_ready
 const Geometry = preload("res://world/geometry.gd")
@@ -32,11 +36,29 @@ const Nameplate = preload("res://ui/world_nameplate.gd")
 const Buildings = preload("res://world/campus/buildings.gd")
 const Flora = preload("res://world/campus/flora.gd")
 const Pedestrian = preload("res://npc/ambient/pedestrian.gd")
+const ED = preload("res://world/hospital/hospital_ed.gd")
+const Imaging = preload("res://world/hospital/hospital_imaging.gd")
+const EDLife = preload("res://world/hospital/ed_life.gd")
+const EDDisplay = preload("res://ui/ed_display.gd")
+const VitalsAtlas = preload("res://ui/vitals_atlas.gd")
+const RadiologyImages = preload("res://ui/radiology_images.gd")
 const UNIT_OFFSET := Vector3(140, 0, 0)
+const ED_OFFSET := ED.ORIGIN
+const IMAGING_OFFSET := Vector3(0, 0, -140)
 ## Per floor: HUD location, camera framing and follow bounds (world x, z).
 const ZONES := {
 	"lobby": {"title": "University Hospital · Level 1 Lobby", "min": Vector2(-11, -9.5), "max": Vector2(11, 6.5), "view": 19.5},
 	"unit": {"title": "University Hospital · Level 4 · 4 West", "min": Vector2(137, -2.5), "max": Vector2(172, 3.0), "view": 15.5},
+	"ed": {"title": "University Hospital · Emergency Department", "min": Vector2(-169, -12.0), "max": Vector2(-111, 20.0), "view": 20.0},
+	"imaging": {"title": "University Hospital · Level 2 · Emergency Radiology", "min": Vector2(-17, -149.0), "max": Vector2(17, -131.0), "view": 17.0},
+}
+## Which floor each floor's working elevator car goes to.
+const ELEVATOR_ROUTES := {"lobby": "unit", "unit": "lobby", "ed": "imaging", "imaging": "ed"}
+const ELEVATOR_TITLES := {
+	"unit": "Take the elevator to Level 4 · 4 West",
+	"lobby": "Take the elevator to Level 1 · Lobby",
+	"imaging": "Take the elevator to Level 2 · Emergency Radiology",
+	"ed": "Take the elevator to Level 1 · Emergency Department",
 }
 ## Lobby visitors stroll this graph (x, z): around the Information desk, to the lifts and the café.
 const VISITOR_NODES := [Vector2(0, 7.0), Vector2(3.8, 3.2), Vector2(3.8, -5.0), Vector2(0, -9.5), Vector2(-3.8, -5.6), Vector2(-3.4, 1.8), Vector2(8.2, -2.0), Vector2(8.5, -9.5)]
@@ -62,6 +84,23 @@ var layers: Array = []
 var entrance_doors: Node3D
 var lobby_elevator: Node3D
 var unit_elevator: Node3D
+var ed_elevator: Node3D
+var imaging_elevator: Node3D
+## One root per floor; only the student's floor is shown.
+var zone_roots := {}
+## Where builders put the nodes they add (the root of the floor being built).
+var build_root: Node3D
+## Busy life in the Emergency Department (EMS crews, walk-ins, boards).
+var ed_life: Node
+var ed_exit: Node3D
+var lobby_to_ed: Node3D
+var ed_to_lobby: Node3D
+## What the ED builder hands the life simulation: bays, seats, doors, routes.
+var ed_layout := {}
+var imaging_layout := {}
+## Shared live displays (one viewport each, shown on many screens).
+var displays := {}
+var display_viewports := {}
 var charge_nurse: Node3D
 var exit_door: Node3D
 var elevator_calls := {}
@@ -72,7 +111,7 @@ var ride_to := ""
 var ride_companion: Node3D
 var ride_timer := 0.0
 var riding := false
-var close_timers := {"lobby": 0.0, "unit": 0.0}
+var close_timers := {"lobby": 0.0, "unit": 0.0, "ed": 0.0, "imaging": 0.0}
 var marker: MeshInstance3D
 ## The workroom's EHR workstation screen and the close-up camera.
 var ehr_screen: MeshInstance3D
@@ -83,29 +122,36 @@ var ehr_open := false
 
 func _ready() -> void:
 	player = Player.instantiate()
-	var lobby := Kit.new(Vector3.ZERO)
-	Lobby.build(self, lobby)
-	layers.append(lobby.commit(self, "Lobby"))
-	var unit := Kit.new(UNIT_OFFSET)
-	Unit.build(self, unit)
-	layers.append(unit.commit(self, "Unit"))
+	for zone_name in ["lobby", "unit", "ed", "imaging"]:
+		var root := Node3D.new()
+		root.name = zone_name.capitalize() + "Floor"
+		add_child(root)
+		zone_roots[zone_name] = root
+	_build_floor("lobby", Lobby, Vector3.ZERO, "Lobby")
+	_build_floor("unit", Unit, UNIT_OFFSET, "Unit")
+	_build_floor("ed", ED, ED_OFFSET, "EmergencyDepartment")
+	_build_floor("imaging", Imaging, IMAGING_OFFSET, "EmergencyRadiology")
+	build_root = self
 	_build_lighting()
-	# One slab under both floors: the floor finishes are visual only.
-	var ground := StaticBody3D.new()
-	ground.name = "FloorCollision"
-	var slab := CollisionShape3D.new()
-	slab.shape = BoxShape3D.new()
-	slab.shape.size = Vector3(260, 1, 120)
-	slab.position = Vector3(UNIT_OFFSET.x / 2.0, -0.5, 0)
-	ground.add_child(slab)
-	add_child(ground)
+	# Floor slabs: the floor finishes are visual only.
+	_floor_slab(Vector3(UNIT_OFFSET.x / 2.0, -0.5, 0), Vector3(260, 1, 120))
+	_floor_slab(ED_OFFSET + Vector3(0, -0.5, 8), Vector3(170, 1, 90))
+	_floor_slab(IMAGING_OFFSET + Vector3(0, -0.5, 0), Vector3(70, 1, 50))
 	marker = ring(0.42, Color("5ec8b5"))
 	marker.name = "StandMarker"
 	marker.visible = false
 	add_child(marker)
 	exit_door = add_endpoint("CampusExit", "Leave for campus", "", Vector3(0, 1.0, 9.1), 1.7)
 	exit_door.activated.connect(AppState.enter_campus.bind("hospital"))
-	player.position = anchors.entrance + Vector3(0, 0.05, 0)
+	ed_exit = add_endpoint("EmergencyExit", "Leave for campus", "", anchors.ed_exit, 1.7)
+	ed_exit.activated.connect(AppState.enter_campus.bind("ed"))
+	# Staff doors between the atrium's west corridor and the Emergency Department.
+	lobby_to_ed = add_endpoint("LobbyToED", "Go to the Emergency Department", "", Vector3(-29.2, 1.0, -10.5), 1.7)
+	lobby_to_ed.activated.connect(_on_transfer.bind(anchors.ed_from_lobby, PI / 2))
+	ed_to_lobby = add_endpoint("EDToLobby", "Go to the main hospital · Atrium", "", anchors.ed_link_door, 1.7)
+	ed_to_lobby.activated.connect(_on_transfer.bind(Vector3(-28.0, 0, -10.5), -PI / 2))
+	var arrival: Vector3 = anchors.ed_entrance if AppState.hospital_entry == "ed" else anchors.entrance
+	player.position = arrival + Vector3(0, 0.05, 0)
 	add_child(player)
 	camera = Camera.new()
 	camera.view_size = ZONES.lobby.view
@@ -129,9 +175,30 @@ func _ready() -> void:
 	session.name = "ShadowingSession"
 	add_child(session)
 	session.setup(self, lecture_ui, physician)
+	ed_life = EDLife.new()
+	ed_life.name = "EDLife"
+	add_child(ed_life)
+	ed_life.setup(self)
 	AppState.view_changed.connect(apply_view)
 	apply_view(AppState.first_person)
 	_update_zone(true)
+
+## Builds one floor into its root with a HospitalKit at `origin`.
+func _build_floor(zone_name: String, builder: Variant, origin: Vector3, label: String) -> void:
+	build_root = zone_roots[zone_name]
+	var kit := Kit.new(origin)
+	builder.build(self, kit)
+	layers.append(kit.commit(build_root, label))
+
+func _floor_slab(center: Vector3, size: Vector3) -> void:
+	var ground := StaticBody3D.new()
+	ground.name = "FloorCollision"
+	var slab := CollisionShape3D.new()
+	slab.shape = BoxShape3D.new()
+	slab.shape.size = size
+	slab.position = center
+	ground.add_child(slab)
+	add_child(ground)
 
 ## First person shows the whole building (ceilings, full-height walls, high
 ## signs); the overhead view shows the cutaway.
@@ -148,7 +215,13 @@ func anchor(id: String) -> Vector3:
 	return anchors.get(id, Vector3.INF)
 
 func zone_of(point: Vector3) -> String:
-	return "unit" if point.x > UNIT_OFFSET.x / 2.0 else "lobby"
+	if point.x > UNIT_OFFSET.x / 2.0:
+		return "unit"
+	if point.x < ED_OFFSET.x / 2.0:
+		return "ed"
+	if point.z < IMAGING_OFFSET.z / 2.0:
+		return "imaging"
+	return "lobby"
 
 func _process(delta: float) -> void:
 	_update_zone()
@@ -166,6 +239,14 @@ func _update_zone(force := false) -> void:
 	camera.follow_max = framing.max
 	camera.follow(player)
 	hud.set_location(framing.title)
+	for zone_name in zone_roots:
+		zone_roots[zone_name].visible = zone_name == zone
+	# The ED's live displays only render while the student is there to see them.
+	for mode in display_viewports:
+		if mode != "radiology":
+			display_viewports[mode].render_target_update_mode = SubViewport.UPDATE_ALWAYS if zone in ["ed", "imaging"] else SubViewport.UPDATE_DISABLED
+	# A save made here resumes at the entrance of this part of the hospital.
+	AppState.hospital_entry = "ed" if zone in ["ed", "imaging"] else "main"
 
 # --- Builder API --------------------------------------------------------------------------
 
@@ -187,12 +268,13 @@ func _layered(node: Node3D, layer: Variant) -> void:
 		tp_nodes.append(node)
 
 ## Sliding door pair; `pos` is the doorway centre on the floor, the leaves slide along local X.
-func add_doors(node_name: String, pos: Vector3, yaw: float, width: float, height: float, glazed: bool) -> Node3D:
+func add_doors(node_name: String, pos: Vector3, yaw: float, width: float, height: float, glazed: bool, frame := Color("3a4045")) -> Node3D:
 	var doors := SlidingDoors.new(width, height, glazed)
+	doors.frame_color = frame
 	doors.name = node_name
 	doors.position = pos
 	doors.rotation.y = yaw
-	add_child(doors)
+	build_root.add_child(doors)
 	return doors
 
 ## A sign mounted flat on a surface (see Geometry.wall_sign). `layer`: "always",
@@ -209,27 +291,27 @@ func add_sign(text: String, pos: Vector3, yaw: float, font_size := 24, pixel := 
 		sign.plate_color = plate
 	if ink.a > 0.0:
 		sign.text_color = ink
-	add_child(sign)
+	build_root.add_child(sign)
 	_layered(sign, layer)
 	return sign
 
 ## Wayfinding text on the floor in front of a door, readable from the corridor.
-func add_floor_label(text: String, pos: Vector3) -> Label3D:
+func add_floor_label(text: String, pos: Vector3, pixel := 0.0036) -> Label3D:
 	var label := Label3D.new()
 	label.text = text
 	label.font = Nameplate.FONT
 	label.font_size = 64
-	label.pixel_size = 0.0036
+	label.pixel_size = pixel
 	label.modulate = Color(0.36, 0.42, 0.45, 0.75)
 	label.outline_size = 0
 	label.rotation = Vector3(-PI / 2, 0, 0)
 	label.position = pos
 	label.shaded = false
-	add_child(label)
+	build_root.add_child(label)
 	return label
 
 func add_letters(text: String, pos: Vector3, yaw: float, height: float) -> void:
-	Buildings.letters(self, text, pos, yaw, height, Color("3a4247"), 0.05)
+	Buildings.letters(build_root, text, pos, yaw, height, Color("3a4247"), 0.05)
 
 ## Floor number on an elevator's indicator screen (amber, no plate).
 func add_indicator(pos: Vector3, text: String, yaw := 0.0) -> void:
@@ -243,13 +325,13 @@ func add_indicator(pos: Vector3, text: String, yaw := 0.0) -> void:
 	label.shaded = false
 	label.rotation.y = yaw
 	label.position = pos + Basis(Vector3.UP, yaw) * Vector3(0, 0, 0.02)
-	add_child(label)
+	build_root.add_child(label)
 
 ## The call point for the working car on a floor: rides to `to_zone`. A panel
 ## inside the car does the same, so the student can also ride from inside.
 func add_elevator_call(node_name: String, pos: Vector3, to_zone: String) -> void:
 	var here := zone_of(pos)
-	var title := "Take the elevator to Level 4 · 4 West" if to_zone == "unit" else "Take the elevator to Level 1 · Lobby"
+	var title: String = ELEVATOR_TITLES[to_zone]
 	var call_point := add_endpoint(node_name, title, "", pos, 2.0)
 	call_point.activated.connect(_on_elevator_requested.bind(to_zone))
 	var panel := add_endpoint(node_name + "Panel", title, "", cab_centre(here) + cab_basis(here) * Vector3(-0.85, 1.2, 0.85), 1.5)
@@ -258,13 +340,13 @@ func add_elevator_call(node_name: String, pos: Vector3, to_zone: String) -> void
 
 ## A standing, seated or bedbound figure. `who` is a preset id or a full look.
 ## Seated figures take the seat height; bedbound ones are placed by the hip.
-func add_figure(who: Variant, pos: Vector3, yaw: float, pose := "stand", seat_top := Props.ARMCHAIR_SEAT) -> Node3D:
+func add_figure(who: Variant, pos: Vector3, yaw: float, pose := "stand", seat_top := Props.ARMCHAIR_SEAT, tilt := Props.BED_TILT) -> Node3D:
 	var figure := Node3D.new()
 	figure.name = "Figure"
 	var look := Appearance.new()
 	look.name = "Appearance"
 	figure.add_child(look)
-	add_child(figure)
+	build_root.add_child(figure)
 	if typeof(who) == TYPE_STRING:
 		look.apply_preset(who)
 	else:
@@ -277,14 +359,9 @@ func add_figure(who: Variant, pos: Vector3, yaw: float, pose := "stand", seat_to
 			figure.rotation.y = yaw
 		"bed":
 			# Pivot at the hip: recline the torso onto the raised head section
-			# and bend at the hips so the legs lie flat under the blanket.
+			# (tilt 0 lies flat) and bend at the hips so the legs lie flat.
 			figure.position = pos
-			figure.rotation = Vector3(PI / 2.0 - Props.BED_TILT, yaw, 0)
-			look.position.y = -Appearance.HIP_HEIGHT * look.height_scale
-			for index in range(2):
-				look.hips[index].rotation.x = Props.BED_TILT
-				look.knees[index].rotation.x = 0.0
-				look.shoulders[index].rotation = Vector3(0.25, 0, 0.12 * (1 if index else -1))
+			Props.lay(figure, look, tilt, yaw)
 		_:
 			figure.position = pos
 			figure.rotation.y = yaw
@@ -299,7 +376,7 @@ func add_endpoint(node_name: String, title: String, response: String, pos: Vecto
 	endpoint.response = response
 	endpoint.reach = reach
 	endpoint.position = pos
-	add_child(endpoint)
+	build_root.add_child(endpoint)
 	return endpoint
 
 ## A hand-sanitizer dispenser the student can use; `id` names it for the script.
@@ -309,14 +386,14 @@ func add_dispenser(id: String, pos: Vector3) -> Node3D:
 	return endpoint
 
 func add_tree(pos: Vector3, scale: float) -> void:
-	Flora.plant(self, "ornamental", [[pos, scale, pos.x * 1.7]], false)
+	Flora.plant(build_root, "ornamental", [[pos, scale, pos.x * 1.7]], false)
 
 func add_shrubs(pos: Vector3, size: float) -> void:
 	var placements := []
 	for index in range(4):
 		var angle := TAU * index / 4.0 + 0.6
 		placements.append([pos + Vector3(cos(angle), 0, sin(angle)) * size * 0.26, 0.42, angle])
-	Flora.plant(self, "shrub", placements, false)
+	Flora.plant(build_root, "shrub", placements, false)
 
 ## The EHR workstation's screen: a quad showing the chart drawn in a viewport.
 func add_ehr_screen(pos: Vector3, yaw: float, screen_size: Vector2) -> void:
@@ -340,7 +417,90 @@ func add_ehr_screen(pos: Vector3, yaw: float, screen_size: Vector2) -> void:
 	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	ehr_screen.material_override = material
 	ehr_screen.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	add_child(ehr_screen)
+	build_root.add_child(ehr_screen)
+
+## An empty node on the current floor for a moving prop (a scanner tabletop).
+func add_prop_node(node_name: String, pos: Vector3, yaw := 0.0) -> Node3D:
+	var node := Node3D.new()
+	node.name = node_name
+	node.position = pos
+	node.rotation.y = yaw
+	build_root.add_child(node)
+	return node
+
+## A plain box as its own node (a blanket that comes and goes with a patient).
+func add_box_node(node_name: String, center: Vector3, size: Vector3, color: Color, yaw := 0.0) -> MeshInstance3D:
+	var mesh := MeshInstance3D.new()
+	mesh.name = node_name
+	mesh.mesh = BoxMesh.new()
+	mesh.mesh.size = size
+	mesh.position = center
+	mesh.rotation.y = yaw
+	var material := StandardMaterial3D.new()
+	material.albedo_color = color
+	material.roughness = 0.9
+	mesh.material_override = material
+	build_root.add_child(mesh)
+	return mesh
+
+## The texture of a shared ED display ("tracking", "trauma", "waiting").
+func board_texture(mode: String) -> Texture2D:
+	if not displays.has(mode):
+		var display := EDDisplay.new(mode)
+		displays[mode] = display
+		display_viewports[mode] = add_board("Display_" + mode, display, Vector2i(EDDisplay.SIZE))
+	return display_viewports[mode].get_texture()
+
+## The bedside monitors' atlas (each screen shows one tile).
+func vitals_texture() -> Texture2D:
+	if not displays.has("vitals"):
+		var atlas := VitalsAtlas.new()
+		displays["vitals"] = atlas
+		display_viewports["vitals"] = add_board("VitalsAtlas", atlas, Vector2i(VitalsAtlas.SIZE))
+	return display_viewports["vitals"].get_texture()
+
+## Schematic radiology images (drawn once).
+func radiology_texture() -> Texture2D:
+	if not displays.has("radiology"):
+		var images := RadiologyImages.new()
+		displays["radiology"] = images
+		var viewport := add_board("RadiologyImages", images, Vector2i(RadiologyImages.SIZE))
+		viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+		display_viewports["radiology"] = viewport
+	return display_viewports["radiology"].get_texture()
+
+## A live display: a Control drawn into its own viewport (boards, monitors).
+## Returns the viewport; use its texture on one or more screens.
+func add_board(node_name: String, control: Control, size: Vector2i) -> SubViewport:
+	var viewport := SubViewport.new()
+	viewport.name = node_name
+	viewport.size = size
+	viewport.disable_3d = true
+	viewport.transparent_bg = false
+	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	add_child(viewport)
+	viewport.add_child(control)
+	return viewport
+
+## A screen showing `texture` (optionally one tile of it) facing +Z rotated by yaw.
+func add_screen(texture: Texture2D, pos: Vector3, yaw: float, screen_size: Vector2, tile := Rect2(0, 0, 1, 1), layer: Variant = "always") -> MeshInstance3D:
+	var screen := MeshInstance3D.new()
+	screen.name = "Screen"
+	screen.mesh = QuadMesh.new()
+	screen.mesh.size = screen_size
+	screen.position = pos + Basis(Vector3.UP, yaw) * Vector3(0, 0, 0.004)
+	screen.rotation.y = yaw
+	var material := StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.albedo_texture = texture
+	material.uv1_scale = Vector3(tile.size.x, tile.size.y, 1)
+	material.uv1_offset = Vector3(tile.position.x, tile.position.y, 0)
+	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	screen.material_override = material
+	screen.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	build_root.add_child(screen)
+	_layered(screen, layer)
+	return screen
 
 ## A flat ring on the floor: the physician's guide ring and the "stand here" marker.
 static func ring(radius: float, color: Color) -> MeshInstance3D:
@@ -370,12 +530,17 @@ func hide_marker() -> void:
 # --- Elevators ----------------------------------------------------------------------------
 
 func elevator_doors(zone_name: String) -> Node3D:
-	return lobby_elevator if zone_name == "lobby" else unit_elevator
+	return {"lobby": lobby_elevator, "unit": unit_elevator, "ed": ed_elevator, "imaging": imaging_elevator}[zone_name]
 
 func cab_rect(zone_name: String) -> Rect2:
-	if zone_name == "lobby":
-		return Lobby.CAB
-	return Rect2(Unit.CAB.position + Vector2(UNIT_OFFSET.x, UNIT_OFFSET.z), Unit.CAB.size)
+	match zone_name:
+		"lobby":
+			return Lobby.CAB
+		"unit":
+			return Rect2(Unit.CAB.position + Vector2(UNIT_OFFSET.x, UNIT_OFFSET.z), Unit.CAB.size)
+		"ed":
+			return Rect2(ED.CAB.position + Vector2(ED_OFFSET.x, ED_OFFSET.z), ED.CAB.size)
+	return Rect2(Imaging.CAB.position + Vector2(IMAGING_OFFSET.x, IMAGING_OFFSET.z), Imaging.CAB.size)
 
 func cab_centre(zone_name: String) -> Vector3:
 	var rect := cab_rect(zone_name)
@@ -383,7 +548,12 @@ func cab_centre(zone_name: String) -> Vector3:
 
 ## The car's frame: local +Z points out through its doors.
 func cab_basis(zone_name: String) -> Basis:
-	return Basis.IDENTITY if zone_name == "lobby" else Basis(Vector3.UP, PI / 2)
+	match zone_name:
+		"lobby":
+			return Basis.IDENTITY
+		"unit":
+			return Basis(Vector3.UP, PI / 2)
+	return Basis(Vector3.UP, PI) # ED and radiology cars open to the north.
 
 func in_cab(node: Node3D, zone_name := "") -> bool:
 	var point := node.global_position
@@ -423,7 +593,7 @@ func _update_elevators(delta: float) -> void:
 				ride_to = ""
 		return
 	# Doors left open (after arriving) close once everyone is clear of the car.
-	for zone_name in ["lobby", "unit"]:
+	for zone_name in ["lobby", "unit", "ed", "imaging"]:
 		var doors := elevator_doors(zone_name)
 		if doors.is_closed() or doors.target_open == 0.0:
 			continue
@@ -473,6 +643,33 @@ func _ride() -> void:
 	riding = false
 	player.movement_enabled = true
 	ride_finished.emit(to)
+
+## Staff doors between floors (the atrium's west corridor and the ED): a fade
+## and a step through, like the elevator. Not while the session is guiding.
+func _on_transfer(to_point: Vector3, yaw: float) -> void:
+	if riding:
+		return
+	if not session.allows_free_ride():
+		hud.show_message("Stay with Dr. Okafor for now.", 4.0)
+		return
+	transfer(to_point, yaw)
+
+func transfer(to_point: Vector3, yaw: float) -> void:
+	riding = true
+	player.movement_enabled = false
+	await Transition.cover()
+	player.global_position = to_point + Vector3(0, 0.05, 0)
+	player.velocity = Vector3.ZERO
+	player.appearance.rotation.y = yaw
+	player.first_person.yaw = yaw
+	player.first_person.current_eye = player.first_person.eye_target()
+	player.first_person.previous_eye = player.first_person.current_eye
+	_update_zone(true)
+	if DisplayServer.get_name() != "headless":
+		await get_tree().create_timer(0.25).timeout
+	Transition.reveal()
+	riding = false
+	player.movement_enabled = true
 
 # --- EHR close-up -------------------------------------------------------------------------
 
@@ -556,7 +753,7 @@ func _build_lighting() -> void:
 		fill.omni_range = 14.0
 		fill.light_energy = 0.35
 		fill.light_color = Color("fff4e4")
-		add_child(fill)
+		zone_roots.lobby.add_child(fill)
 		fp_nodes.append(fill)
 	for x in [4.0, 16.0, 28.0]:
 		var fill := OmniLight3D.new()
@@ -564,7 +761,24 @@ func _build_lighting() -> void:
 		fill.omni_range = 9.0
 		fill.light_energy = 0.3
 		fill.light_color = Color("fff6ea")
-		add_child(fill)
+		zone_roots.unit.add_child(fill)
+		fp_nodes.append(fill)
+	# The Emergency Department and radiology: cooler, even clinical light.
+	for point in [Vector3(-26, 2.9, -8), Vector3(-10, 2.9, -8), Vector3(6, 2.9, -8), Vector3(22, 2.9, -2), Vector3(-20, 2.9, 8), Vector3(0, 2.9, 10), Vector3(20, 2.9, 12)]:
+		var fill := OmniLight3D.new()
+		fill.position = ED_OFFSET + point
+		fill.omni_range = 13.0
+		fill.light_energy = 0.28
+		fill.light_color = Color("f4f8fa")
+		zone_roots.ed.add_child(fill)
+		fp_nodes.append(fill)
+	for point in [Vector3(-14, 2.8, -6), Vector3(4, 2.8, -6), Vector3(-10, 2.8, 7), Vector3(10, 2.8, 7)]:
+		var fill := OmniLight3D.new()
+		fill.position = IMAGING_OFFSET + point
+		fill.omni_range = 12.0
+		fill.light_energy = 0.26
+		fill.light_color = Color("f4f8fa")
+		zone_roots.imaging.add_child(fill)
 		fp_nodes.append(fill)
 
 ## A few visitors crossing the atrium (the campus passer-by, on a lobby graph).
@@ -575,6 +789,6 @@ func _build_visitors() -> void:
 		walker.name = "Visitor"
 		walker.nodes = VISITOR_NODES
 		walker.edges = VISITOR_EDGES
-		add_child(walker)
+		zone_roots.lobby.add_child(walker)
 		walker.setup("", player, keep_clear)
 		visitors.append(walker)

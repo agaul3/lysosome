@@ -133,24 +133,10 @@ static func _elevators(hospital: Node3D, k, at: Callable) -> void:
 	# The working car: doors, cab and the elevator interaction.
 	var doors: Node3D = hospital.add_doors("LobbyElevatorDoors", at.call(Vector3(ACTIVE_ELEVATOR, 0, face + 0.02)), 0.0, 1.3, 2.36, false)
 	hospital.lobby_elevator = doors
-	_cab(k, Vector3(ACTIVE_ELEVATOR, 0, Z0), 0.0)
+	Props.elevator_cab(k, Vector3(ACTIVE_ELEVATOR, 0, Z0), 0.0)
 	hospital.add_elevator_call("LobbyElevator", at.call(Vector3(ACTIVE_ELEVATOR + 0.97, 1.15, face + 0.25)), "unit")
 	# Floor directory beside the cars.
 	hospital.add_sign("Floor directory\n8  Rehabilitation\n7  Oncology\n6  Cardiology\n5  Surgery · Recovery\n4  4 West · Internal Medicine\n3  Operating rooms\n2  Imaging · Laboratory\n1  Lobby · Café · Pharmacy", at.call(Vector3(-6.2, 1.6, face + 0.1)), 0.0, 24, 0.0055, false)
-
-## A car behind a north-wall door at `door` (floor centre of the opening).
-static func _cab(k, door: Vector3, yaw: float) -> void:
-	var basis := Basis(Vector3.UP, yaw)
-	var place := func(local: Vector3) -> Vector3: return door + basis * local
-	var metal := Color("aeb5ba")
-	k.box("paving", place.call(Vector3(0, 0.0, -1.2)), (basis * Vector3(2.2, 0.02, 2.4)).abs(), Color("6e757a"))
-	k.box("metal", place.call(Vector3(0, 1.3, -2.45)), (basis * Vector3(2.3, 2.6, 0.1)).abs(), metal, "always", true)
-	for side in [-1, 1]:
-		k.box("metal", place.call(Vector3(side * 1.12, 1.3, -1.25)), (basis * Vector3(0.1, 2.6, 2.4)).abs(), metal, "always", true)
-	k.box("facade", place.call(Vector3(0, 2.62, -1.25)), (basis * Vector3(2.3, 0.1, 2.4)).abs(), Color("d9dcde"), "fp")
-	k.box("light", place.call(Vector3(0, 2.56, -1.25)), (basis * Vector3(1.4, 0.02, 1.2)).abs(), Color("fffaf0"), "fp")
-	k.box("metal", place.call(Vector3(-0.95, 1.2, -0.3)), (basis * Vector3(0.05, 0.5, 0.2)).abs(), Color("2a2f33"))
-	k.box("metal", place.call(Vector3(0, 0.95, -2.38)), (basis * Vector3(2.0, 0.05, 0.05)).abs(), Color("d9dcde"))
 
 # --- Information and security -----------------------------------------------------
 
@@ -267,7 +253,7 @@ static func _corridors(hospital: Node3D, k, at: Callable) -> void:
 	for side in [-1, 1]:
 		k.box("walnut", Vector3(-29.75, 1.15, -10.5 + side * 0.7), Vector3(0.06, 2.3, 1.36), Color.WHITE)
 		k.box("light", Vector3(-29.71, 1.55, -10.5 + side * 0.7), Vector3(0.02, 0.5, 0.3), Color("cfe6f1"))
-	hospital.add_sign("Emergency Department · Staff access", at.call(Vector3(-29.72, 2.55, -10.5)), PI / 2, 22, 0.006, true)
+	hospital.add_sign("Emergency Department", at.call(Vector3(-29.72, 2.55, -10.5)), PI / 2, 22, 0.006, true)
 	hospital.add_sign("← Emergency Department · Imaging", at.call(Vector3(X0 + 0.16, 3.4, -10.5)), PI / 2, 24, 0.008, false)
 	# North-east: toward Outpatient Clinics and the Pharmacy.
 	k.floor_rect(14.0, -26.0, 17.0, Z0, FLOOR.darkened(0.03))

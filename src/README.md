@@ -4,6 +4,14 @@ A local educational RPG prototype where real medical learning will drive progres
 
 Milestone 11 adds University Hospital, across the street from the parking lot: follow the sidewalk east of the lot to the crossing and the entrance plaza. After class, meet Dr. Okafor at the Information desk for a 9:00 shadowing session. Follow her to the elevators and up to 4 West. Introduce yourself to the charge nurse, see the team's EHR in the workroom, clean your hands and stand at the foot of the bed for rounds in room 412, and read an isolation sign. Short etiquette checks award XP and appear under Clinical Skills in Knowledge; each stop's takeaway lands in Lecture Notes. The elevator also works on its own once the session is done.
 
+The hospital also has an Emergency Department, a Level I trauma center. Walk round the building from the plaza to the red EMERGENCY canopy on the street behind it, or take the atrium's staff door. About every five minutes an ambulance comes down that street, backs into the AMBULANCE ONLY bay, and its crew wheels a patient through the automatic doors. Inside:
+- security screening, registration, triage and the waiting room;
+- areas by acuity on the Emergency Severity Index (Trauma & Resuscitation for ESI 1, Acute Care for ESI 2–3, Super Track for ESI 4–5), where Level 1 is the most critical;
+- glass rooms with working automatic sliding doors, and a medication room;
+- tracking and trauma boards, and bedside monitors with live vitals;
+- EMS crews, walk-ins, discharges and transports keeping it busy;
+- an elevator up to Emergency Radiology (CT, MRI, X-ray).
+
 ## Launch
 
 Tested with **Godot 4.7.2.stable.official.ed1daf0bf**. Import `project.godot` in Godot and press F5, or run:
@@ -61,7 +69,7 @@ Run these from the project root:
 /Applications/Godot.app/Contents/MacOS/Godot --headless --path . --script res://tests/academic_test.gd
 ```
 
-The other suites run the same way: `visual_motion`, `room_polish`, `seating`, `lecture`, `progression`, `knowledge`, `save`, `ui`, `acceptance` (the full spec §46 slice), `ambient` (courtyard life), `first_person` (the first-person view), `wardrobe` (characters, creator, clothing, closet, inventory), `flashcard` (computers and Anki), `cafe_exit` and `hospital` (University Hospital and the shadowing session), each as `res://tests/<name>_test.gd`. Run test scripts one at a time; they share a test save slot.
+The other suites run the same way: `visual_motion`, `room_polish`, `seating`, `lecture`, `progression`, `knowledge`, `save`, `ui`, `acceptance` (the full spec §46 slice), `ambient` (courtyard life), `first_person` (the first-person view), `wardrobe` (characters, creator, clothing, closet, inventory), `flashcard` (computers and Anki), `cafe_exit`, `hospital` (University Hospital and the shadowing session), `emergency` (the Emergency Department and the campus ambulance) and `ed_clearance` (scripted ED routes keep clear of furniture), each as `res://tests/<name>_test.gd`. Run test scripts one at a time; they share a test save slot.
 
 The dorm and campus suites each take about one minute. It exercises all presets, a complete walking/interaction/exit route, restart, physical keyboard and injected controller events, 30/60/120 Hz movement, furniture and boundary collision, overlapping/occluded/removed targets, and settings. Inspect output for errors as well as the check counts: Godot may return exit code 0 on some script errors.
 

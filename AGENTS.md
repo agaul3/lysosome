@@ -9,6 +9,7 @@ This repository contains the `rpg_med` medical-school RPG. The Godot project is 
 - Milestones 1–10 are complete; the v0.1 vertical slice is feature-complete.
 - Development has continued beyond Milestone 10 with courtyard-life improvements, first-person view, visual refinements, and review fixes.
 - Milestone 11 (University Hospital, physician shadowing) is implemented; see `src/docs/development/MILESTONE_11_ACCEPTANCE.md`.
+- The hospital's Emergency Department (Level I trauma center, Emergency Radiology on Level 2, the campus ambulance) is implemented; see `src/docs/development/EMERGENCY_DEPARTMENT_ACCEPTANCE.md`. `tests/ed_clearance_test.gd` keeps the ED's scripted routes clear of furniture.
 - `CHANGELOG.md` at the repository root is the running handoff log and the best source for the latest implemented state.
 - `PROJECT_HANDOFF.md` provides cross-agent project context.
 - `CLAUDE.md` contains Claude-specific standing instructions; shared project rules in this file apply to Codex.

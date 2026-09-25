@@ -359,16 +359,42 @@ static func pavilion(parent: Node3D) -> void:
 ## canopy, so it faces the overhead camera; the tower is held low and far
 ## enough back that it never hides the parking lot or the crosswalk.
 const HOSPITAL_ENTRANCE := Vector3(27.5, 0, 50)
+## The Emergency Department on the south face: the walk-in entrance under a
+## red EMERGENCY canopy, and the ambulance bay (a drive-through portal under
+## the building, like the covered ambulance garages of downtown trauma
+## centers) with its automatic doors at the back.
+const ED_ENTRANCE := Vector3(15.0, 0, 70.0)
+const AMBULANCE_BAY := Rect2(-9.0, 58.0, 18.0, 12.0)
+const AMBULANCE_DOORS := Vector3(0.0, 0, 58.3)
+const LIMESTONE := Color("d8d0c0")
+const GRANITE := Color("5b5752")
+const EMERGENCY_RED := Color("c3302b")
+
+## One glazed block of the podium (the ambulance bay is cut out between blocks).
+static func _podium_block(kit: MeshKit, x0: float, x1: float, z0: float, z1: float, y0 := 0.0, y1 := 8.4) -> void:
+	var center := Vector3((x0 + x1) / 2.0, (y0 + y1) / 2.0, (z0 + z1) / 2.0)
+	var size := Vector3(x1 - x0, y1 - y0, z1 - z0)
+	kit.solid(center, size)
+	kit.box("facade", center, size - Vector3(0.6, 0, 0.6), STONE)
+	var glass_bottom := maxf(y0, 0.2)
+	kit.box("glass", Vector3(center.x, (glass_bottom + 7.6) / 2.0, center.z), Vector3(size.x, 7.6 - glass_bottom, size.z), Color.WHITE)
+	if y0 < 0.3:
+		kit.box("facade", Vector3(center.x, 0.15, center.z), Vector3(size.x + 0.3, 0.3, size.z + 0.3), Color("b9b4a8"))
+		kit.box("facade", Vector3(center.x, 4.15, center.z), Vector3(size.x + 0.4, 0.7, size.z + 0.4), WHITE)
+	else:
+		kit.box("facade", Vector3(center.x, y0 + 0.2, center.z), Vector3(size.x + 0.4, 0.4, size.z + 0.4), WHITE)
+	kit.box("facade", Vector3(center.x, y1 - 0.2, center.z), Vector3(size.x + 0.6, 0.8, size.z + 0.6), WHITE)
+
 static func hospital(parent: Node3D) -> void:
 	var kit := MeshKit.new()
 	var podium_top := 8.4
-	# Podium: core, full glazing, plinth, spandrel band and parapet.
-	kit.solid(Vector3(-4, podium_top / 2.0, 57), Vector3(56, podium_top, 26))
-	kit.box("facade", Vector3(-4, podium_top / 2.0, 57), Vector3(55.4, podium_top, 25.4), STONE)
-	kit.box("glass", Vector3(-4, 3.9, 57), Vector3(56, 7.4, 26), Color.WHITE)
-	kit.box("facade", Vector3(-4, 0.15, 57), Vector3(56.3, 0.3, 26.3), Color("b9b4a8"))
-	kit.box("facade", Vector3(-4, 4.15, 57), Vector3(56.4, 0.7, 26.4), WHITE)
-	kit.box("facade", Vector3(-4, podium_top - 0.2, 57), Vector3(56.6, 0.8, 26.6), WHITE)
+	# Podium: glazed blocks around the ambulance bay, which runs under the building.
+	var bay := AMBULANCE_BAY
+	_podium_block(kit, -32.0, bay.position.x, 44.0, 70.0)
+	_podium_block(kit, bay.end.x, 24.0, 44.0, 70.0)
+	_podium_block(kit, bay.position.x, bay.end.x, 44.0, bay.position.y)
+	_podium_block(kit, bay.position.x, bay.end.x, bay.position.y, 70.0, 4.6)
+	_emergency_front(kit, parent)
 	# Ground-floor mullions and upper-floor fins along the street (north) and entrance (east) faces.
 	for index in range(29):
 		var x := -31.5 + index * 2.0
@@ -428,3 +454,50 @@ static func hospital(parent: Node3D) -> void:
 	letters(parent, "UNIVERSITY HOSPITAL", Vector3(36.22, 4.56, 50), PI / 2, 0.26, Color("3a4247"), 0.03)
 	letters(parent, "MAIN ENTRANCE", Vector3(27.62, 3.1, 50), PI / 2, 0.16, Color("3a4247"), 0.03)
 	letters(parent, "UNIVERSITY HOSPITAL", Vector3(8.2, podium_top + tower_height - 1.4, 63), PI / 2, 0.9, Color("3a4247"))
+
+## The Emergency Department frontage: limestone pilasters on a granite base,
+## the ambulance bay with red walls and automatic doors (the doors themselves
+## are added by the campus EMS loop), and the walk-in entrance.
+static func _emergency_front(kit: MeshKit, parent: Node3D) -> void:
+	var bay := AMBULANCE_BAY
+	for x in [-13.0, bay.position.x - 0.45, bay.end.x + 0.45, 12.0, 18.0, 21.0, 23.55]:
+		kit.box("facade", Vector3(x, 4.2, 70.2), Vector3(0.9, 8.4, 0.4), LIMESTONE)
+		kit.box("facade", Vector3(x, 0.3, 70.24), Vector3(0.96, 0.6, 0.46), GRANITE)
+		for groove in [-0.22, 0.22]:
+			kit.box("facade", Vector3(x + groove, 4.2, 70.41), Vector3(0.03, 8.0, 0.01), LIMESTONE.darkened(0.12))
+	kit.box("facade", Vector3(5.5, 8.5, 70.3), Vector3(37.0, 0.6, 0.5), LIMESTONE)
+	# The bay: red-painted walls, a lit soffit, the ED doors at the back.
+	var red := Color("a8322c")
+	kit.box("facade", Vector3(0, 2.3, bay.position.y + 0.05), Vector3(bay.size.x - 0.2, 4.5, 0.1), red)
+	for x in [bay.position.x + 0.05, bay.end.x - 0.05]:
+		kit.box("facade", Vector3(x, 2.3, bay.get_center().y), Vector3(0.1, 4.5, bay.size.y), red)
+	kit.box("facade", Vector3(0, 4.55, bay.get_center().y), Vector3(bay.size.x, 0.1, bay.size.y), Color("d9dcde"))
+	for x in [-5.0, 0.0, 5.0]:
+		kit.box("light", Vector3(x, 4.49, bay.get_center().y), Vector3(1.6, 0.02, 0.5), Color("fffaf0"))
+	var doors := AMBULANCE_DOORS
+	kit.box("facade", Vector3(doors.x, 1.4, bay.position.y + 0.11), Vector3(3.0, 2.8, 0.02), Color("20272b"))
+	for side in [-1, 1]:
+		kit.box("metal", Vector3(doors.x + side * 1.45, 1.4, bay.position.y + 0.2), Vector3(0.14, 2.8, 0.22), DARK)
+	kit.box("metal", Vector3(doors.x, 2.86, bay.position.y + 0.2), Vector3(3.04, 0.14, 0.22), DARK)
+	for x in [bay.position.x - 0.6, bay.end.x + 0.6, -3.6, 3.6]:
+		kit.cylinder("facade", Vector3(x, 0, 70.9 if absf(x) > 5.0 else bay.position.y + 0.9), Vector3(x, 1.0, 70.9 if absf(x) > 5.0 else bay.position.y + 0.9), 0.11, Color("e0b93a"), 12)
+		kit.solid(Vector3(x, 0.5, 70.9 if absf(x) > 5.0 else bay.position.y + 0.9), Vector3(0.24, 1.0, 0.24))
+	kit.box("facade", Vector3(0, 4.95, 70.32), Vector3(bay.size.x, 0.62, 0.12), Color("20262b"))
+	# Walk-in entrance: glazed doors under a canopy with the red EMERGENCY band.
+	door(kit, ED_ENTRANCE, 3.0)
+	kit.box("facade", Vector3(ED_ENTRANCE.x, 3.65, 71.7), Vector3(5.8, 0.3, 3.4), Color("e8e6e0"))
+	kit.box("facade", Vector3(ED_ENTRANCE.x, 3.35, 73.42), Vector3(5.8, 0.5, 0.06), EMERGENCY_RED)
+	for side in [-1, 1]:
+		kit.cylinder("metal", Vector3(ED_ENTRANCE.x + side * 2.7, 0, 73.1), Vector3(ED_ENTRANCE.x + side * 2.7, 3.5, 73.1), 0.09, Color("d8dcde"))
+		kit.solid(Vector3(ED_ENTRANCE.x + side * 2.7, 1.5, 73.1), Vector3(0.2, 3.0, 0.2))
+	# The red EMERGENCY pylon in a planter by the sidewalk.
+	kit.solid_box("facade", Vector3(27.2, 0.3, 73.4), Vector3(2.6, 0.6, 1.4), GRANITE)
+	kit.box("facade", Vector3(27.2, 0.62, 73.4), Vector3(2.4, 0.04, 1.2), SOIL)
+	kit.solid_box("facade", Vector3(27.2, 1.85, 73.4), Vector3(0.9, 2.5, 0.35), EMERGENCY_RED)
+	kit.commit(parent, "EmergencyFront")
+	letters(parent, "+  AMBULANCE ONLY  +", Vector3(0, 4.95, 70.38), 0.0, 0.34, Color.WHITE, 0.02)
+	letters(parent, "EMERGENCY  ·  AMBULANCE ENTRANCE", Vector3(doors.x, 3.25, bay.position.y + 0.12), 0.0, 0.2, Color.WHITE, 0.02)
+	letters(parent, "+  EMERGENCY", Vector3(ED_ENTRANCE.x, 3.2, 73.46), 0.0, 0.3, Color.WHITE, 0.02)
+	letters(parent, "EMERGENCY", Vector3(ED_ENTRANCE.x, 6.3, 70.42), 0.0, 0.9, EMERGENCY_RED, 0.06)
+	letters(parent, "EMERGENCY", Vector3(27.2, 2.6, 73.59), 0.0, 0.16, Color.WHITE, 0.02)
+	letters(parent, "<  +", Vector3(27.2, 2.2, 73.59), 0.0, 0.3, Color.WHITE, 0.02)

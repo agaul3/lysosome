@@ -4,7 +4,9 @@ extends Node3D
 ## sometimes pausing to check their phone. When the player is in the way they
 ## step to the side of the path (away from the player, never into a bench or
 ## the planter) and walk on in that lane, drifting back to the centre once
-## clear; with no clear side they wait. Solid to the player.
+## clear; with no clear side they wait. Solid to the player. They make way
+## the same way for anyone in the "make_way" group (EMS crews, transports and
+## walking patients in the ED), giving a cart and its crew a wider berth.
 const Appearance = preload("res://player/appearance.gd")
 const Student = preload("res://npc/student.gd")
 ## Waypoints on the quad paths (x, z) and their connections.
@@ -36,6 +38,9 @@ var yielding := false
 var obstacles: Array = []
 const ASIDE := 0.8
 const YIELD_RANGE := 2.2
+const MAKE_WAY := "make_way"
+## How far to step aside for a cart and its crew.
+const CART_ASIDE := 1.25
 
 func _ready() -> void:
 	rng.randomize()
@@ -48,9 +53,11 @@ func _ready() -> void:
 	path_point = nodes[from_node].lerp(nodes[to_node], rng.randf())
 	figure.position = Vector3(path_point.x, 0, path_point.y)
 
-## `preset` names a look; empty dresses the passer-by in a random one.
-func setup(preset: String, target_player: Node3D, keep_clear: Array = []) -> void:
-	if preset.is_empty():
+## `preset` names a look (or is a full look); empty dresses the passer-by in a random one.
+func setup(preset: Variant, target_player: Node3D, keep_clear: Array = []) -> void:
+	if typeof(preset) == TYPE_DICTIONARY:
+		figure.apply_look(preset)
+	elif String(preset).is_empty():
 		figure.apply_look(preload("res://data/looks.gd").random(rng))
 	else:
 		figure.apply_preset(preset)
@@ -90,28 +97,35 @@ func _process(delta: float) -> void:
 	var offset := target - path_point
 	var forward := offset.normalized() if offset.length() > 0.01 else Vector2(-sin(figure.rotation.y), -cos(figure.rotation.y))
 	var side := Vector2(-forward.y, forward.x)
-	# Make way for the player: step to a clear side (away from them if both are
-	# clear), then walk on in that lane unless they are standing in it.
+	# Make way for the player (or a crew, transport or walking patient): step
+	# to a clear side (away from them if both are clear), then walk on in that
+	# lane unless they are standing in it.
 	var ahead := INF
 	var lateral := 0.0
 	var near := false
-	if is_instance_valid(player):
-		var relative := Vector2(player.global_position.x, player.global_position.z) - path_point
+	var berth := ASIDE
+	var width := 0.62
+	var other := _someone_near(forward)
+	if not other.is_empty():
+		var relative: Vector2 = other[0] - path_point
 		ahead = relative.dot(forward)
 		lateral = relative.dot(side)
-		near = relative.length() < YIELD_RANGE and ahead > -0.4
-		if near and not yielding:
+		near = true
+		if other[1]:
+			berth = CART_ASIDE
+			width = 0.97
+		if not yielding:
 			var away := -1.0 if lateral > 0.0 else 1.0
-			if lane_clear(path_point + side * away * ASIDE):
+			if lane_clear(path_point + side * away * berth):
 				aside_side = away
-			elif lane_clear(path_point - side * away * ASIDE):
+			elif lane_clear(path_point - side * away * berth):
 				aside_side = -away
 			else:
 				aside_side = 0.0
 	yielding = near
-	var aside_goal := aside_side * ASIDE if yielding else 0.0
+	var aside_goal := aside_side * berth if yielding else 0.0
 	aside = move_toward(aside, aside_goal, delta * (1.8 if yielding else 0.7))
-	var in_lane := ahead > -0.1 and ahead < 1.3 and absf(lateral - aside) < 0.62
+	var in_lane := ahead > -0.1 and ahead < 1.3 and absf(lateral - aside) < width
 	var hold := yielding and (in_lane or absf(aside) > 0.05 and not lane_clear(path_point + forward * 0.6 + side * aside))
 	if pause > 0.0:
 		pause -= delta
@@ -138,6 +152,33 @@ func _process(delta: float) -> void:
 	if phone > 0.0:
 		figure.shoulders[1].rotation = Vector3(lerpf(figure.shoulders[1].rotation.x, 1.35, phone), 0, -0.3 * phone)
 		figure.spine.rotation.x = -0.12 * phone
+
+## The nearest one to make way for, close ahead: the player or a standing
+## member of the make_way group. [point, is_cart], or [] when no one is near.
+## A cart counts from its nearest part, crew included, end to end.
+func _someone_near(forward: Vector2) -> Array:
+	var best: Array = []
+	var best_distance := INF
+	var candidates: Array = get_tree().get_nodes_in_group(MAKE_WAY)
+	if is_instance_valid(player):
+		candidates.append(player)
+	for node in candidates:
+		if not node is Node3D or not node.is_inside_tree() or not node.is_visible_in_tree():
+			continue
+		if node.has_method("is_sitting") and node.is_sitting():
+			continue
+		var cart: bool = node.has_method("cart_length")
+		var point := Vector2(node.global_position.x, node.global_position.z)
+		if cart:
+			var along := Vector2(sin(node.heading), cos(node.heading))
+			var reach: float = node.cart_length() / 2.0 + 0.9
+			point += along * clampf((path_point - point).dot(along), -reach, reach)
+		var relative := point - path_point
+		var distance := relative.length()
+		if distance < YIELD_RANGE + (0.8 if cart else 0.0) and relative.dot(forward) > -0.4 and distance < best_distance:
+			best_distance = distance
+			best = [point, cart]
+	return best
 
 ## Distance from a point to the nearest segment of the quad paths (tests use it).
 static func distance_to_paths(point: Vector2) -> float:

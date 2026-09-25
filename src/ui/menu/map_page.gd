@@ -3,7 +3,7 @@ extends "res://ui/menu/menu_page.gd"
 ## data/campus_map.gd, with the student's position (live on campus, or the
 ## building they are in), today's class destination and the entrances.
 const MapData = preload("res://data/campus_map.gd")
-const MAP_SIZE := Vector2(584, 400)
+const MAP_SIZE := Vector2(584, 440)
 var hud: CanvasLayer
 var canvas: Control
 var time := 0.0
@@ -76,6 +76,7 @@ func _draw_map() -> void:
 		canvas.draw_rect(_rect(area), Color("3c5157"))
 	canvas.draw_rect(_rect(MapData.PARKING), Color("2a373c"))
 	canvas.draw_rect(_rect(MapData.STREET), Color("23302f"))
+	canvas.draw_rect(_rect(MapData.BACK_STREET), Color("23302f"))
 	var plaza := _to_map(MapData.PLAZA_CENTER.x, MapData.PLAZA_CENTER.y)
 	var scale := _to_map(1, 0).x - _to_map(0, 0).x
 	canvas.draw_circle(plaza, MapData.PLAZA_RADIUS * scale, Color("46595e"))
@@ -102,7 +103,14 @@ func _draw_map() -> void:
 			canvas.draw_string(UI.font(500), rect.get_center() + Vector2(-note_width / 2.0, 20), note, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, UI.REWARD)
 	for entrance in MapData.ENTRANCES:
 		var point := _to_map(entrance[1], entrance[2])
-		canvas.draw_circle(point, 3.5, UI.TEXT)
+		if entrance[0] == "Emergency Department":
+			# The ED entrance: a red square with a white cross.
+			canvas.draw_rect(Rect2(point - Vector2(6, 6), Vector2(12, 12)), Color("c3302b"))
+			canvas.draw_rect(Rect2(point - Vector2(1.5, 4.5), Vector2(3, 9)), Color.WHITE)
+			canvas.draw_rect(Rect2(point - Vector2(4.5, 1.5), Vector2(9, 3)), Color.WHITE)
+			canvas.draw_string(UI.font(600), point + Vector2(10, 5), "Emergency", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color("ef8f7f"))
+		else:
+			canvas.draw_circle(point, 3.5, UI.TEXT)
 	canvas.draw_rect(Rect2(_to_map(MapData.DIRECTORY.x, MapData.DIRECTORY.y) - Vector2(3, 3), Vector2(6, 6)), UI.INFO)
 	# North arrow.
 	var north := Vector2(MAP_SIZE.x - 22, 22)

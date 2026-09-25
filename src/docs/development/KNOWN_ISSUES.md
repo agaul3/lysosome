@@ -47,7 +47,7 @@ See `MILESTONES_5_6_ACCEPTANCE.md` for current validation results.
 
 ## University Hospital and shadowing (Milestone 11, September 24, 2026)
 
-- **Scope.** The hospital is a partial slice: the Level 1 atrium and one inpatient unit (4 West). The Emergency Department, Outpatient Clinics, Level 2 mezzanine, 4 East and the other patient rooms are closed doors, roped stairs or scenery. Only Level 1 and Level 4 are reachable by elevator; the directory lists eight floors.
+- **Scope.** The hospital is a partial slice: the Level 1 atrium, one inpatient unit (4 West) and, since September 24, the Emergency Department with Emergency Radiology (see below). The Outpatient Clinics, Level 2 mezzanine, 4 East and the other patient rooms are closed doors, roped stairs or scenery. The main elevators reach only Level 1 and Level 4; the directory lists eight floors.
 - **Patients are observed scenery.** No history, examination, diagnosis or EHR entry, by design. Patients and staff other than Dr. Okafor are static figures. The charge nurse turns to face you when you talk to her.
 - **The EHR is a read-only illustration for one fictional patient,** driven by the session. Outside the session, the workstation only shows a message.
 - **The session is one-off.** It is the 9:00 event on 2026-09-21. Attendance is recorded when you meet Dr. Okafor; after the lecture you can meet her early without waiting. Completing it once records the results; there is no replay mode.
@@ -57,10 +57,40 @@ See `MILESTONES_5_6_ACCEPTANCE.md` for current validation results.
 - **Dr. Okafor's movement.**
   - She walks straight lines between authored anchors and does not path-find. If you stand directly in her way she waits (and says "Excuse me.") rather than stepping around you.
   - Lobby visitors do not avoid her, so they can briefly overlap.
-- **The elevator** is a fade-and-teleport between two stacked cars. There is no ride animation, and the doors of the other cars are decorative.
+- **The elevators** are a fade-and-teleport between paired cars (atrium ↔ 4 West, ED ↔ radiology). There is no ride animation, and the doors of the other cars are decorative.
 - **Overhead cutaway.** Tall atrium walls on the far (north and west) sides stay full height. Ceilings, high signs and the ring pendant appear only in first person.
 - **Campus side.**
   - The hospital's campus footprint has no interior at campus scale. Its east entrance leads into the separate hospital scene, whose glass front faces the camera, so inside and outside orientations differ.
   - Only the crossing, the plaza and the entrance are walkable across the street.
 - **Visitor looks are random** each visit.
 - **Medical content.** All shadowing content, including the seven questions and the chart values, awaits human review (see `MEDICAL_CONTENT_REVIEW.md`).
+
+## Emergency Department and Emergency Radiology (September 24, 2026)
+
+- **Two simulations, not one.**
+  - The campus exterior and the department are separate scenes, like the rest of the hospital. The ambulance you watch back into the campus bay (about every 5 minutes) is not the one that arrives inside. While you are in the hospital, the ED runs its own busier EMS cycle (a unit every 2–2.7 minutes).
+  - The department's floor plan does not correspond to the campus footprint; the campus building has no interior at campus scale.
+- **Scripted movement.**
+  - EMS crews, transports and walking patients follow authored routes in straight lines. They pause for the student, but they do not steer round the student or each other, so walkers and crews can briefly overlap.
+  - Staff walk a path graph and step aside for the student.
+  - The trauma team, seated clinicians, registrars, guards and waiting patients are static or scripted figures.
+- **Appearing and vanishing.**
+  - Ambulances appear and disappear at the garage entrance and exit (and at the far ends of the campus street).
+  - The wheelchair transport disappears at the ED's second, out-of-service elevator car for 40 s ("upstairs") without riding it; the radiology stretcher appears and disappears at the Level 2 elevator.
+  - A crew and cot vanish as the ambulance's rear doors close; there is no loading animation into the vehicle.
+- **Carts and seats.**
+  - An empty cot is backed out of the bay, then turned in the corridor. Carts corner on the move, so a tight corner can look slightly stiff.
+  - The second crew member walks ahead of the foot end rather than beside the cot, so the pair fits the doorways.
+  - `tests/ed_clearance_test.gd` keeps every scripted route clear of the geometry and the standing figures, but not of seated figures' knees and feet, which the row aisles avoid by design. The check models a turn as happening on the spot.
+  - Sitting and standing are animated with the rig's sit blend, but walkers do not route round a seated neighbour's legs when reaching the seat.
+- **Access.**
+  - Doors open for anyone walking up, and there is no badge logic. The student can walk into the trauma bays, rooms, the medication room and the ambulance garage. Room 11 (being cleaned) is the only locked room.
+  - The Boarder Care Unit and main-hospital double doors on the ED's side walls are closed scenery; the atrium link is a staff door with a fade.
+- **Patients are scenery:** there is no patient interaction or clinical gameplay in the ED (not requested). Endpoints explain what you are looking at.
+- **Boards and monitors.**
+  - All names, initials, complaints, statuses and vitals are fictional. Vitals drift randomly within a range for the patient's ESI level; they are not modelled physiology, and the monitor traces are stylised.
+  - The ESI colour code (1 red to 5 blue) is a game convention.
+  - Radiology screens show obviously schematic images.
+- **Saving:** a save in the ED or radiology resumes at the ED walk-in entrance. The department's patients, EMS and transports are not saved; the department restarts from the same seeded state each visit.
+- **Performance:** while you are on the ED or radiology floor, three 1280×720 board viewports and a 1280×800 bedside-monitor atlas render every frame. The frame rate has not been measured on low-end machines.
+- **Medical and operational content** (triage explanations, EMS call summaries, board data, room and imaging descriptions) awaits human review (see `MEDICAL_CONTENT_REVIEW.md`).

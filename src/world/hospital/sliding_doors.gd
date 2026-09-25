@@ -2,7 +2,9 @@ extends Node3D
 ## A pair of sliding door leaves that part to the sides: the hospital's
 ## automatic entrance and its elevator cars. The doorway's collider is solid
 ## only while the doors are closed. With `auto_target` set, the doors open
-## whenever that node comes within `auto_radius` (the automatic entrance).
+## whenever that node comes within `auto_radius` (the automatic entrance);
+## with `auto_group` set, any visible member of that group opens them too
+## (EMS crews, patients and staff walking through the ED).
 ## Local frame: the doorway spans x ±width/2 in the plane z = 0.
 signal opened
 signal closed
@@ -12,7 +14,15 @@ var height := 2.36
 var leaf_color := Color("a3aaaf")
 var glass := false
 var auto_target: Node3D
+var auto_group := ""
 var auto_radius := 3.4
+## When set, only someone within this distance of the doorway's plane (and
+## roughly in line with it) opens the doors, so a room's doors stay shut as
+## you walk past along the corridor.
+var auto_depth := 0.0
+## Locked doors stay shut (a room being cleaned).
+var locked := false
+var frame_color := Color("3a4045")
 var open_amount := 0.0
 var target_open := 0.0
 var speed := 1.8
@@ -29,7 +39,7 @@ func _ready() -> void:
 		var leaf := Node3D.new()
 		leaf.name = "Leaf"
 		add_child(leaf)
-		var frame := Geometry.box(leaf, "LeafFrame", Vector3(width / 2.0 - 0.01, height, 0.05), Vector3.ZERO, Color("3a4045") if glass else leaf_color)
+		var frame := Geometry.box(leaf, "LeafFrame", Vector3(width / 2.0 - 0.01, height, 0.05), Vector3.ZERO, frame_color if glass else leaf_color)
 		if glass:
 			var pane := Geometry.box(leaf, "LeafGlass", Vector3(width / 2.0 - 0.1, height - 0.16, 0.052), Vector3.ZERO, Color.WHITE)
 			var material := StandardMaterial3D.new()
@@ -78,9 +88,14 @@ func set_open_now(value: bool) -> void:
 	_apply()
 
 func _process(delta: float) -> void:
-	if is_instance_valid(auto_target):
-		var local := to_local(auto_target.global_position)
-		target_open = 1.0 if Vector2(local.x, local.z).length() < auto_radius else 0.0
+	if is_instance_valid(auto_target) or not auto_group.is_empty():
+		var wants := is_instance_valid(auto_target) and auto_target.is_inside_tree() and _near(auto_target)
+		if not wants and not auto_group.is_empty():
+			for node in get_tree().get_nodes_in_group(auto_group):
+				if node is Node3D and node.is_visible_in_tree() and _near(node):
+					wants = true
+					break
+		target_open = 1.0 if wants and not locked else 0.0
 	if is_equal_approx(open_amount, target_open):
 		return
 	var was_open := is_open()
@@ -91,6 +106,12 @@ func _process(delta: float) -> void:
 		opened.emit()
 	elif is_closed() and not was_closed:
 		closed.emit()
+
+func _near(node: Node3D) -> bool:
+	var local := to_local(node.global_position)
+	if auto_depth > 0.0:
+		return absf(local.z) < auto_depth and absf(local.x) < width / 2.0 + 0.7
+	return Vector2(local.x, local.z).length() < auto_radius
 
 func _apply() -> void:
 	var eased := open_amount * open_amount * (3.0 - 2.0 * open_amount)

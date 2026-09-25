@@ -283,3 +283,91 @@ On arrival, the rig applies the preference deferred, after the scene's own camer
 **Questions and knowledge.** `QuestionBank` loads every file in `PATHS` atomically (`load_files`); `hospital_orientation.json` adds seven Clinical Skills / Hospital Orientation questions. Knowledge therefore shows a second discipline, and the flashcard collection files bank cards under `Medicine::<discipline>::<topic>`. Objectives (`data/objectives.gd`) continue after class to the hospital session, then report the day complete.
 
 **Verification.** `tests/hospital_test.gd` checks the data, walks from campus across the street, and runs the whole session with real movement. It then checks first person on both floors, a free elevator ride, saving in the hospital and leaving for campus.
+
+## Emergency Department and Emergency Radiology — September 24, 2026
+
+**Four floors in one scene.** `hospital.gd` now builds four zones, each under its own root node (`zone_roots`): the Level 1 atrium at the origin, 4 West at x +140, the Emergency Department at x −140 (`hospital_ed.gd`, `ED.ORIGIN`) and Level 2 Emergency Radiology at z −140 (`hospital_imaging.gd`). `zone_of()` places the student from position. `_update_zone()`:
+- shows only the current zone's root;
+- sets the camera framing and HUD title from `ZONES`;
+- turns the ED's live display viewports on only in the ED or radiology;
+- records `AppState.hospital_entry` (`"ed"` or `"main"`), which SaveGame stores under `location.hospital_entry`, so a save resumes at the right entrance.
+
+Elevators follow `ELEVATOR_ROUTES` (lobby ↔ 4 West, ED ↔ radiology). Each zone has its own car rectangle and frame (`cab_rect`, `cab_basis`). The cars are `Props.elevator_cab`, moved from the lobby builder, with a cut-away variant for the overhead view. Staff doors between the atrium's east corridor and the ED's link corridor fade the student across (`transfer`); during the shadowing session they ask you to stay with Dr. Okafor.
+
+**Campus side.** `Buildings._emergency_front()` dresses the hospital's south face along a new back street (`campus.gd`):
+- the AMBULANCE ONLY bay (`AMBULANCE_BAY`) with red walls, soffit lights, bollards and automatic doors at `AMBULANCE_DOORS`;
+- the walk-in entrance (`ED_ENTRANCE`) under a red canopy, and a red EMERGENCY pylon;
+- the plaza walkway continues south along the building to the ED sidewalk (`HOSPITAL_PLAZA`, `ED_SIDEWALK`).
+
+Bounds close the street, and `CAMERA_MAX` reaches the ED. The `ed_door` endpoint calls `AppState.enter_hospital("ed")`, and campus entry `"ed"` spawns at `SPAWNS.ed`. The map draws the back street and marks the ED entrance. `campus.ed_pedestrians` walk between the ED and the plaza (kept apart from the quad's `pedestrians`).
+
+**The campus ambulance** (`npc/ambient/ems_arrivals.gd`). A state machine on a `PERIOD` of 300 s (first arrival after 25 s): arriving → backing → unloading → wheeling_in → inside → wheeling_out → loading → departing → idle. The next arrival is timed from the previous one's start (±15 s). A second ambulance stays parked in the bay. `time_scale` speeds up the schedule for tests.
+
+**Vehicles and crews.**
+- **Ambulance** (`world/hospital/ambulance.gd`): a Type III box ambulance built from boxes, with flashing light bars, turning wheels and hinged rear doors.
+  - `drive(points, speed, corner, reverse)` follows a polyline with rounded corners (`smooth`), accelerating and braking, and can reverse.
+  - `watch` makes it stop for the student in its path, ahead or behind when reversing.
+  - `rear_point()` gives where a crew stands to load. Its blocker is solid.
+- **CartCrew** (`npc/cart_crew.gd`): a cot (EMS), stretcher or wheelchair, with one or two crew and an optional patient lying on it (`Props.lay`).
+  - The lead pushes at the head end. The partner guides from just ahead of the foot end, a hand back on the rail, slightly off the centre line (`partner_side`), so the pair fits a 1.4 m doorway.
+  - `walk(points, back_out)` can back the cart out of a room head end first (the partner turns to follow it), instead of turning it round between the bed and the wall.
+  - It pauses for the student ahead (`_someone_ahead`). `set_present(false)` hides it and disables its colliders while it is "through a door".
+  - It joins the `door_openers` group.
+- **RouteWalker** (`npc/route_walker.gd`): a scripted walker (`to`, `wait`, `face`, `sit`, `hide` steps) for walk-ins, triage calls and discharges.
+  - It is solid while standing, waits for the student, and opens doors.
+  - Sitting is animated: it turns while stepping back to the seat's edge, then lowers with the rig's `set_sit_blend`. Standing reverses this before the next walking step. `"instant"` starts someone already seated.
+
+**Automatic doors.** `sliding_doors.gd` gains:
+- `auto_group`: members of the group open the doors, as well as the student (`auto_target`);
+- `auto_depth`: a rectangle in front of and behind the doorway instead of a radius, so room doors stay shut as people pass along a corridor;
+- `locked`;
+- `frame_color`, set before the leaves are built.
+
+The doors' collider is solid only while closed. `HospitalKit`/MeshKit gains a `clear` glass kind (vertex alpha, no culling) for the glass room fronts.
+
+**The ED layout** (`hospital_ed.gd`, 68 × 36 m). It is organised by ESI acuity:
+- **Trauma & Resuscitation (ESI 1):** T1 & T2 in one large room, plus T3 and T4 (headwalls with monitors, surgical lights, booms, crash carts, portable X-ray). The trauma station faces them, with the trauma board.
+- **Acute Care (ESI 2–3):** Rooms 1–12 with glass fronts and sliding doors (`_glass_front`) around the central station and its tracking boards.
+- **Super Track (ESI 4–5):** five recliners by the waiting room, behind automatic doors.
+- **Support:** the medication room (dispensing cabinets, fridge), clean supply, decontamination, and the EMS vestibule with two sets of automatic doors to the ambulance garage (with a parked ambulance and an AMBULANCE ONLY canopy).
+- **Other areas:** EMS check-in, the elevators to radiology, results waiting, physician workstations, doors to the Boarder Care Unit, and the link to the atrium.
+- **Walk-in:** two sets of automatic doors, a metal detector, bag table and guards, registration, three triage bays, and a 24-seat waiting room.
+
+`ed_layout` hands the simulation its bays (id, label, bed/patient nodes, door/inside/park points, monitor tile), recliners, seats, doors, garage and named route points.
+
+**Emergency Radiology** (`hospital_imaging.gd`, Level 2): CT 1 and CT 2 with lead-glass control rooms, the MRI suite (Zones III and IV, RF door, ferromagnetic posts), X-ray, patient holding, the reading room, ultrasound and MRI screening. `imaging_layout` lists the scanner tables (out/in positions) and holding bays.
+
+**The simulation** (`world/hospital/ed_life.gd`, one node). It owns the fictional patient records (initials, age, ESI, complaint, RN/MD, status, time in the department, vitals that drift) and runs:
+- **EMS:** every 120–160 s a unit is dispatched to a free bay suited to its ESI level and shown inbound on the trauma board with an ETA (`ETA_WINDOW` 150 s).
+  - Its ambulance drives into the garage; the crew wheels the patient through both sets of doors to the bay.
+  - At the handover the patient appears on the bed and the boards. The crew backs the empty cot out and takes it back, and the ambulance leaves.
+  - States: idle → inbound → arriving → unloading → to_bay → handoff → returning → loading → departing.
+- **Walk-ins and flow:** walk-ins through the doors, security and registration to a seat, along the row's aisle (`lane`) clear of seated knees; triage calls to Super Track; discharges back out by the exit lane beside the security arch. The route builders are public (`route_to_bay`, `transport_route`, `recliner_discharge_route`, `room_discharge_route`, `exit_route`) so the clearance test sweeps the real routes.
+- **Transport:** a wheelchair transport from a room to the ED's second, out-of-service elevator car and back, leaving the working car clear.
+- **Radiology:** a stretcher transport from the elevator to holding, and scanner tables that slide patients in and out.
+- **Staff:** six walking the department (`Pedestrian` with a per-scene graph and keep-clear zones).
+
+`time_scale` speeds up its timers for tests.
+
+**Displays.** Each board is a Control drawn into one SubViewport and shown on any number of screen quads (`add_board`, `add_screen` with a UV tile):
+- `ui/ed_display.gd` modes `tracking`, `trauma` and `waiting`, reading `tracking_rows()`, `status_info()` and `bay_rows()`;
+- `ui/vitals_atlas.gd`: a 4 × 4 atlas of bedside monitors (bay label, ECG/pleth/respiration traces, HR, SpO₂, BP, RR) from `monitor_data()`, one tile per bay;
+- `ui/radiology_images.gd`: four schematic studies, drawn once.
+
+**Furniture fit.**
+- **Recliners:** the Super Track recliners are upright, with the leg rest folded away. The cushion ends where a seated figure's knees bend, so the shins hang clear.
+- **Security arch:** it is 0.96 m wide inside, enough for the figures' arm span.
+- **Elevators:** `Props.elevator_frame` gives an out-of-service car's closed doors a collider on every floor, where the wall opening used to be walk-through.
+
+**Verification.**
+- `tests/emergency_test.gd` covers the campus ambulance cycle.
+  - It walks every set of doors with real movement: open, close, solid, locked, shut when passing, and the medication room's badge door.
+  - It runs an EMS arrival from dispatch to departure, including the cot backing out and nothing solid left behind by a hidden crew.
+  - It also covers walk-ins, the elevator to radiology and the CT table, first person, the atrium link, saving and leaving.
+  - Its walks step round staff and patients, who pause for the student.
+- `tests/ed_clearance_test.gd` sweeps every scripted route against every box of both floors' geometry (visual and collider) and the standing figures, since walkers and carts move without physics:
+  - walk-ins to each seat, triage calls and discharges;
+  - EMS cots to each bay and back out;
+  - wheelchair and radiology transports;
+  - staff paths and their step-aside lanes.
+  - At corners it assumes an on-the-spot turn, which is stricter than the real eased turn.

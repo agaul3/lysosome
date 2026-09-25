@@ -54,6 +54,9 @@ var hud: CanvasLayer
 var dorm_door: Node3D
 var lecture_door: Node3D
 var hospital_door: Node3D
+var ed_door: Node3D
+## Ambulances coming and going at the Emergency Department.
+var ems: Node3D
 var noticeboard: Node3D
 var student: Node3D
 var sun: DirectionalLight3D
@@ -160,6 +163,18 @@ func _build_paving() -> void:
 	slab.call(plaza.position.x, plaza.position.y, plaza.end.x, plaza.end.y, 0.035, PLAZA)
 	slab.call(31.6, 35, 35.4, 37, 0.055, ASPHALT)
 	slab.call(31.6, 37, 35.4, 56.5, 0.04, ASPHALT)
+	# Behind the hospital: the street past the Emergency Department, the apron
+	# into the ambulance bay, and the ED sidewalk.
+	slab.call(-100, 75.5, 100, 82.5, 0.02, ASPHALT.darkened(0.15))
+	slab.call(-100, 74.5, 100, 75.5, 0.05, CURB)
+	slab.call(-100, 82.5, 100, 84.5, 0.05, CURB)
+	for index in range(20):
+		var x := -97.5 + index * 10.0
+		slab.call(x, 78.9, x + 2.4, 79.1, 0.025, Color("d8d3c2"))
+	slab.call(-11.0, 70, 11.0, 75.6, 0.055, ASPHALT)
+	slab.call(-9.0, 58, 9.0, 70, 0.03, Color("8a8d8f"))
+	var sidewalk: Rect2 = Config.ED_SIDEWALK
+	slab.call(sidewalk.position.x, sidewalk.position.y, 37.0, sidewalk.end.y, 0.036, PATH)
 	for index in range(16):
 		var x := -37.5 + index * 5.0
 		slab.call(x, 30.9, x + 2.4, 31.1, 0.025, Color("d8d3c2"))
@@ -434,7 +449,20 @@ func _build_context() -> void:
 		if x > 26.0:
 			continue # The crossing and the drop-off lane stay open.
 		trees.append([Vector3(x, 0, 36.2), 1.0, float(index)])
+	# Across the street from the Emergency Department: street trees and a low
+	# visitor parking structure (kept low so it never hides the ED entrance).
+	for index in range(14):
+		var x := -46.0 + index * 8.0
+		trees.append([Vector3(x, 0, 86.4), 0.95, float(index) * 1.3])
 	Flora.plant(self, "shade", trees, false)
+	var garage := MeshKit.new()
+	var deck := Color("cfcbc2")
+	garage.solid_box("facade", Vector3(-22, 4.5, 101), Vector3(36, 9, 20), Color("8f959a"))
+	for level in range(4):
+		garage.box("facade", Vector3(-22, 0.9 + level * 2.6, 101), Vector3(36.4, 0.9, 20.4), deck)
+	garage.box("facade", Vector3(-22, 9.2, 101), Vector3(36.6, 0.4, 20.6), deck.darkened(0.1))
+	garage.commit(self, "VisitorParking")
+	Buildings.letters(self, "PATIENT & VISITOR PARKING", Vector3(-22, 7.9, 90.8), PI, 0.5, Color("2c4f86"), 0.04)
 
 ## Invisible edges of the walkable campus.
 func _build_bounds() -> void:
@@ -453,8 +481,9 @@ func _build_bounds() -> void:
 		[Vector3((plaza.position.x + cross.x) / 2.0, 1.5, 36.5), Vector3(cross.x - plaza.position.x, 3, 1)],
 		[Vector3((cross.y + plaza.end.x) / 2.0, 1.5, 36.5), Vector3(plaza.end.x - cross.y, 3, 1)],
 		[Vector3(plaza.position.x - 0.5, 1.5, 40.5), Vector3(1, 3, 7)],
-		[Vector3((plaza.position.x + plaza.end.x) / 2.0, 1.5, plaza.end.y + 0.5), Vector3(plaza.size.x + 1, 3, 1)],
-		[Vector3(36.5, 1.5, 11), Vector3(1, 3, 98)],
+		[Vector3((Config.ED_SIDEWALK.position.x + plaza.end.x) / 2.0, 1.5, plaza.end.y + 0.5), Vector3(plaza.end.x - Config.ED_SIDEWALK.position.x + 1, 3, 1)],
+		[Vector3(Config.ED_SIDEWALK.position.x - 0.5, 1.5, (Config.ED_SIDEWALK.position.y + Config.ED_SIDEWALK.end.y) / 2.0), Vector3(1, 3, Config.ED_SIDEWALK.size.y + 1)],
+		[Vector3(36.5, 1.5, 19), Vector3(1, 3, 114)],
 	]
 	for bound in bounds:
 		var shape := CollisionShape3D.new()
@@ -479,6 +508,8 @@ func _build_people() -> void:
 var bench_students: Array[Node3D] = []
 var dog_walker: Node3D
 var pedestrians: Array[Node3D] = []
+## People walking between the Emergency Department and the hospital plaza.
+var ed_pedestrians: Array[Node3D] = []
 
 func _build_ambient_life() -> void:
 	var feet := StaticBody3D.new()
@@ -524,6 +555,20 @@ func _build_ambient_life() -> void:
 		add_child(walker)
 		walker.setup(preset, player, keep_clear)
 		pedestrians.append(walker)
+	# People walking between the Emergency Department and the plaza.
+	var ed_nodes := [Vector2(13.4, 71.8), Vector2(29.8, 71.8), Vector2(30.6, 63.0), Vector2(29.8, 49.0), Vector2(29.2, 39.0)]
+	for index in range(2):
+		var walker := preload("res://npc/ambient/pedestrian.gd").new()
+		walker.name = "EDPedestrian"
+		walker.nodes = ed_nodes
+		walker.edges = [[0, 1], [1, 2], [2, 3], [3, 4]]
+		add_child(walker)
+		walker.setup("", player, [[Vector2(27.2, 73.4), 1.3]])
+		ed_pedestrians.append(walker)
+	ems = preload("res://npc/ambient/ems_arrivals.gd").new()
+	ems.name = "EMSArrivals"
+	add_child(ems)
+	ems.setup(player)
 
 func _build_interactions() -> void:
 	dorm_door = _endpoint("ResidenceInteraction", "Enter Cedar Residence", "", Config.RESIDENCE_DOOR)
@@ -532,6 +577,8 @@ func _build_interactions() -> void:
 	lecture_door.activated.connect(AppState.enter_lecture_building)
 	hospital_door = _endpoint("HospitalEntryInteraction", "Enter University Hospital", "", Config.HOSPITAL_DOOR)
 	hospital_door.activated.connect(AppState.enter_hospital)
+	ed_door = _endpoint("EmergencyEntryInteraction", "Enter the Emergency Department", "", Config.ED_DOOR)
+	ed_door.activated.connect(AppState.enter_hospital.bind("ed"))
 	noticeboard = _endpoint("DirectoryInteraction", "Read campus directory", "Learning Center / Lecture Hall A: cross the quad to the north, past the round plaza. Cedar Residence faces the quad on the west side; the café is to the east. University Hospital: across the street to the south; follow the sidewalk east of the parking lot to the crossing.", Vector3(-17, 1, 2.3))
 	student = _endpoint("StudentInteraction", "Talk to student", "Morning! Hall A is in the Learning Center, the white building at the top of the quad. Head through the glass doors under the canopy.", Config.SAM_POSITION + Vector3(0, 1, 0.75))
 

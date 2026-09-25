@@ -91,11 +91,13 @@ func campus_crossing() -> void:
 	await ticks(40)
 	release_movement()
 	check(player.position.x > 27.4, "The hospital facade is solid")
-	await reset_position(Vector3(30, 0, 56.8))
+	# The walkway carries on south along the building to the Emergency
+	# Department; the street behind the hospital closes it.
+	await reset_position(Vector3(30, 0, 73.0))
 	drive(Vector3.BACK)
 	await ticks(50)
 	release_movement()
-	check(player.position.z < 58.1, "The plaza's far edge holds")
+	check(player.position.z < 75.0, "The walkway's far edge holds at the street behind the hospital")
 	await reset_position(inside)
 	await capture("hospital-exterior")
 	use_endpoint()
@@ -118,7 +120,7 @@ func hospital_arrival() -> void:
 			missing.append(target)
 	check(missing.is_empty(), "Every anchor and action target in the script exists %s" % str(missing))
 	check(hospital.anchor("observer_412") != Vector3.INF, "The observer mark exists")
-	check(hospital.layers.size() == 2 and not hospital.layers[0][0].visible and hospital.layers[0][1].visible, "Third person shows the cutaway")
+	check(hospital.layers.size() == 4 and not hospital.layers[0][0].visible and hospital.layers[0][1].visible, "Third person shows the cutaway")
 	# The entrance doors part as the student walks up to them.
 	await reset_position(hospital.anchor("entrance") + Vector3(0, 0, -0.5))
 	await ticks(40)

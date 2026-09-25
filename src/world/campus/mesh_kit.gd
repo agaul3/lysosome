@@ -13,6 +13,7 @@ extends RefCounted
 ##   tinted — plain tinted, reflective glass for doors (no curtain-wall grid)
 ##   light  — unshaded colour: daylight in windows, light fixtures, screens
 ##   wood / walnut — oak or darker walnut grain (vertex colour ignored)
+##   clear  — transparent interior glass (the colour's alpha is its opacity)
 static var _materials := {}
 var tools := {}
 var solids: Array = []
@@ -31,6 +32,15 @@ static func material(kind: String) -> Material:
 			light.vertex_color_use_as_albedo = true
 			light.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 			result = light
+		"clear":
+			# Clear interior glass: the vertex colour's alpha sets how much shows.
+			var clear := StandardMaterial3D.new()
+			clear.vertex_color_use_as_albedo = true
+			clear.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+			clear.roughness = 0.05
+			clear.metallic_specular = 0.9
+			clear.cull_mode = BaseMaterial3D.CULL_DISABLED
+			result = clear
 		"tinted":
 			var tinted := StandardMaterial3D.new()
 			tinted.vertex_color_use_as_albedo = true

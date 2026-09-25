@@ -99,6 +99,43 @@ const EXTRAS: Array[Dictionary] = [
 		"build": "classic", "skin": "e3b08c", "hair_style": "short", "hair_color": "b9b6b0", "eye_style": "calm", "eye_color": "7d8a96",
 		"brows": "soft", "mouth": "neutral", "facial_hair": "stubble", "cheeks": "none", "height": 1.0,
 		"outfit": {"head": "", "eyewear": "", "outerwear": "", "top": "grey_henley", "bottom": "grey_joggers", "shoes": "white_sneakers", "neck": "", "back": ""}}},
+	# Emergency Department and radiology staff (faces and hair vary per person).
+	{"id": "ed_doctor", "name": "ED physician", "description": "Emergency physician · white coat over scrubs", "look": {
+		"build": "classic", "skin": "c79a74", "hair_style": "short", "hair_color": "2b2522", "eye_style": "calm", "eye_color": "35231a",
+		"brows": "straight", "mouth": "neutral", "facial_hair": "none", "cheeks": "none", "height": 1.02,
+		"outfit": {"head": "", "eyewear": "", "outerwear": "short_white_coat", "top": "indigo_scrub_top", "bottom": "indigo_scrub_pants", "shoes": "blue_runners", "neck": "stethoscope", "back": ""}}},
+	{"id": "ed_nurse", "name": "ED nurse", "description": "Emergency nurse · ceil scrubs", "look": {
+		"build": "slim", "skin": "d29d78", "hair_style": "ponytail", "hair_color": "3a2a22", "eye_style": "classic", "eye_color": "35231a",
+		"brows": "soft", "mouth": "neutral", "facial_hair": "none", "cheeks": "none", "height": 0.99,
+		"outfit": {"head": "", "eyewear": "", "outerwear": "", "top": "ceil_scrub_top", "bottom": "ceil_scrub_pants", "shoes": "hospital_clogs", "neck": "stethoscope", "back": ""}}},
+	{"id": "emt", "name": "EMT", "description": "Emergency medical technician · navy uniform", "look": {
+		"build": "classic", "skin": "e3b08c", "hair_style": "buzz", "hair_color": "3a2a22", "eye_style": "narrow", "eye_color": "35231a",
+		"brows": "bold", "mouth": "neutral", "facial_hair": "none", "cheeks": "none", "height": 1.03,
+		"outfit": {"head": "navy_cap", "eyewear": "", "outerwear": "", "top": "navy_tee", "bottom": "charcoal_trousers", "shoes": "black_hightops", "neck": "", "back": ""}}},
+	{"id": "paramedic", "name": "Paramedic", "description": "Paramedic · high-visibility jacket", "look": {
+		"build": "classic", "skin": "8d5a44", "hair_style": "short", "hair_color": "1f1c20", "eye_style": "classic", "eye_color": "35231a",
+		"brows": "straight", "mouth": "neutral", "facial_hair": "stubble", "cheeks": "none", "height": 1.02,
+		"outfit": {"head": "", "eyewear": "", "outerwear": "yellow_rain_shell", "top": "navy_tee", "bottom": "charcoal_trousers", "shoes": "black_hightops", "neck": "", "back": ""}}},
+	{"id": "registrar", "name": "Registrar", "description": "Patient registration", "look": {
+		"build": "slim", "skin": "f0c7a8", "hair_style": "bob", "hair_color": "5b3b27", "eye_style": "round", "eye_color": "3d6fc4",
+		"brows": "soft", "mouth": "smile", "facial_hair": "none", "cheeks": "none", "height": 0.97,
+		"outfit": {"head": "", "eyewear": "", "outerwear": "navy_quarter_zip", "top": "white_tee", "bottom": "slate_trousers", "shoes": "brown_loafers", "neck": "student_lanyard", "back": ""}}},
+	{"id": "evs", "name": "Housekeeping", "description": "Environmental services", "look": {
+		"build": "classic", "skin": "a5764f", "hair_style": "short", "hair_color": "1f1c20", "eye_style": "calm", "eye_color": "35231a",
+		"brows": "soft", "mouth": "neutral", "facial_hair": "none", "cheeks": "none", "height": 1.0,
+		"outfit": {"head": "", "eyewear": "", "outerwear": "", "top": "grey_henley", "bottom": "black_joggers", "shoes": "white_sneakers", "neck": "student_lanyard", "back": ""}}},
+	{"id": "transporter", "name": "Transport", "description": "Patient transport", "look": {
+		"build": "classic", "skin": "704b3b", "hair_style": "buzz", "hair_color": "1f1c20", "eye_style": "classic", "eye_color": "35231a",
+		"brows": "straight", "mouth": "neutral", "facial_hair": "none", "cheeks": "none", "height": 1.03,
+		"outfit": {"head": "", "eyewear": "", "outerwear": "", "top": "maroon_crewneck", "bottom": "black_joggers", "shoes": "black_hightops", "neck": "student_lanyard", "back": ""}}},
+	{"id": "rad_tech", "name": "Radiology technologist", "description": "CT / MRI technologist", "look": {
+		"build": "slim", "skin": "e6b494", "hair_style": "long", "hair_color": "854b37", "eye_style": "lashes", "eye_color": "3f7d4a",
+		"brows": "soft", "mouth": "smile", "facial_hair": "none", "cheeks": "none", "height": 0.98,
+		"outfit": {"head": "", "eyewear": "", "outerwear": "", "top": "indigo_scrub_top", "bottom": "indigo_scrub_pants", "shoes": "white_sneakers", "neck": "student_lanyard", "back": ""}}},
+	{"id": "radiologist", "name": "Radiologist", "description": "Attending radiologist", "look": {
+		"build": "classic", "skin": "c89373", "hair_style": "side_part", "hair_color": "5b3b27", "eye_style": "calm", "eye_color": "5a3a24",
+		"brows": "straight", "mouth": "neutral", "facial_hair": "beard", "cheeks": "none", "height": 1.01,
+		"outfit": {"head": "", "eyewear": "rect_glasses", "outerwear": "charcoal_blazer", "top": "oxford_tie", "bottom": "charcoal_trousers", "shoes": "brown_loafers", "neck": "student_lanyard", "back": ""}}},
 	{"id": "sand", "name": "Sand", "description": "Red flannel · beard", "look": {
 		"build": "classic", "skin": "e3b08c", "hair_style": "buzz", "hair_color": "5b3b27", "eye_style": "calm", "eye_color": "8a6a35",
 		"brows": "straight", "mouth": "neutral", "facial_hair": "beard", "cheeks": "none", "height": 1.03,

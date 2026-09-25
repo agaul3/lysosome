@@ -39,7 +39,7 @@ func snapshot() -> Dictionary:
 		"selected_character": AppState.selected_character,
 		"look": AppState.player_look,
 		"name": AppState.player_name,
-		"location": {"scene": AppState.location_key(), "campus_entry": AppState.campus_entry},
+		"location": {"scene": AppState.location_key(), "campus_entry": AppState.campus_entry, "hospital_entry": AppState.hospital_entry},
 		"clock": {"elapsed_seconds": GameClock.elapsed_seconds},
 		"academic": {
 			"xp_balance": AcademicSession.xp_balance,
@@ -137,6 +137,7 @@ func apply(data: Dictionary) -> bool:
 	AppState.name_customized = true
 	AppState.look_changed.emit(AppState.player_look)
 	AppState.campus_entry = data.location.campus_entry
+	AppState.hospital_entry = String(data.location.get("hospital_entry", "main"))
 	GameClock.elapsed_seconds = float(data.clock.elapsed_seconds)
 	var academic: Dictionary = data.academic
 	AcademicSession.reset()
