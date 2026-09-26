@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "id": "exam_b6",
+ "kind": "exam",
+ "eyebrow": "Testing Center",
+ "title": "Block 6 Examination",
+ "intro": "Brain and behavior: motor pathways, stroke, neurology and psychiatry. The last exam of the year: sixteen questions.",
+ "questions": [
+  "exb6_parkinson_01",
+  "exb6_myasthenia_01",
+  "exb6_gbs_01",
+  "exb6_ms_01",
+  "exb6_ssri_01",
+  "exb6_status_01",
+  "exb6_alzheimer_01",
+  "exb6_meningitis_01",
+  "mp_decussation_01",
+  "mp_umn_01",
+  "mp_brown_sequard_01",
+  "stroke_mca_01",
+  "stroke_window_01",
+  "stroke_af_01",
+  "neuro_csf_01",
+  "sp_weak_forehead_01"
+ ],
+ "pass": 0.7,
+ "honors": 0.9,
+ "merit": {
+  "pass": 7500,
+  "honors": 20000
+ },
+ "minutes": 120,
+ "energy": 15,
+ "seconds_per_question": 75
+}

@@ -1,4 +1,4 @@
-# Known issues — Milestones 5–11
+# Known issues — Milestones 5–11 and the first year
 
 - Physical controller hardware has not been tested. Bindings and injected controller events are covered by automated tests.
 - Volume and fullscreen settings are not stored in the save (they are per-session preferences). There is no music or ambience.
@@ -13,11 +13,11 @@ See `MILESTONES_5_6_ACCEPTANCE.md` for current validation results.
 
 - Progress (attendance, question history, XP, level, streak, notes, lecture results) is saved in one local slot. A late student at zero XP has a −5 balance (shown as "owed"); later rewards repay it before counting toward a level. Levels never decrease.
 - Sound effects are original synthesized placeholders.
-- The question bank holds the 12-question lecture set plus two remediation items. Human medical-content review is required before educational release.
-- The configured lecture is a one-off event. Subsequent dates show no scheduled event; repeated daily academic calendars remain future content.
+- The question bank holds 276 questions (13 lectures, the year's activities and exams, the clubs and the shadowing session). Human medical-content review is required before educational release.
+- The first year's calendar is a set of story days (see *The first year* below); each lecture is scheduled once.
 - NPC blockers are simple capsules. Moving NPCs push the player aside rather than steering around them.
-- Campus buildings other than the residence and the Learning Center are scenery (no interiors). Cars are static props. Relief lettering uses Godot's built-in font, because the Outfit variable font fails TextMesh triangulation.
-- Achievements and Inventory menu pages are previews, as the spec allows. The Campus Map is a plan view drawn from layout data.
+- The residence, the Learning Center, University Hospital, the Medical Education Center, the Biomedical Library, the Student Center, Anatomy Hall and the Harbor Street Community Center have interiors; the research tower and the other campus buildings are scenery. Cars are static props. Relief lettering uses Godot's built-in font, because the Outfit variable font fails TextMesh triangulation.
+- The Inventory page is a preview, as the spec allows; Achievements, Skills, Wallet and Journal are working pages. The Campus Map is a plan view drawn from layout data.
 - Saving mid-lecture resumes at the Hall A entrance; sitting again restarts the presentation. Answers already given keep their results and XP (attempt ids are stable), so nothing is double-counted.
 - Ambient campus life is not tied to the clock: bench students eat lunch at 7:30 a.m. They are not saved either, so their timing and the dog's coat are random each visit. Ambient figures do not react to the player, beyond pedestrians stepping aside. They do not avoid Alex or Sam, so they can briefly overlap. The dog has no sounds.
 - Test scripts share one test save slot (`user://savegame_test.json`, cleared at each script's start). Run them one at a time.
@@ -27,12 +27,11 @@ See `MILESTONES_5_6_ACCEPTANCE.md` for current validation results.
   - Walking backwards or sideways uses the forward walk cycle, which is visible only in your shadow.
   - Standing right against an NPC can clip their head at the near plane.
   - Alex starts the morning at the residence door, so arriving on campus early puts you face to face.
-  - Campus buildings other than the residence and the Learning Center still have no interiors. The Anatomy Hall's doors can be reached but not opened yet; the seminar on the lobby display is not yet an event.
   - Steps up to the Anatomy Hall collide as a smooth ramp, so feet can hover up to about 7 cm over the treads, as on Hall A's aisles.
   - The Cmd+F binding is fixed (not remappable).
 - Characters and clothing:
   - Clothing is painted onto the character's pixel skin and its overlay shell. Only backpacks, buns, ponytails and cap brims are separate boxes. Long coats paint their skirts on the upper legs rather than hanging free.
-  - Items unlock by level (rare Lvl 2, epic Lvl 3) or by finishing the first lecture. There is no shop, currency or drop system yet, and every unlocked item counts as owned. Outfit stats are cosmetic.
+  - Items unlock by level (rare Lvl 2, epic Lvl 3) or by finishing the first lecture, or are bought at the Campus Store or given as rewards (club shirts, the white coat). Outfit stats are cosmetic.
   - The closet is only in the dorm; the Inventory's equipment sheet works anywhere.
   - Skins are generated procedurally; custom skin files can't be imported.
   - Seated short characters' feet can hover up to about 5 cm above the floor; tall characters' feet reach it.
@@ -47,7 +46,7 @@ See `MILESTONES_5_6_ACCEPTANCE.md` for current validation results.
 
 ## University Hospital and shadowing (Milestone 11, September 24, 2026)
 
-- **Scope.** The hospital is a partial slice: the Level 1 atrium, one inpatient unit (4 West) and, since September 24, the Emergency Department with Emergency Radiology (see below). The Outpatient Clinics, Level 2 mezzanine, 4 East and the other patient rooms are closed doors, roped stairs or scenery. The main elevators reach only Level 1 and Level 4; the directory lists eight floors.
+- **Scope.** The hospital is a partial slice: the Level 1 atrium, one inpatient unit (4 West), since September 24 the Emergency Department with Emergency Radiology (see below), and since September 25 the Level 1 Food Court. The Outpatient Clinics, Level 2 mezzanine, 4 East and the other patient rooms are closed doors, roped stairs or scenery. The main elevators reach only Level 1 and Level 4; the directory lists eight floors.
 - **Patients are observed scenery.** No history, examination, diagnosis or EHR entry, by design. Patients and staff other than Dr. Okafor are static figures. The charge nurse turns to face you when you talk to her.
 - **The EHR is a read-only illustration for one fictional patient,** driven by the session. Outside the session, the workstation only shows a message.
 - **The session is one-off.** It is the 9:00 event on 2026-09-21. Attendance is recorded when you meet Dr. Okafor; after the lecture you can meet her early without waiting. Completing it once records the results; there is no replay mode.
@@ -94,3 +93,16 @@ See `MILESTONES_5_6_ACCEPTANCE.md` for current validation results.
 - **Saving:** a save in the ED or radiology resumes at the ED walk-in entrance. The department's patients, EMS and transports are not saved; the department restarts from the same seeded state each visit.
 - **Performance:** while you are on the ED or radiology floor, three 1280×720 board viewports and a 1280×800 bedside-monitor atlas render every frame. The frame rate has not been measured on low-end machines.
 - **Medical and operational content** (triage explanations, EMS call summaries, board data, room and imaging descriptions) awaits human review (see `MEDICAL_CONTENT_REVIEW.md`).
+
+## The first year (September 25, 2026)
+
+- **The year is a sequence of 28 story days, not every day.** Sleeping jumps to the next story day; the days between are summarised in a sentence. Weekends and ordinary weekdays between story days can't be played during term. After the last day (Friday 28 May 2027) every night leads to a free summer morning with no scheduled content; the clubs, gym, library and shops carry on. There is no second year.
+- **Activities play in a dialog over the world.** Labs, standardized-patient encounters, the small-group case, Clinical Immersion shifts, the ceremonies, Research Day, the OSCE and exams run in the activity or exam panel at their station. The world doesn't stage them: the anatomical theatre has no seated classmates during the dedication, Hall A has no audience at the White Coat Ceremony, the immersion shifts don't walk you through the Emergency Department, 4 West or clinic, and the exam carrels, proctor and standardized patients' rooms are scenery. The clinic immersion starts at the Outpatient Clinics' doors, which stay closed.
+- **Exams.** The timer counts real seconds. A missed exam moves to a 1 PM make-up on the next story day; missing the make-up too has no further consequence. A failed exam or OSCE has no retake; its questions become flashcards like every other bank question.
+- **Clubs** meet on fixed weekdays, so a club only meets on the story days that fall on its days (and on summer days). Reputation, shirts and rewards follow meetings attended. The club mini-games are simple timing and choice games.
+- **Balance is untested over a full year of real play:** the XP curve's target (about level 20–25 by May), energy costs, boost strengths, prices, pay and the monthly stipend are first estimates. Achievements never pay XP, by design.
+- **The hospital Food Court** is a separate floor of the hospital scene reached through the glass doors off the clinics corridor, with a fade (like the Emergency Department link); it isn't inside the lobby's footprint. Its diners are static, and two passers-by walk a fixed loop. In the overhead view, the rest of the building around the lobby's corridors is drawn as dark cut mass.
+- **New buildings' passers-by** (Medical Education Center, library, Student Center, Anatomy Hall, Community Center, Food Court) move without physics on authored path graphs and are solid. `tests/interior_clearance_test.gd` and `tests/food_court_test.gd` keep their routes and side lanes clear of the furniture; they can still briefly overlap each other or pause in the student's way, and the scripted tests park them.
+- **Content.** Every lecture, question, activity, club text, figure and exhibit is original, AI-assisted and awaiting human review (`MEDICAL_CONTENT_REVIEW.md`); the Medical Spanish phrases need a fluent reviewer. Patients, clinicians, abstracts, charts, strips and results are fictional. Figures are drawn from data (schematic micrographs, synthetic ECG strips, model spirometry curves), not images.
+- **The original Pharmacodynamics bank** (Milestone 7) has most of its correct answers in position a (11 of 14); the new banks are balanced across a–d.
+- **Saving.** Saves keep the calendar, money, skills, achievements, clubs and owned items (the save's `life` section). An activity or exam in progress isn't saved: a save mid-activity resumes before it, and answers already given keep their results (stable attempt ids).

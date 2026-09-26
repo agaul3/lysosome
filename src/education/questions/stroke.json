@@ -1,0 +1,153 @@
+{
+ "version": 1,
+ "questions": [
+  {
+   "id": "stroke_lkw_01",
+   "discipline": "Neuroscience",
+   "topic": "Stroke",
+   "subtopic": "Recognizing stroke",
+   "question_type": "Application",
+   "difficulty_tier": 2,
+   "prompt": "A woman went to bed well at 10 PM and woke at 6 AM unable to move her right arm or speak. For treatment decisions, when did her stroke 'start'?",
+   "choices": {
+    "a": "It can't be estimated, so she's never eligible for treatment",
+    "b": "6 AM, when the symptoms were found",
+    "c": "10 PM, when she was last known to be well",
+    "d": "Midnight, halfway between"
+   },
+   "explanation": "Time of onset is taken as the last time the patient was known to be normal. A \"wake-up stroke\" is timed from when she went to bed; advanced imaging can still identify some such patients who may benefit from treatment.",
+   "learning_objective": "Apply the 'last known well' rule to timing a stroke.",
+   "xp_reward": null,
+   "lecture_id": "stroke_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "stroke_mca_01",
+   "discipline": "Neuroscience",
+   "topic": "Stroke",
+   "subtopic": "Vascular territories",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "A 70-year-old suddenly can't speak and has weakness of the right face and arm, with the leg only mildly affected. Which artery is most likely occluded?",
+   "choices": {
+    "a": "Right posterior cerebral artery",
+    "b": "Left middle cerebral artery",
+    "c": "Left anterior cerebral artery",
+    "d": "Right middle cerebral artery"
+   },
+   "explanation": "Face and arm weakness greater than leg points to the middle cerebral artery territory; right-sided signs point to the left hemisphere, which is dominant for language in most people, explaining the aphasia.",
+   "learning_objective": "Localize a middle cerebral artery stroke.",
+   "xp_reward": null,
+   "lecture_id": "stroke_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "stroke_aca_01",
+   "discipline": "Neuroscience",
+   "topic": "Stroke",
+   "subtopic": "Vascular territories",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "A patient has a weak, numb left leg with the arm and face nearly normal. Which artery's territory is affected?",
+   "choices": {
+    "a": "Left anterior cerebral artery",
+    "b": "Right middle cerebral artery",
+    "c": "Basilar artery",
+    "d": "Right anterior cerebral artery"
+   },
+   "explanation": "The leg area of the motor and sensory cortex lies on the medial surface of the hemisphere, supplied by the anterior cerebral artery. Left-sided signs mean the right hemisphere.",
+   "learning_objective": "Localize an anterior cerebral artery stroke.",
+   "xp_reward": null,
+   "lecture_id": "stroke_01",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "stroke_ct_01",
+   "discipline": "Neuroscience",
+   "topic": "Stroke",
+   "subtopic": "Acute imaging",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "What is the main purpose of the emergency non-contrast head CT in suspected acute stroke?",
+   "choices": {
+    "a": "To rule out intracranial hemorrhage before thrombolysis",
+    "b": "To measure the blood glucose",
+    "c": "To show the ischemic infarct in its first hour",
+    "d": "To diagnose atrial fibrillation"
+   },
+   "explanation": "Early ischemia is often invisible on CT in the first hours, but blood shows immediately. Excluding hemorrhage is essential before giving a thrombolytic.",
+   "learning_objective": "State the purpose of the initial non-contrast CT in stroke.",
+   "xp_reward": null,
+   "lecture_id": "stroke_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "stroke_window_01",
+   "discipline": "Neuroscience",
+   "topic": "Stroke",
+   "subtopic": "Acute treatment",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 3,
+   "prompt": "A man with sudden left-sided weakness was last known well 2 hours ago. His glucose is normal and his CT shows no bleeding. Which treatment should be considered now, if he has no contraindications?",
+   "choices": {
+    "a": "Start warfarin",
+    "b": "Intravenous thrombolysis",
+    "c": "Wait 24 hours and repeat the CT",
+    "d": "Give nothing: thrombolysis only works in the first hour"
+   },
+   "explanation": "Within 4.5 hours of last known well, eligible patients with ischemic stroke and no hemorrhage should be considered for IV thrombolysis; those with a large-vessel occlusion are also evaluated for thrombectomy. Anticoagulation isn't an acute stroke treatment.",
+   "learning_objective": "Identify eligibility for intravenous thrombolysis.",
+   "xp_reward": null,
+   "lecture_id": "stroke_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "stroke_window_remediation_01",
+   "discipline": "Neuroscience",
+   "topic": "Stroke",
+   "subtopic": "Acute treatment",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "Within how long of the patient's last known well time can intravenous thrombolysis generally be given for ischemic stroke?",
+   "choices": {
+    "a": "4.5 hours",
+    "b": "24 hours",
+    "c": "72 hours",
+    "d": "1 hour"
+   },
+   "explanation": "IV thrombolysis is given within 4.5 hours of last known well in eligible patients. Mechanical thrombectomy for large-vessel occlusion extends to 24 hours in selected patients.",
+   "learning_objective": "Recall the time window for IV thrombolysis.",
+   "xp_reward": null,
+   "lecture_id": "stroke_01",
+   "format": "multiple_choice",
+   "is_remediation": true,
+   "correct_answer": "a"
+  },
+  {
+   "id": "stroke_af_01",
+   "discipline": "Neuroscience",
+   "topic": "Stroke",
+   "subtopic": "Secondary prevention",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "After recovering from an ischemic stroke, a 76-year-old is found to have atrial fibrillation. What is the best long-term prevention?",
+   "choices": {
+    "a": "A beta-blocker alone",
+    "b": "Aspirin alone",
+    "c": "An anticoagulant, such as apixaban",
+    "d": "Nothing more than blood pressure control"
+   },
+   "explanation": "Atrial fibrillation causes cardioembolic strokes; anticoagulation (a direct oral anticoagulant or warfarin) substantially reduces recurrence, much more than aspirin. Rate control does not prevent emboli.",
+   "learning_objective": "Choose secondary prevention for stroke with atrial fibrillation.",
+   "xp_reward": null,
+   "lecture_id": "stroke_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  }
+ ]
+}

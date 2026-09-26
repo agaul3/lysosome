@@ -6,7 +6,8 @@ extends RefCounted
 ##   shadowing meeting point), lounge with indoor trees (west), elevator bank
 ##   (north), café and gift shop (east), and corridors that end at staff-only
 ##   doors (Emergency Department to the west, Outpatient Clinics to the north)
-##   so the building reads as much larger than the playable slice. A mezzanine
+##   so the building reads as much larger than the playable slice; glass doors
+##   off the clinics corridor lead to the Food Court. A mezzanine
 ##   and grand stair to Level 2 appear in first person (the stair is roped off).
 const Props = preload("res://world/hospital/hospital_props.gd")
 const FLOOR := Color("c5c3bc")
@@ -29,6 +30,8 @@ const ANCHORS := {
 }
 ## Inside the car (zone-local): x and z ranges.
 const CAB := Rect2(ACTIVE_ELEVATOR - 1.05, -16.35, 2.1, 2.25)
+## The Food Court's doors on the clinics corridor's west wall (z).
+const FOOD_COURT_DOOR_Z := -20.0
 
 static func build(hospital: Node3D, k) -> void:
 	var at := func(local: Vector3) -> Vector3: return local + k.offset
@@ -42,6 +45,7 @@ static func build(hospital: Node3D, k) -> void:
 	_corridors(hospital, k, at)
 	_mezzanine(hospital, k, at)
 	_wayfinding(hospital, k, at)
+	_building_mass(k)
 
 # --- Shell: floor, walls, glass front, ceiling -----------------------------------
 
@@ -136,7 +140,7 @@ static func _elevators(hospital: Node3D, k, at: Callable) -> void:
 	Props.elevator_cab(k, Vector3(ACTIVE_ELEVATOR, 0, Z0), 0.0)
 	hospital.add_elevator_call("LobbyElevator", at.call(Vector3(ACTIVE_ELEVATOR + 0.97, 1.15, face + 0.25)), "unit")
 	# Floor directory beside the cars.
-	hospital.add_sign("Floor directory\n8  Rehabilitation\n7  Oncology\n6  Cardiology\n5  Surgery · Recovery\n4  4 West · Internal Medicine\n3  Operating rooms\n2  Imaging · Laboratory\n1  Lobby · Café · Pharmacy", at.call(Vector3(-6.2, 1.6, face + 0.1)), 0.0, 24, 0.0055, false)
+	hospital.add_sign("Floor directory\n8  Rehabilitation\n7  Oncology\n6  Cardiology\n5  Surgery · Recovery\n4  4 West · Internal Medicine\n3  Operating rooms\n2  Imaging · Laboratory\n1  Lobby · Café · Food Court · Pharmacy", at.call(Vector3(-6.2, 1.6, face + 0.1)), 0.0, 24, 0.0055, false)
 
 # --- Information and security -----------------------------------------------------
 
@@ -219,7 +223,7 @@ static func _cafe_and_shop(hospital: Node3D, k, at: Callable) -> void:
 	hospital.add_sign("Atrium Café", at.call(Vector3(13.76, 0.7, -7.5)), -PI / 2, 26, 0.007, false)
 	hospital.add_sign("Coffee · Tea · Pastries · Sandwiches", at.call(Vector3(17.84, 2.4, -8.0)), -PI / 2, 22, 0.007, true)
 	hospital.add_figure("mint", at.call(Vector3(15.6, 0, -8.4)), PI / 2, "stand")
-	hospital.add_endpoint("CafeCounter", "Order a coffee", "\"Medical students get a free refill. Come back after rounds!\"", at.call(Vector3(13.4, 1.0, -7.5)), 1.8)
+	hospital.add_shop("atrium_cafe", "Order at the Atrium Café", at.call(Vector3(13.4, 1.0, -7.5)))
 	for point in [Vector3(10.6, 0, -6.2), Vector3(11.4, 0, -10.6)]:
 		Props.round_table(k, point, 0.4, 0.74)
 		for side in [-1, 1]:
@@ -257,14 +261,53 @@ static func _corridors(hospital: Node3D, k, at: Callable) -> void:
 	hospital.add_sign("← Emergency Department · Imaging", at.call(Vector3(X0 + 0.16, 3.4, -10.5)), PI / 2, 24, 0.008, false)
 	# North-east: toward Outpatient Clinics and the Pharmacy.
 	k.floor_rect(14.0, -26.0, 17.0, Z0, FLOOR.darkened(0.03))
-	k.wall(true, 14.0, -26.0, Z0, 3.0, WALL, true)
+	k.wall(true, 14.0, -26.0, Z0, 3.0, WALL, true, [[FOOD_COURT_DOOR_Z, 2.0, 2.4]])
 	k.wall(true, 17.0, -26.0, Z0, 3.0, WALL, true)
+	# The Food Court's glass doors (closed; the endpoint takes you through).
+	for side in [-1, 1]:
+		k.box("clear", Vector3(14.0, 0.525, FOOD_COURT_DOOR_Z + side * 0.5), Vector3(0.05, 1.05, 0.96), Color(0.82, 0.9, 0.93, 0.3))
+		k.box("clear", Vector3(14.0, 1.725, FOOD_COURT_DOOR_Z + side * 0.5), Vector3(0.05, 1.35, 0.96), Color(0.82, 0.9, 0.93, 0.3), "fp")
+		k.box("metal", Vector3(14.0, 1.2, FOOD_COURT_DOOR_Z + side * 0.97), Vector3(0.1, 2.4, 0.06), TRIM, "fp")
+		k.box("metal", Vector3(14.08, 1.05, FOOD_COURT_DOOR_Z + side * 0.25), Vector3(0.04, 0.04, 0.4), Color("b8bfc4"))
+	k.box("facade", Vector3(14.0, 1.2, FOOD_COURT_DOOR_Z), Vector3(0.1, 2.4, 0.06), TRIM, "fp")
+	k.box("facade", Vector3(14.0, 0.525, FOOD_COURT_DOOR_Z), Vector3(0.1, 1.05, 0.06), TRIM, "tp")
+	k.solid(Vector3(14.0, 1.2, FOOD_COURT_DOOR_Z), Vector3(0.3, 2.4, 2.0))
+	hospital.add_sign("Food Court", at.call(Vector3(14.16, 2.68, FOOD_COURT_DOOR_Z)), PI / 2, 22, 0.006, "fp")
+	# A short lit vestibule behind the glass, so the doors look onward (first person).
+	var hall := [FOOD_COURT_DOOR_Z - 1.4, FOOD_COURT_DOOR_Z + 1.4]
+	k.box("paving", Vector3(12.5, -0.04, FOOD_COURT_DOOR_Z), Vector3(2.7, 0.08, 2.8), FLOOR.darkened(0.03), "fp")
+	for z in hall:
+		k.box("facade", Vector3(12.5, 1.5, z), Vector3(2.7, 3.0, 0.2), WALL, "fp")
+	k.box("facade", Vector3(11.2, 1.5, FOOD_COURT_DOOR_Z), Vector3(0.2, 3.0, 2.8), WALL, "fp")
+	k.box("facade", Vector3(12.5, 3.06, FOOD_COURT_DOOR_Z), Vector3(2.7, 0.12, 2.8), Color("f4f4f1"), "fp")
+	k.box("light", Vector3(12.5, 2.99, FOOD_COURT_DOOR_Z), Vector3(0.4, 0.02, 1.6), Color("eef6fb"), "fp")
+	hospital.add_sign("Food Court\nOpen 24 hours", at.call(Vector3(11.31, 1.9, FOOD_COURT_DOOR_Z - 0.75)), PI / 2, 22, 0.006, "fp")
+	hospital.add_floor_label("FOOD COURT", at.call(Vector3(15.5, 0.012, FOOD_COURT_DOOR_Z + 1.6)), 0.0034)
 	k.ceiling(14.0, -26.0, 17.0, Z0, 3.0, Color("f4f4f1"))
 	k.ceiling_light(Vector3(15.5, 2.98, -20.0), Vector2(1.8, 0.4))
 	k.wall(false, -25.9, 14.0, 17.0, 3.0, WALL, false)
 	for side in [-1, 1]:
 		k.box("walnut", Vector3(15.5 + side * 0.7, 1.15, -25.75), Vector3(1.36, 2.3, 0.06), Color.WHITE)
-	hospital.add_sign("Outpatient Clinics · Pharmacy", at.call(Vector3(15.5, 3.4, Z0 + 0.16)), 0.0, 22, 0.007, false)
+	hospital.add_sign("Outpatient Clinics · Pharmacy · Food Court", at.call(Vector3(15.5, 3.4, Z0 + 0.16)), 0.0, 22, 0.007, false)
+
+## The rest of the building around the playable corridors, drawn for the
+## overhead camera as cut mass (like the poché of an architectural section),
+## so the corridors read as passages through a large hospital rather than
+## strips in the dark. The working elevator car stays open.
+static func _building_mass(k) -> void:
+	var color := Color("56616a")
+	var top := 1.05 # HospitalKit.CUT: the height cut walls stop at.
+	for rect in [
+		Rect2(-30.0, -32.0, 30.3, 17.85),                          # north, west of the car
+		Rect2(2.7, -32.0, 11.15, 17.85),                           # north, east of the car
+		Rect2(0.3, -32.0, 2.4, 15.4),                              # behind the car
+		Rect2(-30.0, -14.15, 11.85, 2.0),                          # between the atrium and the ED corridor
+		Rect2(-30.0, -8.85, 11.85, 18.85),                         # south of the ED corridor
+		Rect2(17.15, -32.0, 12.85, 17.85),                         # east of the clinics corridor
+		Rect2(18.15, -14.15, 11.85, 24.15),                        # east of the atrium
+		Rect2(13.85, -32.0, 3.3, 5.95),                            # beyond the clinics doors
+	]:
+		k.box("facade", Vector3(rect.position.x + rect.size.x / 2.0, top + 0.02, rect.position.y + rect.size.y / 2.0), Vector3(rect.size.x, 0.04, rect.size.y), color, "tp")
 
 # --- Mezzanine (Level 2) and grand stair -------------------------------------------------
 
@@ -303,5 +346,5 @@ static func _wayfinding(hospital: Node3D, k, at: Callable) -> void:
 	var totem := Vector3(-3.6, 0, 6.4)
 	k.box("facade", totem + Vector3(0, 1.1, 0), Vector3(1.3, 2.2, 0.2), Color("24343c"), "always", true)
 	k.box("walnut", totem + Vector3(0, 2.25, 0), Vector3(1.34, 0.12, 0.24), Color.WHITE)
-	hospital.add_sign("Welcome · Directory\nInformation desk · ahead\nElevators · all floors\nAtrium Café · east\nEmergency Dept · west corridor\n4 West Internal Medicine · Level 4", at.call(totem + Vector3(0, 1.35, 0.1)), 0.0, 24, 0.0048, false)
-	hospital.add_endpoint("Directory", "Read the hospital directory", "Level 1: Information, Café, Gift Shop, Pharmacy. Level 2: Imaging and Laboratory. Level 3: Operating rooms. Level 4: 4 West, Internal Medicine. Emergency Department: west corridor, with its own street entrance.", at.call(totem + Vector3(0, 1.0, 0.45)), 1.8)
+	hospital.add_sign("Welcome · Directory\nInformation desk · ahead\nElevators · all floors\nAtrium Café · east\nFood Court · north-east corridor\nEmergency Dept · west corridor\n4 West Internal Medicine · Level 4", at.call(totem + Vector3(0, 1.35, 0.1)), 0.0, 24, 0.0048, false)
+	hospital.add_endpoint("Directory", "Read the hospital directory", "Level 1: Information, Café, Gift Shop, Pharmacy, and the Food Court off the north-east corridor (open 24 hours). Level 2: Imaging and Laboratory. Level 3: Operating rooms. Level 4: 4 West, Internal Medicine. Emergency Department: west corridor, with its own street entrance.", at.call(totem + Vector3(0, 1.0, 0.45)), 1.8)

@@ -3,7 +3,8 @@ extends Control
 ## crisp at any UI scale. One stroke weight and corner style throughout.
 ## Names: overview, schedule, calendar, map, knowledge, notes, achievements,
 ## inventory, settings, clock, pin, target, spark, flame, check, lock, save,
-## play, power, plus, arrow, book, person.
+## play, power, plus, arrow, book, person, users, coin, bolt, cup, bowl,
+## bar, moon, bag, star, journal, tree.
 @export var icon := "overview":
 	set(value):
 		icon = value
@@ -157,3 +158,55 @@ func _draw() -> void:
 		"person":
 			_circle(0.5, 0.32, 0.17)
 			_arc(0.5, 0.95, 0.36, PI * 1.15, PI * 1.85)
+		"users":
+			_circle(0.38, 0.34, 0.14)
+			_arc(0.38, 0.92, 0.3, PI * 1.15, PI * 1.85)
+			_circle(0.68, 0.38, 0.11)
+			_arc(0.7, 0.9, 0.24, PI * 1.25, PI * 1.85)
+		"coin":
+			_circle(0.5, 0.5, 0.38)
+			_line([Vector2(0.6, 0.34), Vector2(0.44, 0.34), Vector2(0.38, 0.42), Vector2(0.44, 0.5), Vector2(0.56, 0.5), Vector2(0.62, 0.58), Vector2(0.56, 0.66), Vector2(0.4, 0.66)])
+			_line([Vector2(0.5, 0.24), Vector2(0.5, 0.76)])
+		"bolt":
+			_line([Vector2(0.58, 0.08), Vector2(0.26, 0.56), Vector2(0.48, 0.56), Vector2(0.4, 0.92), Vector2(0.74, 0.42), Vector2(0.52, 0.42), Vector2(0.58, 0.08)])
+		"cup":
+			_line([Vector2(0.22, 0.34), Vector2(0.28, 0.86), Vector2(0.66, 0.86), Vector2(0.72, 0.34)], true)
+			_arc(0.76, 0.56, 0.12, -PI / 2, PI / 2)
+			_line([Vector2(0.38, 0.1), Vector2(0.36, 0.22)])
+			_line([Vector2(0.54, 0.1), Vector2(0.52, 0.22)])
+		"bowl":
+			_arc(0.5, 0.46, 0.38, 0.0, PI)
+			_line([Vector2(0.12, 0.46), Vector2(0.88, 0.46)])
+			_line([Vector2(0.38, 0.84), Vector2(0.62, 0.84)])
+			_line([Vector2(0.62, 0.12), Vector2(0.44, 0.4)])
+			_line([Vector2(0.76, 0.16), Vector2(0.56, 0.42)])
+		"bar":
+			_rrect(0.14, 0.34, 0.86, 0.66, 0.1)
+			_line([Vector2(0.38, 0.34), Vector2(0.38, 0.66)])
+			_line([Vector2(0.62, 0.34), Vector2(0.62, 0.66)])
+		"moon":
+			_arc(0.5, 0.5, 0.36, PI * 0.42, PI * 1.9)
+			_arc(0.66, 0.4, 0.28, PI * 0.72, PI * 1.62)
+		"bag":
+			_rrect(0.16, 0.32, 0.84, 0.9, 0.08)
+			_arc(0.5, 0.34, 0.18, PI, TAU)
+		"star":
+			var points: Array = []
+			for index in range(10):
+				var angle := index * TAU / 10.0 - PI / 2
+				var r := 0.42 if index % 2 == 0 else 0.18
+				points.append(Vector2(0.5 + cos(angle) * r, 0.52 + sin(angle) * r))
+			_line(points, true)
+		"journal":
+			_rrect(0.2, 0.1, 0.8, 0.9, 0.08)
+			_line([Vector2(0.32, 0.1), Vector2(0.32, 0.9)])
+			_line([Vector2(0.44, 0.32), Vector2(0.7, 0.32)])
+			_line([Vector2(0.44, 0.46), Vector2(0.7, 0.46)])
+		"tree":
+			_circle(0.5, 0.18, 0.1)
+			_circle(0.22, 0.78, 0.1)
+			_circle(0.78, 0.78, 0.1)
+			_circle(0.5, 0.78, 0.1)
+			_line([Vector2(0.5, 0.28), Vector2(0.5, 0.68)])
+			_line([Vector2(0.5, 0.46), Vector2(0.22, 0.68)])
+			_line([Vector2(0.5, 0.46), Vector2(0.78, 0.68)])

@@ -1,0 +1,64 @@
+{
+ "version": 1,
+ "id": "ecg_lab_01",
+ "kind": "lab",
+ "eyebrow": "Skills Lab · Level 2",
+ "title": "The ECG lab",
+ "intro": "Dr. Adeyemi's teaching fellow has an ECG cart at each bench. First you'll record each other; then you'll read some strips from real practice (anonymized, and redrawn).",
+ "context": "lab",
+ "minutes": 90,
+ "energy": 8,
+ "steps": [
+  {
+   "say": "\"Ten electrodes, twelve leads. Limbs first, then the chest. Count the rib spaces: the angle of Louis is your friend.\"",
+   "speaker": "Dr. Nia Hughes, cardiology fellow"
+  },
+  {
+   "question": "ecg_v1_01"
+  },
+  {
+   "say": "Your partner lies back, you place the stickers, and the cart prints your partner's heart on pink paper. Then you swap."
+  },
+  {
+   "question": "ecg_rate_01",
+   "lead": "Your own strip"
+  },
+  {
+   "question": "ecg_pr_01"
+  },
+  {
+   "say": "\"Now the ones you'll see on call.\"",
+   "speaker": "Dr. Nia Hughes, cardiology fellow"
+  },
+  {
+   "question": "ecg_tachy_01",
+   "lead": "Strip 1"
+  },
+  {
+   "question": "ecg_af_01",
+   "lead": "Strip 2"
+  },
+  {
+   "question": "ecg_stemi_01",
+   "lead": "Strip 3"
+  },
+  {
+   "say": "\"Rate, rhythm, axis, intervals, ST segments. Every time, in that order, and you'll never miss the one that matters.\"",
+   "speaker": "Dr. Nia Hughes, cardiology fellow"
+  }
+ ],
+ "feedback": [
+  [
+   0.85,
+   "\"You read like a second-year. Keep it up.\""
+  ],
+  [
+   0.6,
+   "\"Good. Practice with the rhythm strips in the library this week.\""
+  ],
+  [
+   0.0,
+   "\"Use the same system on every strip: rate, rhythm, intervals, ST. It will come.\""
+  ]
+ ]
+}

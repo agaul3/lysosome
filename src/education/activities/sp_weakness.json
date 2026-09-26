@@ -1,0 +1,201 @@
+{
+ "version": 1,
+ "id": "sp_weakness",
+ "kind": "encounter",
+ "eyebrow": "Clinical Skills Center · Simulation Room",
+ "title": "Standardized patient: sudden weakness",
+ "intro": "A simulation: an overhead page, \"Code stroke, Clinical Skills Room 1.\" Mrs. Eleanor Hayes, 76, and her husband. The clock on the wall is running.",
+ "context": "clinical",
+ "minutes": 60,
+ "energy": 10,
+ "steps": [
+  {
+   "say": "Mrs. Hayes sits in a wheelchair, her left arm limp in her lap, the left side of her mouth drooping. Her husband stands behind her, still holding her handbag."
+  },
+  {
+   "choice": {
+    "prompt": "How do you begin?",
+    "category": "Communication",
+    "options": [
+     {
+      "text": "Introduce yourself, then ask straight away: \"When was she last completely normal?\"",
+      "reply": "\"Quarter past ten. We were doing the crossword,\" says Mr. Hayes. The clock reads 11:00.",
+      "score": 2
+     },
+     {
+      "text": "Start a full past medical history, from childhood.",
+      "reply": "Minutes go by. The coordinator makes a note.",
+      "score": 0
+     },
+     {
+      "text": "Examine her first, without introducing yourself.",
+      "reply": "Mr. Hayes watches, confused about who you are.",
+      "score": 1
+     }
+    ],
+    "lesson": "In a suspected stroke, the time last known well comes first: it decides the treatment"
+   }
+  },
+  {
+   "history": {
+    "patient": "Mrs. Eleanor Hayes, 76, with her husband",
+    "opening": "Mr. Hayes: \"She just dropped her teacup, and her face went funny.\"",
+    "limit": 8,
+    "items": [
+     {
+      "category": "The event",
+      "ask": "Exactly when was she last known to be well?",
+      "answer": "\"At 10:15 we were doing the crossword. At 10:30 she dropped the cup.\"",
+      "key": true
+     },
+     {
+      "category": "The event",
+      "ask": "What did you notice first?",
+      "answer": "\"Her face dropped on the left, and her left arm just fell.\"",
+      "key": true
+     },
+     {
+      "category": "The event",
+      "ask": "Any headache, vomiting or seizure?",
+      "answer": "\"No headache. No fits.\"",
+      "key": true
+     },
+     {
+      "category": "Mimics",
+      "ask": "Does she have diabetes? Has she eaten?",
+      "answer": "\"Type 2, on metformin. She had breakfast.\"",
+      "key": true
+     },
+     {
+      "category": "Treatment",
+      "ask": "Does she take a blood thinner?",
+      "answer": "\"No. Just aspirin, and a blood pressure pill.\"",
+      "key": true
+     },
+     {
+      "category": "Treatment",
+      "ask": "Any recent surgery, bleeding or head injury?",
+      "answer": "\"No, nothing.\"",
+      "key": true
+     },
+     {
+      "category": "Treatment",
+      "ask": "How was she day to day before this?",
+      "answer": "\"Completely independent. She drives, gardens and beats me at chess.\"",
+      "key": true
+     },
+     {
+      "category": "Cause",
+      "ask": "Any heart rhythm problems?",
+      "answer": "\"The nurse said her pulse was irregular last month. They were going to do a heart tracing.\"",
+      "key": false
+     },
+     {
+      "category": "Cause",
+      "ask": "Does she smoke?",
+      "answer": "\"Never.\"",
+      "key": false
+     }
+    ]
+   },
+   "heading": "Take the history"
+  },
+  {
+   "exam": {
+    "limit": 6,
+    "maneuvers": [
+     {
+      "name": "Vital signs",
+      "finding": "BP 176/94, HR 92 and irregularly irregular, SpO₂ 97%, temperature normal.",
+      "key": true
+     },
+     {
+      "name": "Fingerstick glucose",
+      "finding": "134 mg/dL.",
+      "key": true
+     },
+     {
+      "name": "Ask her to smile and raise her eyebrows",
+      "finding": "The lower left face droops; her forehead wrinkles normally on both sides.",
+      "key": true
+     },
+     {
+      "name": "Arm drift",
+      "finding": "Her left arm drifts down and hits the bed within ten seconds.",
+      "key": true
+     },
+     {
+      "name": "Speech",
+      "finding": "Slightly slurred, but the words are right and she understands everything.",
+      "key": true
+     },
+     {
+      "name": "Visual fields",
+      "finding": "She misses your fingers on her left side, in both eyes.",
+      "key": false
+     },
+     {
+      "name": "Touch both hands at once",
+      "finding": "She feels only the right: left-sided extinction. She doesn't seem aware of her weakness.",
+      "key": false
+     },
+     {
+      "name": "Gaze",
+      "finding": "Her eyes rest looking to the right.",
+      "key": false
+     }
+    ]
+   },
+   "heading": "Examine the patient"
+  },
+  {
+   "question": "sp_weak_localize_01",
+   "lead": "The stroke fellow arrives. \"Where is it?\""
+  },
+  {
+   "question": "sp_weak_forehead_01"
+  },
+  {
+   "question": "sp_weak_next_01",
+   "lead": "\"What next?\""
+  },
+  {
+   "choice": {
+    "prompt": "As she's wheeled out to the CT scanner, Mr. Hayes grabs your sleeve. \"Is she going to be all right?\"",
+    "category": "Communication",
+    "options": [
+     {
+      "text": "\"It looks like a stroke, and she's getting here fast, which is the best thing that could have happened. The stroke team will talk with you as soon as the scan is done. Come with me: I'll show you where to wait.\"",
+      "reply": "He nods, and follows you, still holding her handbag.",
+      "score": 2
+     },
+     {
+      "text": "\"She'll be completely fine.\"",
+      "reply": "He believes you. You can't know that.",
+      "score": 0
+     },
+     {
+      "text": "\"I don't know. Please wait here.\"",
+      "reply": "He sits down alone in the empty room.",
+      "score": 1
+     }
+    ],
+    "lesson": "Be honest, give the family something true to hold on to, and don't leave them alone"
+   }
+  }
+ ],
+ "feedback": [
+  [
+   0.85,
+   "\"Fast and methodical. You'd have got her to the scanner well inside the target time.\""
+  ],
+  [
+   0.6,
+   "\"Good. The time last known well first, then glucose, then the scan.\""
+  ],
+  [
+   0.0,
+   "\"Review the code-stroke steps. Time is brain.\""
+  ]
+ ]
+}

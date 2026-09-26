@@ -1,0 +1,235 @@
+{
+ "version": 1,
+ "id": "sp_cough",
+ "kind": "encounter",
+ "eyebrow": "Clinical Skills Center · Room 3",
+ "title": "Standardized patient: a cough",
+ "intro": "Your first standardized-patient encounter. The coordinator hands you the door card: Mr. Daniel Reyes, 58, \"cough\". You have ten minutes; a camera records it for your feedback session.",
+ "context": "clinical",
+ "minutes": 60,
+ "energy": 10,
+ "steps": [
+  {
+   "say": "You knock, wait for \"Come in,\" and open the door. A man in his late fifties sits on the edge of the exam table, coughing into his elbow."
+  },
+  {
+   "choice": {
+    "prompt": "How do you begin?",
+    "category": "Communication",
+    "options": [
+     {
+      "text": "\"Good morning. I'm a first-year medical student working with the team today. What would you like me to call you?\"",
+      "reply": "\"Danny's fine. Nice to meet you.\" He relaxes a little.",
+      "score": 2
+     },
+     {
+      "text": "\"So, what's wrong with you today?\"",
+      "reply": "He blinks. \"Uh, who are you?\" You've skipped the introduction.",
+      "score": 0
+     },
+     {
+      "text": "You sit at the computer and start typing. \"Name and date of birth?\"",
+      "reply": "He answers the back of your head. You've lost eye contact before you've started.",
+      "score": 0
+     }
+    ],
+    "lesson": "Introduce yourself and your role, and ask how the patient would like to be addressed"
+   }
+  },
+  {
+   "choice": {
+    "prompt": "Your first question about why he's here:",
+    "category": "Communication",
+    "options": [
+     {
+      "text": "\"What brings you in today?\"",
+      "reply": "\"This cough. It just won't quit.\" He tells you in his own words.",
+      "score": 2
+     },
+     {
+      "text": "\"Is it a dry cough?\"",
+      "reply": "\"No.\" He waits for the next question. A closed question gives you a closed answer.",
+      "score": 1
+     },
+     {
+      "text": "\"You're a smoker, aren't you?\"",
+      "reply": "He stiffens. \"How did you know that?\" It sounds like a judgment.",
+      "score": 0
+     }
+    ],
+    "lesson": "Open with an open-ended question"
+   }
+  },
+  {
+   "history": {
+    "patient": "Mr. Daniel Reyes, 58",
+    "opening": "\"I've had this cough for about six weeks now, and it isn't going away.\"",
+    "limit": 10,
+    "items": [
+     {
+      "category": "History of present illness",
+      "ask": "When did the cough start, and how has it changed?",
+      "answer": "\"Six weeks ago, after a cold. The cold went away; the cough didn't. If anything it's worse.\"",
+      "key": true
+     },
+     {
+      "category": "History of present illness",
+      "ask": "Are you bringing anything up? What does it look like?",
+      "answer": "\"Yellowish phlegm in the mornings. And twice last week there were streaks of blood in it. That scared me.\"",
+      "key": true
+     },
+     {
+      "category": "History of present illness",
+      "ask": "Have you had fevers, chills or night sweats?",
+      "answer": "\"No fevers. No sweats that I've noticed.\"",
+      "key": true
+     },
+     {
+      "category": "History of present illness",
+      "ask": "Have you lost any weight without trying?",
+      "answer": "\"My belt's looser. Maybe ten pounds since the summer, and I'm not dieting.\"",
+      "key": true
+     },
+     {
+      "category": "History of present illness",
+      "ask": "Any shortness of breath or chest pain?",
+      "answer": "\"A bit winded on the stairs lately. No real chest pain.\"",
+      "key": false
+     },
+     {
+      "category": "Past medical history",
+      "ask": "Do you have any medical conditions?",
+      "answer": "\"High blood pressure. That's it.\"",
+      "key": false
+     },
+     {
+      "category": "Medications and allergies",
+      "ask": "What medicines do you take?",
+      "answer": "\"Lisinopril, for the pressure. About a year now.\"",
+      "key": true
+     },
+     {
+      "category": "Medications and allergies",
+      "ask": "Any allergies to medicines?",
+      "answer": "\"None.\"",
+      "key": false
+     },
+     {
+      "category": "Social history",
+      "ask": "Do you smoke, or have you ever smoked?",
+      "answer": "\"Since I was eighteen. A pack a day. I've tried to quit a few times.\"",
+      "key": true
+     },
+     {
+      "category": "Social history",
+      "ask": "What work have you done?",
+      "answer": "\"Twenty years at the shipyard, then delivery driving.\"",
+      "key": true
+     },
+     {
+      "category": "Social history",
+      "ask": "Any contact with tuberculosis, or time in a shelter or prison?",
+      "answer": "\"Not that I know of.\"",
+      "key": false
+     },
+     {
+      "category": "Family history",
+      "ask": "Any illnesses that run in your family?",
+      "answer": "\"My dad had emphysema. My sister had breast cancer.\"",
+      "key": false
+     },
+     {
+      "category": "Review of systems",
+      "ask": "Any hoarseness or trouble swallowing?",
+      "answer": "\"No.\"",
+      "key": false
+     },
+     {
+      "category": "His perspective",
+      "ask": "What worries you most about the cough?",
+      "answer": "He looks at his hands. \"That it's cancer. My dad smoked too.\"",
+      "key": true
+     }
+    ]
+   },
+   "heading": "Take the history"
+  },
+  {
+   "choice": {
+    "prompt": "He said he's afraid it's cancer. How do you respond?",
+    "category": "Communication",
+    "options": [
+     {
+      "text": "\"That's a very understandable worry. Can you tell me more about it? I'll make sure the doctor hears it, and we'll look into it properly.\"",
+      "reply": "He nods. \"Thanks. I've been scared to say it out loud.\"",
+      "score": 2
+     },
+     {
+      "text": "\"Oh, I'm sure it's nothing. Probably just a bad cold.\"",
+      "reply": "He looks unconvinced. False reassurance can't be kept, and he knows you can't know that.",
+      "score": 0
+     },
+     {
+      "text": "\"Well, with your smoking, it could well be cancer.\"",
+      "reply": "He goes pale. A frightening guess from a student isn't what he needs.",
+      "score": 0
+     }
+    ],
+    "lesson": "Acknowledge and explore the patient's concerns rather than reassuring falsely"
+   }
+  },
+  {
+   "choice": {
+    "prompt": "Time is nearly up. How do you close?",
+    "category": "Communication",
+    "options": [
+     {
+      "text": "Summarize what he's told you, ask if you've missed anything, and explain that the doctor will come in to talk about next steps.",
+      "reply": "\"That's it exactly. Thank you for listening.\" He shakes your hand.",
+      "score": 2
+     },
+     {
+      "text": "\"OK, that's all my questions. The doctor will be in.\"",
+      "reply": "He's left not knowing what happens next.",
+      "score": 1
+     },
+     {
+      "text": "You thank him and leave while he's still talking.",
+      "reply": "The door closes on his sentence.",
+      "score": 0
+     }
+    ],
+    "lesson": "Close by summarizing, checking for anything missed, and explaining next steps"
+   }
+  },
+  {
+   "say": "The coordinator calls time. In the hallway, your preceptor, Dr. Farah Siddiqui, has watched on camera."
+  },
+  {
+   "question": "sp_cough_red_flag_01",
+   "lead": "\"What worried you most?\""
+  },
+  {
+   "question": "sp_cough_next_01",
+   "lead": "\"And what would you do first?\""
+  },
+  {
+   "say": "\"The history is the most powerful test we have,\" she says. \"You just did your first one. Let's watch the recording together.\"",
+   "speaker": "Dr. Farah Siddiqui"
+  }
+ ],
+ "feedback": [
+  [
+   0.85,
+   "\"Excellent. You let him talk, you found the red flags, and you heard his fear. That's the job.\""
+  ],
+  [
+   0.6,
+   "\"A good start. Watch the recording for where you could have asked more openly.\""
+  ],
+  [
+   0.0,
+   "\"First encounters are hard. We'll practice the structure together before the next one.\""
+  ]
+ ]
+}

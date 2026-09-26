@@ -1,0 +1,213 @@
+{
+ "version": 1,
+ "id": "sp_dyspnea",
+ "kind": "encounter",
+ "eyebrow": "Clinical Skills Center · Room 4",
+ "title": "Standardized patient: breathlessness",
+ "intro": "Door card: Mrs. Margaret Holloway, 71, \"short of breath\". Fifteen minutes for a history and a focused cardiovascular and respiratory exam.",
+ "context": "clinical",
+ "minutes": 60,
+ "energy": 10,
+ "steps": [
+  {
+   "say": "Mrs. Holloway sits propped up on the exam table, a little breathless as she says hello, her ankles puffy over the tops of her shoes."
+  },
+  {
+   "choice": {
+    "prompt": "How do you begin?",
+    "category": "Communication",
+    "options": [
+     {
+      "text": "Introduce yourself, then ask if she's comfortable sitting up like that before you start.",
+      "reply": "\"Sitting up's the only way I can breathe, dear. Thank you for asking.\"",
+      "score": 2
+     },
+     {
+      "text": "Ask her to lie flat so you can start the exam straight away.",
+      "reply": "She tries, then sits up again, gasping. You've learned something, the hard way.",
+      "score": 0
+     },
+     {
+      "text": "Start with the history without introducing yourself.",
+      "reply": "She answers, but she keeps glancing at your badge.",
+      "score": 1
+     }
+    ],
+    "lesson": "Introduce yourself and make the patient comfortable before anything else"
+   }
+  },
+  {
+   "history": {
+    "patient": "Mrs. Margaret Holloway, 71",
+    "opening": "\"I just can't get my breath like I used to. It's been getting worse for weeks.\"",
+    "limit": 9,
+    "items": [
+     {
+      "category": "The breathlessness",
+      "ask": "When did this start, and how far can you walk now?",
+      "answer": "\"Three weeks or so. Now I'm puffed walking to the mailbox.\"",
+      "key": true
+     },
+     {
+      "category": "The breathlessness",
+      "ask": "Is it worse lying flat? How many pillows do you sleep on?",
+      "answer": "\"Three pillows. If I lie flat I feel like I'm drowning.\"",
+      "key": true
+     },
+     {
+      "category": "The breathlessness",
+      "ask": "Do you ever wake up at night short of breath?",
+      "answer": "\"Twice this week I woke up gasping and had to sit on the edge of the bed by the window.\"",
+      "key": true
+     },
+     {
+      "category": "The breathlessness",
+      "ask": "Any swelling in your legs?",
+      "answer": "\"My ankles are like balloons by evening. My shoes don't fit.\"",
+      "key": true
+     },
+     {
+      "category": "The breathlessness",
+      "ask": "Has your weight changed?",
+      "answer": "\"Up four kilos this month, and I'm not eating more.\"",
+      "key": true
+     },
+     {
+      "category": "The breathlessness",
+      "ask": "Any chest pain or palpitations?",
+      "answer": "\"No pain. Sometimes a fluttering.\"",
+      "key": false
+     },
+     {
+      "category": "The breathlessness",
+      "ask": "Any cough or fever?",
+      "answer": "\"A dry cough at night. No fever.\"",
+      "key": false
+     },
+     {
+      "category": "Past history",
+      "ask": "Have you had heart problems before?",
+      "answer": "\"A heart attack six years ago. They put a stent in.\"",
+      "key": true
+     },
+     {
+      "category": "Past history",
+      "ask": "Do you have high blood pressure or diabetes?",
+      "answer": "\"Blood pressure, for years. No diabetes.\"",
+      "key": true
+     },
+     {
+      "category": "Medications",
+      "ask": "What medicines do you take?",
+      "answer": "\"Aspirin, a cholesterol pill, and a water pill I stopped last month. I was running to the bathroom all day.\"",
+      "key": true
+     },
+     {
+      "category": "Social",
+      "ask": "Do you smoke?",
+      "answer": "\"Gave up twenty years ago.\"",
+      "key": false
+     },
+     {
+      "category": "Social",
+      "ask": "Has anything changed in what you eat?",
+      "answer": "\"My grandson's been bringing takeout most nights. It's so salty.\"",
+      "key": false
+     }
+    ]
+   },
+   "heading": "Take the history"
+  },
+  {
+   "exam": {
+    "limit": 6,
+    "maneuvers": [
+     {
+      "name": "Vital signs",
+      "finding": "BP 148/88, HR 96 and irregularly irregular, RR 22, SpO₂ 92% on room air, no fever.",
+      "key": true
+     },
+     {
+      "name": "Look at the neck veins",
+      "finding": "At 45°, the jugular venous pressure is raised: 8 cm above the sternal angle.",
+      "key": true
+     },
+     {
+      "name": "Listen to the heart",
+      "finding": "Irregularly irregular, with a third heart sound and a soft pansystolic murmur at the apex.",
+      "key": true
+     },
+     {
+      "name": "Listen to the lungs",
+      "finding": "Fine crackles at both bases, a third of the way up.",
+      "key": true
+     },
+     {
+      "name": "Press on the ankles and shins",
+      "finding": "Pitting edema to mid-shin on both legs.",
+      "key": true
+     },
+     {
+      "name": "Feel the abdomen",
+      "finding": "The liver edge is 2 cm below the ribs and a little tender.",
+      "key": false
+     },
+     {
+      "name": "Check the calves",
+      "finding": "Soft and not tender.",
+      "key": false
+     }
+    ]
+   },
+   "heading": "Examine the patient"
+  },
+  {
+   "question": "sp_dysp_orthopnea_01",
+   "lead": "In the debrief, your preceptor asks:"
+  },
+  {
+   "question": "sp_dysp_echo_01"
+  },
+  {
+   "question": "sp_dysp_diuretic_01"
+  },
+  {
+   "choice": {
+    "prompt": "Before you leave, Mrs. Holloway says quietly, \"I stopped the water pill because I couldn't leave the house. I suppose that was silly.\"",
+    "category": "Communication",
+    "options": [
+     {
+      "text": "\"It's not silly: a lot of people struggle with that. Could we ask your doctor about taking it at a time that fits your day, like after your morning errands?\"",
+      "reply": "She brightens. \"I could take it when I get back from church.\"",
+      "score": 2
+     },
+     {
+      "text": "\"You really shouldn't have stopped it. That's why you're unwell.\"",
+      "reply": "She looks at her hands. \"I know.\"",
+      "score": 0
+     },
+     {
+      "text": "\"Just take it every day, whatever happens.\"",
+      "reply": "She nods, but you can tell she won't.",
+      "score": 1
+     }
+    ],
+    "lesson": "Explore why a medicine was stopped and solve the problem together, without blame"
+   }
+  }
+ ],
+ "feedback": [
+  [
+   0.85,
+   "\"Thorough and kind. You found the missed diuretic and the salt, which is where the fix is.\""
+  ],
+  [
+   0.6,
+   "\"Good. In breathlessness, always ask about orthopnea, PND, edema and weight.\""
+  ],
+  [
+   0.0,
+   "\"Review the signs of heart failure: JVP, crackles, S3, edema. Then practice this one again.\""
+  ]
+ ]
+}

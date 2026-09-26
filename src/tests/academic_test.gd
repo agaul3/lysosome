@@ -134,7 +134,11 @@ func attendance_tests() -> void:
 
 func question_tests() -> void:
 	var production: int = bank.records.size()
-	check(production == 14 + bank.for_lecture("hospital_orientation_01").size() and bank.for_lecture("hospital_orientation_01").size() == 7, "Bank loads every content file: Pharmacodynamics (12 lecture + 2 remediation) and Hospital Orientation (7)")
+	# Every content file loads into one bank (their question counts add up).
+	var expected := 0
+	for path in bank.PATHS:
+		expected += JSON.parse_string(FileAccess.get_file_as_string(path)).questions.size()
+	check(production == expected and bank.for_lecture("pharmacodynamics_01").size() == 14 and bank.for_lecture("hospital_orientation_01").size() == 7, "Bank loads every content file: Pharmacodynamics (12 lecture + 2 remediation), Hospital Orientation (7) and the rest (%d questions)" % production)
 	check(bank.for_lecture("pharmacodynamics_01").size() == 14, "Shared lecture filter")
 	var q: Dictionary = bank.get_question("pd_potency_01")
 	var outcome: Dictionary = bank.grade(q.id, "a")

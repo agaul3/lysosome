@@ -1,0 +1,88 @@
+{
+ "version": 1,
+ "id": "research_day",
+ "kind": "event",
+ "eyebrow": "Medical Education Center · Atrium",
+ "title": "Research Day",
+ "intro": "Sixty posters on easels fill the atrium, from second-year projects to the residents' trials. Judges with clipboards drift between them. You have a program and two free hours.",
+ "context": "lecture",
+ "minutes": 120,
+ "energy": 6,
+ "steps": [
+  {
+   "say": "\"Pick three posters and ask each presenter one real question. That's how you'll find a mentor for the summer.\"",
+   "speaker": "Dr. Lena Park, Associate Dean for Student Affairs"
+  },
+  {
+   "say": "Poster 14: \"A community walking program for blood pressure: a randomized trial.\" A fourth-year talks you through it."
+  },
+  {
+   "question": "res_ci_01",
+   "lead": "\"What do you make of our result?\""
+  },
+  {
+   "say": "Poster 22 is an observational study using a health survey of forty thousand adults."
+  },
+  {
+   "question": "res_confounding_01",
+   "lead": "The presenter grins. \"The judges asked the same thing. Your answer?\""
+  },
+  {
+   "say": "Poster 31: a resident's analysis of a stroke-prevention trial."
+  },
+  {
+   "question": "res_nnt_01",
+   "lead": "\"Everyone quotes the relative risk. What's the number that matters to a patient?\""
+  },
+  {
+   "question": "res_sensitivity_01",
+   "lead": "At the next poster, about a new blood test:"
+  },
+  {
+   "choice": {
+    "prompt": "A second-year asks you to mind her poster while she runs to the restroom. A judge arrives and asks a question you can't answer.",
+    "category": "Professionalism",
+    "options": [
+     {
+      "text": "\"I'm not the author and I don't know, but here's what I understand of the methods. She'll be back in a minute and can answer properly.\"",
+      "reply": "The judge smiles and makes a note. The second-year comes back and answers it well.",
+      "score": 2
+     },
+     {
+      "text": "Make up something that sounds plausible.",
+      "reply": "The judge frowns at the poster, then at you. It was wrong.",
+      "score": 0
+     },
+     {
+      "text": "Say nothing and wait for her to come back.",
+      "reply": "The judge moves on to the next poster.",
+      "score": 1
+     }
+    ],
+    "lesson": "Say what you don't know; never bluff about data"
+   }
+  },
+  {
+   "say": "Dr. Park stops you by the coffee urn. \"A few of the faculty take first-years for summer research. I'll send you the list.\""
+  },
+  {
+   "reward": {
+    "flag": "research_day"
+   }
+  }
+ ],
+ "feedback": [
+  [
+   0.85,
+   "You leave with three business cards and an invitation to a lab meeting."
+  ],
+  [
+   0.6,
+   "A good morning: two of the posters make you want to start a project."
+  ],
+  [
+   0.0,
+   "Biostatistics is a skill like any other. The library has a good introductory text on the reserve shelf."
+  ]
+ ]
+}

@@ -1,0 +1,453 @@
+{
+ "version": 1,
+ "questions": [
+  {
+   "id": "hist_he_01",
+   "discipline": "Histology",
+   "topic": "Microscopy",
+   "subtopic": "Staining",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "In a section stained with hematoxylin and eosin (H&E), what colors the nuclei purple-blue?",
+   "choices": {
+    "a": "Periodic acid–Schiff, which binds glycogen",
+    "b": "Silver, which binds reticular fibers",
+    "c": "Eosin, which binds basic proteins",
+    "d": "Hematoxylin, which binds acidic structures such as DNA and RNA"
+   },
+   "explanation": "Hematoxylin is basic and stains acidic (basophilic) structures like nuclei and ribosome-rich cytoplasm purple-blue; eosin is acidic and stains basic (eosinophilic) proteins in cytoplasm and collagen pink.",
+   "learning_objective": "Explain what hematoxylin and eosin stain.",
+   "xp_reward": null,
+   "lecture_id": "histology_lab_01",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "hist_columnar_01",
+   "discipline": "Histology",
+   "topic": "Epithelium",
+   "subtopic": "Simple columnar",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "This section lines the inside of a tube: one layer of tall cells with nuclei near their bases, a brush border, and scattered pale goblet cells. Where is it from?",
+   "choices": {
+    "a": "The skin",
+    "b": "The trachea",
+    "c": "The small intestine",
+    "d": "The esophagus"
+   },
+   "explanation": "Simple columnar epithelium with microvilli (the brush border) and goblet cells lines the small intestine, built for absorption and mucus secretion. The esophagus has stratified squamous epithelium, the trachea pseudostratified ciliated epithelium.",
+   "learning_objective": "Identify simple columnar epithelium with goblet cells and relate it to absorption.",
+   "xp_reward": null,
+   "lecture_id": "histology_lab_01",
+   "format": "multiple_choice",
+   "figure": {
+    "type": "micrograph",
+    "tissue": "simple_columnar"
+   },
+   "correct_answer": "c"
+  },
+  {
+   "id": "hist_squamous_01",
+   "discipline": "Histology",
+   "topic": "Epithelium",
+   "subtopic": "Stratified squamous",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "Many layers of cells, rounded at the base and flattened toward the surface, with nuclei kept in the surface cells and no keratin layer. Which organ?",
+   "choices": {
+    "a": "The skin of the palm",
+    "b": "The stomach",
+    "c": "The esophagus",
+    "d": "The urinary bladder"
+   },
+   "explanation": "Non-keratinized stratified squamous epithelium lines surfaces that face abrasion but stay moist: the esophagus, mouth and vagina. The skin's epidermis is keratinized (surface cells lose their nuclei), the stomach is simple columnar, the bladder transitional.",
+   "learning_objective": "Distinguish non-keratinized from keratinized stratified squamous epithelium.",
+   "xp_reward": null,
+   "lecture_id": "histology_lab_01",
+   "format": "multiple_choice",
+   "figure": {
+    "type": "micrograph",
+    "tissue": "stratified_squamous"
+   },
+   "correct_answer": "c"
+  },
+  {
+   "id": "hist_resp_01",
+   "discipline": "Histology",
+   "topic": "Epithelium",
+   "subtopic": "Pseudostratified",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "Tall cells all resting on the basement membrane, with nuclei at different heights, cilia on the surface and goblet cells among them. Where is this from?",
+   "choices": {
+    "a": "A capillary",
+    "b": "The epidermis",
+    "c": "The trachea",
+    "d": "The small intestine"
+   },
+   "explanation": "Pseudostratified ciliated columnar epithelium with goblet cells (\"respiratory epithelium\") lines the trachea and bronchi: goblet cells make mucus and cilia sweep it up and out. Every cell touches the basement membrane, though not every one reaches the surface.",
+   "learning_objective": "Identify respiratory epithelium and describe the mucociliary escalator.",
+   "xp_reward": null,
+   "lecture_id": "histology_lab_01",
+   "format": "multiple_choice",
+   "figure": {
+    "type": "micrograph",
+    "tissue": "pseudostratified"
+   },
+   "correct_answer": "c"
+  },
+  {
+   "id": "hist_simple_squamous_01",
+   "discipline": "Histology",
+   "topic": "Epithelium",
+   "subtopic": "Simple squamous",
+   "question_type": "Application",
+   "difficulty_tier": 1,
+   "prompt": "A single layer of thin, flat cells with flattened nuclei is best suited to:",
+   "choices": {
+    "a": "Absorption and secretion, as in the intestine",
+    "b": "Rapid diffusion, as in the alveoli and capillary walls",
+    "c": "Stretching, as in the bladder",
+    "d": "Resisting abrasion, as in the esophagus"
+   },
+   "explanation": "Simple squamous epithelium offers the shortest path for diffusion and filtration: alveoli, capillary endothelium, the glomerulus, and the linings of body cavities (mesothelium).",
+   "learning_objective": "Relate simple squamous epithelium to its function and locations.",
+   "xp_reward": null,
+   "lecture_id": "histology_lab_01",
+   "format": "multiple_choice",
+   "figure": {
+    "type": "micrograph",
+    "tissue": "simple_squamous"
+   },
+   "correct_answer": "b"
+  },
+  {
+   "id": "hist_cartilage_01",
+   "discipline": "Histology",
+   "topic": "Connective tissue",
+   "subtopic": "Cartilage",
+   "question_type": "Conceptual",
+   "difficulty_tier": 2,
+   "prompt": "This tissue has cells sitting in lacunae, often in pairs, within a smooth, glassy matrix and no blood vessels. Why does an injury to it heal so poorly?",
+   "choices": {
+    "a": "It is hyaline cartilage, which is avascular: nutrients reach its cells only by diffusion.",
+    "b": "It is bone, which has too many blood vessels.",
+    "c": "It is dense regular connective tissue, which has no cells.",
+    "d": "It is hyaline cartilage, which is innervated and painful."
+   },
+   "explanation": "Hyaline cartilage (articular surfaces, trachea, costal cartilage) has no blood vessels; chondrocytes rely on diffusion through the matrix, so repair is slow and limited, which is why damaged joint cartilage rarely regrows.",
+   "learning_objective": "Identify hyaline cartilage and explain its poor healing.",
+   "xp_reward": null,
+   "lecture_id": "histology_lab_01",
+   "format": "multiple_choice",
+   "figure": {
+    "type": "micrograph",
+    "tissue": "hyaline_cartilage"
+   },
+   "correct_answer": "a"
+  },
+  {
+   "id": "hist_cardiac_01",
+   "discipline": "Histology",
+   "topic": "Muscle",
+   "subtopic": "Cardiac muscle",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "Striated fibers that branch, with a single central nucleus in each cell and dark bands crossing the fibers where cells meet. What are those bands?",
+   "choices": {
+    "a": "Z-lines of skeletal muscle",
+    "b": "Intercalated discs, joining cardiac muscle cells",
+    "c": "Dense bodies of smooth muscle",
+    "d": "Nodes of Ranvier"
+   },
+   "explanation": "Cardiac muscle cells branch and join end to end at intercalated discs, which contain gap junctions (for electrical coupling) and desmosomes (for strength). Skeletal muscle fibers are long, multinucleated, with peripheral nuclei.",
+   "learning_objective": "Identify cardiac muscle and the function of intercalated discs.",
+   "xp_reward": null,
+   "lecture_id": "histology_lab_01",
+   "format": "multiple_choice",
+   "figure": {
+    "type": "micrograph",
+    "tissue": "cardiac_muscle"
+   },
+   "correct_answer": "b"
+  },
+  {
+   "id": "hist_tendon_01",
+   "discipline": "Histology",
+   "topic": "Connective tissue",
+   "subtopic": "Dense regular",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "Wavy collagen bundles all running the same way, with rows of flattened fibroblast nuclei between them. This is:",
+   "choices": {
+    "a": "Dense regular connective tissue, as in a tendon",
+    "b": "Loose areolar tissue",
+    "c": "Smooth muscle",
+    "d": "Dense irregular connective tissue, as in the dermis"
+   },
+   "explanation": "Parallel collagen bundles resist pulling in one direction: tendons and ligaments. In dense irregular tissue (the dermis) the bundles run in many directions to resist forces from any side.",
+   "learning_objective": "Identify dense regular connective tissue and relate structure to function.",
+   "xp_reward": null,
+   "lecture_id": "histology_lab_01",
+   "format": "multiple_choice",
+   "figure": {
+    "type": "micrograph",
+    "tissue": "dense_regular"
+   },
+   "correct_answer": "a"
+  },
+  {
+   "id": "sp_cough_red_flag_01",
+   "discipline": "Clinical Skills",
+   "topic": "The Medical Interview",
+   "subtopic": "Red flags",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "Which features of Mr. Reyes's history most need prompt investigation?",
+   "choices": {
+    "a": "A cough that began after a cold",
+    "b": "Taking lisinopril for blood pressure",
+    "c": "Blood-streaked sputum and unintended weight loss in a 40-pack-year smoker",
+    "d": "Yellow morning sputum"
+   },
+   "explanation": "Hemoptysis and unintentional weight loss in a long-term smoker (with occupational asbestos exposure) are red flags for lung cancer. A cough after a cold and morning sputum are common; ACE-inhibitor cough is dry and doesn't cause bleeding.",
+   "learning_objective": "Identify red-flag features in a patient with chronic cough.",
+   "xp_reward": null,
+   "lecture_id": "sp_interview_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "sp_cough_next_01",
+   "discipline": "Clinical Skills",
+   "topic": "The Medical Interview",
+   "subtopic": "Next steps",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "What is the most appropriate first test for Mr. Reyes?",
+   "choices": {
+    "a": "A chest X-ray",
+    "b": "Sputum culture only",
+    "c": "A cardiac stress test",
+    "d": "No test: stop the lisinopril and reassess in three months"
+   },
+   "explanation": "Hemoptysis and weight loss in a smoker call for chest imaging, starting with a chest radiograph (CT usually follows if it's abnormal or suspicion stays high). Stopping lisinopril would be reasonable for a dry cough alone, but not with red flags.",
+   "learning_objective": "Choose initial imaging for a smoker with hemoptysis.",
+   "xp_reward": null,
+   "lecture_id": "sp_interview_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "exb1_partial_01",
+   "discipline": "Pharmacology",
+   "topic": "Pharmacodynamics",
+   "subtopic": "Partial agonists",
+   "question_type": "Conceptual",
+   "difficulty_tier": 2,
+   "prompt": "A partial agonist is given to a patient who already has a high concentration of a full agonist at the same receptors. What happens to the response?",
+   "choices": {
+    "a": "It doesn't change at all.",
+    "b": "It falls: the partial agonist displaces the full agonist and acts as an antagonist.",
+    "c": "It falls to zero, because partial agonists are inverse agonists.",
+    "d": "It rises above the full agonist's maximum."
+   },
+   "explanation": "A partial agonist has lower intrinsic activity. Competing for the same receptors, it replaces a full agonist's larger effect with its own smaller one, lowering the response (as buprenorphine can precipitate withdrawal in someone on a full opioid agonist).",
+   "learning_objective": "Predict the effect of a partial agonist in the presence of a full agonist.",
+   "xp_reward": null,
+   "lecture_id": "exam_b1",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "exb1_steady_state_01",
+   "discipline": "Pharmacology",
+   "topic": "Pharmacokinetics",
+   "subtopic": "Steady state",
+   "question_type": "Application",
+   "difficulty_tier": 1,
+   "prompt": "A drug with a half-life of 8 hours is given by constant infusion. About how long until it reaches steady state?",
+   "choices": {
+    "a": "About 8 hours (one half-life)",
+    "b": "About 16 hours",
+    "c": "About a week",
+    "d": "About 32–40 hours (four to five half-lives)"
+   },
+   "explanation": "With first-order elimination, a constant infusion approaches steady state in about four to five half-lives (94–97%) regardless of the dose rate: here 32–40 hours. A loading dose gets there faster.",
+   "learning_objective": "Estimate the time to steady state from the half-life.",
+   "xp_reward": null,
+   "lecture_id": "exam_b1",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "exb1_vd_01",
+   "discipline": "Pharmacology",
+   "topic": "Pharmacokinetics",
+   "subtopic": "Volume of distribution",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "A drug has a volume of distribution of 400 L in a 70-kg adult. This means that the drug:",
+   "choices": {
+    "a": "Is extensively bound in tissues, so little remains in plasma",
+    "b": "Is confined to extracellular fluid",
+    "c": "Stays almost entirely in the blood",
+    "d": "Must be given intravenously"
+   },
+   "explanation": "Vd = amount in the body ÷ plasma concentration. A Vd far larger than total body water (about 42 L) means the drug is concentrated in tissues (fat, muscle), leaving a low plasma concentration, as with digoxin or amiodarone.",
+   "learning_objective": "Interpret a large volume of distribution.",
+   "xp_reward": null,
+   "lecture_id": "exam_b1",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "exb1_first_order_01",
+   "discipline": "Pharmacology",
+   "topic": "Pharmacokinetics",
+   "subtopic": "Elimination kinetics",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "In first-order elimination, what is removed per unit time?",
+   "choices": {
+    "a": "All of the drug at once",
+    "b": "A constant fraction of the drug in the body",
+    "c": "An amount that rises as the concentration falls",
+    "d": "A constant amount of drug, whatever the concentration"
+   },
+   "explanation": "Most drugs follow first-order kinetics: the rate is proportional to concentration, so a constant fraction is eliminated per unit time and the half-life is constant. In zero-order elimination (alcohol, phenytoin at high doses), a constant amount is removed.",
+   "learning_objective": "Distinguish first-order from zero-order elimination.",
+   "xp_reward": null,
+   "lecture_id": "exam_b1",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "exb1_citrate_01",
+   "discipline": "Biochemistry",
+   "topic": "Glycolysis",
+   "subtopic": "Regulation",
+   "question_type": "Recall",
+   "difficulty_tier": 2,
+   "prompt": "When citrate accumulates in the cytosol, glycolysis slows because citrate inhibits:",
+   "choices": {
+    "a": "Hexokinase",
+    "b": "Phosphofructokinase-1",
+    "c": "Pyruvate kinase",
+    "d": "Glyceraldehyde-3-phosphate dehydrogenase"
+   },
+   "explanation": "Citrate (a sign that the citric acid cycle is saturated) and ATP inhibit PFK-1, the committed step of glycolysis; AMP and fructose-2,6-bisphosphate activate it.",
+   "learning_objective": "Recall the regulators of PFK-1.",
+   "xp_reward": null,
+   "lecture_id": "exam_b1",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "exb1_km_rise_01",
+   "discipline": "Biochemistry",
+   "topic": "Enzymes",
+   "subtopic": "Hexokinase and glucokinase",
+   "question_type": "Application",
+   "difficulty_tier": 2,
+   "prompt": "After a meal, portal glucose rises from 5 to 15 mM. How do hexokinase (Km ≈ 0.1 mM) and glucokinase (Km ≈ 10 mM) respond?",
+   "choices": {
+    "a": "Hexokinase is already near Vmax; glucokinase activity rises substantially.",
+    "b": "Hexokinase rises; glucokinase stays saturated.",
+    "c": "Neither changes.",
+    "d": "Both rise substantially."
+   },
+   "explanation": "At 5 mM, hexokinase is ~98% saturated, so more glucose barely changes its rate. Glucokinase, with its high Km, works well below saturation at these concentrations, so its rate climbs with glucose: the liver clears glucose in proportion to supply.",
+   "learning_objective": "Apply Km to explain glucokinase's role in glucose handling.",
+   "xp_reward": null,
+   "lecture_id": "exam_b1",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "exb1_keratin_01",
+   "discipline": "Histology",
+   "topic": "Epithelium",
+   "subtopic": "The epidermis",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "Which epithelium forms the epidermis of the skin?",
+   "choices": {
+    "a": "Non-keratinized stratified squamous epithelium",
+    "b": "Simple columnar epithelium",
+    "c": "Keratinized stratified squamous epithelium",
+    "d": "Transitional epithelium"
+   },
+   "explanation": "The epidermis is keratinized stratified squamous epithelium: its surface cells lose their nuclei and fill with keratin, making a dry, waterproof barrier. Non-keratinized versions line moist surfaces like the esophagus.",
+   "learning_objective": "Identify the epithelium of the epidermis.",
+   "xp_reward": null,
+   "lecture_id": "exam_b1",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "exb1_goblet_01",
+   "discipline": "Histology",
+   "topic": "Epithelium",
+   "subtopic": "Respiratory epithelium",
+   "question_type": "Conceptual",
+   "difficulty_tier": 2,
+   "prompt": "Cigarette smoke paralyzes cilia. Why do smokers then develop a morning cough?",
+   "choices": {
+    "a": "Smoke dissolves the basement membrane.",
+    "b": "Goblet cells stop making mucus.",
+    "c": "Alveoli fill with blood.",
+    "d": "The mucociliary escalator fails, so mucus from goblet cells pools until it's coughed up."
+   },
+   "explanation": "Respiratory epithelium traps particles in mucus from goblet cells and sweeps it upward with cilia. When cilia are damaged, mucus (often increased by goblet-cell hyperplasia) accumulates overnight and must be coughed out.",
+   "learning_objective": "Explain the mucociliary escalator and its failure in smokers.",
+   "xp_reward": null,
+   "lecture_id": "exam_b1",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "exb1_interview_01",
+   "discipline": "Clinical Skills",
+   "topic": "The Medical Interview",
+   "subtopic": "Open-ended questions",
+   "question_type": "Application",
+   "difficulty_tier": 1,
+   "prompt": "Which is the best way to start the history of a patient's main problem?",
+   "choices": {
+    "a": "\"You've been taking your pills, right?\"",
+    "b": "\"Is the pain sharp?\"",
+    "c": "\"Rate your pain from one to ten.\"",
+    "d": "\"What brings you in today?\""
+   },
+   "explanation": "An open-ended question lets the patient tell the story in their own words, which yields more information and shows you're listening. Closed and leading questions come later, to clarify details.",
+   "learning_objective": "Use open-ended questions to begin a history.",
+   "xp_reward": null,
+   "lecture_id": "exam_b1",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "exb1_confidentiality_01",
+   "discipline": "Clinical Skills",
+   "topic": "Professionalism",
+   "subtopic": "Confidentiality",
+   "question_type": "Application",
+   "difficulty_tier": 1,
+   "prompt": "A patient's employer phones the clinic asking what his diagnosis is. What should you do?",
+   "choices": {
+    "a": "Tell the employer to ask the patient's family.",
+    "b": "Share only the diagnosis, not the treatment.",
+    "c": "Share it, since the employer pays for his insurance.",
+    "d": "Decline to share anything without the patient's permission."
+   },
+   "explanation": "Health information is confidential and may be shared with an employer only with the patient's explicit authorization. Paying for insurance doesn't change that.",
+   "learning_objective": "Apply the principle of confidentiality.",
+   "xp_reward": null,
+   "lecture_id": "exam_b1",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  }
+ ]
+}

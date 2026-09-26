@@ -1,0 +1,386 @@
+{
+ "version": 1,
+ "id": "gi_liver_01",
+ "title": "Digestion & the Liver",
+ "professor": "Dr. Amara Nwosu",
+ "segments": [
+  {
+   "id": "introduction",
+   "topic": "Introduction",
+   "slide": {
+    "heading": "The Gut",
+    "bullets": [],
+    "subheading": "Digestion, absorption, bile and bilirubin",
+    "diagram": "figure",
+    "figure": {
+     "type": "flow",
+     "nodes": [
+      {
+       "id": "mouth",
+       "label": "Mouth: amylase",
+       "x": 0.1,
+       "y": 0.5,
+       "color": "second"
+      },
+      {
+       "id": "stomach",
+       "label": "Stomach: acid, pepsin",
+       "x": 0.33,
+       "y": 0.5,
+       "color": "red"
+      },
+      {
+       "id": "duo",
+       "label": "Duodenum: bile, enzymes",
+       "x": 0.56,
+       "y": 0.5,
+       "color": "gold"
+      },
+      {
+       "id": "ileum",
+       "label": "Ileum: B12, bile salts",
+       "x": 0.79,
+       "y": 0.5,
+       "color": "accent"
+      },
+      {
+       "id": "liver",
+       "label": "Liver",
+       "x": 0.56,
+       "y": 0.12,
+       "color": "third"
+      }
+     ],
+     "edges": [
+      {
+       "from": "mouth",
+       "to": "stomach"
+      },
+      {
+       "from": "stomach",
+       "to": "duo"
+      },
+      {
+       "from": "duo",
+       "to": "ileum"
+      },
+      {
+       "from": "liver",
+       "to": "duo"
+      }
+     ]
+    }
+   },
+   "lines": [
+    {
+     "text": "Good morning. I'm Amara Nwosu, gastroenterology and hepatology. Nine metres of tube, and what goes on in it.",
+     "gesture": "audience"
+    },
+    {
+     "text": "We'll follow a meal: acid in the stomach, the hormones that coordinate everything, digestion and absorption, and then the liver, bile and bilirubin.",
+     "gesture": "screen"
+    }
+   ]
+  },
+  {
+   "id": "acid",
+   "topic": "Gastric acid",
+   "slide": {
+    "heading": "Stomach acid",
+    "bullets": [
+     "Parietal cells: H⁺/K⁺-ATPase (the proton pump)",
+     "Stimulated by gastrin, histamine (H2) and ACh",
+     "PPIs block the pump irreversibly",
+     "Parietal cells also make intrinsic factor",
+     "B12 + intrinsic factor absorbed in the terminal ileum"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "Parietal cells secrete hydrochloric acid through the H-K ATPase, the proton pump.",
+     "gesture": "screen",
+     "reveal": 1
+    },
+    {
+     "text": "Three signals switch them on: gastrin, histamine through H2 receptors, and acetylcholine from the vagus.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "text": "Proton pump inhibitors like omeprazole bind the pump irreversibly. They're the strongest acid suppressants we have.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "question": "gi_ppi_01"
+    },
+    {
+     "text": "Parietal cells make one more thing: intrinsic factor, which carries vitamin B12 to the end of the ileum to be absorbed.",
+     "gesture": "screen",
+     "reveal": 5
+    },
+    {
+     "question": "gi_b12_01"
+    }
+   ]
+  },
+  {
+   "id": "hormones",
+   "topic": "GI hormones",
+   "slide": {
+    "heading": "The hormones that run digestion",
+    "bullets": [
+     "Gastrin (G cells, antrum): acid",
+     "CCK (I cells, duodenum): gallbladder, enzymes",
+     "Secretin (S cells, duodenum): bicarbonate",
+     "CCK responds to fat and protein; secretin to acid"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "table",
+     "columns": [
+      "Hormone",
+      "Made by",
+      "Released by",
+      "Main effects"
+     ],
+     "rows": [
+      [
+       "Gastrin",
+       "G cells, antrum",
+       "Protein, stomach stretch",
+       "Acid secretion"
+      ],
+      [
+       "CCK",
+       "I cells, duodenum",
+       "Fat, protein",
+       "Gallbladder contracts; pancreatic enzymes"
+      ],
+      [
+       "Secretin",
+       "S cells, duodenum",
+       "Acid in the duodenum",
+       "Pancreatic bicarbonate"
+      ]
+     ],
+     "widths": [
+      0.18,
+      0.24,
+      0.24,
+      0.34
+     ]
+    }
+   },
+   "lines": [
+    {
+     "text": "Food reaching the duodenum sets off hormones from its lining.",
+     "gesture": "audience"
+    },
+    {
+     "text": "Fat and protein release cholecystokinin, which contracts the gallbladder and releases pancreatic enzymes. That's why a fatty meal brings on gallstone pain.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "text": "Acid releases secretin, which calls for bicarbonate from the pancreas to neutralize it.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "question": "gi_cck_01"
+    }
+   ]
+  },
+  {
+   "id": "absorption",
+   "topic": "Digestion and absorption",
+   "slide": {
+    "heading": "Breaking it down and taking it in",
+    "bullets": [
+     "Starch: amylase, then brush-border enzymes",
+     "Lactase deficiency: osmotic diarrhea, bloating",
+     "Proteins: pepsin, then trypsin (activated by enteropeptidase)",
+     "Fats: bile salts make micelles; chylomicrons to lymph",
+     "Bile salts reabsorbed in the terminal ileum"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "Starch is broken down by amylase and finished by enzymes on the brush border of the small intestine, including lactase.",
+     "gesture": "screen",
+     "reveal": 1
+    },
+    {
+     "text": "Many adults lose their lactase. Unabsorbed lactose draws water into the gut and bacteria ferment it: bloating, gas and diarrhea.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "question": "gi_lactose_01"
+    },
+    {
+     "text": "Fats need bile. Bile salts emulsify them into micelles; enterocytes package them into chylomicrons, which go into the lymph. Then the bile salts are reabsorbed at the end of the ileum and recycled.",
+     "gesture": "screen",
+     "reveal": 5
+    }
+   ]
+  },
+  {
+   "id": "bilirubin",
+   "topic": "Bilirubin and jaundice",
+   "slide": {
+    "heading": "Bilirubin: follow the yellow",
+    "bullets": [
+     "Heme → unconjugated bilirubin (insoluble, on albumin)",
+     "Liver conjugates it (UGT1A1)",
+     "Hemolysis: unconjugated rises",
+     "Obstruction: conjugated rises; dark urine, pale stool",
+     "Gilbert syndrome: mild unconjugated rise with fasting"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "flow",
+     "nodes": [
+      {
+       "id": "heme",
+       "label": "Heme (old red cells)",
+       "x": 0.1,
+       "y": 0.2,
+       "color": "red"
+      },
+      {
+       "id": "uncon",
+       "label": "Unconjugated bilirubin (on albumin)",
+       "x": 0.42,
+       "y": 0.2,
+       "color": "gold"
+      },
+      {
+       "id": "liver",
+       "label": "Liver: UGT1A1 conjugates",
+       "x": 0.76,
+       "y": 0.2,
+       "color": "accent"
+      },
+      {
+       "id": "bile",
+       "label": "Conjugated bilirubin in bile",
+       "x": 0.76,
+       "y": 0.62,
+       "color": "second"
+      },
+      {
+       "id": "gut",
+       "label": "Gut bacteria: urobilinogen",
+       "x": 0.42,
+       "y": 0.62,
+       "color": "third"
+      },
+      {
+       "id": "stool",
+       "label": "Stercobilin: brown stool",
+       "x": 0.12,
+       "y": 0.9,
+       "color": "muted"
+      },
+      {
+       "id": "urine",
+       "label": "Some urobilin in urine",
+       "x": 0.42,
+       "y": 0.92,
+       "color": "muted"
+      }
+     ],
+     "edges": [
+      {
+       "from": "heme",
+       "to": "uncon"
+      },
+      {
+       "from": "uncon",
+       "to": "liver"
+      },
+      {
+       "from": "liver",
+       "to": "bile"
+      },
+      {
+       "from": "bile",
+       "to": "gut"
+      },
+      {
+       "from": "gut",
+       "to": "stool"
+      },
+      {
+       "from": "gut",
+       "to": "urine"
+      }
+     ],
+     "text_size": 17
+    }
+   },
+   "lines": [
+    {
+     "text": "Old red cells release heme, which becomes unconjugated bilirubin. It's insoluble, so it travels on albumin.",
+     "gesture": "screen",
+     "reveal": 1
+    },
+    {
+     "text": "The liver conjugates it with glucuronic acid, making it water-soluble, and excretes it in bile. Gut bacteria turn it into urobilinogen: some colors the stool brown, some is reabsorbed and leaves in the urine.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "text": "Too much production, as in hemolysis, raises unconjugated bilirubin. A blocked bile duct backs up conjugated bilirubin into the blood.",
+     "gesture": "screen",
+     "reveal": 4
+    },
+    {
+     "question": "gi_obstruction_01"
+    },
+    {
+     "text": "And a benign, common variant: Gilbert syndrome, a sluggish UGT enzyme. Mild jaundice when fasting or ill, nothing else.",
+     "gesture": "screen",
+     "reveal": 5
+    },
+    {
+     "question": "gi_gilbert_01"
+    }
+   ]
+  },
+  {
+   "id": "acetaminophen",
+   "topic": "Acetaminophen and the liver",
+   "slide": {
+    "heading": "Acetaminophen overdose",
+    "bullets": [
+     "Normally glucuronidated and sulfated",
+     "In overdose, more goes to NAPQI (via CYP2E1)",
+     "Glutathione detoxifies NAPQI until it runs out",
+     "Then centrilobular hepatic necrosis",
+     "N-acetylcysteine restores glutathione: give it early"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "The most common cause of acute liver failure in the United States is acetaminophen.",
+     "gesture": "audience"
+    },
+    {
+     "text": "At normal doses it's conjugated and excreted. In overdose, more is turned into a toxic metabolite, NAPQI, which glutathione neutralizes until the glutathione runs out. Then liver cells die.",
+     "gesture": "screen",
+     "reveal": 4
+    },
+    {
+     "question": "gi_nac_01",
+     "lead": "What's the antidote?"
+    }
+   ]
+  }
+ ]
+}

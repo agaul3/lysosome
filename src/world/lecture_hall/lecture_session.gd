@@ -1,12 +1,16 @@
 extends Node
-## Runs the Pharmacodynamics lecture in Hall A. Sitting down before 8:00 shows
-## a waiting prompt (the player may wait out the clock); once class time has
-## come and the lecture camera has settled, the student is kept seated and the
-## professor presents slide by slide. Afterwards the student may stand.
+## Runs today's lecture in this hall (education/lectures/lecture_catalog.gd:
+## Pharmacodynamics in Hall A on day 1, Pharmacokinetics on day 2, …).
+## Sitting down before class time shows a waiting prompt (the player may wait
+## out the clock); once class time has come and the lecture camera has
+## settled, the student is kept seated and the professor presents slide by
+## slide. Afterwards the student may stand. With no lecture here today the
+## hall is open for a quiet sit-down, and the screen shows the last slide deck.
 signal state_changed(state: int)
 const LectureRunner = preload("res://education/lectures/lecture_runner.gd")
 const CompetitiveActivity = preload("res://world/lecture_hall/competitive_activity.gd")
 const QuestionBeat = preload("res://world/lecture_hall/question_beat.gd")
+const Catalog = preload("res://education/lectures/lecture_catalog.gd")
 const SCRIPT_PATH := "res://education/lectures/pharmacodynamics_01.json"
 enum State { IDLE, WAITING, STARTING, PRESENTING, SUMMARY, COMPLETE }
 var state := State.IDLE
@@ -21,6 +25,10 @@ var event: Dictionary = {}
 var activity: Node
 var question: Node
 var summary: Dictionary = {}
+## "hall_a" or "hall_b".
+var hall_id := "hall_a"
+## No lecture is scheduled in this hall today.
+var no_class := false
 
 func setup(target_hall: Node3D, target_ui: CanvasLayer, target_slide: Control, viewport: SubViewport, target_professor: Node3D) -> void:
 	hall = target_hall
@@ -29,11 +37,16 @@ func setup(target_hall: Node3D, target_ui: CanvasLayer, target_slide: Control, v
 	slide = target_slide
 	slide_viewport = viewport
 	professor = target_professor
-	var loaded := runner.load_file(SCRIPT_PATH)
+	hall_id = String(hall.get("hall_id")) if hall.get("hall_id") != null else "hall_a"
+	event = Catalog.lecture_on(hall_id, YearCalendar.today_date())
+	no_class = event.is_empty()
+	var path := SCRIPT_PATH if no_class else Catalog.path_for(Catalog.lecture_id(event))
+	var loaded := runner.load_file(path)
 	assert(loaded, runner.last_error)
-	for candidate in GameClock.config.events:
-		if candidate.id == runner.script_data.id:
-			event = candidate
+	if no_class:
+		for candidate in GameClock.config.events:
+			if candidate.id == runner.script_data.id:
+				event = candidate
 	runner.segment_started.connect(_on_segment)
 	runner.line_started.connect(_on_line)
 	runner.finished.connect(_on_finished)
@@ -52,7 +65,7 @@ func setup(target_hall: Node3D, target_ui: CanvasLayer, target_slide: Control, v
 	_show_title_slide()
 
 func completed() -> bool:
-	return AcademicSession.lectures_completed.has(runner.script_data.id)
+	return no_class or AcademicSession.lectures_completed.has(runner.script_data.id)
 
 ## Unix time at which class begins, from data/academic_config.json.
 func start_time() -> float:
@@ -69,6 +82,9 @@ func _set_state(next: State) -> void:
 
 func _on_seating(seating_state: int) -> void:
 	if seating_state == player.seating.State.SEATED:
+		if no_class:
+			ui.show_waiting("No lecture here today")
+			return
 		if completed():
 			return
 		if class_has_started():
@@ -144,7 +160,7 @@ func _on_segment(segment: Dictionary, index: int) -> void:
 	AcademicSession.notes_progress[lecture] = maxi(int(AcademicSession.notes_progress.get(lecture, 0)), index + 1)
 	slide.show_slide(segment.slide, 0)
 	ui.show_topic(runner.progress_label())
-	hall.hud.set_objective("Pharmacodynamics  ·  " + segment.topic)
+	hall.hud.set_objective(String(runner.script_data.title) + "  ·  " + segment.topic)
 
 func _on_line(line: Dictionary) -> void:
 	if line.has("activity"):
@@ -169,6 +185,7 @@ func _on_finished() -> void:
 	AcademicSession.lectures_completed[runner.script_data.id] = summary.duplicate()
 	if first_time:
 		AcademicSession.lecture_completed.emit(runner.script_data.id)
+		Wellbeing.spend(12.0, "lecture")
 	professor.set_line("audience")
 	professor.set_speaking(false)
 	ui.show_summary("Lecture complete  ·  " + runner.script_data.title, [

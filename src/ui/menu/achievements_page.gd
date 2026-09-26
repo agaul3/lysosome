@@ -1,46 +1,50 @@
 extends "res://ui/menu/menu_page.gd"
-## Achievements (placeholder per spec): a preview of milestone badges,
-## derived directly from existing progress — no separate achievement system.
+## Achievements: the whole catalogue (data/achievements.gd) by category, with
+## progress toward stat goals and each reward. Hidden achievements keep
+## their description until unlocked.
+const Catalogue = preload("res://data/achievements.gd")
 
 func _ready() -> void:
+	Achievements.unlocked.connect(func(_id: String, _achievement: Dictionary) -> void:
+		if is_visible_in_tree():
+			refresh())
 	refresh()
-
-func _badges() -> Array:
-	var lecture: Dictionary = AcademicSession.lectures_completed.get("pharmacodynamics_01", {})
-	var arrival: Dictionary = {}
-	for record in AcademicSession.attendance.values():
-		arrival = record
-	return [
-		["Punctual", "Arrive on time for your first lecture.", "clock", not arrival.is_empty() and not arrival.late],
-		["First Correct Answer", "Answer a lecture question correctly.", "check", AcademicSession.correct > 0],
-		["Pharmacodynamics I", "Complete the Pharmacodynamics lecture.", "book", not lecture.is_empty()],
-		["Sharp Mind", "Score 80% or more in a lecture.", "target", not lecture.is_empty() and float(lecture.accuracy) >= 0.8],
-		["In the Zone", "Answer 10 questions in a row correctly.", "flame", AcademicSession.best_streak >= 10],
-		["Level Up", "Reach Level 2.", "spark", AcademicSession.level >= 2],
-	]
 
 func refresh() -> void:
 	clear()
-	var badges := _badges()
-	var unlocked := badges.filter(func(badge): return badge[3]).size()
+	var total := Catalogue.ACHIEVEMENTS.size()
 	var head := HBoxContainer.new()
-	var count := UI.label("%d of %d unlocked" % [unlocked, badges.size()], UI.SIZE_BODY, UI.TEXT, 600)
+	var count := UI.label("%d of %d unlocked" % [Achievements.unlocked_count(), total], UI.SIZE_BODY, UI.TEXT, 600)
 	count.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(count)
-	head.add_child(UI.chip("Preview", UI.TEXT_MUTED))
+	head.add_child(UI.chip("Rewards: money · skill points · clothing", UI.REWARD))
 	content.add_child(head)
-	var grid := GridContainer.new()
-	grid.columns = 2
-	grid.add_theme_constant_override("h_separation", 12)
-	grid.add_theme_constant_override("v_separation", 12)
-	content.add_child(grid)
-	for badge in badges:
-		grid.add_child(_badge(badge[0], badge[1], badge[2], badge[3]))
-	content.add_child(UI.label("More achievements arrive with later chapters of the year.", UI.SIZE_LABEL, UI.TEXT_FAINT, 400))
+	for category in Catalogue.CATEGORIES:
+		var ids: Array = Catalogue.ACHIEVEMENTS.keys().filter(func(id: String) -> bool: return Catalogue.ACHIEVEMENTS[id].category == category[0])
+		if ids.is_empty():
+			continue
+		var done := ids.filter(func(id: String) -> bool: return Achievements.is_unlocked(id)).size()
+		var heading := HBoxContainer.new()
+		heading.add_theme_constant_override("separation", 8)
+		heading.add_child(Icon.new(category[2], 15, UI.ACCENT))
+		var title := UI.label(String(category[1]).to_upper(), UI.SIZE_CAPTION, UI.TEXT_MUTED, 600, true)
+		title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		heading.add_child(title)
+		heading.add_child(UI.label("%d / %d" % [done, ids.size()], UI.SIZE_CAPTION, UI.TEXT_FAINT, 600))
+		content.add_child(heading)
+		var grid := GridContainer.new()
+		grid.columns = 2
+		grid.add_theme_constant_override("h_separation", 12)
+		grid.add_theme_constant_override("v_separation", 12)
+		content.add_child(grid)
+		for id in ids:
+			grid.add_child(_badge(id))
 
-func _badge(title: String, detail: String, icon: String, unlocked: bool) -> Control:
+func _badge(id: String) -> Control:
+	var achievement: Dictionary = Catalogue.ACHIEVEMENTS[id]
+	var unlocked := Achievements.is_unlocked(id)
 	var card := UI.card(Vector4(14, 12, 14, 12), UI.SURFACE_RAISED if unlocked else Color(UI.SURFACE_RAISED, 0.5))
-	card.custom_minimum_size = Vector2(294, 72)
+	card.custom_minimum_size = Vector2(294, 86)
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 12)
 	card.add_child(row)
@@ -48,14 +52,29 @@ func _badge(title: String, detail: String, icon: String, unlocked: bool) -> Cont
 	medal.add_theme_stylebox_override("panel", UI.box(Color(UI.REWARD, 0.14) if unlocked else Color(1, 1, 1, 0.04), 20, Color(UI.REWARD, 0.6) if unlocked else UI.LINE, 1, Vector4(0, 0, 0, 0)))
 	medal.custom_minimum_size = Vector2(44, 44)
 	medal.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	var glyph := Icon.new(icon if unlocked else "lock", 20, UI.REWARD if unlocked else UI.TEXT_FAINT)
+	var glyph := Icon.new(String(achievement.icon) if unlocked else "lock", 20, UI.REWARD if unlocked else UI.TEXT_FAINT)
 	glyph.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	medal.add_child(glyph)
 	row.add_child(medal)
 	var text := VBoxContainer.new()
-	text.add_theme_constant_override("separation", 1)
+	text.add_theme_constant_override("separation", 2)
 	text.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	text.add_child(UI.label(title, UI.SIZE_BODY, UI.TEXT if unlocked else UI.TEXT_MUTED, 600))
-	text.add_child(UI.paragraph(detail, 200, UI.SIZE_CAPTION, UI.TEXT_MUTED if unlocked else UI.TEXT_FAINT))
+	text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(text)
+	text.add_child(UI.label(String(achievement.title), UI.SIZE_BODY, UI.TEXT if unlocked else UI.TEXT_MUTED, 600))
+	var hidden: bool = achievement.get("hidden", false) and not unlocked
+	text.add_child(UI.paragraph("A secret, for now." if hidden else String(achievement.description), 200, UI.SIZE_CAPTION, UI.TEXT_MUTED if unlocked else UI.TEXT_FAINT))
+	var progress: Array = Achievements.progress(id)
+	if not unlocked and int(progress[1]) > 1:
+		var bar := Control.new()
+		bar.custom_minimum_size = Vector2(200, 4)
+		var fraction := float(progress[0]) / float(progress[1])
+		bar.draw.connect(func() -> void:
+			bar.draw_rect(Rect2(Vector2.ZERO, bar.size), Color(1, 1, 1, 0.08))
+			bar.draw_rect(Rect2(Vector2.ZERO, Vector2(bar.size.x * fraction, bar.size.y)), UI.ACCENT))
+		text.add_child(bar)
+		text.add_child(UI.label("%d / %d" % [progress[0], progress[1]], 10, UI.TEXT_FAINT, 600))
+	var reward := Achievements.reward_text(id)
+	if not reward.is_empty():
+		text.add_child(UI.label(reward, 10, UI.REWARD if unlocked else UI.TEXT_FAINT, 600))
 	return card

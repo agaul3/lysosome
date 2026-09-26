@@ -1,0 +1,191 @@
+{
+ "version": 1,
+ "id": "sp_knee",
+ "kind": "encounter",
+ "eyebrow": "Clinical Skills Center · Room 5",
+ "title": "Standardized patient: knee pain",
+ "intro": "The musculoskeletal encounter: a focused history and knee examination. Door card: Ms. Alicia Moreno, 24, \"right knee pain\". Twelve minutes.",
+ "context": "clinical",
+ "minutes": 60,
+ "energy": 10,
+ "steps": [
+  {
+   "say": "Ms. Moreno sits on the exam table with her right knee propped on a pillow, a pair of crutches against the wall."
+  },
+  {
+   "choice": {
+    "prompt": "How do you begin?",
+    "category": "Communication",
+    "options": [
+     {
+      "text": "Introduce yourself, confirm her name, and ask what happened.",
+      "reply": "\"Hi. Alicia. I did something to my knee playing soccer on Saturday.\"",
+      "score": 2
+     },
+     {
+      "text": "\"Let's look at that knee,\" and reach for it before she's settled.",
+      "reply": "She flinches. \"Careful, please.\"",
+      "score": 0
+     },
+     {
+      "text": "\"Knee pain? On a scale of one to ten?\"",
+      "reply": "\"Seven? It's more that it gave way.\" You've jumped past the story.",
+      "score": 1
+     }
+    ],
+    "lesson": "Introduce yourself and let the patient tell the story first"
+   }
+  },
+  {
+   "history": {
+    "patient": "Ms. Alicia Moreno, 24",
+    "opening": "\"I planted my foot to cut past a defender, twisted, and heard a pop. I couldn't keep playing.\"",
+    "limit": 7,
+    "items": [
+     {
+      "category": "The injury",
+      "ask": "Did anyone hit your knee, or did it happen on its own?",
+      "answer": "\"Nobody touched me. I just turned.\"",
+      "key": true
+     },
+     {
+      "category": "The injury",
+      "ask": "How quickly did it swell?",
+      "answer": "\"Within an hour or two it was huge.\"",
+      "key": true
+     },
+     {
+      "category": "The injury",
+      "ask": "Could you walk on it afterward?",
+      "answer": "\"Barely. Teammates carried me off.\"",
+      "key": true
+     },
+     {
+      "category": "Symptoms now",
+      "ask": "Does it give way, lock or catch?",
+      "answer": "\"It feels wobbly, like it'll give way. It hasn't locked.\"",
+      "key": true
+     },
+     {
+      "category": "Symptoms now",
+      "ask": "Where exactly does it hurt?",
+      "answer": "\"Deep inside, and all over really.\"",
+      "key": false
+     },
+     {
+      "category": "Past history",
+      "ask": "Any previous knee injuries or surgery?",
+      "answer": "\"Never.\"",
+      "key": false
+     },
+     {
+      "category": "Medications",
+      "ask": "What have you taken for it?",
+      "answer": "\"Ibuprofen and ice.\"",
+      "key": false
+     },
+     {
+      "category": "Social",
+      "ask": "What do you do, and what do you need the knee for?",
+      "answer": "\"I'm a PE teacher. I need to be on my feet all day.\"",
+      "key": true
+     }
+    ]
+   },
+   "heading": "Take the history"
+  },
+  {
+   "exam": {
+    "limit": 5,
+    "maneuvers": [
+     {
+      "name": "Inspect and compare both knees",
+      "finding": "The right knee is swollen compared with the left, with no bruising or deformity.",
+      "key": true
+     },
+     {
+      "name": "Palpate for an effusion (patellar tap)",
+      "finding": "A tense effusion: the patella taps down onto the femur.",
+      "key": true
+     },
+     {
+      "name": "Range of motion",
+      "finding": "Flexion limited to 90 degrees by pain and swelling; full extension is possible.",
+      "key": false
+     },
+     {
+      "name": "Lachman test",
+      "finding": "Increased forward translation of the tibia with a soft end point compared with the left.",
+      "key": true
+     },
+     {
+      "name": "Anterior drawer test",
+      "finding": "Slightly increased translation; guarding limits it.",
+      "key": false
+     },
+     {
+      "name": "McMurray's test",
+      "finding": "No click; mild discomfort only.",
+      "key": false
+     },
+     {
+      "name": "Valgus and varus stress",
+      "finding": "Stable, without pain.",
+      "key": false
+     },
+     {
+      "name": "Check pulses and sensation in the foot",
+      "finding": "Normal dorsalis pedis pulse and sensation.",
+      "key": true
+     }
+    ]
+   },
+   "heading": "Examine the patient"
+  },
+  {
+   "choice": {
+    "prompt": "She asks, \"Is it broken? Will I be able to teach?\"",
+    "category": "Communication",
+    "options": [
+     {
+      "text": "\"I don't think it's broken, but it may be a ligament. The doctor will examine you and talk about imaging and what it means for your work.\"",
+      "reply": "\"OK. Thanks for being straight with me.\"",
+      "score": 2
+     },
+     {
+      "text": "\"You'll be fine in a week.\"",
+      "reply": "She looks relieved, but you can't know that.",
+      "score": 0
+     },
+     {
+      "text": "\"That's a question for the doctor.\" Then you leave.",
+      "reply": "She's left with her worry.",
+      "score": 1
+     }
+    ],
+    "lesson": "Answer honestly within your role, without false reassurance"
+   }
+  },
+  {
+   "question": "sp_knee_dx_01",
+   "lead": "Your preceptor asks for your impression."
+  },
+  {
+   "question": "sp_knee_lachman_01"
+  }
+ ],
+ "feedback": [
+  [
+   0.85,
+   "\"Beautiful focused exam, and you always checked the other side and the foot. Well done.\""
+  ],
+  [
+   0.6,
+   "\"Good. Always compare with the other knee, and never forget pulses and sensation.\""
+  ],
+  [
+   0.0,
+   "\"Let's practice the knee exam sequence together before the practical.\""
+  ]
+ ]
+}

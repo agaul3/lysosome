@@ -1,0 +1,27 @@
+{
+ "version": 1,
+ "id": "anatomy_practical_b2",
+ "kind": "exam",
+ "eyebrow": "Gross Anatomy Laboratory",
+ "title": "Anatomy Practical: The Upper Limb",
+ "intro": "Tagged structures at timed stations around the lab. Read each tag, identify, write, move on. Eight stations; the bell rings every ninety seconds.",
+ "questions": [
+  "prac_tag_radial_01",
+  "prac_tag_ulnar_01",
+  "prac_tag_supraspinatus_01",
+  "prac_tag_biceps_01",
+  "prac_tag_axillary_artery_01",
+  "prac_tag_scaphoid_01",
+  "prac_tag_deltoid_01",
+  "prac_tag_median_01"
+ ],
+ "pass": 0.7,
+ "honors": 0.9,
+ "merit": {
+  "pass": 5000,
+  "honors": 12500
+ },
+ "minutes": 90,
+ "energy": 15,
+ "seconds_per_question": 90
+}

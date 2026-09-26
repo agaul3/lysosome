@@ -36,9 +36,17 @@ func has_laptop() -> bool:
 
 func cards() -> Array:
 	var result: Array = []
+	var today := Time.get_date_string_from_unix_time(int(GameClock.now_seconds()))
 	for q in QuestionBank.records.values():
 		# Presentation-only prompts require a graph/slide and cannot stand alone.
-		if q.id == "pd_viz_competitive_01":
+		if q.id == "pd_viz_competitive_01" or q.has("figure"):
+			continue
+		# A club's questions are cards only for its members.
+		if String(q.lecture_id).begins_with("club_") and not Clubs.is_member(String(q.lecture_id).trim_prefix("club_")):
+			continue
+		# A lecture's (or exam's) cards arrive on the day it's taught.
+		var source: Dictionary = YearCalendar.event(String(q.lecture_id))
+		if not source.is_empty() and String(source.date) > today:
 			continue
 		# One deck per discipline and topic, e.g. Medicine::Pharmacology::Pharmacodynamics.
 		result.append({"id": "bank:" + q.id, "note": "bank:" + q.id, "deck": "Medicine::%s::%s" % [q.discipline, q.topic],
@@ -170,8 +178,9 @@ func rate(rating: int) -> Dictionary:
 	# Same effort reward for all ratings; honest failure must not cost XP.
 	# A three-second minimum blocks accidental instant reveal/rate rewards.
 	var reward := 0
-	if int(previous.reward_day) != day and int(daily.xp) < DAILY_XP_CAP and Time.get_ticks_msec() - shown_at >= 3000:
-		reward = mini(XP_PER_CARD, DAILY_XP_CAP - int(daily.xp))
+	var cap := daily_cap()
+	if int(previous.reward_day) != day and int(daily.xp) < cap and Time.get_ticks_msec() - shown_at >= 3000:
+		reward = mini(XP_PER_CARD, cap - int(daily.xp))
 		next.reward_day = day
 		daily.xp += reward
 	daily.reviews += 1
@@ -188,11 +197,18 @@ func rate(rating: int) -> Dictionary:
 	if review_log.size() > 5000:
 		review_log.pop_front()
 	end_review()
+	# Studying is learning: boosts and perks multiply it, and it tires you a little.
 	if reward > 0:
-		AcademicSession.add_xp(reward, "flashcards")
+		AcademicSession.add_xp(Wellbeing.apply(reward, "flashcard"), "flashcards")
+	Wellbeing.spend(0.25, "flashcards")
+	Achievements.bump("flashcards_reviewed")
 	SaveGame.autosave()
 	changed.emit()
 	return {"xp": reward, "due": next.due, "suspended": next.suspended}
+
+## Daily XP cap (base 100; the Spaced Mastery perk raises it).
+func daily_cap() -> int:
+	return DAILY_XP_CAP + int(Skills.effect("flashcard:cap"))
 
 func set_suspended(id: String, value: bool) -> void:
 	if card(id).is_empty():

@@ -1,0 +1,64 @@
+{
+ "version": 1,
+ "id": "white_coat",
+ "kind": "ceremony",
+ "eyebrow": "Lecture Hall A",
+ "title": "The White Coat Ceremony",
+ "intro": "Hall A is full. Families fill the upper rows with phones raised; your class sits in the front rows in their best clothes, the coats folded on a long table on the stage.",
+ "context": "lecture",
+ "minutes": 90,
+ "energy": 4,
+ "steps": [
+  {
+   "say": "\"The coat you receive today is short. That's on purpose. It says you're a student, that there is a great deal still to learn, and that the patients who let you learn from them are doing you a kindness.\"",
+   "speaker": "Dr. Evelyn Carter, Dean"
+  },
+  {
+   "say": "\"It also says something to them. When you walk into a room in this coat, people will tell you things they have told no one else. Deserve that.\"",
+   "speaker": "Dr. Evelyn Carter, Dean"
+  },
+  {
+   "say": "Dr. Lena Park reads the names. Yours comes. You cross the stage; your faculty advisor holds the coat open and you slip your arms in. It's heavier than it looks, the pockets already weighed down with a pen light and a pocket guide."
+  },
+  {
+   "reward": {
+    "item": "short_white_coat",
+    "wear": true,
+    "flag": "white_coat"
+   }
+  },
+  {
+   "say": "The whole class stands and, together, reads the oath your class wrote in orientation week."
+  },
+  {
+   "say": "\"I will put the good of my patients first. I will respect their dignity, their choices and their privacy. I will admit what I do not know and ask for help when I need it. I will treat my colleagues with the same respect I owe my patients. I will look after myself, so that I can look after others. And I will keep learning for as long as I practice.\"",
+   "speaker": "The Class of 2030"
+  },
+  {
+   "choice": {
+    "prompt": "On the quad afterward, your family asks what the coat means to you.",
+    "category": "Reflection",
+    "options": [
+     {
+      "text": "\"That people are going to trust me before I've earned it. I have to earn it.\"",
+      "reply": "Your mother squeezes your hand. \"You will.\"",
+      "score": 1
+     },
+     {
+      "text": "\"That this is real now. I'm really doing this.\"",
+      "reply": "Your father laughs. \"You've been doing it for weeks. Now it's official.\"",
+      "score": 1
+     },
+     {
+      "text": "\"That I have a lot to learn. Short coat, long road.\"",
+      "reply": "\"Short coat, long road,\" your grandmother repeats, and makes you pose for another photo.",
+      "score": 1
+     }
+    ]
+   }
+  },
+  {
+   "say": "Photos on the quad, the whole class in white. Somebody's little brother tries on a coat that reaches his ankles."
+  }
+ ]
+}

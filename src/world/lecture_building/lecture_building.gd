@@ -14,6 +14,7 @@ var camera: Camera3D
 var hud: CanvasLayer
 var exit_door: Node3D
 var hall_door: Node3D
+var ceremony: Node3D
 ## Walls cut away for the overhead camera; the ceiling and south doors seen only in first person.
 var cutaway: Array[MeshInstance3D] = []
 var first_person_only: Array[Node3D] = []
@@ -91,6 +92,13 @@ func _ready() -> void:
 	hud = HUD.new()
 	add_child(hud)
 	hud.bind_player(player)
+	# Ceremonies in Hall A start at the doors (world/activity_station.gd).
+	ceremony = preload("res://world/activity_station.gd").new()
+	ceremony.name = "HallAStation"
+	ceremony.position = Vector3(2.2, 1.0, -2.8)
+	ceremony.reach = 1.6
+	ceremony.setup("lecture_building", "hall_a", hud, "Hall A notices", "The notice board by Hall A: this week's lecture times, a flyer for the White Coat Ceremony on Saturday, October 10, and a reminder to book your standardized-patient slot.")
+	add_child(ceremony)
 	AppState.view_changed.connect(apply_view)
 	apply_view(AppState.first_person)
 

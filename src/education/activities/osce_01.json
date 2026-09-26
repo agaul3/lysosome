@@ -1,0 +1,212 @@
+{
+ "version": 1,
+ "id": "osce_01",
+ "kind": "encounter",
+ "eyebrow": "Clinical Skills Center · OSCE",
+ "title": "The end-of-year OSCE",
+ "intro": "The Objective Structured Clinical Examination: two stations, eight minutes each, a buzzer between them. Examiners watch from the corner with a checklist. Read the door card, knock, and begin.",
+ "context": "clinical",
+ "minutes": 120,
+ "energy": 14,
+ "steps": [
+  {
+   "say": "A buzzer. Door card, station 1: Ms. Aisha Rahman, 38, \"headache\". Take a focused history and examination, then tell the examiner your plan."
+  },
+  {
+   "choice": {
+    "prompt": "Ms. Rahman is holding her head in the dim room. You begin:",
+    "category": "Communication",
+    "options": [
+     {
+      "text": "\"Hello, I'm a medical student. I'm sorry you're in pain. Can you tell me about this headache?\" Then you ask whether she'd like the lights left low.",
+      "reply": "\"Please. Thank you.\" The examiner ticks a box.",
+      "score": 2
+     },
+     {
+      "text": "\"On a scale of one to ten, how bad is your pain?\"",
+      "reply": "\"Ten.\" Now what? You've skipped the introduction.",
+      "score": 0
+     },
+     {
+      "text": "Switch the main light on so you can see her properly.",
+      "reply": "She flinches from the light. The examiner writes something.",
+      "score": 0
+     }
+    ],
+    "lesson": "Introduce yourself and attend to comfort; photophobia is a clue"
+   }
+  },
+  {
+   "history": {
+    "patient": "Ms. Aisha Rahman, 38",
+    "opening": "\"It hit me like a bat to the back of the head. The worst headache of my life.\"",
+    "limit": 7,
+    "items": [
+     {
+      "category": "The headache",
+      "ask": "How quickly did it come on?",
+      "answer": "\"Instantly. It was at its worst within a few seconds, at the gym, lifting.\"",
+      "key": true
+     },
+     {
+      "category": "The headache",
+      "ask": "Have you ever had a headache like this before?",
+      "answer": "\"I get migraines, but nothing like this. This is the worst ever.\"",
+      "key": true
+     },
+     {
+      "category": "The headache",
+      "ask": "Did you pass out, or have a seizure?",
+      "answer": "\"I think I blacked out for a second. My friend said I went pale.\"",
+      "key": true
+     },
+     {
+      "category": "The headache",
+      "ask": "Any neck stiffness, or does light bother you?",
+      "answer": "\"My neck feels stiff. And the light hurts.\"",
+      "key": true
+     },
+     {
+      "category": "The headache",
+      "ask": "Any vomiting?",
+      "answer": "\"Twice.\"",
+      "key": false
+     },
+     {
+      "category": "Background",
+      "ask": "Do you take blood thinners, or have high blood pressure?",
+      "answer": "\"No blood thinners. My blood pressure's always been fine.\"",
+      "key": true
+     },
+     {
+      "category": "Background",
+      "ask": "Anyone in the family had a brain aneurysm or kidney cysts?",
+      "answer": "\"My aunt died of a bleed in the brain.\"",
+      "key": false
+     },
+     {
+      "category": "Background",
+      "ask": "Do you smoke or use any drugs?",
+      "answer": "\"I smoke a few a day. No drugs.\"",
+      "key": false
+     }
+    ]
+   },
+   "heading": "Take the history"
+  },
+  {
+   "exam": {
+    "limit": 4,
+    "maneuvers": [
+     {
+      "name": "Vital signs",
+      "finding": "BP 158/92, HR 64, temperature normal.",
+      "key": true
+     },
+     {
+      "name": "Check for neck stiffness",
+      "finding": "Neck flexion is stiff and painful.",
+      "key": true
+     },
+     {
+      "name": "Check the pupils",
+      "finding": "Equal and reacting to light.",
+      "key": true
+     },
+     {
+      "name": "Test limb power",
+      "finding": "Normal in all four limbs.",
+      "key": false
+     },
+     {
+      "name": "Look at the fundi",
+      "finding": "The discs look normal.",
+      "key": false
+     }
+    ]
+   },
+   "heading": "Examine the patient"
+  },
+  {
+   "question": "osce_sah_01",
+   "lead": "The examiner: \"What is your plan?\""
+  },
+  {
+   "say": "The buzzer. Door card, station 2: Mr. Samuel Otieno, 55, newly diagnosed with type 2 diabetes. His doctor has prescribed metformin. Explain it to him."
+  },
+  {
+   "choice": {
+    "prompt": "How do you explain how to take it?",
+    "category": "Communication",
+    "options": [
+     {
+      "text": "\"You'll start with one tablet a day with your evening meal, and we'll increase it slowly over a few weeks. That helps your stomach get used to it.\"",
+      "reply": "\"With food, and slowly. That makes sense.\"",
+      "score": 2
+     },
+     {
+      "text": "\"Take the full dose on an empty stomach, twice a day.\"",
+      "reply": "He frowns. The examiner frowns more.",
+      "score": 0
+     },
+     {
+      "text": "\"Just follow what the pharmacist's label says.\"",
+      "reply": "\"I was hoping you'd explain it,\" he says.",
+      "score": 1
+     }
+    ]
+   }
+  },
+  {
+   "question": "osce_metformin_side_01",
+   "lead": "\"What should I expect?\" he asks."
+  },
+  {
+   "question": "osce_metformin_sick_01",
+   "lead": "\"And if I get a stomach bug?\""
+  },
+  {
+   "choice": {
+    "prompt": "You have one minute left. How do you check he's understood?",
+    "category": "Communication",
+    "options": [
+     {
+      "text": "\"I've given you a lot of information. So I know I've explained it well, could you tell me in your own words how you'll take it?\"",
+      "reply": "He explains it back perfectly. The examiner nods.",
+      "score": 2
+     },
+     {
+      "text": "\"Do you understand?\"",
+      "reply": "\"Yes,\" he says, as nearly everyone does.",
+      "score": 0
+     },
+     {
+      "text": "Hand him a leaflet.",
+      "reply": "He folds it into his pocket.",
+      "score": 1
+     }
+    ],
+    "lesson": "Use teach-back: ask patients to explain the plan in their own words"
+   }
+  },
+  {
+   "say": "The final buzzer. You walk out into the corridor with the rest of your class, and for the first time in a year, nobody talks about the exam."
+  }
+ ],
+ "feedback": [
+  [
+   0.85,
+   "Examiner's comment: \"Clear, safe and kind. Pass with distinction.\""
+  ],
+  [
+   0.7,
+   "Examiner's comment: \"Safe and organized. Pass.\""
+  ],
+  [
+   0.0,
+   "Examiner's comment: \"Below the standard today. Your advisor will go through the recording with you, and you'll practice these stations again before second year.\""
+  ]
+ ],
+ "pass_flag": "osce_passed",
+ "pass_score": 0.7
+}

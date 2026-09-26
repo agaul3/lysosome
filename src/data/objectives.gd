@@ -13,6 +13,11 @@ const LOCATIONS := {
 	"lecture_building": "Learning Center · Ground Floor",
 	"lecture_hall": "Learning Center · Lecture Hall A",
 	"hospital": "University Hospital · Level 1 Lobby",
+	"med_ed": "Medical Education Center · Level 1",
+	"library": "Biomedical Library",
+	"student_center": "Student Center",
+	"anatomy": "Anatomy Hall",
+	"community": "Harbor Street Community Center",
 }
 
 static func location(scene: String) -> String:
@@ -31,6 +36,9 @@ static func _when(event_id: String) -> String:
 	return ("starts in %d min" % minutes) if minutes > 0 else "has started"
 
 static func current(scene: String) -> String:
+	# Day 1 keeps its hand-written guidance; later story days read the schedule.
+	if YearCalendar.day_number() > 1 or (YearCalendar.day_number() == 0 and YearCalendar.completed_days.size() > 0):
+		return _year_objective(scene)
 	if AcademicSession.lectures_completed.has(LECTURE_ID):
 		return _after_class(scene)
 	var when := _when(LECTURE_ID)
@@ -50,7 +58,7 @@ static func current(scene: String) -> String:
 ## After the lecture: physician shadowing at University Hospital, then the day is done.
 static func _after_class(scene: String) -> String:
 	if AcademicSession.lectures_completed.has(SHADOWING_ID):
-		return "Day complete · Review your results in the menu (Tab)"
+		return "Day complete · Free time: explore, study, eat · Sleep from 6 PM"
 	var when := _when(SHADOWING_ID)
 	match scene:
 		"dorm":
@@ -62,3 +70,22 @@ static func _after_class(scene: String) -> String:
 		"hospital":
 			return "Meet Dr. Okafor at the Information desk"
 	return ""
+
+## Any story day after the first: the next event and where it is, or free time.
+static func _year_objective(scene: String) -> String:
+	var next: Dictionary = YearCalendar.next_event()
+	var hour := int(GameClock.snapshot().hour)
+	if next.is_empty():
+		if hour >= YearCalendar.BEDTIME_HOUR:
+			return "Day's work done · Head home to sleep (Cedar Residence)" if scene != "dorm" else "Day's work done · Your bed is ready when you are"
+		if YearCalendar.year_over():
+			return "Summer break · The clubs, the gym and the library are open · Sleep from 6 PM"
+		return "Free time · Study, eat, explore or see your clubs · Sleep from 6 PM"
+	var start := YearCalendar.start_of(next)
+	var minutes := int(ceil((start - GameClock.now_seconds()) / 60.0))
+	var when := ("in %d min" % minutes) if minutes > 0 and minutes < 120 else ("at " + _clock(int(next.hour), int(next.minute)) if minutes > 0 else "now")
+	var title := String(next.title).capitalize()
+	return "%s %s · %s" % [title, when, String(next.location)]
+
+static func _clock(hour: int, minute: int) -> String:
+	return "%d:%02d %s" % [12 if hour % 12 == 0 else hour % 12, minute, "AM" if hour < 12 else "PM"]

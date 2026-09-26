@@ -1,6 +1,6 @@
 # Shared question engine
 
-`QuestionBank` loads versioned JSON from `pharmacodynamics.json`. Content is separate from scripts and available to both future lecture and study callers. No lecture delivery UI or runtime AI is implemented.
+`QuestionBank` loads the versioned JSON files listed in `QuestionBank.PATHS` as one bank (IDs unique across files): the lectures' banks, the shadowing session, the year's activities and exams (`activities_b1.json`–`activities_b6.json`) and the clubs. Content is separate from scripts and shared by lectures, activities, exams, quizzes and flashcards. No runtime AI is used.
 
 Each document is `{ "version": 1, "questions": [...] }`. Each record requires nonempty string fields `id`, `discipline`, `topic`, `subtopic`, `question_type`, `prompt`, `correct_answer`, `explanation`, `learning_objective`, `lecture_id`; integer `difficulty_tier` 1–3; a `choices` object mapping stable keys to unique text; and `xp_reward` (integer override between 0 and 1,000,000 or null to use `data/academic_config.json` tier rewards). Type is independent of tier. Supported types: Recall, Conceptual, Application, Clinical Application, Interpretation, Synthesis.
 

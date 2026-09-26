@@ -127,9 +127,11 @@ func _run() -> void:
 	quit(1 if failures else 0)
 
 func campus_collisions() -> void:
+	# The quad's south, west and north edges, and the East Campus's east edge
+	# (the campus runs east along the Health Sciences Walk to x 134.5).
 	for probe in [
 		[Vector3(0, 0, 25.4), Vector3.BACK],
-		[Vector3(35.4, 0, 10), Vector3.RIGHT],
+		[Vector3(133.4, 0, 0), Vector3.RIGHT],
 		[Vector3(-38.4, 0, 15), Vector3.LEFT],
 		[Vector3(-17.5, 0, -35.5), Vector3.FORWARD],
 	]:
@@ -137,7 +139,7 @@ func campus_collisions() -> void:
 		drive(probe[1])
 		await ticks(50)
 		release_movement()
-		check(player.position.x > -39.0 and player.position.x < 36.0 and player.position.z > -37.0 and player.position.z < 26.0, "Campus boundary blocks traversal")
+		check(player.position.x > -39.0 and player.position.x < 134.5 and player.position.z > -37.0 and player.position.z < 26.0, "Campus boundary blocks traversal at %s" % probe[0])
 	for probe in [
 		[Vector3(8, 0, -21), Vector3.FORWARD, "LearningCenter", -24.4],
 		[Vector3(0, 0, 1.2), Vector3.FORWARD, "Plaza planter", 0.1],

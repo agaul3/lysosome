@@ -1,0 +1,201 @@
+{
+ "version": 1,
+ "id": "sp_abdominal",
+ "kind": "encounter",
+ "eyebrow": "Clinical Skills Center · Room 1",
+ "title": "Standardized patient: abdominal pain",
+ "intro": "Door card: Mr. Tyler Brooks, 22, \"stomach pain\". Twelve minutes, history and a focused abdominal exam.",
+ "context": "clinical",
+ "minutes": 60,
+ "energy": 10,
+ "steps": [
+  {
+   "say": "Mr. Brooks lies very still on his side, knees drawn up. He winces when you close the door."
+  },
+  {
+   "choice": {
+    "prompt": "How do you begin?",
+    "category": "Communication",
+    "options": [
+     {
+      "text": "Introduce yourself, acknowledge that he's in pain, and tell him you'll be quick and gentle.",
+      "reply": "\"Thanks. It really hurts.\" He manages a smile.",
+      "score": 2
+     },
+     {
+      "text": "Ask him to sit up and walk to the exam table so it's easier to examine him.",
+      "reply": "He tries, then stops, holding his side. Every movement hurts: that's a clue in itself.",
+      "score": 0
+     },
+     {
+      "text": "Start your questions straight away.",
+      "reply": "He answers in short, tight sentences.",
+      "score": 1
+     }
+    ],
+    "lesson": "Acknowledge pain and explain what you'll do before you start"
+   }
+  },
+  {
+   "history": {
+    "patient": "Mr. Tyler Brooks, 22",
+    "opening": "\"It started in the middle last night. Now it's all down here.\" He points to his right lower abdomen.",
+    "limit": 7,
+    "items": [
+     {
+      "category": "The pain",
+      "ask": "Where did it start, and where is it now?",
+      "answer": "\"Around my belly button. This morning it moved down here, on the right.\"",
+      "key": true
+     },
+     {
+      "category": "The pain",
+      "ask": "When did it start?",
+      "answer": "\"About eighteen hours ago.\"",
+      "key": true
+     },
+     {
+      "category": "The pain",
+      "ask": "Does moving or coughing make it worse?",
+      "answer": "\"The car ride over was agony: every bump.\"",
+      "key": true
+     },
+     {
+      "category": "The pain",
+      "ask": "Have you felt sick or vomited? How's your appetite?",
+      "answer": "\"I threw up twice. I don't want to eat anything.\"",
+      "key": true
+     },
+     {
+      "category": "The pain",
+      "ask": "Any fever or shivers?",
+      "answer": "\"I felt hot and shivery this morning.\"",
+      "key": true
+     },
+     {
+      "category": "Other symptoms",
+      "ask": "Any change in your bowels?",
+      "answer": "\"Not really.\"",
+      "key": false
+     },
+     {
+      "category": "Other symptoms",
+      "ask": "Any burning when you pee, or blood in your urine?",
+      "answer": "\"No.\"",
+      "key": false
+     },
+     {
+      "category": "Other symptoms",
+      "ask": "Any pain or swelling in your testicles?",
+      "answer": "\"No, nothing like that.\"",
+      "key": false
+     },
+     {
+      "category": "Background",
+      "ask": "Have you had anything like this before? Any medical problems or allergies?",
+      "answer": "\"Never. I'm never ill. No allergies.\"",
+      "key": false
+     },
+     {
+      "category": "Background",
+      "ask": "When did you last eat or drink?",
+      "answer": "\"A sandwich yesterday lunchtime. Sips of water since.\"",
+      "key": true
+     }
+    ]
+   },
+   "heading": "Take the history"
+  },
+  {
+   "exam": {
+    "limit": 5,
+    "maneuvers": [
+     {
+      "name": "Vital signs",
+      "finding": "Temperature 38.1 °C, HR 104, BP 124/78, RR 18, SpO₂ 99%.",
+      "key": true
+     },
+     {
+      "name": "Palpate at McBurney's point",
+      "finding": "Marked tenderness a third of the way from the right anterior superior iliac spine to the umbilicus, with guarding.",
+      "key": true
+     },
+     {
+      "name": "Press on the left lower quadrant",
+      "finding": "Pressing on the left causes pain on the right: Rovsing sign is positive.",
+      "key": true
+     },
+     {
+      "name": "Check for peritonism",
+      "finding": "Gentle percussion over the right lower quadrant makes him flinch; he won't cough without holding his side.",
+      "key": true
+     },
+     {
+      "name": "Extend the right hip",
+      "finding": "Pain on extending the hip: the psoas sign is positive.",
+      "key": false
+     },
+     {
+      "name": "Check the kidney angles",
+      "finding": "No tenderness at the costovertebral angles.",
+      "key": false
+     },
+     {
+      "name": "Listen to the bowel sounds",
+      "finding": "Present but quiet.",
+      "key": false
+     }
+    ]
+   },
+   "heading": "Examine the patient"
+  },
+  {
+   "choice": {
+    "prompt": "\"Am I going to need an operation?\"",
+    "category": "Communication",
+    "options": [
+     {
+      "text": "\"It may well be your appendix. The surgeons will see you and explain everything, and it's often a keyhole operation. I'll make sure they know how much pain you're in.\"",
+      "reply": "He nods, relieved to have a straight answer.",
+      "score": 2
+     },
+     {
+      "text": "\"Definitely. Tonight.\"",
+      "reply": "He goes pale. It isn't your decision to make, and he'll hold you to it.",
+      "score": 1
+     },
+     {
+      "text": "\"I can't tell you anything.\"",
+      "reply": "He looks away. He's frightened and alone with it.",
+      "score": 0
+     }
+    ],
+    "lesson": "Be honest about what you think, within your role, and say who will decide"
+   }
+  },
+  {
+   "question": "sp_abd_migration_01",
+   "lead": "In the debrief:"
+  },
+  {
+   "question": "sp_abd_ct_01"
+  },
+  {
+   "question": "sp_abd_analgesia_01"
+  }
+ ],
+ "feedback": [
+  [
+   0.85,
+   "\"Textbook. You examined the abdomen as gently as you took the history.\""
+  ],
+  [
+   0.6,
+   "\"Good. Always ask when they last ate: the anesthetist will.\""
+  ],
+  [
+   0.0,
+   "\"Review appendicitis: migration, anorexia, fever, McBurney's point, Rovsing. Then practice on a classmate.\""
+  ]
+ ]
+}

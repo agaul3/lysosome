@@ -1,0 +1,242 @@
+{
+ "version": 1,
+ "questions": [
+  {
+   "id": "enz_km_01",
+   "discipline": "Biochemistry",
+   "topic": "Enzymes",
+   "subtopic": "Km and affinity",
+   "question_type": "Conceptual",
+   "difficulty_tier": 1,
+   "prompt": "Enzyme A has a Km of 0.1 mM for a substrate; enzyme B has a Km of 5 mM for the same substrate. Which statement is correct?",
+   "choices": {
+    "a": "Enzyme A must have the higher Vmax.",
+    "b": "Km says nothing about how readily an enzyme binds its substrate.",
+    "c": "Enzyme B has the higher affinity, because its Km is larger.",
+    "d": "Enzyme A reaches half its maximal velocity at a lower substrate concentration: it has the higher affinity."
+   },
+   "explanation": "Km is the substrate concentration at which the velocity is half of Vmax. A lower Km means the enzyme is half-saturated at a lower [S]: a higher apparent affinity. Km on its own says nothing about Vmax.",
+   "learning_objective": "Interpret Km as a measure of an enzyme's apparent affinity for its substrate.",
+   "xp_reward": null,
+   "lecture_id": "enzymes_01",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "enz_vmax_01",
+   "discipline": "Biochemistry",
+   "topic": "Enzymes",
+   "subtopic": "Vmax and enzyme amount",
+   "question_type": "Application",
+   "difficulty_tier": 1,
+   "prompt": "You double the amount of enzyme in a reaction and keep everything else the same. What happens to Vmax and Km?",
+   "choices": {
+    "a": "Neither changes.",
+    "b": "Km halves; Vmax is unchanged.",
+    "c": "Vmax doubles; Km is unchanged.",
+    "d": "Both Vmax and Km double."
+   },
+   "explanation": "Vmax = kcat × total enzyme, so it scales with the amount of enzyme. Km describes the enzyme–substrate pair and does not depend on how much enzyme is present.",
+   "learning_objective": "Relate Vmax to enzyme concentration and Km to the enzyme–substrate pair.",
+   "xp_reward": null,
+   "lecture_id": "enzymes_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "enz_lb_01",
+   "discipline": "Biochemistry",
+   "topic": "Enzymes",
+   "subtopic": "Lineweaver–Burk plots",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "On a Lineweaver–Burk (double-reciprocal) plot of 1/V against 1/[S], where does the line cross the x-axis?",
+   "choices": {
+    "a": "At −1/Km",
+    "b": "At Km/Vmax",
+    "c": "At 1/Vmax",
+    "d": "At −1/Vmax"
+   },
+   "explanation": "1/V = (Km/Vmax)(1/[S]) + 1/Vmax. The y-intercept is 1/Vmax; setting 1/V to zero gives 1/[S] = −1/Km, the x-intercept. The slope is Km/Vmax.",
+   "learning_objective": "Read Km and Vmax from a Lineweaver–Burk plot.",
+   "xp_reward": null,
+   "lecture_id": "enzymes_01",
+   "format": "multiple_choice",
+   "figure": {
+    "type": "curves",
+    "x": {
+     "label": "1/[S]",
+     "min": -0.6,
+     "max": 1.2
+    },
+    "y": {
+     "label": "1/V",
+     "min": 0,
+     "max": 0.045
+    },
+    "series": [
+     {
+      "label": "Double-reciprocal plot",
+      "fn": "lineweaver_burk",
+      "params": {
+       "vmax": 100,
+       "km": 2
+      },
+      "from": -0.5,
+      "to": 1.2,
+      "color": "second"
+     }
+    ]
+   },
+   "correct_answer": "a"
+  },
+  {
+   "id": "enz_competitive_01",
+   "discipline": "Biochemistry",
+   "topic": "Enzymes",
+   "subtopic": "Competitive inhibition",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "Statins lower LDL cholesterol by competing with HMG-CoA for the active site of HMG-CoA reductase. Compared with the uninhibited enzyme, how do Km and Vmax change?",
+   "choices": {
+    "a": "The apparent Km increases; Vmax is unchanged.",
+    "b": "Both Km and Vmax decrease.",
+    "c": "Km decreases; Vmax increases.",
+    "d": "Km is unchanged; Vmax decreases."
+   },
+   "explanation": "A competitive inhibitor occupies the active site, but enough substrate can outcompete it, so Vmax is still reached. More substrate is needed to reach half of Vmax, so the apparent Km rises.",
+   "learning_objective": "Predict the kinetic effect of a competitive inhibitor, using statins as the example.",
+   "xp_reward": null,
+   "lecture_id": "enzymes_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "enz_inhibition_remediation_01",
+   "discipline": "Biochemistry",
+   "topic": "Enzymes",
+   "subtopic": "Competitive inhibition",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "Which kind of enzyme inhibition can be overcome by adding a large excess of substrate?",
+   "choices": {
+    "a": "Irreversible (covalent) inhibition",
+    "b": "Noncompetitive inhibition",
+    "c": "Competitive inhibition",
+    "d": "Uncompetitive inhibition"
+   },
+   "explanation": "Only a competitive inhibitor competes with the substrate for the same site, so a high enough substrate concentration displaces it and restores Vmax.",
+   "learning_objective": "Identify competitive inhibition as the type overcome by excess substrate.",
+   "xp_reward": null,
+   "lecture_id": "enzymes_01",
+   "format": "multiple_choice",
+   "is_remediation": true,
+   "correct_answer": "c"
+  },
+  {
+   "id": "enz_noncompetitive_01",
+   "discipline": "Biochemistry",
+   "topic": "Enzymes",
+   "subtopic": "Noncompetitive inhibition",
+   "question_type": "Conceptual",
+   "difficulty_tier": 2,
+   "prompt": "A noncompetitive inhibitor binds an allosteric site equally well whether or not substrate is bound. Which change is expected?",
+   "choices": {
+    "a": "Adding more substrate fully restores Vmax.",
+    "b": "Both Km and Vmax increase.",
+    "c": "Km increases; Vmax is unchanged.",
+    "d": "Vmax decreases; Km is unchanged."
+   },
+   "explanation": "It effectively removes enzyme from action, so Vmax falls and extra substrate cannot rescue it. Because it binds equally with or without substrate, the enzyme's apparent affinity (Km) is unchanged.",
+   "learning_objective": "Predict the kinetic effect of a noncompetitive inhibitor.",
+   "xp_reward": null,
+   "lecture_id": "enzymes_01",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "enz_allosteric_01",
+   "discipline": "Biochemistry",
+   "topic": "Enzymes",
+   "subtopic": "Allosteric regulation",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "An enzyme's plot of velocity against substrate concentration is sigmoidal rather than hyperbolic. This most suggests:",
+   "choices": {
+    "a": "Simple Michaelis–Menten kinetics.",
+    "b": "Cooperative binding among subunits: an allosterically regulated enzyme",
+    "c": "A competitive inhibitor is present.",
+    "d": "The enzyme is saturated at every concentration."
+   },
+   "explanation": "Sigmoidal kinetics reflect cooperativity among subunits, typical of allosteric enzymes such as PFK-1 (and of oxygen binding to hemoglobin). A Michaelis–Menten enzyme gives a hyperbola.",
+   "learning_objective": "Recognize sigmoidal kinetics as a sign of cooperativity and allosteric regulation.",
+   "xp_reward": null,
+   "lecture_id": "enzymes_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "enz_glucokinase_01",
+   "discipline": "Biochemistry",
+   "topic": "Enzymes",
+   "subtopic": "Hexokinase and glucokinase",
+   "question_type": "Conceptual",
+   "difficulty_tier": 2,
+   "prompt": "Compared with hexokinase, the glucokinase of the liver and pancreatic β cells has:",
+   "choices": {
+    "a": "Strong feedback inhibition by glucose-6-phosphate.",
+    "b": "A higher Km, so its activity rises with blood glucose after a meal",
+    "c": "No role in sensing blood glucose.",
+    "d": "A lower Km, so it is saturated at fasting glucose levels."
+   },
+   "explanation": "Hexokinase (most tissues) has a low Km and is inhibited by glucose-6-phosphate. Glucokinase has a high Km and high capacity and is not inhibited by glucose-6-phosphate, so the liver and β cells respond in proportion to rising glucose; in the β cell it acts as the glucose sensor.",
+   "learning_objective": "Contrast hexokinase and glucokinase and explain glucokinase's role as a glucose sensor.",
+   "xp_reward": null,
+   "lecture_id": "enzymes_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "enz_pfk1_01",
+   "discipline": "Biochemistry",
+   "topic": "Enzymes",
+   "subtopic": "Glycolysis regulation",
+   "question_type": "Recall",
+   "difficulty_tier": 2,
+   "prompt": "Which molecule activates phosphofructokinase-1, the rate-limiting enzyme of glycolysis?",
+   "choices": {
+    "a": "Fructose-2,6-bisphosphate",
+    "b": "Glucose-6-phosphate",
+    "c": "Citrate",
+    "d": "ATP"
+   },
+   "explanation": "PFK-1 is activated by AMP and fructose-2,6-bisphosphate (made by PFK-2, favored by insulin in the fed state) and inhibited by ATP and citrate, which signal that energy is plentiful.",
+   "learning_objective": "List the main activators and inhibitors of PFK-1.",
+   "xp_reward": null,
+   "lecture_id": "enzymes_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "enz_methanol_01",
+   "discipline": "Biochemistry",
+   "topic": "Enzymes",
+   "subtopic": "Inhibitors as antidotes",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 3,
+   "prompt": "A man drank windshield-washer fluid containing methanol and is given fomepizole. How does fomepizole help?",
+   "choices": {
+    "a": "It binds formic acid directly and neutralizes it.",
+    "b": "It competitively inhibits alcohol dehydrogenase, slowing conversion of methanol to toxic formaldehyde and formic acid.",
+    "c": "It speeds methanol's excretion by the kidneys.",
+    "d": "It irreversibly activates aldehyde dehydrogenase."
+   },
+   "explanation": "Methanol itself is relatively harmless; its metabolites (formaldehyde, then formic acid) cause metabolic acidosis and optic nerve damage. Fomepizole competitively inhibits alcohol dehydrogenase so the unchanged methanol can be cleared, with hemodialysis in severe cases.",
+   "learning_objective": "Explain the use of fomepizole in methanol (or ethylene glycol) poisoning.",
+   "xp_reward": null,
+   "lecture_id": "enzymes_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  }
+ ]
+}

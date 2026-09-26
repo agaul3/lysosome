@@ -1,0 +1,152 @@
+{
+ "version": 1,
+ "questions": [
+  {
+   "id": "bp_map_01",
+   "discipline": "Physiology",
+   "topic": "Blood Pressure",
+   "subtopic": "Mean arterial pressure",
+   "question_type": "Application",
+   "difficulty_tier": 1,
+   "prompt": "A patient's blood pressure is 120/80 mmHg. Approximately what is the mean arterial pressure?",
+   "choices": {
+    "a": "120 mmHg",
+    "b": "80 mmHg",
+    "c": "100 mmHg",
+    "d": "93 mmHg"
+   },
+   "explanation": "MAP ≈ diastolic + ⅓ × (systolic − diastolic) = 80 + ⅓ × 40 ≈ 93 mmHg. The mean sits nearer diastolic because diastole lasts longer than systole at normal heart rates.",
+   "learning_objective": "Estimate mean arterial pressure from systolic and diastolic pressures.",
+   "xp_reward": null,
+   "lecture_id": "blood_pressure_01",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "bp_baro_01",
+   "discipline": "Physiology",
+   "topic": "Blood Pressure",
+   "subtopic": "Baroreceptor reflex",
+   "question_type": "Application",
+   "difficulty_tier": 2,
+   "prompt": "When a healthy person stands up quickly from lying down, what does the baroreceptor reflex do?",
+   "choices": {
+    "a": "Nothing: blood pressure doesn't change on standing",
+    "b": "It releases renin within seconds",
+    "c": "Less baroreceptor firing: sympathetic output rises and vagal tone falls, raising heart rate and vascular resistance",
+    "d": "More baroreceptor firing: the heart rate slows"
+   },
+   "explanation": "Standing pools blood in the legs, reducing venous return, stroke volume and pressure. The carotid and aortic baroreceptors fire less, so the brainstem increases sympathetic and reduces vagal outflow: heart rate, contractility and arteriolar tone rise within seconds.",
+   "learning_objective": "Describe the baroreceptor response to standing.",
+   "xp_reward": null,
+   "lecture_id": "blood_pressure_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "bp_stage_01",
+   "discipline": "Physiology",
+   "topic": "Blood Pressure",
+   "subtopic": "Hypertension categories",
+   "question_type": "Application",
+   "difficulty_tier": 1,
+   "prompt": "On repeated, properly measured readings, a 45-year-old's average blood pressure is 136/84 mmHg. Under the 2017 ACC/AHA guideline, this is:",
+   "choices": {
+    "a": "Stage 1 hypertension",
+    "b": "Elevated blood pressure",
+    "c": "Stage 2 hypertension",
+    "d": "Normal blood pressure"
+   },
+   "explanation": "Stage 1 hypertension is a systolic of 130–139 or a diastolic of 80–89 mmHg. Elevated is 120–129 with diastolic below 80; stage 2 is 140 or more systolic, or 90 or more diastolic.",
+   "learning_objective": "Classify blood pressure readings using the 2017 ACC/AHA categories.",
+   "xp_reward": null,
+   "lecture_id": "blood_pressure_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "bp_ace_cough_01",
+   "discipline": "Physiology",
+   "topic": "Blood Pressure",
+   "subtopic": "ACE inhibitors",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "Two months after starting lisinopril, a patient has a persistent dry cough with a clear chest. What is the best change?",
+   "choices": {
+    "a": "Order a chest CT",
+    "b": "Switch to an angiotensin receptor blocker, such as losartan",
+    "c": "Switch to a higher dose of lisinopril",
+    "d": "Add a cough suppressant and continue lisinopril"
+   },
+   "explanation": "ACE inhibitors reduce the breakdown of bradykinin, which causes a dry cough in a minority of patients. Angiotensin receptor blockers block the effect of angiotensin II at its receptor without raising bradykinin, so the cough usually resolves.",
+   "learning_objective": "Manage ACE-inhibitor cough by switching to an ARB.",
+   "xp_reward": null,
+   "lecture_id": "blood_pressure_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "bp_pregnancy_01",
+   "discipline": "Physiology",
+   "topic": "Blood Pressure",
+   "subtopic": "Drugs in pregnancy",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "Which antihypertensive should be stopped in a woman who is planning pregnancy?",
+   "choices": {
+    "a": "Labetalol",
+    "b": "Nifedipine",
+    "c": "An ACE inhibitor (or an angiotensin receptor blocker)",
+    "d": "Methyldopa"
+   },
+   "explanation": "ACE inhibitors and ARBs are fetotoxic, especially in the second and third trimesters (fetal kidney damage, oligohydramnios). Labetalol, nifedipine and methyldopa are used in pregnancy.",
+   "learning_objective": "Identify antihypertensives contraindicated in pregnancy.",
+   "xp_reward": null,
+   "lecture_id": "blood_pressure_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "bp_renin_01",
+   "discipline": "Physiology",
+   "topic": "Blood Pressure",
+   "subtopic": "Renin release",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "Which change makes the juxtaglomerular cells of the kidney release more renin?",
+   "choices": {
+    "a": "High angiotensin II levels",
+    "b": "Reduced perfusion pressure in the afferent arteriole",
+    "c": "High blood pressure in the renal artery",
+    "d": "High sodium chloride delivery to the macula densa"
+   },
+   "explanation": "Renin release rises with low afferent arteriolar pressure, low NaCl delivery sensed by the macula densa, and sympathetic (β1) stimulation. Angiotensin II feeds back to suppress it.",
+   "learning_objective": "List the stimuli for renin release.",
+   "xp_reward": null,
+   "lecture_id": "blood_pressure_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "bp_thiazide_01",
+   "discipline": "Physiology",
+   "topic": "Blood Pressure",
+   "subtopic": "Thiazide diuretics",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "Three weeks after starting hydrochlorothiazide, a man has a hot, swollen, painful big-toe joint. How did the drug likely contribute?",
+   "choices": {
+    "a": "Thiazides raise serum uric acid, which can precipitate gout.",
+    "b": "Thiazides cause a drug allergy limited to the toe.",
+    "c": "Thiazides lower uric acid too quickly.",
+    "d": "Thiazides cause hypercalcemia, which crystallizes in joints."
+   },
+   "explanation": "Thiazides reduce urate excretion (they compete for secretion in the proximal tubule and cause volume contraction), raising serum urate and the risk of gout attacks. Other effects: low K⁺ and Na⁺, high Ca²⁺ and glucose.",
+   "learning_objective": "Recognize hyperuricemia and gout as adverse effects of thiazides.",
+   "xp_reward": null,
+   "lecture_id": "blood_pressure_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  }
+ ]
+}

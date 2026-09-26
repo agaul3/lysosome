@@ -28,6 +28,7 @@ func refresh() -> void:
 	legend.add_child(_legend_item(UI.ACCENT, "You are here"))
 	legend.add_child(_legend_item(UI.REWARD, "Next on today's schedule"))
 	legend.add_child(_legend_item(UI.TEXT, "Entrance"))
+	legend.add_child(_legend_item(UI.INFO, "Shuttle"))
 	var where := UI.label(_where_text(), UI.SIZE_LABEL, UI.TEXT_MUTED, 500)
 	where.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	where.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
@@ -47,8 +48,20 @@ func _legend_item(color: Color, text: String) -> Control:
 
 func _where_text() -> String:
 	var scene := AppState.location_key()
-	var names := {"dorm": "In your room, Cedar Residence", "campus": "Outdoors, Student Commons", "lecture_building": "Inside the Learning Center", "lecture_hall": "In Lecture Hall A", "hospital": "Inside University Hospital"}
+	var names := {"dorm": "In your room, Cedar Residence", "campus": "Outdoors, Student Commons", "lecture_building": "Inside the Learning Center",
+		"lecture_hall": "In Lecture Hall B" if AppState.current_hall == "hall_b" else "In Lecture Hall A", "hospital": "Inside University Hospital",
+		"med_ed": "Inside the Medical Education Center", "library": "Inside the Biomedical Library", "student_center": "Inside the Student Center",
+		"anatomy": "Inside Anatomy Hall", "community": "Off campus: Harbor Street Community Center"}
 	return names.get(scene, "")
+
+## Today's next event and the building it's in: [building id, note].
+func _destination() -> Array:
+	var entry := YearCalendar.next_event()
+	if entry.is_empty():
+		return ["", ""]
+	var hour := int(entry.hour)
+	var note := "%s · %d:%02d %s" % [String(entry.title).capitalize(), 12 if hour % 12 == 0 else hour % 12, int(entry.minute), "AM" if hour < 12 else "PM"]
+	return [MapData.building_for_event(entry), note]
 
 func _process(delta: float) -> void:
 	if is_visible_in_tree() and is_instance_valid(canvas):
@@ -74,6 +87,9 @@ func _draw_map() -> void:
 		canvas.draw_rect(_rect(lawn), Color("2f5a3f"))
 	for area in MapData.PLAZAS + MapData.PATHS:
 		canvas.draw_rect(_rect(area), Color("3c5157"))
+	var fountain := _to_map(MapData.FOUNTAIN.x, MapData.FOUNTAIN.y)
+	canvas.draw_circle(fountain, MapData.FOUNTAIN_RADIUS * (_to_map(1, 0).x - _to_map(0, 0).x), Color("46595e"))
+	canvas.draw_circle(fountain, 1.4 * (_to_map(1, 0).x - _to_map(0, 0).x), Color("5aa9d6"))
 	canvas.draw_rect(_rect(MapData.PARKING), Color("2a373c"))
 	canvas.draw_rect(_rect(MapData.STREET), Color("23302f"))
 	canvas.draw_rect(_rect(MapData.BACK_STREET), Color("23302f"))
@@ -84,20 +100,21 @@ func _draw_map() -> void:
 	var parking := _rect(MapData.PARKING)
 	canvas.draw_string(UI.font(500), parking.get_center() + Vector2(-22, 4), "Parking", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, UI.TEXT_FAINT)
 	canvas.draw_string(UI.font(500), _to_map(-11.5, 7.2), "The Quad", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(UI.TEXT, 0.55))
-	# Today's next place: class first, then shadowing at the hospital.
-	var destination := "learning_center"
-	var note := "Lecture Hall A · 8:00"
-	if AcademicSession.lectures_completed.has("pharmacodynamics_01"):
-		destination = "" if AcademicSession.lectures_completed.has("hospital_orientation_01") else "hospital"
-		note = "Shadowing · 9:00"
+	canvas.draw_string(UI.font(500), _to_map(44.0, 18.6), "East Green", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(UI.TEXT, 0.55))
+	canvas.draw_string(UI.font(500), _to_map(44.0, -16.6), "Health Sciences Walk", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(UI.TEXT, 0.45))
+	# Today's next event, wherever it is.
+	var next := _destination()
+	var destination: String = next[0]
+	var note: String = next[1]
 	for id in MapData.BUILDINGS:
 		var entry: Array = MapData.BUILDINGS[id]
 		var rect := _rect([entry[1], entry[2], entry[3], entry[4]])
 		var style := UI.box(UI.SURFACE_HOVER, 4, UI.REWARD if id == destination else UI.LINE, 2 if id == destination else 1)
 		style.draw(canvas.get_canvas_item(), rect)
-		var name: String = entry[0]
-		var width := font.get_string_size(name, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x
-		canvas.draw_string(font, rect.get_center() + Vector2(-width / 2.0, 4), name, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, UI.TEXT if id == destination else UI.TEXT_MUTED)
+		var label: String = entry[0]
+		var font_size := 12 if rect.size.x > font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x + 6 else 10
+		var width := font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
+		canvas.draw_string(font, rect.get_center() + Vector2(-width / 2.0, 4), label, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, UI.TEXT if id == destination else UI.TEXT_MUTED)
 		if id == destination:
 			var note_width := UI.font(500).get_string_size(note, HORIZONTAL_ALIGNMENT_LEFT, -1, 11).x
 			canvas.draw_string(UI.font(500), rect.get_center() + Vector2(-note_width / 2.0, 20), note, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, UI.REWARD)
@@ -112,6 +129,10 @@ func _draw_map() -> void:
 		else:
 			canvas.draw_circle(point, 3.5, UI.TEXT)
 	canvas.draw_rect(Rect2(_to_map(MapData.DIRECTORY.x, MapData.DIRECTORY.y) - Vector2(3, 3), Vector2(6, 6)), UI.INFO)
+	for stop in MapData.SHUTTLES:
+		var at := _to_map(stop[1], stop[2])
+		UI.box(UI.INFO, 3).draw(canvas.get_canvas_item(), Rect2(at - Vector2(5, 4), Vector2(10, 8)))
+		canvas.draw_string(UI.font(500), at + Vector2(8, 4), "Shuttle", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, UI.INFO)
 	# North arrow.
 	var north := Vector2(MAP_SIZE.x - 22, 22)
 	canvas.draw_colored_polygon(PackedVector2Array([north + Vector2(0, -10), north + Vector2(6, 6), north + Vector2(0, 2), north + Vector2(-6, 6)]), UI.TEXT_MUTED)

@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "id": "exam_b1",
+ "kind": "exam",
+ "eyebrow": "Testing Center",
+ "title": "Block 1 Examination",
+ "intro": "Foundations of Medicine: pharmacology, biochemistry, histology and the medical interview. Sixteen questions, about twenty minutes. Answers can be changed until you submit. Phones in the lockers, please.",
+ "questions": [
+  "exb1_partial_01",
+  "exb1_steady_state_01",
+  "exb1_vd_01",
+  "exb1_first_order_01",
+  "exb1_citrate_01",
+  "exb1_km_rise_01",
+  "exb1_keratin_01",
+  "exb1_goblet_01",
+  "exb1_interview_01",
+  "exb1_confidentiality_01",
+  "pd_competitive_01",
+  "pd_efficacy_01",
+  "pk_loading_dose_01",
+  "pk_half_life_01",
+  "enz_competitive_01",
+  "enz_glucokinase_01"
+ ],
+ "pass": 0.7,
+ "honors": 0.9,
+ "merit": {
+  "pass": 7500,
+  "honors": 20000
+ },
+ "minutes": 120,
+ "energy": 15,
+ "seconds_per_question": 75
+}

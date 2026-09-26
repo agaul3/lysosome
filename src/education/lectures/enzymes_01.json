@@ -1,0 +1,609 @@
+{
+ "version": 1,
+ "id": "enzymes_01",
+ "title": "Enzymes & Metabolism",
+ "professor": "Dr. Rafael Ortiz",
+ "segments": [
+  {
+   "id": "introduction",
+   "topic": "Introduction",
+   "slide": {
+    "heading": "Enzymes & Metabolism",
+    "bullets": [],
+    "subheading": "How cells speed up chemistry, and how drugs slow it down",
+    "diagram": "figure",
+    "figure": {
+     "type": "flow",
+     "nodes": [
+      {
+       "id": "s",
+       "label": "Substrate",
+       "x": 0.12,
+       "y": 0.4,
+       "color": "second"
+      },
+      {
+       "id": "es",
+       "label": "Enzyme–substrate complex",
+       "x": 0.5,
+       "y": 0.4,
+       "color": "accent"
+      },
+      {
+       "id": "p",
+       "label": "Product",
+       "x": 0.88,
+       "y": 0.4,
+       "color": "gold"
+      },
+      {
+       "id": "e",
+       "label": "Free enzyme, unchanged",
+       "x": 0.5,
+       "y": 0.82,
+       "color": "third"
+      }
+     ],
+     "edges": [
+      {
+       "from": "s",
+       "to": "es"
+      },
+      {
+       "from": "es",
+       "to": "p"
+      },
+      {
+       "from": "es",
+       "to": "e"
+      }
+     ]
+    }
+   },
+   "lines": [
+    {
+     "text": "Good morning, and welcome to Hall B. I'm Rafael Ortiz, and for the next two weeks we're doing biochemistry.",
+     "gesture": "audience"
+    },
+    {
+     "text": "Almost every reaction in your patients' cells would take years without help. Enzymes make them happen in milliseconds.",
+     "gesture": "audience"
+    },
+    {
+     "text": "An enzyme binds its substrate, lowers the activation energy of the reaction, releases the product, and comes out unchanged, ready to go again.",
+     "gesture": "screen"
+    },
+    {
+     "text": "Today: how fast enzymes work, how drugs inhibit them, and how the cell turns glycolysis up and down.",
+     "gesture": "audience"
+    }
+   ]
+  },
+  {
+   "id": "kinetics",
+   "topic": "Michaelis–Menten kinetics",
+   "slide": {
+    "heading": "Michaelis–Menten kinetics",
+    "bullets": [
+     "V = Vmax·[S] / (Km + [S])",
+     "Vmax: the rate when every enzyme is busy",
+     "Km: the [S] that gives half of Vmax",
+     "Low Km: half-saturated at low [S] (high affinity)",
+     "Vmax scales with the amount of enzyme"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "curves",
+     "x": {
+      "label": "Substrate concentration [S] (mM)",
+      "min": 0,
+      "max": 20
+     },
+     "y": {
+      "label": "Velocity (% of Vmax)",
+      "min": 0,
+      "max": 110
+     },
+     "series": [
+      {
+       "label": "V = Vmax·[S] / (Km + [S])",
+       "fn": "michaelis_menten",
+       "params": {
+        "vmax": 100,
+        "km": 2
+       },
+       "color": "accent"
+      }
+     ],
+     "marks": [
+      {
+       "x": 2,
+       "y": 50,
+       "label": "Km: half of Vmax",
+       "color": "gold"
+      }
+     ],
+     "hlines": [
+      {
+       "y": 100,
+       "label": "Vmax",
+       "color": "muted"
+      }
+     ]
+    }
+   },
+   "lines": [
+    {
+     "text": "Add substrate and the rate rises, at first almost in proportion. Then it flattens: every enzyme molecule is busy. That ceiling is Vmax.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "text": "The substrate concentration that gives half of Vmax is the Michaelis constant, Km.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "text": "A low Km means the enzyme is half-saturated at a low substrate concentration. We call that a higher affinity.",
+     "gesture": "audience",
+     "reveal": 4
+    },
+    {
+     "question": "enz_km_01"
+    },
+    {
+     "text": "Vmax is a different kind of number. It depends on how much enzyme you have. Km is a property of the enzyme and its substrate.",
+     "gesture": "audience",
+     "reveal": 5
+    },
+    {
+     "question": "enz_vmax_01",
+     "lead": "Quick check."
+    }
+   ]
+  },
+  {
+   "id": "lineweaver",
+   "topic": "Lineweaver–Burk plots",
+   "slide": {
+    "heading": "The double-reciprocal plot",
+    "bullets": [
+     "Plot 1/V against 1/[S]: a straight line",
+     "y-intercept = 1/Vmax",
+     "x-intercept = −1/Km",
+     "Slope = Km / Vmax"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "curves",
+     "x": {
+      "label": "1/[S] (1/mM)",
+      "min": -0.6,
+      "max": 1.2
+     },
+     "y": {
+      "label": "1/V",
+      "min": 0,
+      "max": 0.045
+     },
+     "series": [
+      {
+       "label": "1/V = (Km/Vmax)·(1/[S]) + 1/Vmax",
+       "fn": "lineweaver_burk",
+       "params": {
+        "vmax": 100,
+        "km": 2
+       },
+       "from": -0.5,
+       "to": 1.2,
+       "color": "second"
+      }
+     ],
+     "marks": [
+      {
+       "x": -0.5,
+       "y": 0.0,
+       "label": "−1/Km",
+       "color": "gold"
+      },
+      {
+       "x": 0,
+       "y": 0.01,
+       "label": "1/Vmax",
+       "color": "accent"
+      }
+     ]
+    }
+   },
+   "lines": [
+    {
+     "text": "The curve is hard to read at its ceiling, so biochemists flip it. Take the reciprocal of both axes and it becomes a straight line.",
+     "gesture": "screen",
+     "reveal": 1
+    },
+    {
+     "text": "Where the line crosses the y-axis is one over Vmax. Extend it back to the x-axis and it crosses at minus one over Km.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "text": "The slope is Km over Vmax. You'll use this picture to tell kinds of inhibition apart.",
+     "gesture": "screen",
+     "reveal": 4
+    },
+    {
+     "question": "enz_lb_01",
+     "lead": "Where does it cross?"
+    }
+   ]
+  },
+  {
+   "id": "inhibition",
+   "topic": "Enzyme inhibition",
+   "slide": {
+    "heading": "Inhibitors: competitive and noncompetitive",
+    "bullets": [
+     "Competitive: binds the active site; ↑ apparent Km, same Vmax",
+     "Overcome by enough substrate",
+     "Noncompetitive: binds elsewhere; ↓ Vmax, same Km",
+     "Not overcome by substrate",
+     "Many drugs are enzyme inhibitors"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "curves",
+     "x": {
+      "label": "Substrate concentration [S] (mM)",
+      "min": 0,
+      "max": 20
+     },
+     "y": {
+      "label": "Velocity (% of uninhibited Vmax)",
+      "min": 0,
+      "max": 110
+     },
+     "series": [
+      {
+       "label": "No inhibitor",
+       "fn": "michaelis_menten",
+       "params": {
+        "vmax": 100,
+        "km": 2
+       },
+       "color": "accent"
+      },
+      {
+       "label": "Competitive (Km 2 → 6)",
+       "fn": "michaelis_menten",
+       "params": {
+        "vmax": 100,
+        "km": 6
+       },
+       "color": "second"
+      },
+      {
+       "label": "Noncompetitive (Vmax 100 → 55)",
+       "fn": "michaelis_menten",
+       "params": {
+        "vmax": 55,
+        "km": 2
+       },
+       "color": "third"
+      }
+     ]
+    }
+   },
+   "lines": [
+    {
+     "text": "Now let's slow enzymes down, because that's what a lot of your drugs do.",
+     "gesture": "audience"
+    },
+    {
+     "text": "A competitive inhibitor looks enough like the substrate to sit in the active site. Flood the enzyme with substrate and you push it out: Vmax is unchanged, but you need more substrate to reach half of it, so the apparent Km goes up.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "question": "enz_competitive_01",
+     "lead": "Statins are the classic example.",
+     "remediation": "enz_inhibition_remediation_01"
+    },
+    {
+     "text": "A noncompetitive inhibitor binds somewhere else and takes enzyme out of action whatever the substrate is doing. Vmax falls, Km stays the same, and no amount of substrate rescues it.",
+     "gesture": "screen",
+     "reveal": 4
+    },
+    {
+     "question": "enz_noncompetitive_01"
+    },
+    {
+     "text": "On the double-reciprocal plot: competitive inhibitors pivot the line around the y-intercept; noncompetitive ones pivot it around the x-intercept.",
+     "gesture": "screen",
+     "reveal": 5
+    }
+   ]
+  },
+  {
+   "id": "regulation",
+   "topic": "Regulating enzymes",
+   "slide": {
+    "heading": "Turning enzymes up and down",
+    "bullets": [
+     "Allosteric effectors bind away from the active site",
+     "Cooperative enzymes give sigmoidal curves",
+     "Covalent modification: phosphorylation",
+     "Zymogens are activated by cleavage",
+     "Feedback inhibition by the pathway's product"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "curves",
+     "x": {
+      "label": "Substrate concentration [S] (mM)",
+      "min": 0,
+      "max": 20
+     },
+     "y": {
+      "label": "Velocity (% of Vmax)",
+      "min": 0,
+      "max": 110
+     },
+     "series": [
+      {
+       "label": "Michaelis–Menten: hyperbolic",
+       "fn": "michaelis_menten",
+       "params": {
+        "vmax": 100,
+        "km": 5
+       },
+       "color": "muted"
+      },
+      {
+       "label": "Allosteric, cooperative: sigmoidal",
+       "fn": "hill",
+       "params": {
+        "emax": 100,
+        "ec50": 5,
+        "n": 3
+       },
+       "color": "accent"
+      }
+     ]
+    }
+   },
+   "lines": [
+    {
+     "text": "Cells can't wait for substrate to pile up. They regulate enzymes directly.",
+     "gesture": "audience",
+     "reveal": 1
+    },
+    {
+     "text": "Enzymes with several subunits can bind substrate cooperatively: binding at one site makes the next easier. Their curves are sigmoidal, and small changes in substrate cause big changes in rate.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "question": "enz_allosteric_01"
+    },
+    {
+     "text": "Hormones add or remove phosphate groups through kinases and phosphatases. Some enzymes are made as inactive zymogens, like trypsinogen, and switched on by cutting them.",
+     "gesture": "audience",
+     "reveal": 4
+    },
+    {
+     "text": "And many pathways switch themselves off: the end product inhibits the first committed step.",
+     "gesture": "audience",
+     "reveal": 5
+    }
+   ]
+  },
+  {
+   "id": "glycolysis",
+   "topic": "Regulating glycolysis",
+   "slide": {
+    "heading": "Glycolysis: where the control is",
+    "bullets": [
+     "Hexokinase: low Km, most tissues, inhibited by G6P",
+     "Glucokinase: high Km, liver and β cells",
+     "PFK-1: the rate-limiting, committed step",
+     "PFK-1 + : AMP, fructose-2,6-bisphosphate",
+     "PFK-1 − : ATP, citrate"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "flow",
+     "nodes": [
+      {
+       "id": "g",
+       "label": "Glucose",
+       "x": 0.1,
+       "y": 0.2,
+       "color": "second"
+      },
+      {
+       "id": "g6p",
+       "label": "Glucose-6-P",
+       "x": 0.36,
+       "y": 0.2,
+       "color": "muted"
+      },
+      {
+       "id": "f6p",
+       "label": "Fructose-6-P",
+       "x": 0.62,
+       "y": 0.2,
+       "color": "muted"
+      },
+      {
+       "id": "f16",
+       "label": "Fructose-1,6-bisP",
+       "x": 0.88,
+       "y": 0.2,
+       "color": "muted"
+      },
+      {
+       "id": "pep",
+       "label": "Phosphoenolpyruvate",
+       "x": 0.62,
+       "y": 0.72,
+       "color": "muted"
+      },
+      {
+       "id": "pyr",
+       "label": "Pyruvate",
+       "x": 0.36,
+       "y": 0.72,
+       "color": "gold"
+      },
+      {
+       "id": "hk",
+       "label": "Hexokinase / glucokinase",
+       "x": 0.23,
+       "y": 0.46,
+       "color": "third"
+      },
+      {
+       "id": "pfk",
+       "label": "PFK-1 (rate-limiting)",
+       "x": 0.75,
+       "y": 0.46,
+       "color": "accent"
+      },
+      {
+       "id": "pk",
+       "label": "Pyruvate kinase",
+       "x": 0.49,
+       "y": 0.9,
+       "color": "third"
+      }
+     ],
+     "edges": [
+      {
+       "from": "g",
+       "to": "g6p"
+      },
+      {
+       "from": "g6p",
+       "to": "f6p"
+      },
+      {
+       "from": "f6p",
+       "to": "f16"
+      },
+      {
+       "from": "f16",
+       "to": "pep"
+      },
+      {
+       "from": "pep",
+       "to": "pyr"
+      }
+     ],
+     "text_size": 18
+    }
+   },
+   "lines": [
+    {
+     "text": "Let's put it together in glycolysis, which your patients' red cells run on entirely.",
+     "gesture": "audience"
+    },
+    {
+     "text": "The first step traps glucose in the cell. Most tissues use hexokinase: a low Km, and inhibited by its own product.",
+     "gesture": "screen",
+     "reveal": 1
+    },
+    {
+     "text": "The liver and the pancreatic β cells use glucokinase: a high Km, so it works in proportion to how much glucose is around. That makes it a glucose sensor.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "question": "enz_glucokinase_01"
+    },
+    {
+     "text": "The committed, rate-limiting step is phosphofructokinase-1. Signals of low energy, AMP, and of the fed state, fructose-2,6-bisphosphate, switch it on. Plenty of ATP and citrate switch it off.",
+     "gesture": "screen",
+     "reveal": 5
+    },
+    {
+     "question": "enz_pfk1_01",
+     "lead": "Which one turns it on?"
+    }
+   ]
+  },
+  {
+   "id": "summary",
+   "topic": "Summary",
+   "slide": {
+    "heading": "Summary: enzymes at the bedside",
+    "bullets": [
+     "Km: affinity; Vmax: capacity",
+     "Competitive: ↑Km, same Vmax (statins, fomepizole)",
+     "Noncompetitive: ↓Vmax, same Km",
+     "PFK-1 controls the pace of glycolysis"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "table",
+     "columns": [
+      "Inhibitor",
+      "Binds",
+      "Km",
+      "Vmax",
+      "More substrate?"
+     ],
+     "rows": [
+      [
+       "Competitive",
+       "Active site",
+       "↑",
+       "Same",
+       "Overcomes it"
+      ],
+      [
+       "Noncompetitive",
+       "Another site",
+       "Same",
+       "↓",
+       "Doesn't help"
+      ],
+      [
+       "Irreversible",
+       "Covalently",
+       "—",
+       "↓",
+       "Doesn't help"
+      ]
+     ],
+     "widths": [
+      0.22,
+      0.22,
+      0.12,
+      0.14,
+      0.3
+     ]
+    }
+   },
+   "lines": [
+    {
+     "text": "One last case, because it's the one you'll see in the emergency department.",
+     "gesture": "audience"
+    },
+    {
+     "question": "enz_methanol_01",
+     "lead": "A man drank windshield-washer fluid."
+    },
+    {
+     "text": "Methanol, and ethylene glycol in antifreeze, are dangerous for what alcohol dehydrogenase turns them into. Block the enzyme and you buy time.",
+     "gesture": "audience",
+     "reveal": 2
+    },
+    {
+     "text": "Next week: your first histology lab, this afternoon. See you on Level 2.",
+     "gesture": "audience",
+     "reveal": 4
+    }
+   ]
+  }
+ ]
+}

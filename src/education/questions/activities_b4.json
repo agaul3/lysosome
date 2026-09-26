@@ -1,0 +1,495 @@
+{
+ "version": 1,
+ "questions": [
+  {
+   "id": "spiro_technique_01",
+   "discipline": "Clinical Skills",
+   "topic": "Pulmonary Function",
+   "subtopic": "Spirometry technique",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "How should a person perform the forced expiratory maneuver for spirometry?",
+   "choices": {
+    "a": "Breathe in as fully as possible, seal the lips around the mouthpiece, then blast out as hard and fast as possible and keep going until empty",
+    "b": "Breathe out gently and slowly for a full minute",
+    "c": "Hold the breath for ten seconds, then breathe normally",
+    "d": "Take a normal breath in and let it out normally"
+   },
+   "explanation": "The forced vital capacity maneuver starts from a maximal breath in (total lung capacity), then a maximal, forceful and complete exhalation, usually for at least six seconds or until the volume plateaus, with a nose clip. At least three acceptable efforts are recorded.",
+   "learning_objective": "Describe how to perform forced spirometry.",
+   "xp_reward": null,
+   "lecture_id": "spirometry_lab_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "spiro_ratio_01",
+   "discipline": "Physiology",
+   "topic": "Pulmonary Function",
+   "subtopic": "FEV1/FVC",
+   "question_type": "Application",
+   "difficulty_tier": 1,
+   "prompt": "Your own tracing: FEV1 3.8 L and FVC 4.75 L. What is your FEV1/FVC ratio, and what does it mean?",
+   "choices": {
+    "a": "1.25: normal",
+    "b": "0.62: airflow obstruction",
+    "c": "0.80: normal",
+    "d": "0.80: airflow obstruction"
+   },
+   "explanation": "FEV1/FVC = 3.8 ÷ 4.75 = 0.80. Healthy young adults breathe out about 75–85% of their vital capacity in the first second. A ratio below about 0.70 (or below the lower limit of normal for age) means airflow obstruction.",
+   "learning_objective": "Calculate and interpret the FEV1/FVC ratio.",
+   "xp_reward": null,
+   "lecture_id": "spirometry_lab_01",
+   "format": "multiple_choice",
+   "figure": {
+    "type": "curves",
+    "x": {
+     "label": "Time (s)",
+     "min": 0,
+     "max": 6
+    },
+    "y": {
+     "label": "Volume exhaled (L)",
+     "min": 0,
+     "max": 5.5
+    },
+    "series": [
+     {
+      "fn": "saturating",
+      "params": {
+       "ymax": 4.75,
+       "tau": 0.6213,
+       "y0": 0
+      },
+      "label": "Your forced expiration",
+      "color": "second",
+      "from": 0,
+      "to": 6
+     }
+    ],
+    "marks": [
+     {
+      "x": 1,
+      "y": 3.8,
+      "label": "FEV1 3.8 L"
+     }
+    ],
+    "vlines": [
+     {
+      "x": 1,
+      "label": "1 s"
+     }
+    ],
+    "hlines": [
+     {
+      "y": 4.75,
+      "label": "FVC 4.75 L"
+     }
+    ]
+   },
+   "correct_answer": "c"
+  },
+  {
+   "id": "spiro_restrictive_01",
+   "discipline": "Physiology",
+   "topic": "Pulmonary Function",
+   "subtopic": "Restrictive pattern",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "A 58-year-old with pulmonary fibrosis: FVC 2.4 L (60% of predicted), FEV1 2.1 L. What pattern is this?",
+   "choices": {
+    "a": "Restrictive: both volumes are small, but the ratio is normal (0.88)",
+    "b": "Obstructive: the FEV1 is low",
+    "c": "Normal: the ratio is above 0.70",
+    "d": "Obstructive with poor effort"
+   },
+   "explanation": "The ratio is 2.1 ÷ 2.4 = 0.88. A small FVC with a normal or high ratio suggests restriction: stiff lungs (fibrosis) or a limited chest wall. Spirometry can only suggest it; measuring total lung capacity confirms it.",
+   "learning_objective": "Recognize a restrictive spirometry pattern.",
+   "xp_reward": null,
+   "lecture_id": "spirometry_lab_01",
+   "format": "multiple_choice",
+   "figure": {
+    "type": "curves",
+    "x": {
+     "label": "Time (s)",
+     "min": 0,
+     "max": 6
+    },
+    "y": {
+     "label": "Volume exhaled (L)",
+     "min": 0,
+     "max": 5.5
+    },
+    "series": [
+     {
+      "fn": "saturating",
+      "params": {
+       "ymax": 4.75,
+       "tau": 0.6213,
+       "y0": 0
+      },
+      "label": "Predicted for her",
+      "color": "muted",
+      "from": 0,
+      "to": 6
+     },
+     {
+      "fn": "saturating",
+      "params": {
+       "ymax": 2.4,
+       "tau": 0.4809,
+       "y0": 0
+      },
+      "label": "Her tracing",
+      "color": "accent",
+      "from": 0,
+      "to": 6
+     }
+    ],
+    "vlines": [
+     {
+      "x": 1,
+      "label": "1 s"
+     }
+    ]
+   },
+   "correct_answer": "a"
+  },
+  {
+   "id": "spiro_bronchodilator_01",
+   "discipline": "Physiology",
+   "topic": "Pulmonary Function",
+   "subtopic": "Bronchodilator response",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "A 24-year-old with episodes of wheeze has an FEV1 of 2.6 L that rises to 3.1 L fifteen minutes after inhaled albuterol. What does this suggest?",
+   "choices": {
+    "a": "Poor technique, because FEV1 cannot change",
+    "b": "Significant reversibility, supporting asthma",
+    "c": "A restrictive lung disease",
+    "d": "COPD, because the first FEV1 was low"
+   },
+   "explanation": "A rise in FEV1 of at least 12% and 200 mL after a bronchodilator is a significant response. Hers is 500 mL (19%): typical of asthma. In COPD, obstruction persists after the bronchodilator (the post-bronchodilator FEV1/FVC stays below 0.70).",
+   "learning_objective": "Interpret a bronchodilator response.",
+   "xp_reward": null,
+   "lecture_id": "spirometry_lab_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "spiro_inhaler_01",
+   "discipline": "Clinical Skills",
+   "topic": "Pulmonary Function",
+   "subtopic": "Inhaler technique",
+   "question_type": "Application",
+   "difficulty_tier": 2,
+   "prompt": "Which is the correct way to use a metered-dose inhaler with a spacer?",
+   "choices": {
+    "a": "Press once, then breathe out into the spacer to warm the medicine",
+    "b": "Press the canister four times into the spacer, then take one breath",
+    "c": "Press once and breathe in as hard and fast as you can",
+    "d": "Shake it, breathe out, seal your lips on the spacer, press once, then breathe in slowly and deeply and hold for about ten seconds"
+   },
+   "explanation": "One puff at a time: several puffs into a spacer at once reduce the dose inhaled. A slow, deep breath (or several normal breaths through a spacer with a valve) and a breath-hold carry the particles into the small airways. Poor technique is one of the commonest reasons asthma stays uncontrolled.",
+   "learning_objective": "Teach correct inhaler technique.",
+   "xp_reward": null,
+   "lecture_id": "spirometry_lab_01",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "sp_dysp_orthopnea_01",
+   "discipline": "Physiology",
+   "topic": "Heart Failure",
+   "subtopic": "Orthopnea",
+   "question_type": "Conceptual",
+   "difficulty_tier": 2,
+   "prompt": "Why does lying flat make Mrs. Holloway breathless?",
+   "choices": {
+    "a": "She is anxious at night",
+    "b": "Her diaphragm is weak on one side",
+    "c": "Lying down shifts blood from the legs and abdomen into the chest, and her failing left ventricle can't handle the extra return, so pressure backs up into the lungs",
+    "d": "Lying flat lowers the blood oxygen in everyone"
+   },
+   "explanation": "Supine, venous return rises. A failing left ventricle can't pump out the extra volume, so pulmonary venous and capillary pressures rise and fluid moves into the lung interstitium. Paroxysmal nocturnal dyspnea is the delayed version: edema fluid from the legs is reabsorbed over hours of lying down.",
+   "learning_objective": "Explain orthopnea and paroxysmal nocturnal dyspnea.",
+   "xp_reward": null,
+   "lecture_id": "sp_dyspnea_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "sp_dysp_echo_01",
+   "discipline": "Clinical Skills",
+   "topic": "Heart Failure",
+   "subtopic": "Diagnosis",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "Her BNP comes back high. Which test confirms heart failure and measures her ejection fraction?",
+   "choices": {
+    "a": "Spirometry",
+    "b": "A ventilation–perfusion scan",
+    "c": "A coronary angiogram",
+    "d": "A transthoracic echocardiogram"
+   },
+   "explanation": "A raised natriuretic peptide (BNP or NT-proBNP) supports heart failure; the echocardiogram confirms it and measures the ejection fraction: reduced (40% or less), mildly reduced (41–49%) or preserved (50% or more). It also shows the valves and wall motion.",
+   "learning_objective": "Choose the echocardiogram to confirm heart failure.",
+   "xp_reward": null,
+   "lecture_id": "sp_dyspnea_01",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "sp_dysp_diuretic_01",
+   "discipline": "Pharmacology",
+   "topic": "Heart Failure",
+   "subtopic": "Congestion",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "What will relieve her congestion fastest?",
+   "choices": {
+    "a": "Intravenous fluids",
+    "b": "A loop diuretic such as furosemide",
+    "c": "A high starting dose of a beta-blocker",
+    "d": "A calcium-channel blocker"
+   },
+   "explanation": "Loop diuretics relieve pulmonary and peripheral edema. Beta-blockers improve survival in heart failure with reduced ejection fraction but are started at a low dose once the patient is stable, not to clear congestion; fluids would make it worse.",
+   "learning_objective": "Treat congestion in heart failure with a loop diuretic.",
+   "xp_reward": null,
+   "lecture_id": "sp_dyspnea_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "imm_fm_bp_01",
+   "discipline": "Clinical Skills",
+   "topic": "Family Medicine",
+   "subtopic": "Blood pressure technique",
+   "question_type": "Application",
+   "difficulty_tier": 1,
+   "prompt": "Before you take Mr. Davis's blood pressure, which technique matters?",
+   "choices": {
+    "a": "Measure it the moment he walks in, before he sits",
+    "b": "A small cuff is fine on a large arm",
+    "c": "Seated for five minutes with his back supported and feet flat, the arm supported at heart level, and a cuff that fits",
+    "d": "Legs crossed is fine if the arm is supported"
+   },
+   "explanation": "A small cuff, crossed legs, an unsupported arm, talking and no rest all raise the reading, sometimes by 10 mmHg or more. The cuff's bladder should wrap about 80% of the arm.",
+   "learning_objective": "Measure blood pressure accurately.",
+   "xp_reward": null,
+   "lecture_id": "immersion_clinic_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "imm_fm_phq2_01",
+   "discipline": "Behavioral Science",
+   "topic": "Family Medicine",
+   "subtopic": "Depression screening",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "The PHQ-2 asks how often, over the past two weeks, a patient has been bothered by two things. What are they?",
+   "choices": {
+    "a": "Low energy and poor concentration",
+    "b": "Guilt and thoughts of death",
+    "c": "Little interest or pleasure in doing things, and feeling down, depressed or hopeless",
+    "d": "Poor sleep and poor appetite"
+   },
+   "explanation": "The PHQ-2 covers the two core symptoms of depression, anhedonia and low mood, each scored 0–3. A score of 3 or more is a positive screen, followed by the PHQ-9 and a clinical interview that asks directly about suicidal thoughts.",
+   "learning_objective": "Recall the PHQ-2 depression screen.",
+   "xp_reward": null,
+   "lecture_id": "immersion_clinic_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "imm_fm_quit_01",
+   "discipline": "Pharmacology",
+   "topic": "Family Medicine",
+   "subtopic": "Smoking cessation",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "Mr. Price wants to quit smoking. Which approach gives him the best chance?",
+   "choices": {
+    "a": "Medication (varenicline, or a nicotine patch with a short-acting form) combined with counseling and support",
+    "b": "Cutting down gradually, without a quit date or medication",
+    "c": "Advice to quit, with nothing else",
+    "d": "A nicotine patch alone for one week"
+   },
+   "explanation": "Combining medication with behavioral support gives the highest quit rates. Varenicline or combination nicotine replacement (a patch plus gum or lozenges for cravings) work best. Every smoker should be asked, advised and offered help at every visit.",
+   "learning_objective": "Recommend effective smoking-cessation treatment.",
+   "xp_reward": null,
+   "lecture_id": "immersion_clinic_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "exb4_alkalosis_01",
+   "discipline": "Physiology",
+   "topic": "Acid–Base",
+   "subtopic": "Respiratory alkalosis",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "A student having a panic attack breathes fast: pH 7.52, PaCO₂ 28 mmHg, bicarbonate 23 mEq/L. What is the disorder?",
+   "choices": {
+    "a": "Metabolic alkalosis",
+    "b": "Respiratory acidosis",
+    "c": "Acute respiratory alkalosis",
+    "d": "Compensated metabolic acidosis"
+   },
+   "explanation": "Hyperventilation blows off CO₂, raising the pH: a respiratory alkalosis. The bicarbonate is still normal because the kidneys take days to compensate. Tingling fingers and lips come from a fall in ionized calcium.",
+   "learning_objective": "Identify an acute respiratory alkalosis.",
+   "xp_reward": null,
+   "lecture_id": "exam_b4",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "exb4_oxygen_copd_01",
+   "discipline": "Physiology",
+   "topic": "Respiratory",
+   "subtopic": "Oxygen in COPD",
+   "question_type": "Conceptual",
+   "difficulty_tier": 3,
+   "prompt": "A man with severe COPD becomes drowsy after an hour on high-flow oxygen, and his PaCO₂ has risen. What is the main reason?",
+   "choices": {
+    "a": "Oxygen poisons the alveoli within minutes",
+    "b": "Oxygen releases hypoxic vasoconstriction, worsening ventilation–perfusion matching, and hemoglobin releases more CO₂ (the Haldane effect)",
+    "c": "His hypoxic drive was the only reason he breathed",
+    "d": "Oxygen directly sedates the brainstem"
+   },
+   "explanation": "In some people with COPD and chronic CO₂ retention, high-concentration oxygen raises PaCO₂, mainly through worse V/Q matching and the Haldane effect, with a smaller part from reduced drive. Titrate oxygen to saturations of 88–92%.",
+   "learning_objective": "Explain CO₂ retention with oxygen in COPD.",
+   "xp_reward": null,
+   "lecture_id": "exam_b4",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "exb4_pe_01",
+   "discipline": "Clinical Skills",
+   "topic": "Respiratory",
+   "subtopic": "Pulmonary embolism",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "A 34-year-old on the combined pill, three days after a long flight, has sudden pleuritic chest pain, a heart rate of 112 and SpO₂ of 91%. Her chest X-ray is clear. What is most likely?",
+   "choices": {
+    "a": "Pulmonary embolism",
+    "b": "Pneumothorax",
+    "c": "An asthma attack",
+    "d": "Lobar pneumonia"
+   },
+   "explanation": "Sudden pleuritic pain, tachycardia and hypoxemia with a clear film and risk factors (estrogen, immobility) is a pulmonary embolism until proven otherwise; CT pulmonary angiography confirms it. A pneumothorax or pneumonia would show on the X-ray.",
+   "learning_objective": "Recognize a likely pulmonary embolism.",
+   "xp_reward": null,
+   "lecture_id": "exam_b4",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "exb4_prerenal_01",
+   "discipline": "Physiology",
+   "topic": "Renal",
+   "subtopic": "Acute kidney injury",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "After three days of vomiting, a man's creatinine has doubled. His urine sodium is 10 mEq/L and his fractional excretion of sodium is 0.5%. What kind of kidney injury is this?",
+   "choices": {
+    "a": "Glomerulonephritis",
+    "b": "Obstruction of the urinary tract",
+    "c": "Acute tubular necrosis",
+    "d": "Prerenal: working tubules are holding on to sodium because perfusion is low"
+   },
+   "explanation": "An FENa under 1% means the tubules are reabsorbing sodium avidly, as intact tubules do when perfusion falls: prerenal injury, which fluids should reverse. In acute tubular necrosis, damaged tubules can't reabsorb sodium, so the FENa is usually above 2%. (Diuretics make the FENa unreliable.)",
+   "learning_objective": "Distinguish prerenal injury using the FENa.",
+   "xp_reward": null,
+   "lecture_id": "exam_b4",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "exb4_hyperk_01",
+   "discipline": "Physiology",
+   "topic": "Renal",
+   "subtopic": "Hyperkalemia",
+   "question_type": "Recall",
+   "difficulty_tier": 2,
+   "prompt": "Which ECG change usually appears first as serum potassium rises?",
+   "choices": {
+    "a": "Tall, peaked T waves",
+    "b": "ST depression",
+    "c": "U waves",
+    "d": "A long QT interval"
+   },
+   "explanation": "Rising potassium: peaked T waves, then a long PR and flattened P waves, a widening QRS, and eventually a sine-wave pattern and cardiac arrest. U waves suggest low potassium. Dangerous hyperkalemia is treated with IV calcium to protect the heart, insulin with glucose to shift potassium into cells, and removal.",
+   "learning_objective": "Recognize the ECG signs of hyperkalemia.",
+   "xp_reward": null,
+   "lecture_id": "exam_b4",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "exb4_gap_01",
+   "discipline": "Physiology",
+   "topic": "Acid–Base",
+   "subtopic": "The anion gap",
+   "question_type": "Application",
+   "difficulty_tier": 2,
+   "prompt": "Sodium 140, chloride 100 and bicarbonate 10 mEq/L. What is the anion gap, and what does it mean?",
+   "choices": {
+    "a": "130 mEq/L: a normal gap",
+    "b": "30 mEq/L: a high anion gap metabolic acidosis",
+    "c": "10 mEq/L: a normal-gap acidosis",
+    "d": "50 mEq/L: a respiratory acidosis"
+   },
+   "explanation": "Anion gap = Na − (Cl + HCO₃) = 140 − 110 = 30, far above the usual 8–12. A high gap means unmeasured acids: ketoacids, lactate, kidney failure, or toxins such as methanol, ethylene glycol or salicylates.",
+   "learning_objective": "Calculate and interpret the anion gap.",
+   "xp_reward": null,
+   "lecture_id": "exam_b4",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "exb4_thiazide_01",
+   "discipline": "Pharmacology",
+   "topic": "Diuretics",
+   "subtopic": "Thiazides",
+   "question_type": "Conceptual",
+   "difficulty_tier": 2,
+   "prompt": "Which electrolyte effects are typical of thiazide diuretics?",
+   "choices": {
+    "a": "High potassium and high sodium",
+    "b": "Low sodium and low potassium, with less calcium lost in the urine",
+    "c": "More calcium lost in the urine, causing low calcium",
+    "d": "No effect on electrolytes"
+   },
+   "explanation": "Thiazides block the Na⁺–Cl⁻ cotransporter in the distal convoluted tubule. Hyponatremia and hypokalemia are common; they also increase calcium reabsorption, which is useful in people with calcium kidney stones. Loop diuretics do the opposite with calcium.",
+   "learning_objective": "Describe the electrolyte effects of thiazides.",
+   "xp_reward": null,
+   "lecture_id": "exam_b4",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "exb4_epo_01",
+   "discipline": "Physiology",
+   "topic": "Renal",
+   "subtopic": "Chronic kidney disease",
+   "question_type": "Conceptual",
+   "difficulty_tier": 1,
+   "prompt": "Why do people with advanced chronic kidney disease become anemic?",
+   "choices": {
+    "a": "They lack vitamin C",
+    "b": "Uremia destroys the bone marrow",
+    "c": "The kidneys filter out red blood cells",
+    "d": "Their kidneys make less erythropoietin"
+   },
+   "explanation": "Erythropoietin is made by cells in the kidney's interstitium in response to low oxygen. Failing kidneys make less, causing a normocytic anemia; iron deficiency often adds to it. Treatment is iron and, if needed, an erythropoiesis-stimulating agent.",
+   "learning_objective": "Explain the anemia of chronic kidney disease.",
+   "xp_reward": null,
+   "lecture_id": "exam_b4",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  }
+ ]
+}

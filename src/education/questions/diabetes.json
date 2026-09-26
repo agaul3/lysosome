@@ -1,0 +1,174 @@
+{
+ "version": 1,
+ "questions": [
+  {
+   "id": "dm_katp_01",
+   "discipline": "Physiology",
+   "topic": "Endocrine",
+   "subtopic": "Insulin secretion",
+   "question_type": "Conceptual",
+   "difficulty_tier": 2,
+   "prompt": "How do sulfonylureas such as glipizide lower blood glucose?",
+   "choices": {
+    "a": "They close ATP-sensitive K⁺ channels on β cells, depolarizing them and releasing insulin.",
+    "b": "They make muscle more sensitive to insulin.",
+    "c": "They block glucose reabsorption in the kidney.",
+    "d": "They reduce the liver's glucose output without affecting insulin."
+   },
+   "explanation": "Sulfonylureas bind the SUR1 subunit of the β cell's K-ATP channel and close it, depolarizing the cell, opening voltage-gated Ca²⁺ channels and triggering insulin release even when glucose is low: hence their risk of hypoglycemia.",
+   "learning_objective": "Explain the mechanism of sulfonylureas using the β-cell K-ATP channel.",
+   "xp_reward": null,
+   "lecture_id": "diabetes_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "dm_cpeptide_01",
+   "discipline": "Physiology",
+   "topic": "Endocrine",
+   "subtopic": "C-peptide",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 3,
+   "prompt": "A nurse without diabetes is found confused with a glucose of 38 mg/dL. Her insulin level is very high but her C-peptide is low. What is the most likely cause?",
+   "choices": {
+    "a": "A sulfonylurea overdose",
+    "b": "Injected insulin",
+    "c": "Type 2 diabetes",
+    "d": "An insulin-secreting tumor (insulinoma)"
+   },
+   "explanation": "Endogenous insulin is released with C-peptide in equal amounts; injected insulin contains none. High insulin with low C-peptide points to exogenous insulin. An insulinoma or a sulfonylurea raises both.",
+   "learning_objective": "Use C-peptide to distinguish endogenous from injected insulin.",
+   "xp_reward": null,
+   "lecture_id": "diabetes_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "dm_diagnosis_01",
+   "discipline": "Physiology",
+   "topic": "Endocrine",
+   "subtopic": "Diagnosis",
+   "question_type": "Application",
+   "difficulty_tier": 1,
+   "prompt": "An asymptomatic 50-year-old has an HbA1c of 7.0% and, a week later, 6.9%. What is the diagnosis?",
+   "choices": {
+    "a": "Diabetes mellitus",
+    "b": "Normal glucose tolerance",
+    "c": "Prediabetes",
+    "d": "It cannot be diagnosed without a glucose tolerance test"
+   },
+   "explanation": "Two HbA1c results of 6.5% or higher confirm diabetes. Prediabetes is 5.7–6.4%. An oral glucose tolerance test is one option, but it isn't required.",
+   "learning_objective": "Apply the HbA1c criteria for diagnosing diabetes.",
+   "xp_reward": null,
+   "lecture_id": "diabetes_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "dm_a1c_01",
+   "discipline": "Physiology",
+   "topic": "Endocrine",
+   "subtopic": "HbA1c",
+   "question_type": "Conceptual",
+   "difficulty_tier": 2,
+   "prompt": "Why does the HbA1c reflect average blood glucose over roughly the previous three months?",
+   "choices": {
+    "a": "Glucose is stored in red cells for three months.",
+    "b": "The liver releases HbA1c in proportion to glycogen stores.",
+    "c": "HbA1c is made only once every three months.",
+    "d": "Glucose binds hemoglobin irreversibly, and red cells live about 120 days."
+   },
+   "explanation": "Glycation of hemoglobin is non-enzymatic and proportional to glucose exposure over the red cell's life (about 120 days). Anything that shortens red-cell survival, like hemolysis, falsely lowers the HbA1c.",
+   "learning_objective": "Explain what the HbA1c measures and its limitations.",
+   "xp_reward": null,
+   "lecture_id": "diabetes_01",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "dm_a1c_remediation_01",
+   "discipline": "Physiology",
+   "topic": "Endocrine",
+   "subtopic": "HbA1c",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "About how long do red blood cells survive in the circulation?",
+   "choices": {
+    "a": "About one year",
+    "b": "About 120 days",
+    "c": "About 7 days",
+    "d": "About 30 days"
+   },
+   "explanation": "Red cells survive about 120 days, so the HbA1c is weighted toward the last two to three months of glucose exposure.",
+   "learning_objective": "Recall red-cell lifespan as the basis of the HbA1c.",
+   "xp_reward": null,
+   "lecture_id": "diabetes_01",
+   "format": "multiple_choice",
+   "is_remediation": true,
+   "correct_answer": "b"
+  },
+  {
+   "id": "dm_dka_k_01",
+   "discipline": "Physiology",
+   "topic": "Endocrine",
+   "subtopic": "Diabetic ketoacidosis",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 3,
+   "prompt": "A patient in diabetic ketoacidosis has a serum potassium of 3.1 mEq/L. What should happen before the insulin infusion is started?",
+   "choices": {
+    "a": "Give a loop diuretic to clear ketones.",
+    "b": "Give sodium bicarbonate instead of insulin.",
+    "c": "Replace potassium first: insulin will drive potassium into cells and lower it further.",
+    "d": "Start insulin at once; potassium will correct itself."
+   },
+   "explanation": "Total-body potassium is depleted in DKA (urinary losses), even when the serum level looks normal or high, because acidosis and insulin lack shift potassium out of cells. Insulin moves it back in, so a low serum potassium must be corrected (commonly to about 3.3 mEq/L or more) before insulin, to avoid dangerous hypokalemia.",
+   "learning_objective": "Manage potassium safely at the start of DKA treatment.",
+   "xp_reward": null,
+   "lecture_id": "diabetes_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "dm_metformin_01",
+   "discipline": "Physiology",
+   "topic": "Endocrine",
+   "subtopic": "Metformin",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "What is the main way metformin lowers blood glucose?",
+   "choices": {
+    "a": "It blocks carbohydrate absorption in the gut.",
+    "b": "It increases glucose excretion in the urine.",
+    "c": "It reduces the liver's glucose production (gluconeogenesis).",
+    "d": "It stimulates insulin release from β cells."
+   },
+   "explanation": "Metformin mainly reduces hepatic gluconeogenesis and modestly improves insulin sensitivity. It doesn't stimulate insulin release, so alone it rarely causes hypoglycemia. Side effects: GI upset, B12 deficiency and, rarely, lactic acidosis.",
+   "learning_objective": "State metformin's mechanism and key adverse effects.",
+   "xp_reward": null,
+   "lecture_id": "diabetes_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "dm_sglt2_01",
+   "discipline": "Physiology",
+   "topic": "Endocrine",
+   "subtopic": "SGLT2 inhibitors",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "A woman who started empagliflozin a month ago has vulvovaginal itching and discharge. How does the drug explain it?",
+   "choices": {
+    "a": "It dries the mucous membranes by blocking acetylcholine.",
+    "b": "It suppresses the immune system.",
+    "c": "It raises estrogen levels.",
+    "d": "It causes glucose in the urine, which encourages genital yeast infections."
+   },
+   "explanation": "SGLT2 inhibitors block proximal tubular glucose reabsorption, producing glycosuria that promotes genital mycotic infections and urinary tract infections. They can also cause euglycemic DKA; they reduce heart failure hospitalization and slow kidney disease.",
+   "learning_objective": "Identify the adverse effects of SGLT2 inhibitors from their mechanism.",
+   "xp_reward": null,
+   "lecture_id": "diabetes_01",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  }
+ ]
+}

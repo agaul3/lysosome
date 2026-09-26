@@ -1,0 +1,262 @@
+{
+ "version": 1,
+ "id": "stroke_01",
+ "title": "Stroke",
+ "professor": "Dr. Mei Chen",
+ "segments": [
+  {
+   "id": "introduction",
+   "topic": "Introduction",
+   "slide": {
+    "heading": "Stroke",
+    "bullets": [],
+    "subheading": "Time is brain: vascular territories and the first hour",
+    "diagram": "figure",
+    "figure": {
+     "type": "bars",
+     "bars": [
+      {
+       "label": "Ischemic",
+       "value": 87,
+       "color": "accent",
+       "text": "≈ 87%"
+      },
+      {
+       "label": "Intracerebral hemorrhage",
+       "value": 10,
+       "color": "red",
+       "text": "≈ 10%"
+      },
+      {
+       "label": "Subarachnoid hemorrhage",
+       "value": 3,
+       "color": "gold",
+       "text": "≈ 3%"
+      }
+     ],
+     "y_label": "Share of strokes (%)",
+     "max": 100
+    }
+   },
+   "lines": [
+    {
+     "text": "Stroke. In a large ischemic stroke, the brain loses nearly two million neurons for every minute the artery stays blocked.",
+     "gesture": "audience"
+    },
+    {
+     "text": "Most strokes are ischemic: a clot, from a diseased artery or thrown from the heart. The rest are bleeds.",
+     "gesture": "screen"
+    },
+    {
+     "text": "Your job in the first hour is to recognize it, localize it, and get the patient to treatment. Every minute counts.",
+     "gesture": "audience"
+    }
+   ]
+  },
+  {
+   "id": "recognize",
+   "topic": "Recognizing stroke",
+   "slide": {
+    "heading": "BE-FAST",
+    "bullets": [
+     "Balance: sudden loss of coordination",
+     "Eyes: sudden loss of vision",
+     "Face: one side droops",
+     "Arm (or leg): one side weak",
+     "Speech, and Time: note when last known well"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "The public learns BE-FAST: balance, eyes, face, arm, speech, and time.",
+     "gesture": "screen",
+     "reveal": 5
+    },
+    {
+     "text": "The most important question you'll ask is when the patient was last known to be well. Not when the symptoms were found: when they were last seen normal.",
+     "gesture": "audience"
+    },
+    {
+     "question": "stroke_lkw_01"
+    }
+   ]
+  },
+  {
+   "id": "territories",
+   "topic": "Vascular territories",
+   "slide": {
+    "heading": "Where is the stroke?",
+    "bullets": [
+     "MCA: face and arm more than leg, opposite side",
+     "Left (dominant) MCA: aphasia",
+     "Right MCA: neglect of the left side",
+     "ACA: leg more than arm",
+     "PCA: homonymous hemianopia (macula spared)"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "table",
+     "columns": [
+      "Artery",
+      "Weakness and numbness",
+      "Also"
+     ],
+     "rows": [
+      [
+       "Middle cerebral",
+       "Face and arm > leg",
+       "Aphasia (dominant) or neglect; gaze toward lesion"
+      ],
+      [
+       "Anterior cerebral",
+       "Leg > arm",
+       "Abulia, incontinence"
+      ],
+      [
+       "Posterior cerebral",
+       "Usually none",
+       "Opposite homonymous hemianopia"
+      ],
+      [
+       "Lacunar (penetrating)",
+       "Pure motor, face, arm, leg",
+       "No cortical signs"
+      ]
+     ],
+     "widths": [
+      0.26,
+      0.34,
+      0.4
+     ]
+    }
+   },
+   "lines": [
+    {
+     "text": "The homunculus predicts the territories. The middle cerebral artery supplies the lateral cortex: the face and arm areas. Block it and the opposite face and arm are weaker than the leg.",
+     "gesture": "screen",
+     "reveal": 1
+    },
+    {
+     "text": "In the dominant hemisphere, usually the left, it also takes language: aphasia. On the right, the patient may ignore the left side of the world.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "question": "stroke_mca_01"
+    },
+    {
+     "text": "The anterior cerebral artery supplies the medial surface, where the leg lives: leg weaker than arm.",
+     "gesture": "screen",
+     "reveal": 4
+    },
+    {
+     "question": "stroke_aca_01"
+    },
+    {
+     "text": "And the posterior cerebral artery supplies the occipital lobe: a homonymous hemianopia, often sparing the center of vision.",
+     "gesture": "screen",
+     "reveal": 5
+    }
+   ]
+  },
+  {
+   "id": "acute",
+   "topic": "Acute treatment",
+   "slide": {
+    "heading": "The first hour",
+    "bullets": [
+     "Check glucose: hypoglycemia can mimic stroke",
+     "Non-contrast CT first: rule out bleeding",
+     "IV thrombolysis within 4.5 hours of last known well",
+     "Thrombectomy for large-vessel occlusion (up to 24 h if selected)",
+     "No thrombolysis if there is hemorrhage"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "Check the glucose: low sugar can look exactly like a stroke.",
+     "gesture": "screen",
+     "reveal": 1
+    },
+    {
+     "text": "Then a non-contrast CT of the head, straight away. It's fast, and its main job is to show whether there's blood, because clot-busting drugs would make a bleed worse.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "question": "stroke_ct_01"
+    },
+    {
+     "text": "If there's no bleed and the patient is eligible, intravenous thrombolysis can be given within four and a half hours of last known well.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "text": "For a large artery blocked by clot, a thrombectomy pulls it out through a catheter, in selected patients up to twenty-four hours out.",
+     "gesture": "screen",
+     "reveal": 4
+    },
+    {
+     "question": "stroke_window_01",
+     "remediation": "stroke_window_remediation_01"
+    }
+   ]
+  },
+  {
+   "id": "prevention",
+   "topic": "Preventing the next one",
+   "slide": {
+    "heading": "Preventing the next stroke",
+    "bullets": [
+     "Atrial fibrillation: anticoagulation",
+     "Otherwise, antiplatelet therapy",
+     "Statin, blood pressure control, stop smoking",
+     "Severe symptomatic carotid stenosis: endarterectomy"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "After the acute stroke, find the cause and prevent the next one.",
+     "gesture": "audience"
+    },
+    {
+     "text": "If the heart is throwing clots, as in atrial fibrillation, patients need an anticoagulant, not just aspirin.",
+     "gesture": "screen",
+     "reveal": 1
+    },
+    {
+     "question": "stroke_af_01"
+    },
+    {
+     "text": "Everyone else: an antiplatelet, a statin, blood pressure control and no smoking; and a tight carotid stenosis on the stroke's side may need surgery.",
+     "gesture": "screen",
+     "reveal": 4
+    }
+   ]
+  },
+  {
+   "id": "summary",
+   "topic": "Summary",
+   "slide": {
+    "heading": "Summary",
+    "bullets": [
+     "Last known well starts the clock",
+     "MCA: face and arm; ACA: leg; PCA: vision",
+     "CT first, then thrombolysis within 4.5 h",
+     "Atrial fibrillation: anticoagulate"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "This afternoon: a patient with sudden weakness in the Clinical Skills Center. Localize it, and don't forget the clock.",
+     "gesture": "audience",
+     "reveal": 4
+    }
+   ]
+  }
+ ]
+}

@@ -120,7 +120,7 @@ func hospital_arrival() -> void:
 			missing.append(target)
 	check(missing.is_empty(), "Every anchor and action target in the script exists %s" % str(missing))
 	check(hospital.anchor("observer_412") != Vector3.INF, "The observer mark exists")
-	check(hospital.layers.size() == 4 and not hospital.layers[0][0].visible and hospital.layers[0][1].visible, "Third person shows the cutaway")
+	check(hospital.layers.size() == hospital.zone_roots.size() and not hospital.layers[0][0].visible and hospital.layers[0][1].visible, "Third person shows the cutaway")
 	# The entrance doors part as the student walks up to them.
 	await reset_position(hospital.anchor("entrance") + Vector3(0, 0, -0.5))
 	await ticks(40)

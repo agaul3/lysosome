@@ -36,6 +36,9 @@ var aside_side := 1.0
 var yielding := false
 ## [centre (Vector2), radius] areas a sidestep must not enter (benches, planter).
 var obstacles: Array = []
+## How far to step aside for the student: ASIDE on open paths, less in
+## buildings, where aisles between furniture are about two metres wide.
+var aside_width := ASIDE
 const ASIDE := 0.8
 const YIELD_RANGE := 2.2
 const MAKE_WAY := "make_way"
@@ -103,7 +106,7 @@ func _process(delta: float) -> void:
 	var ahead := INF
 	var lateral := 0.0
 	var near := false
-	var berth := ASIDE
+	var berth := aside_width
 	var width := 0.62
 	var other := _someone_near(forward)
 	if not other.is_empty():

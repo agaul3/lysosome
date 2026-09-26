@@ -1,0 +1,441 @@
+{
+ "version": 1,
+ "id": "respiratory_01",
+ "title": "Respiratory Mechanics & Gas Exchange",
+ "professor": "Dr. Priya Raman",
+ "segments": [
+  {
+   "id": "introduction",
+   "topic": "Introduction",
+   "slide": {
+    "heading": "Breathe In",
+    "bullets": [],
+    "subheading": "Getting air in, and oxygen across",
+    "diagram": "figure",
+    "figure": {
+     "type": "flow",
+     "nodes": [
+      {
+       "id": "air",
+       "label": "Air in",
+       "x": 0.12,
+       "y": 0.5,
+       "color": "second"
+      },
+      {
+       "id": "alv",
+       "label": "Alveolus",
+       "x": 0.42,
+       "y": 0.5,
+       "color": "accent"
+      },
+      {
+       "id": "cap",
+       "label": "Capillary blood",
+       "x": 0.72,
+       "y": 0.5,
+       "color": "red"
+      },
+      {
+       "id": "tis",
+       "label": "Tissues",
+       "x": 0.92,
+       "y": 0.5,
+       "color": "gold"
+      }
+     ],
+     "edges": [
+      {
+       "from": "air",
+       "to": "alv"
+      },
+      {
+       "from": "alv",
+       "to": "cap"
+      },
+      {
+       "from": "cap",
+       "to": "tis"
+      }
+     ]
+    }
+   },
+   "lines": [
+    {
+     "text": "Good morning. I'm Priya Raman, pulmonology. Take a deep breath. That breath cost you almost nothing, and today we find out why.",
+     "gesture": "audience"
+    },
+    {
+     "text": "Two problems: getting air in and out, which is mechanics, and getting oxygen across into the blood, which is gas exchange.",
+     "gesture": "screen"
+    },
+    {
+     "text": "This afternoon you'll measure your own lungs in the spirometry lab, so pay attention to the volumes.",
+     "gesture": "audience"
+    }
+   ]
+  },
+  {
+   "id": "volumes",
+   "topic": "Lung volumes",
+   "slide": {
+    "heading": "Lung volumes and capacities",
+    "bullets": [
+     "Tidal volume ≈ 500 mL at rest",
+     "Residual volume: what you can never breathe out",
+     "FRC = expiratory reserve + residual volume",
+     "Spirometry can't measure RV, FRC or TLC",
+     "TLC = vital capacity + residual volume"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "bars",
+     "bars": [
+      {
+       "label": "TV",
+       "value": 0.5,
+       "color": "accent",
+       "text": "0.5 L"
+      },
+      {
+       "label": "IRV",
+       "value": 3.1,
+       "color": "second",
+       "text": "3.1 L"
+      },
+      {
+       "label": "ERV",
+       "value": 1.2,
+       "color": "third",
+       "text": "1.2 L"
+      },
+      {
+       "label": "RV",
+       "value": 1.2,
+       "color": "gold",
+       "text": "1.2 L"
+      },
+      {
+       "label": "FRC",
+       "value": 2.4,
+       "color": "blue",
+       "text": "2.4 L"
+      },
+      {
+       "label": "TLC",
+       "value": 6.0,
+       "color": "green",
+       "text": "6.0 L"
+      }
+     ],
+     "y_label": "Litres (young adult)",
+     "max": 6.5
+    }
+   },
+   "lines": [
+    {
+     "text": "At rest you move about half a litre per breath: the tidal volume. You could breathe in about three litres more, or out about one more.",
+     "gesture": "screen",
+     "reveal": 1
+    },
+    {
+     "text": "But you can never empty your lungs. What's left is the residual volume, and it can't be measured by a spirometer, because you can't blow it out.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "text": "At the end of a quiet breath, the lungs' inward recoil and the chest wall's outward spring balance. The volume there is the functional residual capacity: expiratory reserve plus residual volume.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "question": "resp_frc_01"
+    },
+    {
+     "text": "Add the residual volume to the vital capacity and you have the total lung capacity.",
+     "gesture": "screen",
+     "reveal": 5
+    }
+   ]
+  },
+  {
+   "id": "spirometry",
+   "topic": "Spirometry",
+   "slide": {
+    "heading": "Spirometry: obstructive or restrictive?",
+    "bullets": [
+     "FVC: everything you can blow out",
+     "FEV1: how much in the first second",
+     "Obstructive (asthma, COPD): FEV1/FVC < 0.7",
+     "Restrictive (fibrosis): small volumes, ratio normal or high",
+     "Confirm restriction with TLC"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "curves",
+     "x": {
+      "label": "Time (s)",
+      "min": 0,
+      "max": 6
+     },
+     "y": {
+      "label": "Volume exhaled (L)",
+      "min": 0,
+      "max": 5.5
+     },
+     "series": [
+      {
+       "label": "Normal: FEV1/FVC ≈ 0.8",
+       "fn": "saturating",
+       "params": {
+        "ymax": 4.8,
+        "tau": 0.62
+       },
+       "color": "accent"
+      },
+      {
+       "label": "Obstructive: FEV1/FVC ≈ 0.5",
+       "fn": "saturating",
+       "params": {
+        "ymax": 3.8,
+        "tau": 1.45
+       },
+       "color": "red"
+      },
+      {
+       "label": "Restrictive: small but fast",
+       "fn": "saturating",
+       "params": {
+        "ymax": 2.6,
+        "tau": 0.45
+       },
+       "color": "second"
+      }
+     ],
+     "vlines": [
+      {
+       "x": 1,
+       "label": "1 s",
+       "color": "muted"
+      }
+     ]
+    }
+   },
+   "lines": [
+    {
+     "text": "Blow out as hard and fast as you can, all the way. The total is the forced vital capacity; the amount in the first second is the FEV1.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "text": "In asthma and COPD the airways are narrowed, so air comes out slowly: the FEV1 falls much more than the FVC, and the ratio drops below point seven.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "question": "resp_obstructive_01",
+     "lead": "Read this spirogram."
+    },
+    {
+     "text": "In fibrosis the lungs are small and stiff. Both numbers fall, but the ratio stays normal or even rises. To prove restriction you need the total lung capacity.",
+     "gesture": "screen",
+     "reveal": 5
+    }
+   ]
+  },
+  {
+   "id": "compliance",
+   "topic": "Compliance and surfactant",
+   "slide": {
+    "heading": "Compliance and surfactant",
+    "bullets": [
+     "Compliance = change in volume ÷ change in pressure",
+     "Fibrosis: stiff, low compliance",
+     "Emphysema: floppy, high compliance, poor recoil",
+     "Surfactant (type II cells) lowers surface tension",
+     "Premature babies lack it: respiratory distress syndrome"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "How easily do the lungs stretch? That's compliance: change in volume over change in pressure.",
+     "gesture": "audience",
+     "reveal": 1
+    },
+    {
+     "text": "Fibrosis makes them stiff. Emphysema destroys elastic tissue, so they're easy to inflate but recoil poorly, and air gets trapped.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "text": "And the alveoli are wet, so surface tension tries to collapse them, most of all the small ones. Surfactant, made by type two pneumocytes, lowers the tension and keeps them open.",
+     "gesture": "screen",
+     "reveal": 4
+    },
+    {
+     "question": "resp_surfactant_01"
+    }
+   ]
+  },
+  {
+   "id": "vq",
+   "topic": "Ventilation and perfusion",
+   "slide": {
+    "heading": "Matching air to blood",
+    "bullets": [
+     "Overall V/Q ≈ 0.8",
+     "Shunt (V/Q = 0): blood passes unventilated alveoli",
+     "Shunt hypoxemia barely improves with 100% O₂",
+     "Dead space (V/Q = ∞): ventilated, not perfused",
+     "A pulmonary embolus creates dead space"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "Oxygen only gets in where air and blood meet. Ventilation and perfusion have to match.",
+     "gesture": "audience"
+    },
+    {
+     "text": "If blood flows past alveoli that aren't ventilated, full of pus or collapsed, it comes back unoxygenated. That's a shunt, and giving more oxygen barely helps, because it never reaches that blood.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "question": "resp_shunt_01"
+    },
+    {
+     "text": "The opposite is dead space: ventilated alveoli with no blood flow, as beyond a pulmonary embolus.",
+     "gesture": "screen",
+     "reveal": 5
+    }
+   ]
+  },
+  {
+   "id": "hemoglobin",
+   "topic": "The oxygen–hemoglobin curve",
+   "slide": {
+    "heading": "Hemoglobin: loading and unloading",
+    "bullets": [
+     "Sigmoidal: cooperative binding",
+     "P50 ≈ 27 mmHg",
+     "Right shift: ↑CO₂, ↑H⁺, ↑2,3-BPG, ↑temperature",
+     "Right shift unloads O₂ in working tissue",
+     "Left shift: fetal Hb, CO, cold, alkalosis"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "curves",
+     "x": {
+      "label": "PO₂ (mmHg)",
+      "min": 0,
+      "max": 100
+     },
+     "y": {
+      "label": "Hemoglobin saturation (%)",
+      "min": 0,
+      "max": 100
+     },
+     "series": [
+      {
+       "label": "Normal (P50 27)",
+       "fn": "hill",
+       "params": {
+        "emax": 100,
+        "ec50": 27,
+        "n": 2.7
+       },
+       "color": "accent"
+      },
+      {
+       "label": "Right shift: exercise, acidosis (P50 33)",
+       "fn": "hill",
+       "params": {
+        "emax": 100,
+        "ec50": 33,
+        "n": 2.7
+       },
+       "color": "red"
+      },
+      {
+       "label": "Left shift: fetal hemoglobin (P50 20)",
+       "fn": "hill",
+       "params": {
+        "emax": 100,
+        "ec50": 20,
+        "n": 2.7
+       },
+       "color": "second"
+      }
+     ],
+     "marks": [
+      {
+       "x": 27,
+       "y": 50,
+       "label": "P50",
+       "color": "gold"
+      }
+     ]
+    }
+   },
+   "lines": [
+    {
+     "text": "Once oxygen is in the blood, hemoglobin carries it. Its binding is cooperative, so the curve is an S, and half-saturated at a PO2 of about twenty-seven.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "text": "In working muscle there's more carbon dioxide, more acid, more heat and more 2,3-BPG. Each shifts the curve to the right, and hemoglobin lets its oxygen go exactly where it's needed.",
+     "gesture": "screen",
+     "reveal": 4
+    },
+    {
+     "question": "resp_right_shift_01"
+    },
+    {
+     "text": "Fetal hemoglobin binds oxygen more tightly, a left shift, so it can take oxygen from the mother's blood.",
+     "gesture": "screen",
+     "reveal": 5
+    }
+   ]
+  },
+  {
+   "id": "gradient",
+   "topic": "The A–a gradient",
+   "slide": {
+    "heading": "The A–a gradient",
+    "bullets": [
+     "PAO₂ = FiO₂ (760 − 47) − PaCO₂ / 0.8",
+     "On room air: PAO₂ ≈ 150 − 1.25 × PaCO₂",
+     "Normal A–a gradient: about 5–15 mmHg (rises with age)",
+     "Hypoventilation: low PaO₂, normal gradient",
+     "V/Q mismatch, shunt, diffusion: high gradient"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "Here's the bedside tool that ties it together. From the arterial blood gas you can estimate the alveolar oxygen with the alveolar gas equation.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "text": "The difference between alveolar and arterial oxygen is the A–a gradient. Normally it's small.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "text": "If a patient is hypoxemic only because they're hypoventilating, the gradient stays normal. If the problem is in the lung itself, it widens.",
+     "gesture": "screen",
+     "reveal": 5
+    },
+    {
+     "question": "resp_aa_01",
+     "lead": "Calculate it.",
+     "remediation": "resp_aa_remediation_01"
+    }
+   ]
+  }
+ ]
+}

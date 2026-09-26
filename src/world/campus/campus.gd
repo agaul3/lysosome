@@ -2,9 +2,13 @@ extends Node3D
 ## Medical-school campus: a Harvard-style central quad (lawn panels, cross
 ## paths, round plaza, tree rows) framed by a modern stacked Learning Center
 ## (north), Cedar Residence (west), a café pavilion (east), a classical
-## Anatomy Hall and a medical-centre tower in the background, and parking to
-## the south. Buildings live in buildings.gd, planting in flora.gd; geometry
-## is merged per material (mesh_kit.gd) so the larger map stays fast.
+## Anatomy Hall and the biomedical research tower in the background, and
+## parking to the south. East of the quad the health-sciences district (the
+## Medical Education Center, the Biomedical Library, the Student Center and
+## the East Green; east_campus.gd). Buildings live in buildings.gd, planting
+## in flora.gd; geometry is merged per material (mesh_kit.gd) so the larger
+## map stays fast. Campus shuttles link the quad, the hospital crossing, the
+## East Campus and the Harbor Street Community Center off campus.
 const Geometry = preload("res://world/geometry.gd")
 const Endpoint = preload("res://world/interactable.gd")
 const Camera = preload("res://world/exploration_camera.gd")
@@ -15,6 +19,8 @@ const Config = preload("res://data/campus_config.gd")
 const MeshKit = preload("res://world/campus/mesh_kit.gd")
 const Buildings = preload("res://world/campus/buildings.gd")
 const Flora = preload("res://world/campus/flora.gd")
+const EastCampus = preload("res://world/campus/east_campus.gd")
+const ShuttlePanel = preload("res://ui/shuttle_panel.gd")
 
 const PATH := Color("dcd6c9")
 const PLAZA := Color("e4dfd3")
@@ -55,6 +61,17 @@ var dorm_door: Node3D
 var lecture_door: Node3D
 var hospital_door: Node3D
 var ed_door: Node3D
+var med_ed_door: Node3D
+var library_door: Node3D
+var student_center_door: Node3D
+var research_door: Node3D
+var anatomy_door: Node3D
+## Shuttle stop id -> its interaction.
+var shuttle_stops := {}
+## The Club Fair and intramurals on the quad (world/campus/campus_events.gd).
+var campus_events: Node3D
+## Class events on the quad (world/activity_station.gd).
+var quad_station: Node3D
 ## Ambulances coming and going at the Emergency Department.
 var ems: Node3D
 var noticeboard: Node3D
@@ -72,6 +89,7 @@ func _ready() -> void:
 	Buildings.anatomy_hall(self)
 	Buildings.pavilion(self)
 	Buildings.hospital(self)
+	EastCampus.build(self)
 	_build_signs()
 	_build_props()
 	_build_parking()
@@ -98,6 +116,18 @@ func _ready() -> void:
 	hud = HUD.new()
 	add_child(hud)
 	hud.bind_player(player)
+	# The Club Fair and intramural games, on their days.
+	campus_events = preload("res://world/campus/campus_events.gd").new()
+	add_child(campus_events)
+	campus_events.setup(self)
+	# Class events on the quad (the end-of-year celebration).
+	quad_station = preload("res://world/activity_station.gd").new()
+	quad_station.name = "QuadStation"
+	quad_station.position = Vector3(0, 1.0, 2.6)
+	quad_station.reach = 1.8
+	quad_station.setup("campus", "quad", hud, "The plaza", "")
+	quad_station.hide_when_idle = true
+	add_child(quad_station)
 	AppState.view_changed.connect(apply_view)
 	apply_view(AppState.first_person)
 
@@ -192,7 +222,7 @@ func _build_signs() -> void:
 	Buildings.letters(self, "SCHOOL OF MEDICINE", Vector3(-8, 0.42, -17.0), 0.0, 0.42, Color("3a4247"))
 	Buildings.letters(self, "LECTURE HALL A", Vector3(0, 4.25, -19.8), 0.0, 0.22, Color("3a4247"), 0.03)
 	Buildings.letters(self, "CEDAR RESIDENCE", Vector3(-18.8, 3.3, -2), PI / 2, 0.22, Color("3a4247"), 0.03)
-	Buildings.letters(self, "UNIVERSITY MEDICAL CENTER", Vector3(26, 5.3, -18.7), 0.0, 0.26, Color("3a4247"), 0.03)
+	Buildings.letters(self, "BIOMEDICAL RESEARCH", Vector3(26, 5.3, -18.7), 0.0, 0.26, Color("3a4247"), 0.03)
 	Buildings.letters(self, "CAFÉ", Vector3(19.0, 3.95, -3), -PI / 2, 0.3, Color("3a4247"), 0.03)
 
 # --- Street furniture, planters and the directory -------------------------------------
@@ -248,7 +278,8 @@ func _build_props() -> void:
 		plan.call(-0.36, 1.62, 0.22, 0.1, Color("d8d1c2")) # Anatomy Hall
 		plan.call(-0.33, 1.34, 0.12, 0.36, Color("e3d4ad")) # Cedar Residence
 		plan.call(0.5, 1.33, 0.1, 0.22, Color("b8c6cf")) # Café
-		plan.call(0.5, 1.62, 0.16, 0.12, Color("aab8c2")) # Medical Center
+		plan.call(0.5, 1.62, 0.16, 0.12, Color("aab8c2")) # Research tower
+		plan.call(0.61, 1.64, 0.06, 0.14, Color("c98a6c"), 1.08) # East Campus (off the edge: an arrow)
 		plan.call(-0.2, 1.36, 0.045, 0.045, Color("d9483b"), 1.1) # You are here
 		for row in range(4):
 			plan.call(-0.3 + (row % 2) * 0.62, 0.92 - (row / 2) * 0.12, 0.5, 0.035, Color("7d8a90"))
@@ -347,7 +378,7 @@ func _build_planting() -> void:
 	for x in [-11.0, -8.5, -3.5, 3.5, 8.5, 11.0]:
 		shrubs.append(Vector3(x, 0.76, -20.4))
 	for x in range(18, 35, 3):
-		if absf(x - 26) > 2.4: # Keep the Medical Center doors clear.
+		if absf(x - 26) > 2.4: # Keep the research tower's doors clear.
 			shrubs.append(Vector3(x, 0, -21.4))
 	# Fill the plaza planters and the pavilion's green roof with low planting.
 	for planter_x in [-8.0, 8.0]:
@@ -382,12 +413,17 @@ func _build_grass() -> void:
 	rng.seed = 20260921
 	var transforms: Array[Transform3D] = []
 	var colors: Array[Color] = []
-	for lawn in LAWNS:
+	# The quad's lawns are the densest; the East Green's larger lawns a little sparser.
+	var lawns := LAWNS.map(func(lawn: Array) -> Array: return [lawn, 42.0, PLAZA_CENTER, PLAZA_RADIUS])
+	lawns.append_array(EastCampus.LAWNS.map(func(lawn: Array) -> Array: return [lawn, 16.0, EastCampus.FOUNTAIN, EastCampus.FOUNTAIN_PLAZA]))
+	for entry in lawns:
+		var lawn: Array = entry[0]
+		var centre: Vector3 = entry[2]
 		var area: float = (lawn[2] - lawn[0]) * (lawn[3] - lawn[1])
-		for index in range(int(area * 42)):
+		for index in range(int(area * float(entry[1]))):
 			var x := rng.randf_range(lawn[0] + 0.1, lawn[2] - 0.1)
 			var z := rng.randf_range(lawn[1] + 0.1, lawn[3] - 0.1)
-			if Vector2(x - PLAZA_CENTER.x, z - PLAZA_CENTER.z).length() < PLAZA_RADIUS + 0.1:
+			if Vector2(x - centre.x, z - centre.z).length() < float(entry[3]) + 0.1:
 				continue
 			var size := rng.randf_range(0.5, 0.8)
 			transforms.append(Transform3D(Basis(Vector3.UP, rng.randf() * TAU).scaled(Vector3(size, size * rng.randf_range(0.28, 0.4), size)), Vector3(x, 0, z)))
@@ -434,7 +470,10 @@ func _build_context() -> void:
 	var kit := MeshKit.new()
 	var blocks := [
 		[Vector3(-30, 0, -52), Vector3(22, 28, 14)], [Vector3(-4, 0, -54), Vector3(18, 40, 16)], [Vector3(20, 0, -50), Vector3(20, 22, 12)],
-		[Vector3(44, 0, -38), Vector3(12, 30, 18)], [Vector3(-54, 0, -30), Vector3(14, 24, 22)], [Vector3(-56, 0, 2), Vector3(12, 16, 26)],
+		[Vector3(-54, 0, -30), Vector3(14, 24, 22)], [Vector3(-56, 0, 2), Vector3(12, 16, 26)],
+		# Beyond the East Campus: behind the MEC and the library, and across the avenue.
+		[Vector3(56, 0, -76), Vector3(24, 30, 14)], [Vector3(86, 0, -80), Vector3(18, 22, 16)], [Vector3(118, 0, -72), Vector3(22, 36, 16)],
+		[Vector3(162, 0, -40), Vector3(16, 28, 30)], [Vector3(164, 0, -2), Vector3(14, 20, 26)], [Vector3(160, 0, 26), Vector3(16, 14, 18)],
 		[Vector3(-72, 0, 98), Vector3(18, 14, 20)], [Vector3(80, 0, 104), Vector3(20, 16, 14)],
 	]
 	for block in blocks:
@@ -472,10 +511,13 @@ func _build_bounds() -> void:
 	var plaza: Rect2 = Config.HOSPITAL_PLAZA
 	var bounds := [
 		[Vector3(0, 1.5, -37.5), Vector3(80, 3, 1)],
+		# The East Campus: its buildings close the north side; the avenue edge.
+		[Vector3(134.5, 1.5, -14.0), Vector3(1, 3, 81)],
+		[Vector3(133.25, 1.5, -23.0), Vector3(2.5, 3, 1)],
 		[Vector3(-39.5, 1.5, -5), Vector3(1, 3, 66)],
 		# South edge, open at the crossing; the crossing's sides; the hospital plaza.
 		[Vector3((-40.0 + cross.x) / 2.0, 1.5, 26.5), Vector3(cross.x + 40.0, 3, 1)],
-		[Vector3((cross.y + 40.0) / 2.0, 1.5, 26.5), Vector3(40.0 - cross.y, 3, 1)],
+		[Vector3((cross.y + 134.5) / 2.0, 1.5, 26.5), Vector3(134.5 - cross.y, 3, 1)],
 		[Vector3(cross.x - 0.5, 1.5, 31.8), Vector3(1, 3, 10.6)],
 		[Vector3(cross.y + 0.5, 1.5, 31.8), Vector3(1, 3, 10.6)],
 		[Vector3((plaza.position.x + cross.x) / 2.0, 1.5, 36.5), Vector3(cross.x - plaza.position.x, 3, 1)],
@@ -483,7 +525,7 @@ func _build_bounds() -> void:
 		[Vector3(plaza.position.x - 0.5, 1.5, 40.5), Vector3(1, 3, 7)],
 		[Vector3((Config.ED_SIDEWALK.position.x + plaza.end.x) / 2.0, 1.5, plaza.end.y + 0.5), Vector3(plaza.end.x - Config.ED_SIDEWALK.position.x + 1, 3, 1)],
 		[Vector3(Config.ED_SIDEWALK.position.x - 0.5, 1.5, (Config.ED_SIDEWALK.position.y + Config.ED_SIDEWALK.end.y) / 2.0), Vector3(1, 3, Config.ED_SIDEWALK.size.y + 1)],
-		[Vector3(36.5, 1.5, 19), Vector3(1, 3, 114)],
+		[Vector3(36.5, 1.5, 56), Vector3(1, 3, 40)],
 	]
 	for bound in bounds:
 		var shape := CollisionShape3D.new()
@@ -510,6 +552,9 @@ var dog_walker: Node3D
 var pedestrians: Array[Node3D] = []
 ## People walking between the Emergency Department and the hospital plaza.
 var ed_pedestrians: Array[Node3D] = []
+## Students on the East Campus benches and walking its paths.
+var east_bench_students: Array[Node3D] = []
+var east_pedestrians: Array[Node3D] = []
 
 func _build_ambient_life() -> void:
 	var feet := StaticBody3D.new()
@@ -565,10 +610,52 @@ func _build_ambient_life() -> void:
 		add_child(walker)
 		walker.setup("", player, [[Vector2(27.2, 73.4), 1.3]])
 		ed_pedestrians.append(walker)
+	_build_east_life()
 	ems = preload("res://npc/ambient/ems_arrivals.gd").new()
 	ems.name = "EMSArrivals"
 	add_child(ems)
 	ems.setup(player)
+
+## The East Campus: students on its benches (their knees solid, as on the
+## quad) and passers-by on the walk, the green and the sidewalk.
+func _build_east_life() -> void:
+	var feet := StaticBody3D.new()
+	feet.name = "EastSeatedFeetColliders"
+	add_child(feet)
+	var occupied := {}
+	for entry in EastCampus.BENCH_STUDENTS:
+		var bench: Array = EastCampus.BENCHES[entry[0]]
+		var basis := Basis(Vector3.UP, bench[1])
+		var sitter := preload("res://npc/ambient/bench_student.gd").new()
+		sitter.activity = entry[2]
+		sitter.preset = entry[3]
+		sitter.name = "EastBenchStudent"
+		sitter.position = bench[0] + basis * Vector3(entry[1], 0.02, -0.12)
+		sitter.rotation.y = bench[1]
+		add_child(sitter)
+		east_bench_students.append(sitter)
+		occupied[entry[0]] = true
+	for index in occupied:
+		var bench: Array = EastCampus.BENCHES[index]
+		var basis := Basis(Vector3.UP, bench[1])
+		var shape := CollisionShape3D.new()
+		shape.shape = BoxShape3D.new()
+		shape.shape.size = Vector3(1.8, 0.5, 0.34)
+		shape.position = bench[0] + basis * Vector3(0, 0.25, -0.44)
+		shape.basis = basis
+		feet.add_child(shape)
+	var keep_clear: Array = [[Vector2(EastCampus.FOUNTAIN.x, EastCampus.FOUNTAIN.z), 3.9]]
+	for bench in EastCampus.BENCHES:
+		var front: Vector3 = bench[0] + Basis(Vector3.UP, bench[1]) * Vector3(0, 0, -0.2)
+		keep_clear.append([Vector2(front.x, front.z), 1.15])
+	for index in range(4):
+		var walker := preload("res://npc/ambient/pedestrian.gd").new()
+		walker.name = "EastPedestrian"
+		walker.nodes = EastCampus.WALK_NODES
+		walker.edges = EastCampus.WALK_EDGES
+		add_child(walker)
+		walker.setup("", player, keep_clear)
+		east_pedestrians.append(walker)
 
 func _build_interactions() -> void:
 	dorm_door = _endpoint("ResidenceInteraction", "Enter Cedar Residence", "", Config.RESIDENCE_DOOR)
@@ -579,8 +666,59 @@ func _build_interactions() -> void:
 	hospital_door.activated.connect(AppState.enter_hospital)
 	ed_door = _endpoint("EmergencyEntryInteraction", "Enter the Emergency Department", "", Config.ED_DOOR)
 	ed_door.activated.connect(AppState.enter_hospital.bind("ed"))
-	noticeboard = _endpoint("DirectoryInteraction", "Read campus directory", "Learning Center / Lecture Hall A: cross the quad to the north, past the round plaza. Cedar Residence faces the quad on the west side; the café is to the east. University Hospital: across the street to the south; follow the sidewalk east of the parking lot to the crossing.", Vector3(-17, 1, 2.3))
+	med_ed_door = _endpoint("MedEdEntryInteraction", "Enter the Medical Education Center", "", EastCampus.MEC_DOOR)
+	med_ed_door.activated.connect(AppState.enter_med_ed.bind("main"))
+	library_door = _endpoint("LibraryEntryInteraction", "Enter the Biomedical Library", "", EastCampus.LIBRARY_DOOR)
+	library_door.activated.connect(AppState.enter_library)
+	student_center_door = _endpoint("StudentCenterEntryInteraction", "Enter the Student Center", "", EastCampus.STUDENT_CENTER_DOOR)
+	student_center_door.activated.connect(AppState.enter_student_center)
+	research_door = _endpoint("ResearchTowerInteraction", "Biomedical Research Tower", "Badge access only: research laboratories on nine floors. First-years meet the labs at Research Day in the spring; until then the doors stay locked.", EastCampus.RESEARCH_DOOR)
+	anatomy_door = _endpoint("AnatomyHallInteraction", "Enter Anatomy Hall", "", EastCampus.ANATOMY_DOOR)
+	anatomy_door.activated.connect(AppState.enter_anatomy)
+	for id in EastCampus.SHUTTLE_STOPS:
+		var stop: Array = EastCampus.SHUTTLE_STOPS[id]
+		var pole: Vector3 = stop[1]
+		# Just off the pole (which is solid) on the riders' side, so it can be seen.
+		var side: Vector3 = (Vector3(stop[2].x, 0, stop[2].z) - Vector3(pole.x, 0, pole.z)).normalized()
+		var endpoint := _endpoint("ShuttleStop_" + String(id), "Take the campus shuttle", "", pole + side * 0.22 + Vector3(0, 1.0, 0))
+		endpoint.activated.connect(open_shuttle.bind(String(id)))
+		shuttle_stops[id] = endpoint
+	noticeboard = _endpoint("DirectoryInteraction", "Read campus directory", "Learning Center / Lecture Hall A: cross the quad to the north, past the round plaza. Cedar Residence faces the quad on the west side; the café is to the east. Anatomy Hall is the stone building north-west of the quad. East Campus (Medical Education Center, Biomedical Library, Student Center): past the café, or along the Health Sciences Walk from the research tower. University Hospital: across the street to the south; follow the sidewalk east of the parking lot to the crossing. Campus shuttles stop on the sidewalk south of the quad.", Vector3(-17, 1, 2.3))
 	student = _endpoint("StudentInteraction", "Talk to student", "Morning! Hall A is in the Learning Center, the white building at the top of the quad. Head through the glass doors under the canopy.", Config.SAM_POSITION + Vector3(0, 1, 0.75))
+
+## The shuttle's route map at a stop (ui/shuttle_panel.gd); riding it moves
+## you to another stop, or off campus to the Community Center.
+func open_shuttle(stop: String) -> void:
+	var panel := ShuttlePanel.new(stop)
+	panel.ride.connect(ride_shuttle)
+	hud.open_modal(panel)
+
+## Fast travel: the ride takes game time, and you step off at the stop.
+func ride_shuttle(to_stop: String, minutes: int) -> void:
+	hud.close_modal()
+	if to_stop == "community":
+		YearCalendar.pass_time(minutes)
+		Achievements.bump("shuttle_rides")
+		AppState.enter_community()
+		return
+	var stop: Array = EastCampus.SHUTTLE_STOPS.get(to_stop, [])
+	if stop.is_empty():
+		return
+	player.movement_enabled = false
+	player.interaction.enabled = false
+	await Transition.cover()
+	player.global_position = stop[2]
+	player.velocity = Vector3.ZERO
+	player.appearance.rotation.y = stop[3]
+	player.first_person.yaw = stop[3]
+	camera.follow(player)
+	YearCalendar.pass_time(minutes)
+	AppState.campus_entry = "shuttle_" + to_stop
+	Achievements.bump("shuttle_rides")
+	SaveGame.autosave()
+	await Transition.reveal()
+	player.movement_enabled = true
+	player.interaction.enabled = true
 
 func _endpoint(node_name: String, title: String, response: String, position: Vector3) -> Node3D:
 	var endpoint := Endpoint.new()

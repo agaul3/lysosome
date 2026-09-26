@@ -1,0 +1,33 @@
+{
+ "version": 1,
+ "id": "exam_b3",
+ "kind": "exam",
+ "eyebrow": "Testing Center",
+ "title": "Block 3 Examination",
+ "intro": "Cardiovascular: the cardiac cycle, blood pressure, the ECG and chest pain. Fourteen questions.",
+ "questions": [
+  "exb3_s3_01",
+  "exb3_mr_01",
+  "exb3_co_01",
+  "exb3_tpr_01",
+  "exb3_ccb_01",
+  "exb3_af_stroke_01",
+  "exb3_qrs_01",
+  "exb3_ace_labs_01",
+  "cc_ef_01",
+  "cc_as_01",
+  "cc_afterload_01",
+  "bp_baro_01",
+  "bp_ace_cough_01",
+  "ecg_af_01"
+ ],
+ "pass": 0.7,
+ "honors": 0.9,
+ "merit": {
+  "pass": 7500,
+  "honors": 20000
+ },
+ "minutes": 120,
+ "energy": 15,
+ "seconds_per_question": 75
+}

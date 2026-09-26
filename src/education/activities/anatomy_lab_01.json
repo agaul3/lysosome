@@ -1,0 +1,64 @@
+{
+ "version": 1,
+ "id": "anatomy_lab_01",
+ "kind": "lab",
+ "eyebrow": "Gross Anatomy Laboratory · Table 7",
+ "title": "Dissection: the axilla and the arm",
+ "intro": "Your first dissection. Gowned and gloved, your group of four stands around Table 7. The dissector is open to the axilla; Dr. Marsh and the teaching assistants move between tables.",
+ "context": "lab",
+ "minutes": 120,
+ "energy": 14,
+ "steps": [
+  {
+   "say": "Priya folds back the drape from the donor's arm and chest, leaving the face covered. For a moment nobody picks up a scalpel. Then Dr. Marsh stops at your table."
+  },
+  {
+   "say": "\"Go slowly. Clean each structure before you cut anything. If you don't know what it is, don't cut it.\"",
+   "speaker": "Dr. Helen Marsh"
+  },
+  {
+   "say": "You reflect the skin and fat of the pectoral region and find pectoralis major, then lift it to see pectoralis minor running up to the coracoid process."
+  },
+  {
+   "question": "anat_pec_minor_01",
+   "lead": "The teaching assistant points at the axillary artery."
+  },
+  {
+   "say": "Beneath the fascia, the cords of the brachial plexus wrap around the artery. It takes the four of you forty minutes to see it clearly."
+  },
+  {
+   "question": "anat_median_m_01",
+   "lead": "\"Show me the M.\""
+  },
+  {
+   "question": "anat_musculocutaneous_01"
+  },
+  {
+   "say": "Laterally, a vein runs up between deltoid and pectoralis major."
+  },
+  {
+   "question": "anat_cephalic_01"
+  },
+  {
+   "question": "anat_long_thoracic_01",
+   "lead": "On the medial wall, a long thin nerve."
+  },
+  {
+   "say": "You cover the donor, clean your instruments and table, and wash up. In the PPE room, somebody says quietly, \"That was a person's arm.\" Nobody answers, but everybody nods."
+  }
+ ],
+ "feedback": [
+  [
+   0.85,
+   "\"A careful, clean dissection. That's how it's done.\""
+  ],
+  [
+   0.6,
+   "\"Good work. Review the cords against the atlas tonight.\""
+  ],
+  [
+   0.0,
+   "\"Come to open lab this week and trace the plexus again with a TA.\""
+  ]
+ ]
+}

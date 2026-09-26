@@ -1,0 +1,371 @@
+{
+ "version": 1,
+ "id": "motor_pathways_01",
+ "title": "Motor Pathways",
+ "professor": "Dr. Mei Chen",
+ "segments": [
+  {
+   "id": "introduction",
+   "topic": "Introduction",
+   "slide": {
+    "heading": "The Brain",
+    "bullets": [],
+    "subheading": "Upper and lower motor neurons, and the corticospinal tract",
+    "diagram": "figure",
+    "figure": {
+     "type": "flow",
+     "nodes": [
+      {
+       "id": "cortex",
+       "label": "Motor cortex (precentral gyrus)",
+       "x": 0.14,
+       "y": 0.1,
+       "color": "accent"
+      },
+      {
+       "id": "capsule",
+       "label": "Internal capsule (posterior limb)",
+       "x": 0.14,
+       "y": 0.4,
+       "color": "second"
+      },
+      {
+       "id": "brainstem",
+       "label": "Cerebral peduncle, pons, pyramids",
+       "x": 0.14,
+       "y": 0.72,
+       "color": "third"
+      },
+      {
+       "id": "cross",
+       "label": "Pyramidal decussation (caudal medulla)",
+       "x": 0.55,
+       "y": 0.72,
+       "color": "gold"
+      },
+      {
+       "id": "lateral",
+       "label": "Lateral corticospinal tract",
+       "x": 0.86,
+       "y": 0.45,
+       "color": "red"
+      },
+      {
+       "id": "ahc",
+       "label": "Anterior horn cell (LMN)",
+       "x": 0.86,
+       "y": 0.12,
+       "color": "green"
+      }
+     ],
+     "edges": [
+      {
+       "from": "cortex",
+       "to": "capsule"
+      },
+      {
+       "from": "capsule",
+       "to": "brainstem"
+      },
+      {
+       "from": "brainstem",
+       "to": "cross"
+      },
+      {
+       "from": "cross",
+       "to": "lateral"
+      },
+      {
+       "from": "lateral",
+       "to": "ahc"
+      }
+     ],
+     "text_size": 16
+    }
+   },
+   "lines": [
+    {
+     "text": "Good morning, and welcome to the last block. I'm Mei Chen, neurology.",
+     "gesture": "audience"
+    },
+    {
+     "text": "To move your finger takes two neurons in series: an upper motor neuron in the cortex and a lower motor neuron in the spinal cord.",
+     "gesture": "screen"
+    },
+    {
+     "text": "Where a lesion sits along this pathway decides what the patient looks like. By the end of today, you'll be able to tell from the bedside.",
+     "gesture": "audience"
+    }
+   ]
+  },
+  {
+   "id": "pathway",
+   "topic": "The corticospinal tract",
+   "slide": {
+    "heading": "From cortex to muscle",
+    "bullets": [
+     "Upper motor neuron: precentral gyrus",
+     "Down through the posterior limb of the internal capsule",
+     "Brainstem: peduncles, pons, medullary pyramids",
+     "Most fibers cross at the caudal medulla",
+     "Lower motor neuron: anterior horn cell to muscle"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "flow",
+     "nodes": [
+      {
+       "id": "cortex",
+       "label": "Motor cortex (precentral gyrus)",
+       "x": 0.14,
+       "y": 0.1,
+       "color": "accent"
+      },
+      {
+       "id": "capsule",
+       "label": "Internal capsule (posterior limb)",
+       "x": 0.14,
+       "y": 0.4,
+       "color": "second"
+      },
+      {
+       "id": "brainstem",
+       "label": "Cerebral peduncle, pons, pyramids",
+       "x": 0.14,
+       "y": 0.72,
+       "color": "third"
+      },
+      {
+       "id": "cross",
+       "label": "Pyramidal decussation (caudal medulla)",
+       "x": 0.55,
+       "y": 0.72,
+       "color": "gold"
+      },
+      {
+       "id": "lateral",
+       "label": "Lateral corticospinal tract",
+       "x": 0.86,
+       "y": 0.45,
+       "color": "red"
+      },
+      {
+       "id": "ahc",
+       "label": "Anterior horn cell (LMN)",
+       "x": 0.86,
+       "y": 0.12,
+       "color": "green"
+      }
+     ],
+     "edges": [
+      {
+       "from": "cortex",
+       "to": "capsule"
+      },
+      {
+       "from": "capsule",
+       "to": "brainstem"
+      },
+      {
+       "from": "brainstem",
+       "to": "cross"
+      },
+      {
+       "from": "cross",
+       "to": "lateral"
+      },
+      {
+       "from": "lateral",
+       "to": "ahc"
+      }
+     ],
+     "text_size": 16
+    }
+   },
+   "lines": [
+    {
+     "text": "The upper motor neuron starts in the precentral gyrus, laid out as the homunculus: face lateral, leg medial, dipping into the midline.",
+     "gesture": "screen",
+     "reveal": 1
+    },
+    {
+     "text": "Its axon runs through the posterior limb of the internal capsule, where the fibers are packed tight, then down the brainstem in the pyramids.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "text": "At the bottom of the medulla most fibers cross to the other side, then run down the lateral corticospinal tract to synapse on anterior horn cells: the lower motor neurons.",
+     "gesture": "screen",
+     "reveal": 5
+    },
+    {
+     "question": "mp_decussation_01"
+    }
+   ]
+  },
+  {
+   "id": "signs",
+   "topic": "Upper versus lower motor neuron signs",
+   "slide": {
+    "heading": "Upper or lower?",
+    "bullets": [
+     "Both: weakness",
+     "UMN: spasticity, hyperreflexia, Babinski sign",
+     "UMN: little wasting early",
+     "LMN: flaccid, reflexes lost, wasting",
+     "LMN: fasciculations"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "table",
+     "columns": [
+      "Sign",
+      "Upper motor neuron",
+      "Lower motor neuron"
+     ],
+     "rows": [
+      [
+       "Tone",
+       "Increased (spastic)",
+       "Decreased (flaccid)"
+      ],
+      [
+       "Reflexes",
+       "Brisk",
+       "Reduced or absent"
+      ],
+      [
+       "Plantar",
+       "Extensor (Babinski)",
+       "Flexor or absent"
+      ],
+      [
+       "Wasting",
+       "Slight (disuse)",
+       "Marked"
+      ],
+      [
+       "Fasciculations",
+       "No",
+       "Yes"
+      ]
+     ],
+     "widths": [
+      0.26,
+      0.37,
+      0.37
+     ]
+    }
+   },
+   "lines": [
+    {
+     "text": "Both lesions cause weakness. The difference is in everything else.",
+     "gesture": "audience",
+     "reveal": 1
+    },
+    {
+     "text": "An upper motor neuron lesion releases the spinal cord from the brain's control: tone goes up, reflexes become brisk, and the big toe goes up when you stroke the sole. That's Babinski's sign.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "question": "mp_umn_01"
+    },
+    {
+     "text": "A lower motor neuron lesion cuts the muscle off from its only nerve supply: it goes floppy, the reflex disappears, the muscle wastes and twitches.",
+     "gesture": "screen",
+     "reveal": 5
+    },
+    {
+     "question": "mp_lmn_01"
+    }
+   ]
+  },
+  {
+   "id": "localizing",
+   "topic": "Localizing a lesion",
+   "slide": {
+    "heading": "Which side, which level",
+    "bullets": [
+     "Above the decussation: weakness on the opposite side",
+     "Below it, in the cord: same side",
+     "Hemisection (Brown-Séquard): same-side weakness",
+     "…same-side loss of vibration and position",
+     "…opposite-side loss of pain and temperature"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "Now put in the crossing. A lesion in the cortex, capsule or brainstem, above the decussation, weakens the opposite side of the body.",
+     "gesture": "screen",
+     "reveal": 1
+    },
+    {
+     "text": "In the spinal cord, the fibers have already crossed, so the weakness is on the same side.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "text": "Cut half the cord and three pathways tell you where. The corticospinal tract and the dorsal columns cross in the medulla, so weakness and loss of vibration and position sense are on the same side. Pain and temperature cross within a segment or two of entering the cord, so they're lost on the opposite side.",
+     "gesture": "screen",
+     "reveal": 5
+    },
+    {
+     "question": "mp_brown_sequard_01",
+     "remediation": "mp_brown_sequard_remediation_01"
+    }
+   ]
+  },
+  {
+   "id": "als",
+   "topic": "Amyotrophic lateral sclerosis",
+   "slide": {
+    "heading": "When both neurons fail: ALS",
+    "bullets": [
+     "Upper and lower motor neuron signs together",
+     "In the same limbs: wasting with brisk reflexes",
+     "Sensation spared",
+     "Riluzole modestly slows progression"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "One disease breaks the rules: amyotrophic lateral sclerosis, which kills both upper and lower motor neurons.",
+     "gesture": "audience",
+     "reveal": 1
+    },
+    {
+     "text": "So you find wasting and fasciculations sitting right next to brisk reflexes and a Babinski sign, with normal sensation.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "question": "mp_als_01"
+    }
+   ]
+  },
+  {
+   "id": "summary",
+   "topic": "Summary",
+   "slide": {
+    "heading": "Summary",
+    "bullets": [
+     "Two neurons: cortex and anterior horn",
+     "UMN: spastic, brisk, Babinski; LMN: flaccid, absent, wasted",
+     "Above the decussation: opposite side",
+     "ALS: both, sensation spared"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "This afternoon, the neuroanatomy lab in Anatomy Hall: find every structure we named today on the brain models.",
+     "gesture": "audience",
+     "reveal": 4
+    }
+   ]
+  }
+ ]
+}

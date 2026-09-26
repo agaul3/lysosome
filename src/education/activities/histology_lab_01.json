@@ -1,0 +1,73 @@
+{
+ "version": 1,
+ "id": "histology_lab_01",
+ "kind": "lab",
+ "eyebrow": "Histology Lab · Level 2",
+ "title": "Histology: epithelium and connective tissue",
+ "intro": "Dr. Imani Brooks runs the lab from the projection screen. Each bench has a microscope and a box of glass slides; you share yours with Priya from your small group. Find each tissue on low power, then go up.",
+ "context": "lab",
+ "minutes": 90,
+ "energy": 10,
+ "steps": [
+  {
+   "say": "\"Welcome to histology. Low power first: find the tissue and orient yourself. Then go up. Everything you see is stained with hematoxylin and eosin, so start there.\"",
+   "speaker": "Dr. Imani Brooks"
+  },
+  {
+   "question": "hist_he_01"
+  },
+  {
+   "say": "Slide 1. You bring the lining of a gut tube into focus."
+  },
+  {
+   "question": "hist_columnar_01",
+   "lead": "Slide 1"
+  },
+  {
+   "question": "hist_squamous_01",
+   "lead": "Slide 2"
+  },
+  {
+   "question": "hist_resp_01",
+   "lead": "Slide 3"
+  },
+  {
+   "question": "hist_simple_squamous_01",
+   "lead": "Slide 4"
+  },
+  {
+   "say": "\"Now the connective tissues. Notice how the matrix changes with the job.\"",
+   "speaker": "Dr. Imani Brooks"
+  },
+  {
+   "question": "hist_cartilage_01",
+   "lead": "Slide 5"
+  },
+  {
+   "question": "hist_cardiac_01",
+   "lead": "Slide 6"
+  },
+  {
+   "question": "hist_tendon_01",
+   "lead": "Slide 7"
+  },
+  {
+   "say": "\"Put your slides back in the right slots. Next week: glands and the skin. Good work today.\"",
+   "speaker": "Dr. Imani Brooks"
+  }
+ ],
+ "feedback": [
+  [
+   0.85,
+   "Dr. Brooks initials your lab sheet: \"You have an eye for this.\""
+  ],
+  [
+   0.6,
+   "\"Solid. Go back over the epithelia with the atlas this week.\""
+  ],
+  [
+   0.0,
+   "\"Histology is pattern recognition: it comes with practice. Come to Thursday's open lab.\""
+  ]
+ ]
+}

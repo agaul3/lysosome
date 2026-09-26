@@ -1,0 +1,33 @@
+{
+ "version": 1,
+ "id": "exam_b2",
+ "kind": "exam",
+ "eyebrow": "Testing Center",
+ "title": "Block 2 Examination",
+ "intro": "Musculoskeletal and gross anatomy: the upper limb, muscle, bone and the knee. Fourteen questions, about eighteen minutes.",
+ "questions": [
+  "exb2_klumpke_01",
+  "exb2_winging_01",
+  "exb2_tetanus_01",
+  "exb2_smooth_01",
+  "exb2_pth_01",
+  "exb2_vitd_01",
+  "exb2_meniscus_01",
+  "exb2_ottawa_knee_01",
+  "ul_erb_01",
+  "ul_radial_01",
+  "mb_ryr_01",
+  "mb_rankl_01",
+  "ul_case_01",
+  "sp_knee_lachman_01"
+ ],
+ "pass": 0.7,
+ "honors": 0.9,
+ "merit": {
+  "pass": 7500,
+  "honors": 20000
+ },
+ "minutes": 120,
+ "energy": 15,
+ "seconds_per_question": 75
+}

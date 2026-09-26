@@ -1,0 +1,491 @@
+{
+ "version": 1,
+ "id": "blood_pressure_01",
+ "title": "Blood Pressure",
+ "professor": "Dr. Samuel Adeyemi",
+ "segments": [
+  {
+   "id": "introduction",
+   "topic": "Introduction",
+   "slide": {
+    "heading": "Blood Pressure",
+    "bullets": [],
+    "subheading": "MAP = CO × TPR, and how the body defends it",
+    "diagram": "figure",
+    "figure": {
+     "type": "flow",
+     "nodes": [
+      {
+       "id": "hr",
+       "label": "Heart rate",
+       "x": 0.12,
+       "y": 0.25,
+       "color": "second"
+      },
+      {
+       "id": "sv",
+       "label": "Stroke volume",
+       "x": 0.12,
+       "y": 0.75,
+       "color": "second"
+      },
+      {
+       "id": "co",
+       "label": "Cardiac output",
+       "x": 0.45,
+       "y": 0.5,
+       "color": "accent"
+      },
+      {
+       "id": "tpr",
+       "label": "Resistance (arterioles)",
+       "x": 0.45,
+       "y": 0.9,
+       "color": "third"
+      },
+      {
+       "id": "map",
+       "label": "Mean arterial pressure",
+       "x": 0.82,
+       "y": 0.6,
+       "color": "gold"
+      }
+     ],
+     "edges": [
+      {
+       "from": "hr",
+       "to": "co"
+      },
+      {
+       "from": "sv",
+       "to": "co"
+      },
+      {
+       "from": "co",
+       "to": "map"
+      },
+      {
+       "from": "tpr",
+       "to": "map"
+      }
+     ]
+    }
+   },
+   "lines": [
+    {
+     "text": "Back in Hall B. Last week the heart was a pump; today, the pressure it creates, and how tightly your body holds it steady.",
+     "gesture": "audience"
+    },
+    {
+     "text": "Mean arterial pressure is cardiac output times total peripheral resistance. Cardiac output is heart rate times stroke volume; resistance is set mostly by the arterioles.",
+     "gesture": "screen"
+    },
+    {
+     "text": "Every drug we use for blood pressure changes one of these boxes.",
+     "gesture": "audience"
+    }
+   ]
+  },
+  {
+   "id": "determinants",
+   "topic": "Mean arterial pressure",
+   "slide": {
+    "heading": "Mean arterial pressure",
+    "bullets": [
+     "MAP = CO × TPR",
+     "MAP ≈ diastolic + ⅓ (systolic − diastolic)",
+     "Diastole is longer, so MAP sits nearer diastolic",
+     "Organs are perfused by the MAP"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "Your patients' organs are perfused by the mean pressure, not the systolic.",
+     "gesture": "audience",
+     "reveal": 1
+    },
+    {
+     "text": "Because the heart spends longer in diastole, the mean sits closer to the diastolic: roughly diastolic plus a third of the pulse pressure.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "question": "bp_map_01"
+    }
+   ]
+  },
+  {
+   "id": "baroreceptors",
+   "topic": "The baroreceptor reflex",
+   "slide": {
+    "heading": "The baroreceptor reflex",
+    "bullets": [
+     "Stretch receptors in the carotid sinus (IX) and aortic arch (X)",
+     "Signal to the nucleus tractus solitarius",
+     "BP up: more vagal, less sympathetic output",
+     "Standing up: BP falls, HR and resistance rise",
+     "Fast, but resets in chronic hypertension"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "flow",
+     "nodes": [
+      {
+       "id": "bp",
+       "label": "BP rises",
+       "x": 0.1,
+       "y": 0.5,
+       "color": "red"
+      },
+      {
+       "id": "sinus",
+       "label": "Carotid sinus and aortic arch fire more",
+       "x": 0.36,
+       "y": 0.2,
+       "color": "second"
+      },
+      {
+       "id": "nts",
+       "label": "Nucleus tractus solitarius",
+       "x": 0.62,
+       "y": 0.2,
+       "color": "accent"
+      },
+      {
+       "id": "vagal",
+       "label": "↑ Vagal: ↓ HR",
+       "x": 0.88,
+       "y": 0.2,
+       "color": "green"
+      },
+      {
+       "id": "symp",
+       "label": "↓ Sympathetic: ↓ HR, ↓ TPR",
+       "x": 0.75,
+       "y": 0.75,
+       "color": "gold"
+      }
+     ],
+     "edges": [
+      {
+       "from": "bp",
+       "to": "sinus"
+      },
+      {
+       "from": "sinus",
+       "to": "nts"
+      },
+      {
+       "from": "nts",
+       "to": "vagal"
+      },
+      {
+       "from": "nts",
+       "to": "symp"
+      }
+     ],
+     "text_size": 18
+    }
+   },
+   "lines": [
+    {
+     "text": "The fastest defense is a reflex. Stretch receptors in the carotid sinus, carried by the glossopharyngeal nerve, and in the aortic arch, by the vagus, report the pressure beat by beat to the brainstem.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "text": "Pressure up: they fire more, the brainstem turns up vagal tone and turns down sympathetic output, and the heart slows and vessels relax.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "text": "Stand up quickly and the reverse happens. Blood pools in your legs, pressure dips, and within seconds your heart speeds up and your arterioles squeeze.",
+     "gesture": "audience",
+     "reveal": 4
+    },
+    {
+     "question": "bp_baro_01"
+    },
+    {
+     "text": "When the reflex is sluggish, from age, drugs or autonomic disease, standing makes people dizzy: orthostatic hypotension.",
+     "gesture": "audience",
+     "reveal": 5
+    }
+   ]
+  },
+  {
+   "id": "raas",
+   "topic": "The renin–angiotensin–aldosterone system",
+   "slide": {
+    "heading": "Renin, angiotensin, aldosterone",
+    "bullets": [
+     "Low renal perfusion: renin from juxtaglomerular cells",
+     "Angiotensinogen → angiotensin I → (ACE) → angiotensin II",
+     "Ang II: vasoconstriction, aldosterone, thirst, ADH",
+     "Aldosterone: Na⁺ and water kept, K⁺ lost",
+     "ACE also breaks down bradykinin"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "flow",
+     "nodes": [
+      {
+       "id": "renin",
+       "label": "Renin (kidney)",
+       "x": 0.12,
+       "y": 0.2,
+       "color": "second"
+      },
+      {
+       "id": "ang1",
+       "label": "Angiotensin I",
+       "x": 0.4,
+       "y": 0.2,
+       "color": "muted"
+      },
+      {
+       "id": "ace",
+       "label": "ACE (lungs)",
+       "x": 0.4,
+       "y": 0.55,
+       "color": "third"
+      },
+      {
+       "id": "ang2",
+       "label": "Angiotensin II",
+       "x": 0.68,
+       "y": 0.2,
+       "color": "accent"
+      },
+      {
+       "id": "vc",
+       "label": "Vasoconstriction",
+       "x": 0.92,
+       "y": 0.1,
+       "color": "red"
+      },
+      {
+       "id": "aldo",
+       "label": "Aldosterone: Na⁺ in, K⁺ out",
+       "x": 0.9,
+       "y": 0.45,
+       "color": "gold"
+      },
+      {
+       "id": "brady",
+       "label": "Bradykinin → inactive",
+       "x": 0.4,
+       "y": 0.9,
+       "color": "muted"
+      }
+     ],
+     "edges": [
+      {
+       "from": "renin",
+       "to": "ang1"
+      },
+      {
+       "from": "ang1",
+       "to": "ang2"
+      },
+      {
+       "from": "ang2",
+       "to": "vc"
+      },
+      {
+       "from": "ang2",
+       "to": "aldo"
+      },
+      {
+       "from": "ace",
+       "to": "ang2"
+      },
+      {
+       "from": "ace",
+       "to": "brady"
+      }
+     ],
+     "text_size": 17
+    }
+   },
+   "lines": [
+    {
+     "text": "The slower defense is hormonal. When the kidney senses low perfusion, its juxtaglomerular cells release renin.",
+     "gesture": "screen",
+     "reveal": 1
+    },
+    {
+     "text": "Renin cuts angiotensinogen to angiotensin one; angiotensin-converting enzyme, mostly in the lungs, makes angiotensin two.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "text": "Angiotensin two constricts arterioles, releases aldosterone and antidiuretic hormone, and makes you thirsty. Aldosterone holds sodium and water and lets potassium go.",
+     "gesture": "screen",
+     "reveal": 4
+    },
+    {
+     "question": "bp_renin_01"
+    },
+    {
+     "text": "One more job for ACE: it breaks down bradykinin. Block ACE and bradykinin builds up, and you'll see why that matters in a minute.",
+     "gesture": "screen",
+     "reveal": 5
+    }
+   ]
+  },
+  {
+   "id": "hypertension",
+   "topic": "Hypertension",
+   "slide": {
+    "heading": "Hypertension",
+    "bullets": [
+     "Normal: < 120 and < 80",
+     "Elevated: 120–129 and < 80",
+     "Stage 1: 130–139 or 80–89",
+     "Stage 2: ≥ 140 or ≥ 90",
+     "Confirm with repeated, out-of-office readings"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "table",
+     "columns": [
+      "Category",
+      "Systolic",
+      "",
+      "Diastolic"
+     ],
+     "rows": [
+      [
+       "Normal",
+       "< 120",
+       "and",
+       "< 80"
+      ],
+      [
+       "Elevated",
+       "120–129",
+       "and",
+       "< 80"
+      ],
+      [
+       "Stage 1",
+       "130–139",
+       "or",
+       "80–89"
+      ],
+      [
+       "Stage 2",
+       "≥ 140",
+       "or",
+       "≥ 90"
+      ]
+     ],
+     "widths": [
+      0.34,
+      0.24,
+      0.12,
+      0.3
+     ],
+     "highlight": 2
+    }
+   },
+   "lines": [
+    {
+     "text": "Hypertension is the commonest thing you'll treat, and it's silent until it causes a stroke, a heart attack, heart failure or kidney disease.",
+     "gesture": "audience"
+    },
+    {
+     "text": "The categories in the U.S. guideline: normal below one-twenty over eighty; elevated one-twenty to one-twenty-nine; stage one, one-thirty to one-thirty-nine or eighty to eighty-nine; stage two, one-forty or ninety and above.",
+     "gesture": "screen",
+     "reveal": 4
+    },
+    {
+     "question": "bp_stage_01"
+    },
+    {
+     "text": "Never diagnose from one reading. Measure properly, repeat it, and confirm with home or ambulatory readings.",
+     "gesture": "audience",
+     "reveal": 5
+    }
+   ]
+  },
+  {
+   "id": "drugs",
+   "topic": "Antihypertensives",
+   "slide": {
+    "heading": "The drugs, and their catches",
+    "bullets": [
+     "Thiazides: low K⁺ and Na⁺, high Ca²⁺ and urate",
+     "ACE inhibitors: cough, angioedema, high K⁺",
+     "ARBs: block the Ang II receptor; no bradykinin cough",
+     "ACE inhibitors and ARBs: not in pregnancy",
+     "Amlodipine (dihydropyridine CCB): ankle swelling"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "First-line drugs: a thiazide diuretic, an ACE inhibitor or angiotensin receptor blocker, or a dihydropyridine calcium-channel blocker like amlodipine.",
+     "gesture": "audience"
+    },
+    {
+     "text": "Thiazides can lower potassium and sodium and raise calcium and uric acid, which can bring on gout.",
+     "gesture": "screen",
+     "reveal": 1
+    },
+    {
+     "question": "bp_thiazide_01"
+    },
+    {
+     "text": "ACE inhibitors raise bradykinin, which causes a dry cough in some patients and, rarely, angioedema. They can also raise potassium.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "question": "bp_ace_cough_01",
+     "lead": "A common scenario."
+    },
+    {
+     "text": "Angiotensin receptor blockers act one step later, don't touch bradykinin, and rarely cause the cough.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "text": "Both are harmful to the fetal kidney, so neither is used in pregnancy.",
+     "gesture": "screen",
+     "reveal": 4
+    },
+    {
+     "question": "bp_pregnancy_01"
+    }
+   ]
+  },
+  {
+   "id": "summary",
+   "topic": "Summary",
+   "slide": {
+    "heading": "Summary",
+    "bullets": [
+     "MAP = CO × TPR",
+     "Baroreflex: seconds; RAAS: hours to days",
+     "Stage 1 starts at 130/80",
+     "ACEi cough → switch to an ARB"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "The reflex defends pressure in seconds; the kidney, over days. Your drugs lean on both.",
+     "gesture": "audience",
+     "reveal": 4
+    },
+    {
+     "text": "This afternoon: a patient with chest pain in the Clinical Skills Center. Think about everything we've covered this week.",
+     "gesture": "audience"
+    }
+   ]
+  }
+ ]
+}

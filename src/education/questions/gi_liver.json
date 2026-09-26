@@ -1,0 +1,152 @@
+{
+ "version": 1,
+ "questions": [
+  {
+   "id": "gi_ppi_01",
+   "discipline": "Physiology",
+   "topic": "Gastrointestinal",
+   "subtopic": "Acid suppression",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "Omeprazole reduces stomach acid by:",
+   "choices": {
+    "a": "Irreversibly inhibiting the H⁺/K⁺-ATPase of parietal cells",
+    "b": "Blocking histamine H2 receptors",
+    "c": "Blocking gastrin release from G cells",
+    "d": "Neutralizing acid in the stomach"
+   },
+   "explanation": "Proton pump inhibitors are activated in the acid of the parietal cell's canaliculus and bind the H⁺/K⁺-ATPase covalently, blocking the final step of acid secretion whatever the stimulus. H2 blockers act on one of the three stimuli; antacids neutralize acid.",
+   "learning_objective": "State the mechanism of proton pump inhibitors.",
+   "xp_reward": null,
+   "lecture_id": "gi_liver_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "gi_b12_01",
+   "discipline": "Physiology",
+   "topic": "Gastrointestinal",
+   "subtopic": "Vitamin B12",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "A woman had her terminal ileum removed for Crohn disease. Which vitamin deficiency is she at risk of in the coming years?",
+   "choices": {
+    "a": "Folate",
+    "b": "Vitamin B1 (thiamine)",
+    "c": "Vitamin C",
+    "d": "Vitamin B12"
+   },
+   "explanation": "Vitamin B12 bound to intrinsic factor is absorbed in the terminal ileum. Stores last years, so deficiency (megaloblastic anemia, neuropathy) appears late; lifelong B12 injections prevent it.",
+   "learning_objective": "Relate vitamin B12 absorption to intrinsic factor and the terminal ileum.",
+   "xp_reward": null,
+   "lecture_id": "gi_liver_01",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "gi_cck_01",
+   "discipline": "Physiology",
+   "topic": "Gastrointestinal",
+   "subtopic": "GI hormones",
+   "question_type": "Conceptual",
+   "difficulty_tier": 2,
+   "prompt": "A patient with gallstones gets right-upper-quadrant pain after fatty meals. Which hormone links the meal to the pain?",
+   "choices": {
+    "a": "Gastrin, released by protein, contracts the gallbladder.",
+    "b": "Insulin, released by glucose, contracts the gallbladder.",
+    "c": "Cholecystokinin (CCK), released by fat in the duodenum, contracts the gallbladder.",
+    "d": "Secretin, released by acid, contracts the gallbladder."
+   },
+   "explanation": "Fat and protein in the duodenum release CCK from I cells; CCK contracts the gallbladder (and relaxes the sphincter of Oddi). If a stone blocks the cystic duct, the contraction causes biliary colic.",
+   "learning_objective": "Explain the role of CCK in gallbladder contraction.",
+   "xp_reward": null,
+   "lecture_id": "gi_liver_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "gi_lactose_01",
+   "discipline": "Physiology",
+   "topic": "Gastrointestinal",
+   "subtopic": "Carbohydrate absorption",
+   "question_type": "Conceptual",
+   "difficulty_tier": 1,
+   "prompt": "Why does lactase deficiency cause diarrhea after drinking milk?",
+   "choices": {
+    "a": "Lactose damages the intestinal lining.",
+    "b": "Undigested lactose stays in the gut lumen, drawing water in osmotically, and bacteria ferment it.",
+    "c": "Lactose triggers an allergic reaction to milk protein.",
+    "d": "Lactase deficiency increases acid secretion."
+   },
+   "explanation": "Without brush-border lactase, lactose can't be absorbed; it holds water in the lumen (osmotic diarrhea) and colonic bacteria ferment it into gas and short-chain fatty acids, causing bloating. It isn't an allergy.",
+   "learning_objective": "Explain the mechanism of symptoms in lactase deficiency.",
+   "xp_reward": null,
+   "lecture_id": "gi_liver_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "gi_obstruction_01",
+   "discipline": "Physiology",
+   "topic": "Gastrointestinal",
+   "subtopic": "Jaundice",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "A man has jaundice, itching, dark urine and pale stools. His conjugated bilirubin is high. Where is the problem?",
+   "choices": {
+    "a": "Hemolysis of red cells",
+    "b": "Obstruction of bile flow, such as a stone or tumor in the bile duct",
+    "c": "Reduced UGT1A1 activity (Gilbert syndrome)",
+    "d": "Increased bilirubin production in the spleen"
+   },
+   "explanation": "Blocked bile flow backs conjugated (water-soluble) bilirubin into the blood; it spills into the urine and darkens it, while little reaches the gut, so stools are pale. Hemolysis and Gilbert syndrome raise unconjugated bilirubin, which is not excreted in urine.",
+   "learning_objective": "Recognize obstructive (posthepatic) jaundice from its features.",
+   "xp_reward": null,
+   "lecture_id": "gi_liver_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "gi_gilbert_01",
+   "discipline": "Physiology",
+   "topic": "Gastrointestinal",
+   "subtopic": "Jaundice",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "A healthy 20-year-old notices yellow eyes after a few days of the flu and not eating. Unconjugated bilirubin is mildly raised; blood count and liver enzymes are normal. The most likely explanation is:",
+   "choices": {
+    "a": "Gilbert syndrome",
+    "b": "Hemolytic anemia",
+    "c": "Obstruction of the common bile duct",
+    "d": "Acute viral hepatitis"
+   },
+   "explanation": "Gilbert syndrome is a common, benign reduction in UGT1A1 activity; fasting, illness and stress raise unconjugated bilirubin mildly. Normal hemoglobin argues against hemolysis and normal enzymes against hepatitis.",
+   "learning_objective": "Recognize Gilbert syndrome.",
+   "xp_reward": null,
+   "lecture_id": "gi_liver_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "gi_nac_01",
+   "discipline": "Physiology",
+   "topic": "Gastrointestinal",
+   "subtopic": "Acetaminophen toxicity",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "A 19-year-old took a large overdose of acetaminophen four hours ago and feels well. Her level is above the treatment line. What is the antidote, and how does it work?",
+   "choices": {
+    "a": "Naloxone, which blocks opioid receptors",
+    "b": "Flumazenil, which blocks benzodiazepine receptors",
+    "c": "N-acetylcysteine, which replenishes glutathione to neutralize NAPQI",
+    "d": "Fomepizole, which blocks alcohol dehydrogenase"
+   },
+   "explanation": "N-acetylcysteine restores glutathione (and supports sulfation), detoxifying NAPQI. It is most effective within 8–10 hours of ingestion, before liver injury appears, which is why a patient who looks well still needs it.",
+   "learning_objective": "Explain N-acetylcysteine treatment of acetaminophen overdose.",
+   "xp_reward": null,
+   "lecture_id": "gi_liver_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  }
+ ]
+}

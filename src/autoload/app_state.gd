@@ -10,7 +10,7 @@ signal look_changed(look: Dictionary)
 const Presets = preload("res://data/character_presets.gd")
 const Looks = preload("res://data/looks.gd")
 const Clothing = preload("res://data/clothing.gd")
-const PHASE_BY_SCENE := {"dorm": 2, "campus": 3, "lecture_building": 4, "lecture_hall": 5, "hospital": 6}
+const PHASE_BY_SCENE := {"dorm": 2, "campus": 3, "lecture_building": 4, "lecture_hall": 5, "hospital": 6, "med_ed": 7, "library": 8, "student_center": 9, "anatomy": 10, "community": 11}
 const SCENES := {
 	"title": "res://ui/start_screen.tscn",
 	"dorm": "res://world/dorm/dorm.tscn",
@@ -18,9 +18,16 @@ const SCENES := {
 	"lecture_building": "res://world/lecture_building/lecture_building.tscn",
 	"lecture_hall": "res://world/lecture_hall/lecture_hall.tscn",
 	"hospital": "res://world/hospital/hospital.tscn",
+	"med_ed": "res://world/med_ed/med_ed.tscn",
+	"library": "res://world/library/library.tscn",
+	"student_center": "res://world/student_center/student_center.tscn",
+	"anatomy": "res://world/anatomy/anatomy.tscn",
+	"community": "res://world/community/community.tscn",
 }
-enum Phase { TITLE, CHARACTER_SELECT, DORM, CAMPUS, LECTURE_BUILDING, LECTURE_HALL, HOSPITAL }
-const WORLD_PHASES := [Phase.DORM, Phase.CAMPUS, Phase.LECTURE_BUILDING, Phase.LECTURE_HALL, Phase.HOSPITAL]
+enum Phase { TITLE, CHARACTER_SELECT, DORM, CAMPUS, LECTURE_BUILDING, LECTURE_HALL, HOSPITAL, MED_ED, LIBRARY, STUDENT_CENTER, ANATOMY, COMMUNITY }
+## Where the campus can be entered from (data/campus_config.gd SPAWNS).
+const CAMPUS_ENTRIES := ["dorm", "lecture_building", "hospital", "ed", "med_ed", "library", "student_center", "anatomy", "shuttle_quad", "shuttle_hospital", "shuttle_east", "community"]
+const WORLD_PHASES := [Phase.DORM, Phase.CAMPUS, Phase.LECTURE_BUILDING, Phase.LECTURE_HALL, Phase.HOSPITAL, Phase.MED_ED, Phase.LIBRARY, Phase.STUDENT_CENTER, Phase.ANATOMY, Phase.COMMUNITY]
 var phase: Phase = Phase.TITLE
 ## Preset the look started from, or "custom" once built in the creator.
 var selected_character: String = Presets.DEFAULT_ID
@@ -35,6 +42,16 @@ var campus_entry := "dorm"
 ## (the Emergency Department's walk-in entrance). The hospital keeps it
 ## current while you move around, so a save resumes in the right part.
 var hospital_entry := "main"
+## The lecture hall being entered: "hall_a" (Learning Center) or "hall_b"
+## (Medical Education Center).
+var current_hall := "hall_a"
+## Where the student appears in the Medical Education Center: "main" (the
+## entrance), "hall_b" (coming out of Lecture Hall B) or "level2".
+var med_ed_entry := "main"
+## Where the student appears in the Biomedical Library, the Student Center,
+## Anatomy Hall or the Community Center: "main" (the entrance) or a zone the
+## building names ("level2"…), kept current so a save resumes on that floor.
+var interior_entry := "main"
 ## View preference for this session (like volume and fullscreen, not saved).
 var first_person := false
 ## Mouse / right-stick look speed multiplier for the first-person view.
@@ -45,11 +62,20 @@ func start_new_game() -> void:
 	NPCSchedule.reset()
 	GameClock.reset()
 	AcademicSession.reset()
+	Skills.reset()
+	Wellbeing.reset()
+	Wallet.reset()
+	Achievements.reset()
+	YearCalendar.reset()
+	Clubs.reset()
 	player_name = ""
 	name_customized = false
 	select_character(Presets.DEFAULT_ID)
 	campus_entry = "dorm"
 	hospital_entry = "main"
+	current_hall = "hall_a"
+	med_ed_entry = "main"
+	interior_entry = "main"
 	_set_phase(Phase.CHARACTER_SELECT)
 
 func set_first_person(enabled: bool) -> void:
@@ -146,7 +172,7 @@ func leave_dorm() -> void:
 func enter_campus(entry: String = "dorm") -> void:
 	if transitioning:
 		return
-	campus_entry = entry if entry in ["dorm", "lecture_building", "hospital", "ed"] else "dorm"
+	campus_entry = entry if CAMPUS_ENTRIES.has(entry) else "dorm"
 	_request_transition("campus", Phase.CAMPUS)
 
 func enter_lecture_building() -> void:
@@ -155,7 +181,46 @@ func enter_lecture_building() -> void:
 
 func enter_lecture_hall() -> void:
 	if phase == Phase.LECTURE_BUILDING:
+		current_hall = "hall_a"
 		_request_transition("lecture_hall", Phase.LECTURE_HALL)
+
+## The Medical Education Center (north of the Learning Center).
+func enter_med_ed(entry := "main") -> void:
+	if phase in [Phase.CAMPUS, Phase.LECTURE_HALL] and not transitioning:
+		med_ed_entry = entry if entry in ["main", "hall_b", "level2"] else "main"
+		_request_transition("med_ed", Phase.MED_ED)
+
+## The Biomedical Library, the Student Center and Anatomy Hall, from campus.
+func enter_library(entry := "main") -> void:
+	_enter_building("library", Phase.LIBRARY, entry)
+
+func enter_student_center(entry := "main") -> void:
+	_enter_building("student_center", Phase.STUDENT_CENTER, entry)
+
+func enter_anatomy(entry := "main") -> void:
+	_enter_building("anatomy", Phase.ANATOMY, entry)
+
+## The Harbor Street Community Center, off campus by the campus shuttle.
+func enter_community(entry := "main") -> void:
+	_enter_building("community", Phase.COMMUNITY, entry)
+
+func _enter_building(scene: String, next_phase: Phase, entry: String) -> void:
+	if phase == Phase.CAMPUS and not transitioning:
+		interior_entry = entry
+		_request_transition(scene, next_phase)
+
+## Lecture Hall B, from the Medical Education Center's atrium.
+func enter_lecture_hall_b() -> void:
+	if phase == Phase.MED_ED and not transitioning:
+		current_hall = "hall_b"
+		_request_transition("lecture_hall", Phase.LECTURE_HALL)
+
+## Out of a lecture hall, back to the building it belongs to.
+func leave_lecture_hall() -> void:
+	if current_hall == "hall_b":
+		enter_med_ed("hall_b")
+	else:
+		enter_lecture_building()
 
 ## University Hospital, across the street from the campus: its main
 ## entrance, or the Emergency Department's walk-in entrance ("ed").
@@ -194,8 +259,12 @@ func _commit_transition(destination: String, next_phase: Phase) -> void:
 	GameClock.running = in_world()
 	Transition.reveal()
 	phase_changed.emit(phase)
+	if in_world():
+		Achievements.visit(destination)
 	if phase == Phase.LECTURE_HALL:
-		AcademicSession.record_arrival("pharmacodynamics_01")
+		var lecture: Dictionary = preload("res://education/lectures/lecture_catalog.gd").lecture_on(current_hall, YearCalendar.today_date())
+		if not lecture.is_empty():
+			AcademicSession.record_arrival(String(lecture.id))
 	SaveGame.autosave()
 
 func _set_phase(next_phase: Phase) -> void:

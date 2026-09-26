@@ -1,0 +1,601 @@
+{
+ "version": 1,
+ "id": "cardiac_cycle_01",
+ "title": "The Cardiac Cycle",
+ "professor": "Dr. Samuel Adeyemi",
+ "segments": [
+  {
+   "id": "introduction",
+   "topic": "Introduction",
+   "slide": {
+    "heading": "The Cardiac Cycle",
+    "bullets": [],
+    "subheading": "Pressures, valves, sounds, and the loop that ties them together",
+    "diagram": "figure",
+    "figure": {
+     "type": "cycle",
+     "steps": [
+      "Isovolumetric contraction",
+      "Ejection",
+      "Isovolumetric relaxation",
+      "Filling"
+     ],
+     "center": "One heartbeat"
+    }
+   },
+   "lines": [
+    {
+     "text": "Happy new year, and welcome to the Spring term. I'm Samuel Adeyemi, cardiology. We start with one heartbeat, taken apart.",
+     "gesture": "audience"
+    },
+    {
+     "text": "Four phases: the ventricle squeezes with its valves shut, ejects, relaxes with its valves shut, and fills.",
+     "gesture": "screen"
+    },
+    {
+     "text": "Everything today, the pressures, the heart sounds, the murmurs, the pressure-volume loop, is the same beat seen from different angles.",
+     "gesture": "audience"
+    }
+   ]
+  },
+  {
+   "id": "phases",
+   "topic": "Pressures and valves",
+   "slide": {
+    "heading": "Pressures open and close the valves",
+    "bullets": [
+     "Mitral closes (S1): isovolumetric contraction",
+     "LV pressure > aortic: aortic valve opens, ejection",
+     "LV pressure < aortic: aortic valve closes (S2)",
+     "Isovolumetric relaxation, then the mitral opens",
+     "Filling: rapid, slow, then the atrial kick"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "curves",
+     "x": {
+      "label": "Time (s)",
+      "min": 0,
+      "max": 0.8
+     },
+     "y": {
+      "label": "Pressure (mmHg)",
+      "min": 0,
+      "max": 130
+     },
+     "series": [
+      {
+       "label": "Left ventricle",
+       "points": [
+        [
+         0,
+         8
+        ],
+        [
+         0.05,
+         10
+        ],
+        [
+         0.08,
+         30
+        ],
+        [
+         0.1,
+         80
+        ],
+        [
+         0.14,
+         108
+        ],
+        [
+         0.18,
+         120
+        ],
+        [
+         0.24,
+         114
+        ],
+        [
+         0.28,
+         102
+        ],
+        [
+         0.3,
+         94
+        ],
+        [
+         0.33,
+         55
+        ],
+        [
+         0.36,
+         18
+        ],
+        [
+         0.4,
+         6
+        ],
+        [
+         0.44,
+         3
+        ],
+        [
+         0.5,
+         4
+        ],
+        [
+         0.6,
+         5
+        ],
+        [
+         0.7,
+         6
+        ],
+        [
+         0.75,
+         8
+        ],
+        [
+         0.8,
+         8
+        ]
+       ],
+       "color": "accent"
+      },
+      {
+       "label": "Aorta",
+       "points": [
+        [
+         0,
+         84
+        ],
+        [
+         0.05,
+         82
+        ],
+        [
+         0.1,
+         80
+        ],
+        [
+         0.14,
+         106
+        ],
+        [
+         0.18,
+         118
+        ],
+        [
+         0.24,
+         114
+        ],
+        [
+         0.28,
+         104
+        ],
+        [
+         0.3,
+         97
+        ],
+        [
+         0.31,
+         94
+        ],
+        [
+         0.33,
+         98
+        ],
+        [
+         0.4,
+         95
+        ],
+        [
+         0.5,
+         91
+        ],
+        [
+         0.6,
+         88
+        ],
+        [
+         0.7,
+         85
+        ],
+        [
+         0.8,
+         84
+        ]
+       ],
+       "color": "second"
+      },
+      {
+       "label": "Left atrium",
+       "points": [
+        [
+         0,
+         7
+        ],
+        [
+         0.05,
+         6
+        ],
+        [
+         0.1,
+         4
+        ],
+        [
+         0.2,
+         7
+        ],
+        [
+         0.3,
+         11
+        ],
+        [
+         0.36,
+         13
+        ],
+        [
+         0.4,
+         8
+        ],
+        [
+         0.5,
+         5
+        ],
+        [
+         0.6,
+         6
+        ],
+        [
+         0.7,
+         8
+        ],
+        [
+         0.74,
+         11
+        ],
+        [
+         0.78,
+         9
+        ],
+        [
+         0.8,
+         7
+        ]
+       ],
+       "color": "gold"
+      }
+     ],
+     "vlines": [
+      {
+       "x": 0.06,
+       "label": "S1",
+       "color": "muted"
+      },
+      {
+       "x": 0.3,
+       "label": "S2",
+       "color": "muted"
+      }
+     ]
+    }
+   },
+   "lines": [
+    {
+     "text": "Valves are passive. They open and close because of pressure differences, nothing else.",
+     "gesture": "audience"
+    },
+    {
+     "text": "The ventricle starts to contract. As soon as its pressure passes the atrium's, the mitral valve slams shut: the first heart sound. With both valves closed, pressure rises at constant volume: isovolumetric contraction.",
+     "gesture": "screen",
+     "reveal": 1
+    },
+    {
+     "text": "When it passes aortic pressure, about eighty here, the aortic valve opens and blood is ejected.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "question": "cc_isovol_01"
+    },
+    {
+     "text": "The ventricle relaxes. When its pressure falls below the aorta's, the aortic valve closes: the second heart sound, and the notch on the aortic trace.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "text": "Then the mitral valve opens and the ventricle fills: fast at first, then slowly, then a last push from the atrium.",
+     "gesture": "screen",
+     "reveal": 5
+    }
+   ]
+  },
+  {
+   "id": "loop",
+   "topic": "The pressure-volume loop",
+   "slide": {
+    "heading": "The pressure-volume loop",
+    "bullets": [
+     "Stroke volume = EDV − ESV",
+     "Ejection fraction = SV ÷ EDV (normal ≳ 55%)",
+     "Width of the loop: stroke volume",
+     "Top-left corner: aortic valve closes"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "curves",
+     "x": {
+      "label": "Left ventricular volume (mL)",
+      "min": 30,
+      "max": 140
+     },
+     "y": {
+      "label": "LV pressure (mmHg)",
+      "min": 0,
+      "max": 130
+     },
+     "series": [
+      {
+       "label": "One beat: EDV 120 mL, ESV 50 mL",
+       "points": [
+        [
+         120,
+         10
+        ],
+        [
+         120,
+         50
+        ],
+        [
+         120,
+         80
+        ],
+        [
+         114,
+         108
+        ],
+        [
+         100,
+         122
+        ],
+        [
+         80,
+         120
+        ],
+        [
+         62,
+         108
+        ],
+        [
+         50,
+         96
+        ],
+        [
+         50,
+         50
+        ],
+        [
+         50,
+         8
+        ],
+        [
+         60,
+         4
+        ],
+        [
+         80,
+         5
+        ],
+        [
+         100,
+         7
+        ],
+        [
+         120,
+         10
+        ]
+       ],
+       "color": "accent"
+      }
+     ],
+     "marks": [
+      {
+       "x": 120,
+       "y": 10,
+       "label": "Mitral closes",
+       "color": "gold"
+      },
+      {
+       "x": 120,
+       "y": 80,
+       "label": "Aortic opens",
+       "color": "second"
+      },
+      {
+       "x": 50,
+       "y": 96,
+       "label": "Aortic closes",
+       "color": "third"
+      },
+      {
+       "x": 50,
+       "y": 8,
+       "label": "Mitral opens",
+       "color": "green"
+      }
+     ]
+    }
+   },
+   "lines": [
+    {
+     "text": "Plot pressure against volume for one beat and you get a loop, run counterclockwise.",
+     "gesture": "screen"
+    },
+    {
+     "text": "The ventricle fills to its end-diastolic volume, here one hundred and twenty millilitres, and ejects down to fifty. The difference is the stroke volume.",
+     "gesture": "screen",
+     "reveal": 1
+    },
+    {
+     "text": "Stroke volume over end-diastolic volume is the ejection fraction. Normal is about fifty-five percent or more.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "question": "cc_ef_01",
+     "lead": "Your turn.",
+     "remediation": "cc_ef_remediation_01"
+    },
+    {
+     "text": "The loop's width is the stroke volume; everything that changes the heart's performance changes the loop's shape.",
+     "gesture": "screen",
+     "reveal": 3
+    }
+   ]
+  },
+  {
+   "id": "sounds",
+   "topic": "Heart sounds and murmurs",
+   "slide": {
+    "heading": "Heart sounds and murmurs",
+    "bullets": [
+     "S1: mitral and tricuspid close; S2: aortic and pulmonic",
+     "Inspiration splits S2 (pulmonic closes later)",
+     "S3: early filling of an overfilled ventricle",
+     "S4: the atrium pushing into a stiff ventricle",
+     "Aortic stenosis: systolic crescendo–decrescendo"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "Put your stethoscope on the chest. S1 is the atrioventricular valves closing; S2, the semilunar valves.",
+     "gesture": "audience",
+     "reveal": 1
+    },
+    {
+     "text": "Breathe in, and S2 splits in two. Inspiration increases return to the right heart, so the right ventricle ejects a little longer and the pulmonic valve closes later.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "question": "cc_s2_split_01"
+    },
+    {
+     "text": "Two extra sounds: an S3, early in diastole, as blood rushes into a big, overfilled ventricle; and an S4, late, as the atrium pushes into a stiff one.",
+     "gesture": "screen",
+     "reveal": 4
+    },
+    {
+     "text": "And murmurs are turbulent flow. Aortic stenosis gives a harsh crescendo–decrescendo in systole at the right upper sternal border, radiating to the carotids.",
+     "gesture": "screen",
+     "reveal": 5
+    },
+    {
+     "question": "cc_as_01"
+    }
+   ]
+  },
+  {
+   "id": "starling",
+   "topic": "Frank–Starling",
+   "slide": {
+    "heading": "What sets the stroke volume",
+    "bullets": [
+     "Preload: stretch at the end of diastole (EDV)",
+     "Frank–Starling: more stretch, stronger beat",
+     "Afterload: what the ventricle ejects against",
+     "Contractility: the beat's strength at a given stretch"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "curves",
+     "x": {
+      "label": "End-diastolic volume (preload)",
+      "min": 0,
+      "max": 250
+     },
+     "y": {
+      "label": "Stroke volume (mL)",
+      "min": 0,
+      "max": 130
+     },
+     "series": [
+      {
+       "label": "Normal heart",
+       "fn": "saturating",
+       "params": {
+        "ymax": 110,
+        "tau": 80
+       },
+       "color": "accent"
+      },
+      {
+       "label": "More contractility (sympathetic)",
+       "fn": "saturating",
+       "params": {
+        "ymax": 130,
+        "tau": 60
+       },
+       "color": "second"
+      },
+      {
+       "label": "Failing heart",
+       "fn": "saturating",
+       "params": {
+        "ymax": 70,
+        "tau": 110
+       },
+       "color": "red"
+      }
+     ]
+    }
+   },
+   "lines": [
+    {
+     "text": "Three things set the stroke volume. Preload: how much the ventricle is stretched by the end of filling. Stretch it more, and within limits it beats harder. That's the Frank–Starling law.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "question": "cc_starling_01"
+    },
+    {
+     "text": "Afterload: the pressure it has to eject against. Raise the aortic pressure and the ventricle ejects less, leaving more blood behind.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "question": "cc_afterload_01"
+    },
+    {
+     "text": "And contractility: sympathetic stimulation and inotropic drugs shift the whole curve up; a failing heart sits below it.",
+     "gesture": "screen",
+     "reveal": 4
+    }
+   ]
+  },
+  {
+   "id": "summary",
+   "topic": "Summary",
+   "slide": {
+    "heading": "Summary: one beat, four views",
+    "bullets": [
+     "Valves follow pressure",
+     "S1 starts systole; S2 ends it",
+     "SV = EDV − ESV; EF = SV ÷ EDV",
+     "Preload, afterload, contractility"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "One beat, seen as pressures, sounds and a loop. This afternoon in the ECG lab, you'll see the electrical version.",
+     "gesture": "audience",
+     "reveal": 4
+    }
+   ]
+  }
+ ]
+}

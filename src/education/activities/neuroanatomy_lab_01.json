@@ -1,0 +1,122 @@
+{
+ "version": 1,
+ "id": "neuroanatomy_lab_01",
+ "kind": "lab",
+ "eyebrow": "Anatomy Hall · Laboratory",
+ "title": "The neuroanatomy lab",
+ "intro": "Brains in the lab today: plastinated specimens on every table, sliced in three planes, and a set of colored models you can take apart.",
+ "context": "lab",
+ "minutes": 90,
+ "energy": 8,
+ "steps": [
+  {
+   "say": "\"Gloves on. Hold the brain in both hands, like something precious, because it is. Start with the ventricles: the brain is built around them.\"",
+   "speaker": "Dr. Helen Marsh, Course Director"
+  },
+  {
+   "question": "neuro_csf_01"
+  },
+  {
+   "figure": {
+    "type": "flow",
+    "nodes": [
+     {
+      "id": "lat",
+      "label": "Lateral ventricles\n(choroid plexus)",
+      "x": 0.15,
+      "y": 0.2,
+      "color": "second"
+     },
+     {
+      "id": "third",
+      "label": "Third ventricle",
+      "x": 0.5,
+      "y": 0.2,
+      "color": "second"
+     },
+     {
+      "id": "fourth",
+      "label": "Fourth ventricle",
+      "x": 0.85,
+      "y": 0.2,
+      "color": "second"
+     },
+     {
+      "id": "sas",
+      "label": "Subarachnoid space",
+      "x": 0.85,
+      "y": 0.75,
+      "color": "accent"
+     },
+     {
+      "id": "gran",
+      "label": "Arachnoid granulations\n→ venous sinuses",
+      "x": 0.4,
+      "y": 0.75,
+      "color": "gold"
+     }
+    ],
+    "edges": [
+     {
+      "from": "lat",
+      "to": "third",
+      "label": "interventricular foramina"
+     },
+     {
+      "from": "third",
+      "to": "fourth",
+      "label": "cerebral aqueduct"
+     },
+     {
+      "from": "fourth",
+      "to": "sas",
+      "label": "apertures"
+     },
+     {
+      "from": "sas",
+      "to": "gran"
+     }
+    ]
+   },
+   "caption": "The flow of cerebrospinal fluid."
+  },
+  {
+   "say": "You turn the brain over in your hands: the frontal lobe, the lateral sulcus, the gyri on either side of the central sulcus."
+  },
+  {
+   "question": "neuro_broca_01",
+   "lead": "\"Find the inferior frontal gyrus. What lives there?\""
+  },
+  {
+   "question": "neuro_homunculus_01"
+  },
+  {
+   "say": "Underneath: the circle of arteries at the base of the brain, and the nerves leaving the brainstem like the strings of an instrument."
+  },
+  {
+   "question": "neuro_cn3_01",
+   "lead": "Dr. Marsh points her probe between two small arteries."
+  },
+  {
+   "question": "neuro_cerebellum_01"
+  },
+  {
+   "say": "\"Next week, the spinal cord. And some of you will be neurologists, and one day you'll hold a reflex hammer and remember this afternoon.\"",
+   "speaker": "Dr. Helen Marsh, Course Director"
+  }
+ ],
+ "feedback": [
+  [
+   0.85,
+   "\"You could teach this lab next year.\""
+  ],
+  [
+   0.6,
+   "\"Good. Walk through the ventricles again with the models before the exam.\""
+  ],
+  [
+   0.0,
+   "\"Spend an hour with the brain models in the library's anatomy room.\""
+  ]
+ ]
+}

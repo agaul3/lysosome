@@ -1,0 +1,153 @@
+{
+ "version": 1,
+ "questions": [
+  {
+   "id": "mb_troponin_01",
+   "discipline": "Physiology",
+   "topic": "Musculoskeletal",
+   "subtopic": "Excitation–contraction coupling",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "In skeletal muscle, calcium released from the sarcoplasmic reticulum starts contraction by binding to:",
+   "choices": {
+    "a": "Calmodulin",
+    "b": "Troponin C",
+    "c": "The myosin head",
+    "d": "Tropomyosin"
+   },
+   "explanation": "Ca²⁺ binds troponin C, which shifts tropomyosin off the myosin-binding sites on actin. (In smooth muscle, Ca²⁺ binds calmodulin instead, activating myosin light-chain kinase.)",
+   "learning_objective": "Describe how calcium initiates contraction in skeletal muscle.",
+   "xp_reward": null,
+   "lecture_id": "muscle_bone_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "mb_ryr_01",
+   "discipline": "Physiology",
+   "topic": "Musculoskeletal",
+   "subtopic": "Malignant hyperthermia",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "Minutes after induction with sevoflurane and succinylcholine, a patient develops rigidity, rising end-tidal CO₂, tachycardia and a climbing temperature. What is the specific treatment?",
+   "choices": {
+    "a": "Nifedipine, a calcium-channel blocker",
+    "b": "Dantrolene, which blocks calcium release through the ryanodine receptor",
+    "c": "Neostigmine, to reverse neuromuscular blockade",
+    "d": "More succinylcholine, to relax the muscles"
+   },
+   "explanation": "Malignant hyperthermia is usually caused by an inherited ryanodine receptor (RYR1) variant: volatile anesthetics or succinylcholine trigger uncontrolled Ca²⁺ release from the SR. Stop the trigger, cool, and give dantrolene, which inhibits Ca²⁺ release via RyR1.",
+   "learning_objective": "Recognize malignant hyperthermia and its treatment with dantrolene.",
+   "xp_reward": null,
+   "lecture_id": "muscle_bone_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "mb_atp_01",
+   "discipline": "Physiology",
+   "topic": "Musculoskeletal",
+   "subtopic": "The cross-bridge cycle",
+   "question_type": "Conceptual",
+   "difficulty_tier": 2,
+   "prompt": "In the cross-bridge cycle, what does the binding of ATP to the myosin head do?",
+   "choices": {
+    "a": "It releases the myosin head from actin.",
+    "b": "It triggers the power stroke.",
+    "c": "It locks myosin to actin (rigor).",
+    "d": "It binds calcium to troponin."
+   },
+   "explanation": "ATP binding detaches myosin from actin; hydrolysis to ADP + Pi re-cocks the head; release of phosphate accompanies the power stroke. Without ATP, heads stay bound: rigor mortis.",
+   "learning_objective": "Explain the role of ATP in releasing myosin from actin.",
+   "xp_reward": null,
+   "lecture_id": "muscle_bone_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "mb_atp_remediation_01",
+   "discipline": "Physiology",
+   "topic": "Musculoskeletal",
+   "subtopic": "The cross-bridge cycle",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "Why does rigor mortis develop a few hours after death?",
+   "choices": {
+    "a": "Calcium is pumped back into the sarcoplasmic reticulum.",
+    "b": "Acetylcholine keeps firing the muscle.",
+    "c": "Without ATP, myosin heads cannot detach from actin.",
+    "d": "Tropomyosin covers every binding site."
+   },
+   "explanation": "After death ATP is exhausted. Myosin heads, bound to actin, need ATP to let go, so the muscles lock until the proteins break down.",
+   "learning_objective": "Explain rigor mortis in terms of the cross-bridge cycle.",
+   "xp_reward": null,
+   "lecture_id": "muscle_bone_01",
+   "format": "multiple_choice",
+   "is_remediation": true,
+   "correct_answer": "c"
+  },
+  {
+   "id": "mb_size_01",
+   "discipline": "Physiology",
+   "topic": "Musculoskeletal",
+   "subtopic": "Motor units",
+   "question_type": "Conceptual",
+   "difficulty_tier": 1,
+   "prompt": "As you slowly increase the force of a voluntary contraction, which motor units are recruited first?",
+   "choices": {
+    "a": "The small motor units, with small motor neurons",
+    "b": "All motor units at once, firing more slowly",
+    "c": "Motor units at random",
+    "d": "The largest motor units"
+   },
+   "explanation": "The size principle: small motor neurons have the highest input resistance and reach threshold first, so small units (often slow, fatigue-resistant fibers) are recruited first; large, powerful units join as force rises.",
+   "learning_objective": "State the size principle of motor unit recruitment.",
+   "xp_reward": null,
+   "lecture_id": "muscle_bone_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "mb_rankl_01",
+   "discipline": "Physiology",
+   "topic": "Musculoskeletal",
+   "subtopic": "Bone remodeling",
+   "question_type": "Application",
+   "difficulty_tier": 2,
+   "prompt": "Denosumab, used for osteoporosis, is a monoclonal antibody against RANKL. How does it reduce bone loss?",
+   "choices": {
+    "a": "It stimulates osteoblasts directly to make new bone.",
+    "b": "It blocks the vitamin D receptor.",
+    "c": "It binds calcium in the blood.",
+    "d": "It stops RANKL from activating RANK on osteoclast precursors, so fewer osteoclasts mature."
+   },
+   "explanation": "RANKL, displayed by osteoblasts, drives osteoclast differentiation through RANK. Denosumab mimics osteoprotegerin, the natural decoy, by binding RANKL, so resorption falls.",
+   "learning_objective": "Explain the RANKL–RANK–OPG system and denosumab's mechanism.",
+   "xp_reward": null,
+   "lecture_id": "muscle_bone_01",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "mb_bisphosphonate_01",
+   "discipline": "Physiology",
+   "topic": "Musculoskeletal",
+   "subtopic": "Osteoporosis treatment",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "A 67-year-old woman starts alendronate for osteoporosis. What instruction helps prevent its commonest serious side effect?",
+   "choices": {
+    "a": "Take it lying down, after a large meal.",
+    "b": "Crush the tablet and take it at bedtime.",
+    "c": "Take it with a full glass of water and stay upright for at least 30 minutes.",
+    "d": "Take it with milk to protect the stomach."
+   },
+   "explanation": "Oral bisphosphonates can cause esophagitis and ulcers. They are taken on an empty stomach with plain water (food and calcium block absorption), staying upright for at least 30 minutes. Rare effects include osteonecrosis of the jaw and atypical femoral fractures.",
+   "learning_objective": "Counsel a patient on taking an oral bisphosphonate safely.",
+   "xp_reward": null,
+   "lecture_id": "muscle_bone_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  }
+ ]
+}

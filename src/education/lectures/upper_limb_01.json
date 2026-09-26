@@ -1,0 +1,514 @@
+{
+ "version": 1,
+ "id": "upper_limb_01",
+ "title": "The Upper Limb",
+ "professor": "Dr. Helen Marsh",
+ "segments": [
+  {
+   "id": "introduction",
+   "topic": "Introduction",
+   "slide": {
+    "heading": "The Upper Limb",
+    "bullets": [],
+    "subheading": "The brachial plexus, and the nerve injuries that give themselves away",
+    "diagram": "figure",
+    "figure": {
+     "type": "flow",
+     "nodes": [
+      {
+       "id": "r",
+       "label": "Roots C5–T1",
+       "x": 0.1,
+       "y": 0.5,
+       "color": "second"
+      },
+      {
+       "id": "t",
+       "label": "Trunks",
+       "x": 0.3,
+       "y": 0.5,
+       "color": "accent"
+      },
+      {
+       "id": "d",
+       "label": "Divisions",
+       "x": 0.5,
+       "y": 0.5,
+       "color": "third"
+      },
+      {
+       "id": "c",
+       "label": "Cords",
+       "x": 0.7,
+       "y": 0.5,
+       "color": "gold"
+      },
+      {
+       "id": "b",
+       "label": "Branches",
+       "x": 0.9,
+       "y": 0.5,
+       "color": "green"
+      }
+     ],
+     "edges": [
+      {
+       "from": "r",
+       "to": "t"
+      },
+      {
+       "from": "t",
+       "to": "d"
+      },
+      {
+       "from": "d",
+       "to": "c"
+      },
+      {
+       "from": "c",
+       "to": "b"
+      }
+     ]
+    }
+   },
+   "lines": [
+    {
+     "text": "Good morning. I'm Helen Marsh. You spent this morning in the theatre thanking your donors; for the next five weeks, they will teach you anatomy.",
+     "gesture": "audience"
+    },
+    {
+     "text": "We start with the brachial plexus: the network of nerves that runs every muscle and most of the skin of the arm.",
+     "gesture": "screen"
+    },
+    {
+     "text": "It looks like a tangle. It isn't. It goes roots, trunks, divisions, cords, branches. Generations of students remember it as \"Randy Travis Drinks Cold Beer\".",
+     "gesture": "screen"
+    },
+    {
+     "text": "And the reason you'll learn it cold is that its injuries are some of the most recognizable signs in medicine.",
+     "gesture": "audience"
+    }
+   ]
+  },
+  {
+   "id": "plexus",
+   "topic": "The brachial plexus",
+   "slide": {
+    "heading": "Roots, trunks, cords, branches",
+    "bullets": [
+     "Roots: ventral rami of C5–T1",
+     "Trunks: upper (C5–C6), middle (C7), lower (C8–T1)",
+     "Cords: lateral, posterior, medial (to the axillary artery)",
+     "Posterior cord: axillary and radial nerves",
+     "Medial cord: ulnar; lateral cord: musculocutaneous; both: median"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "flow",
+     "nodes": [
+      {
+       "id": "up",
+       "label": "Upper trunk C5–C6",
+       "x": 0.12,
+       "y": 0.2,
+       "color": "second"
+      },
+      {
+       "id": "mid",
+       "label": "Middle trunk C7",
+       "x": 0.12,
+       "y": 0.5,
+       "color": "second"
+      },
+      {
+       "id": "low",
+       "label": "Lower trunk C8–T1",
+       "x": 0.12,
+       "y": 0.8,
+       "color": "second"
+      },
+      {
+       "id": "lat",
+       "label": "Lateral cord",
+       "x": 0.45,
+       "y": 0.2,
+       "color": "gold"
+      },
+      {
+       "id": "post",
+       "label": "Posterior cord",
+       "x": 0.45,
+       "y": 0.5,
+       "color": "gold"
+      },
+      {
+       "id": "med",
+       "label": "Medial cord",
+       "x": 0.45,
+       "y": 0.8,
+       "color": "gold"
+      },
+      {
+       "id": "mc",
+       "label": "Musculocutaneous",
+       "x": 0.82,
+       "y": 0.08,
+       "color": "green"
+      },
+      {
+       "id": "ax",
+       "label": "Axillary",
+       "x": 0.82,
+       "y": 0.32,
+       "color": "accent"
+      },
+      {
+       "id": "rad",
+       "label": "Radial",
+       "x": 0.82,
+       "y": 0.5,
+       "color": "accent"
+      },
+      {
+       "id": "medn",
+       "label": "Median",
+       "x": 0.82,
+       "y": 0.68,
+       "color": "third"
+      },
+      {
+       "id": "uln",
+       "label": "Ulnar",
+       "x": 0.82,
+       "y": 0.92,
+       "color": "blue"
+      }
+     ],
+     "edges": [
+      {
+       "from": "up",
+       "to": "lat"
+      },
+      {
+       "from": "mid",
+       "to": "lat"
+      },
+      {
+       "from": "up",
+       "to": "post"
+      },
+      {
+       "from": "mid",
+       "to": "post"
+      },
+      {
+       "from": "low",
+       "to": "post"
+      },
+      {
+       "from": "low",
+       "to": "med"
+      },
+      {
+       "from": "lat",
+       "to": "mc"
+      },
+      {
+       "from": "lat",
+       "to": "medn"
+      },
+      {
+       "from": "med",
+       "to": "medn"
+      },
+      {
+       "from": "med",
+       "to": "uln"
+      },
+      {
+       "from": "post",
+       "to": "ax"
+      },
+      {
+       "from": "post",
+       "to": "rad"
+      }
+     ],
+     "text_size": 16
+    }
+   },
+   "lines": [
+    {
+     "text": "The roots are the ventral rami of C5 through T1. They join into three trunks: upper, from C5 and C6; middle, C7; lower, C8 and T1.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "text": "Each trunk splits into anterior and posterior divisions, which regroup as three cords, named for where they sit around the axillary artery.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "text": "All three posterior divisions make the posterior cord, and it gives the axillary and radial nerves: the nerves of extension.",
+     "gesture": "screen",
+     "reveal": 4
+    },
+    {
+     "question": "ul_plexus_cord_01",
+     "lead": "Which cord?",
+     "remediation": "ul_plexus_remediation_01"
+    },
+    {
+     "text": "The lateral cord gives the musculocutaneous nerve, the medial cord the ulnar, and they meet to make the median nerve, which you can see as an M in front of the artery in the lab.",
+     "gesture": "screen",
+     "reveal": 5
+    }
+   ]
+  },
+  {
+   "id": "trunks",
+   "topic": "Trunk injuries",
+   "slide": {
+    "heading": "When the trunks are stretched",
+    "bullets": [
+     "Upper trunk (C5–C6): Erb palsy",
+     "Head forced away from the shoulder: a fall, a hard delivery",
+     "Arm adducted, internally rotated, elbow extended: \"waiter's tip\"",
+     "Lower trunk (C8–T1): Klumpke palsy",
+     "Arm pulled up: claw hand; with T1, Horner syndrome"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "The trunks are injured by stretch. Force the head away from the shoulder, in a motorcycle crash or a difficult delivery, and you tear the upper trunk.",
+     "gesture": "audience",
+     "reveal": 2
+    },
+    {
+     "text": "C5 and C6 run the shoulder's abductors and external rotators and the elbow's flexors. The arm hangs adducted and internally rotated, the elbow straight and the forearm pronated. It's called the waiter's tip.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "question": "ul_erb_01"
+    },
+    {
+     "text": "Pull the arm up, grabbing a branch as you fall, and you stretch the lower trunk: the small muscles of the hand, a claw hand. If T1's sympathetic fibers go too, there's a Horner syndrome on that side.",
+     "gesture": "audience",
+     "reveal": 5
+    }
+   ]
+  },
+  {
+   "id": "proximal",
+   "topic": "Nerves at the humerus and shoulder",
+   "slide": {
+    "heading": "Axillary, radial, long thoracic",
+    "bullets": [
+     "Axillary: surgical neck fracture, shoulder dislocation",
+     "Deltoid weakness, numb patch over the lateral shoulder",
+     "Radial: humeral shaft fracture (radial groove)",
+     "Wrist drop: the wrist and finger extensors fail",
+     "Long thoracic: serratus anterior, winged scapula"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "The axillary nerve wraps around the surgical neck of the humerus. A fracture there, or an anterior dislocation of the shoulder, can injure it: the deltoid weakens and there's a numb patch over the lateral shoulder.",
+     "gesture": "audience",
+     "reveal": 2
+    },
+    {
+     "question": "ul_axillary_01"
+    },
+    {
+     "text": "The radial nerve lies in the radial groove, on the back of the humeral shaft. Break the shaft and the patient can't lift the wrist: wrist drop.",
+     "gesture": "screen",
+     "reveal": 4
+    },
+    {
+     "question": "ul_radial_01"
+    },
+    {
+     "text": "And the long thoracic nerve, on the side of the chest wall, runs serratus anterior. Injure it in an axillary node dissection and the scapula wings off the chest when the patient pushes against a wall.",
+     "gesture": "audience",
+     "reveal": 5
+    }
+   ]
+  },
+  {
+   "id": "hand",
+   "topic": "Median and ulnar nerves",
+   "slide": {
+    "heading": "The hand: median and ulnar",
+    "bullets": [
+     "Median at the wrist: carpal tunnel syndrome",
+     "Numb thumb, index, middle and half the ring finger",
+     "Thenar wasting; Tinel and Phalen signs",
+     "Ulnar at the elbow (medial epicondyle): the funny bone",
+     "Clawing of the ring and little fingers"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "The median nerve passes under the flexor retinaculum in the carpal tunnel with nine tendons. Squeeze the tunnel and you get carpal tunnel syndrome.",
+     "gesture": "screen",
+     "reveal": 1
+    },
+    {
+     "text": "Numbness and tingling in the thumb, index and middle fingers and the radial half of the ring finger, worse at night; later, wasting of the thenar muscles.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "question": "ul_carpal_01"
+    },
+    {
+     "text": "The ulnar nerve runs behind the medial epicondyle: the funny bone. Injure it and the ring and little fingers claw, and the small muscles of the hand waste.",
+     "gesture": "screen",
+     "reveal": 5
+    },
+    {
+     "question": "ul_ulnar_01"
+    }
+   ]
+  },
+  {
+   "id": "cuff",
+   "topic": "The rotator cuff",
+   "slide": {
+    "heading": "The rotator cuff: SITS",
+    "bullets": [
+     "Supraspinatus: starts abduction; the one most often torn",
+     "Infraspinatus: external rotation",
+     "Teres minor: external rotation",
+     "Subscapularis: internal rotation"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "table",
+     "columns": [
+      "Muscle",
+      "Main action",
+      "Nerve"
+     ],
+     "rows": [
+      [
+       "Supraspinatus",
+       "First 15° of abduction",
+       "Suprascapular"
+      ],
+      [
+       "Infraspinatus",
+       "External rotation",
+       "Suprascapular"
+      ],
+      [
+       "Teres minor",
+       "External rotation",
+       "Axillary"
+      ],
+      [
+       "Subscapularis",
+       "Internal rotation",
+       "Upper and lower subscapular"
+      ]
+     ],
+     "widths": [
+      0.3,
+      0.4,
+      0.3
+     ],
+     "highlight": 0
+    }
+   },
+   "lines": [
+    {
+     "text": "Four muscles hold the head of the humerus in its shallow socket: supraspinatus, infraspinatus, teres minor and subscapularis. S-I-T-S.",
+     "gesture": "screen",
+     "reveal": 4
+    },
+    {
+     "text": "Supraspinatus starts abduction and runs under the acromion, where it frays and tears. It's the cuff tendon you'll see torn most.",
+     "gesture": "screen",
+     "reveal": 1
+    },
+    {
+     "question": "ul_cuff_01"
+    }
+   ]
+  },
+  {
+   "id": "summary",
+   "topic": "Summary",
+   "slide": {
+    "heading": "Summary: localize the lesion",
+    "bullets": [
+     "Posterior cord: axillary, radial (extensors)",
+     "Erb: waiter's tip; Klumpke: claw hand",
+     "Humeral shaft fracture: radial nerve, wrist drop",
+     "Carpal tunnel: median; medial epicondyle: ulnar"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "table",
+     "columns": [
+      "Nerve",
+      "Where it's injured",
+      "Sign"
+     ],
+     "rows": [
+      [
+       "Axillary",
+       "Surgical neck, dislocation",
+       "Deltoid weakness"
+      ],
+      [
+       "Radial",
+       "Humeral shaft",
+       "Wrist drop"
+      ],
+      [
+       "Median",
+       "Carpal tunnel",
+       "Thenar wasting, numb lateral fingers"
+      ],
+      [
+       "Ulnar",
+       "Medial epicondyle",
+       "Claw of ring and little fingers"
+      ],
+      [
+       "Long thoracic",
+       "Axillary surgery",
+       "Winged scapula"
+      ]
+     ],
+     "widths": [
+      0.2,
+      0.36,
+      0.44
+     ]
+    }
+   },
+   "lines": [
+    {
+     "text": "The skill is to go from the sign to the nerve to the place it was injured. Let's try one.",
+     "gesture": "audience"
+    },
+    {
+     "question": "ul_case_01",
+     "lead": "A case."
+    },
+    {
+     "text": "This afternoon: your first dissection, the axilla. Find the M of the median nerve. Treat your donor with care.",
+     "gesture": "audience",
+     "reveal": 4
+    }
+   ]
+  }
+ ]
+}

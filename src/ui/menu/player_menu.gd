@@ -5,7 +5,7 @@ extends Control
 signal close_requested
 const UI = preload("res://ui/style/ui_style.gd")
 const Icon = preload("res://ui/style/icon.gd")
-const PANEL_SIZE := Vector2(904, 584)
+const PANEL_SIZE := Vector2(904, 640)
 const SIDEBAR_WIDTH := 232.0
 ## [node name, sidebar label, icon, page title, page subtitle]
 const PAGES := [
@@ -18,7 +18,13 @@ const PAGES := [
 	["Achievements", "Achievements", "achievements", "Achievements", "Milestones in your first year"],
 	["Inventory", "Inventory", "inventory", "Inventory", "Clothing and equipment · select a slot, then an item to wear"],
 	["Settings", "Settings", "settings", "Settings", "Audio, display and controls"],
+	["Skills", "Skills", "tree", "Skills", "Perks for the student you are becoming"],
+	["Wallet", "Wallet", "coin", "Wallet & Wellbeing", "Money, energy, boosts and what's in your bag"],
+	["Journal", "Journal", "journal", "Journal", "The story of your first year"],
 ]
+## Sidebar order (page indices): new pages sit beside the ones they belong
+## with; page indices stay stable for saves, tests and deep links.
+const SIDEBAR_ORDER := [0, 1, 2, 11, 3, 4, 5, 9, 6, 10, 7, 8]
 var hud: CanvasLayer
 var pages: TabContainer
 var nav_buttons: Array[Button] = []
@@ -29,6 +35,7 @@ var level_label: Label
 var xp_label: Label
 var xp_bar: Control
 var identity_name: Label
+var identity_title: Label
 var portrait: SubViewportContainer
 var backdrop: ColorRect
 var open_tween: Tween
@@ -94,7 +101,8 @@ func _sidebar() -> Control:
 	identity.add_child(who)
 	identity_name = UI.label("", UI.SIZE_TITLE, UI.TEXT, 600)
 	who.add_child(identity_name)
-	who.add_child(UI.label("First-year · Fall 1", UI.SIZE_CAPTION, UI.TEXT_MUTED, 500))
+	identity_title = UI.label("", UI.SIZE_CAPTION, UI.TEXT_MUTED, 500)
+	who.add_child(identity_title)
 	column.add_child(UI.spacer(12))
 	var level_row := HBoxContainer.new()
 	column.add_child(level_row)
@@ -113,12 +121,13 @@ func _sidebar() -> Control:
 	column.add_child(UI.spacer(16))
 	column.add_child(UI.hairline())
 	column.add_child(UI.spacer(10))
-	for index in range(PAGES.size()):
+	nav_buttons.resize(PAGES.size())
+	for index in SIDEBAR_ORDER:
 		var entry: Array = PAGES[index]
 		var button := Button.new()
 		button.theme_type_variation = "NavButton"
 		button.toggle_mode = true
-		button.custom_minimum_size = Vector2(0, 36)
+		button.custom_minimum_size = Vector2(0, 34)
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.focus_mode = Control.FOCUS_ALL
 		var row := HBoxContainer.new()
@@ -140,7 +149,7 @@ func _sidebar() -> Control:
 				show_page(index)
 				Sfx.play("ui_move"))
 		column.add_child(button)
-		nav_buttons.append(button)
+		nav_buttons[index] = button
 	column.add_child(UI.spacer(0, 0, true))
 	var footer := HBoxContainer.new()
 	footer.add_theme_constant_override("separation", 8)
@@ -240,6 +249,7 @@ func _refresh_identity() -> void:
 	if not is_instance_valid(level_label):
 		return
 	identity_name.text = AppState.display_name()
+	identity_title.text = "%s · M1" % Skills.title()
 	var progress: Dictionary = AcademicSession.level_progress()
 	level_label.text = "Lvl %d" % progress.level
 	xp_label.text = "%d / %d XP" % [progress.into, progress.needed]

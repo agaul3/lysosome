@@ -1,0 +1,436 @@
+{
+ "version": 1,
+ "questions": [
+  {
+   "id": "ecg_v1_01",
+   "discipline": "Physiology",
+   "topic": "Electrocardiography",
+   "subtopic": "Recording an ECG",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "Where is the V1 electrode placed?",
+   "choices": {
+    "a": "In the fourth intercostal space at the right sternal border",
+    "b": "On the right wrist",
+    "c": "In the second intercostal space at the left sternal border",
+    "d": "In the fifth intercostal space at the midclavicular line"
+   },
+   "explanation": "V1 goes in the 4th intercostal space just right of the sternum, V2 at the same level on the left; V4 sits in the 5th space at the midclavicular line, with V3 between V2 and V4, and V5–V6 continuing laterally.",
+   "learning_objective": "Place the precordial ECG leads correctly.",
+   "xp_reward": null,
+   "lecture_id": "ecg_lab_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "ecg_rate_01",
+   "discipline": "Physiology",
+   "topic": "Electrocardiography",
+   "subtopic": "Heart rate",
+   "question_type": "Application",
+   "difficulty_tier": 1,
+   "prompt": "On your own strip, consecutive R waves are four large boxes apart (at 25 mm/s). What is your heart rate?",
+   "choices": {
+    "a": "100 beats per minute",
+    "b": "150 beats per minute",
+    "c": "75 beats per minute",
+    "d": "60 beats per minute"
+   },
+   "explanation": "Each large box is 0.2 s, so 300 large boxes make a minute. Rate ≈ 300 ÷ the number of large boxes between R waves: 300 ÷ 4 = 75.",
+   "learning_objective": "Calculate heart rate from an ECG strip.",
+   "xp_reward": null,
+   "lecture_id": "ecg_lab_01",
+   "format": "multiple_choice",
+   "figure": {
+    "type": "ecg_strip",
+    "rate": 75,
+    "rhythm": "sinus",
+    "st": 0.0,
+    "lead": "II",
+    "seconds": 6.0
+   },
+   "correct_answer": "c"
+  },
+  {
+   "id": "ecg_pr_01",
+   "discipline": "Physiology",
+   "topic": "Electrocardiography",
+   "subtopic": "Intervals",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "What is the normal PR interval?",
+   "choices": {
+    "a": "0.12–0.20 seconds (three to five small boxes)",
+    "b": "Under 0.04 seconds",
+    "c": "Over 0.44 seconds",
+    "d": "0.20–0.40 seconds"
+   },
+   "explanation": "The PR interval, from the start of the P wave to the start of the QRS, reflects conduction through the atria and AV node: normally 0.12–0.20 s. Longer than 0.20 s is first-degree AV block.",
+   "learning_objective": "State the normal PR interval.",
+   "xp_reward": null,
+   "lecture_id": "ecg_lab_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "ecg_tachy_01",
+   "discipline": "Physiology",
+   "topic": "Electrocardiography",
+   "subtopic": "Rhythms",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "A classmate who ran up the stairs has this strip: regular, about 125 beats per minute, an upright P wave before every narrow QRS. What is the rhythm?",
+   "choices": {
+    "a": "Atrial fibrillation",
+    "b": "Sinus tachycardia",
+    "c": "Ventricular tachycardia",
+    "d": "Complete heart block"
+   },
+   "explanation": "A regular rhythm with a normal P wave before each QRS, at over 100 beats a minute, is sinus tachycardia: here a normal response to exercise.",
+   "learning_objective": "Recognize sinus tachycardia.",
+   "xp_reward": null,
+   "lecture_id": "ecg_lab_01",
+   "format": "multiple_choice",
+   "figure": {
+    "type": "ecg_strip",
+    "rate": 125,
+    "rhythm": "sinus",
+    "st": 0.0,
+    "lead": "II",
+    "seconds": 6.0
+   },
+   "correct_answer": "b"
+  },
+  {
+   "id": "ecg_af_01",
+   "discipline": "Physiology",
+   "topic": "Electrocardiography",
+   "subtopic": "Rhythms",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "This strip is from a 74-year-old with palpitations: the QRS complexes come at irregular intervals with no pattern, and there are no clear P waves. What is the rhythm?",
+   "choices": {
+    "a": "Atrial fibrillation",
+    "b": "Sinus arrhythmia",
+    "c": "Atrial flutter with 2:1 block",
+    "d": "Sinus tachycardia"
+   },
+   "explanation": "An irregularly irregular ventricular rhythm without discrete P waves (sometimes with a fibrillating baseline) is atrial fibrillation. Sinus arrhythmia varies with breathing but keeps P waves.",
+   "learning_objective": "Recognize atrial fibrillation.",
+   "xp_reward": null,
+   "lecture_id": "ecg_lab_01",
+   "format": "multiple_choice",
+   "figure": {
+    "type": "ecg_strip",
+    "rate": 96,
+    "rhythm": "afib",
+    "st": 0.0,
+    "lead": "II",
+    "seconds": 6.0
+   },
+   "correct_answer": "a"
+  },
+  {
+   "id": "ecg_stemi_01",
+   "discipline": "Physiology",
+   "topic": "Electrocardiography",
+   "subtopic": "ST elevation",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 3,
+   "prompt": "This is lead II from a man with crushing chest pain; leads III and aVF look the same. What does it show, and which artery is most often responsible?",
+   "choices": {
+    "a": "Pericarditis, affecting every lead",
+    "b": "A normal variant: early repolarization",
+    "c": "Anterior infarction from the left anterior descending artery",
+    "d": "Inferior ST-elevation myocardial infarction, most often the right coronary artery"
+   },
+   "explanation": "ST elevation in II, III and aVF localizes to the inferior wall, usually supplied by the right coronary artery. With chest pain, this is a STEMI: emergency reperfusion, ideally primary PCI.",
+   "learning_objective": "Localize an inferior STEMI.",
+   "xp_reward": null,
+   "lecture_id": "ecg_lab_01",
+   "format": "multiple_choice",
+   "figure": {
+    "type": "ecg_strip",
+    "rate": 88,
+    "rhythm": "sinus",
+    "st": 0.28,
+    "lead": "II",
+    "seconds": 6.0
+   },
+   "correct_answer": "d"
+  },
+  {
+   "id": "sp_cp_first_01",
+   "discipline": "Clinical Skills",
+   "topic": "Chest Pain",
+   "subtopic": "First steps",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "Mr. Kim has had 40 minutes of crushing central chest pressure radiating to his left arm, with sweating. What is the first test, and how quickly?",
+   "choices": {
+    "a": "A chest X-ray, within an hour",
+    "b": "A cardiac stress test, today",
+    "c": "Troponin only, and wait for the result",
+    "d": "A 12-lead ECG, within 10 minutes of arrival"
+   },
+   "explanation": "Suspected acute coronary syndrome calls for a 12-lead ECG within 10 minutes of arrival to identify ST elevation, which needs emergency reperfusion. Troponins are drawn too, but don't delay the ECG.",
+   "learning_objective": "Prioritize the ECG in suspected acute coronary syndrome.",
+   "xp_reward": null,
+   "lecture_id": "sp_chest_pain_01",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "sp_cp_aspirin_01",
+   "discipline": "Clinical Skills",
+   "topic": "Chest Pain",
+   "subtopic": "Early treatment",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "Unless he's allergic or has active bleeding, what should Mr. Kim be given right away?",
+   "choices": {
+    "a": "A beta-blocker intravenously, whatever his blood pressure",
+    "b": "Ibuprofen",
+    "c": "Aspirin, chewed (about 160–325 mg)",
+    "d": "Nothing until the troponin comes back"
+   },
+   "explanation": "Aspirin irreversibly inhibits platelet COX-1 and reduces mortality in acute coronary syndrome; chewing speeds absorption. NSAIDs like ibuprofen increase cardiovascular risk.",
+   "learning_objective": "Give aspirin early in suspected acute coronary syndrome.",
+   "xp_reward": null,
+   "lecture_id": "sp_chest_pain_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "imm_ed_ottawa_01",
+   "discipline": "Clinical Skills",
+   "topic": "Emergency Medicine",
+   "subtopic": "Ankle injuries",
+   "question_type": "Application",
+   "difficulty_tier": 2,
+   "prompt": "A 16-year-old rolled her ankle playing basketball. She walked in on it, limping, and is tender over the ligaments in front of the lateral malleolus but not over the bone. Under the Ottawa ankle rules, does she need an X-ray?",
+   "choices": {
+    "a": "No: no bone tenderness at the malleoli, and she can bear weight",
+    "b": "No: teenagers can't break their ankles",
+    "c": "Yes: any swelling means a fracture",
+    "d": "Yes: every ankle injury needs an X-ray"
+   },
+   "explanation": "The Ottawa ankle rules call for X-rays with bone tenderness at the posterior edge or tip of either malleolus (or the navicular or base of the fifth metatarsal for the foot), or inability to bear weight for four steps both immediately and in the ED. Ligament tenderness alone suggests a sprain.",
+   "learning_objective": "Apply the Ottawa ankle rules.",
+   "xp_reward": null,
+   "lecture_id": "immersion_ed_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "imm_ed_abcde_01",
+   "discipline": "Clinical Skills",
+   "topic": "Emergency Medicine",
+   "subtopic": "Trauma",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "When the trauma team receives a patient from a car crash, what is assessed first in the primary survey?",
+   "choices": {
+    "a": "The airway, with cervical spine protection",
+    "b": "Disability: the level of consciousness",
+    "c": "Exposure: undressing to look for injuries",
+    "d": "Circulation: the pulse and blood pressure"
+   },
+   "explanation": "The primary survey runs ABCDE: Airway (with cervical spine protection), Breathing, Circulation (with hemorrhage control), Disability, Exposure. Life threats are treated as they're found, in that order.",
+   "learning_objective": "Recall the order of the trauma primary survey.",
+   "xp_reward": null,
+   "lecture_id": "immersion_ed_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "imm_ed_sepsis_01",
+   "discipline": "Clinical Skills",
+   "topic": "Emergency Medicine",
+   "subtopic": "Sepsis",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 3,
+   "prompt": "An 82-year-old from a nursing home has a fever of 39 °C, new confusion, a heart rate of 118 and a blood pressure of 86/50. After blood cultures, what matters most in the next hour?",
+   "choices": {
+    "a": "Waiting for the urine culture to choose an antibiotic",
+    "b": "Acetaminophen and observation",
+    "c": "A head CT before any treatment",
+    "d": "Broad-spectrum antibiotics and intravenous fluids"
+   },
+   "explanation": "This is suspected sepsis with hypotension. Early antibiotics (within an hour) after cultures, and fluid resuscitation, improve survival; vasopressors follow if pressure doesn't respond. Imaging and cultures must not delay treatment.",
+   "learning_objective": "Prioritize early antibiotics and fluids in sepsis.",
+   "xp_reward": null,
+   "lecture_id": "immersion_ed_01",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "exb3_s3_01",
+   "discipline": "Physiology",
+   "topic": "Cardiovascular",
+   "subtopic": "Heart sounds",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "A 70-year-old with breathlessness and swollen ankles has an extra sound early in diastole, just after S2. What does it suggest?",
+   "choices": {
+    "a": "An S4, from atrial contraction into a stiff ventricle",
+    "b": "An S3, from rapid filling of a dilated, volume-overloaded ventricle, as in heart failure",
+    "c": "A normal finding at any age",
+    "d": "A mid-systolic click of mitral valve prolapse"
+   },
+   "explanation": "An S3 occurs in early diastole as blood rushes into a compliant, overfilled ventricle. It can be normal in children and young adults but in older adults suggests heart failure with volume overload.",
+   "learning_objective": "Interpret an S3 in an older adult.",
+   "xp_reward": null,
+   "lecture_id": "exam_b3",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "exb3_mr_01",
+   "discipline": "Physiology",
+   "topic": "Cardiovascular",
+   "subtopic": "Murmurs",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "A holosystolic, blowing murmur is loudest at the apex and radiates to the left axilla. What's the likely lesion?",
+   "choices": {
+    "a": "Mitral stenosis",
+    "b": "Mitral regurgitation",
+    "c": "Ventricular septal defect",
+    "d": "Aortic stenosis"
+   },
+   "explanation": "Mitral regurgitation gives a holosystolic murmur at the apex radiating to the axilla. Aortic stenosis is ejection-type at the right upper sternal border; a VSD is holosystolic at the left lower sternal border.",
+   "learning_objective": "Recognize the murmur of mitral regurgitation.",
+   "xp_reward": null,
+   "lecture_id": "exam_b3",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "exb3_co_01",
+   "discipline": "Physiology",
+   "topic": "Cardiovascular",
+   "subtopic": "Cardiac output",
+   "question_type": "Application",
+   "difficulty_tier": 1,
+   "prompt": "A resting heart rate of 70 beats per minute and a stroke volume of 70 mL give a cardiac output of about:",
+   "choices": {
+    "a": "140 mL per minute",
+    "b": "0.49 L per minute",
+    "c": "4.9 L per minute",
+    "d": "49 L per minute"
+   },
+   "explanation": "Cardiac output = heart rate × stroke volume = 70 × 70 mL = 4,900 mL/min ≈ 4.9 L/min.",
+   "learning_objective": "Calculate cardiac output.",
+   "xp_reward": null,
+   "lecture_id": "exam_b3",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "exb3_tpr_01",
+   "discipline": "Physiology",
+   "topic": "Cardiovascular",
+   "subtopic": "Resistance",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "Which vessels contribute most to total peripheral resistance?",
+   "choices": {
+    "a": "The aorta",
+    "b": "The capillaries",
+    "c": "The arterioles",
+    "d": "The veins"
+   },
+   "explanation": "Arterioles have the greatest resistance and, with their smooth muscle, control it: they're where the pressure drops most and where vasodilators and vasoconstrictors act.",
+   "learning_objective": "Identify arterioles as the main resistance vessels.",
+   "xp_reward": null,
+   "lecture_id": "exam_b3",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "exb3_ccb_01",
+   "discipline": "Pharmacology",
+   "topic": "Antihypertensives",
+   "subtopic": "Calcium-channel blockers",
+   "question_type": "Conceptual",
+   "difficulty_tier": 2,
+   "prompt": "Why does amlodipine cause ankle swelling that diuretics don't fix well?",
+   "choices": {
+    "a": "It lowers plasma albumin.",
+    "b": "It dilates arterioles more than venules, raising capillary pressure in the legs.",
+    "c": "It causes the kidneys to retain salt and water.",
+    "d": "It damages lymphatic vessels."
+   },
+   "explanation": "Dihydropyridines dilate precapillary arterioles, transmitting more pressure to capillaries, so fluid filters into the tissues. Because it isn't salt retention, diuretics help little; adding an ACE inhibitor or ARB (which dilates venules) can reduce it.",
+   "learning_objective": "Explain dihydropyridine-induced edema.",
+   "xp_reward": null,
+   "lecture_id": "exam_b3",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "exb3_af_stroke_01",
+   "discipline": "Physiology",
+   "topic": "Electrocardiography",
+   "subtopic": "Atrial fibrillation",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "What is the most important long-term risk of atrial fibrillation?",
+   "choices": {
+    "a": "Low blood sugar",
+    "b": "Kidney stones",
+    "c": "Stroke from clots forming in the left atrial appendage",
+    "d": "Sudden hearing loss"
+   },
+   "explanation": "In atrial fibrillation, blood stagnates in the left atrium, especially its appendage, forming clots that can embolize to the brain. Stroke risk is estimated (for example with CHA₂DS₂-VASc) to decide on anticoagulation.",
+   "learning_objective": "Recognize the thromboembolic risk of atrial fibrillation.",
+   "xp_reward": null,
+   "lecture_id": "exam_b3",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "exb3_qrs_01",
+   "discipline": "Physiology",
+   "topic": "Electrocardiography",
+   "subtopic": "Intervals",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "An ECG shows a QRS duration of 0.16 seconds. What does this indicate?",
+   "choices": {
+    "a": "Atrial enlargement",
+    "b": "A normal QRS",
+    "c": "First-degree AV block",
+    "d": "Abnormally slow ventricular conduction, as in a bundle branch block"
+   },
+   "explanation": "A normal QRS is under 0.12 s. A wide QRS means the ventricles are depolarizing slowly, through a blocked bundle branch or from a ventricular origin.",
+   "learning_objective": "Interpret a wide QRS complex.",
+   "xp_reward": null,
+   "lecture_id": "exam_b3",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "exb3_ace_labs_01",
+   "discipline": "Pharmacology",
+   "topic": "Antihypertensives",
+   "subtopic": "Monitoring",
+   "question_type": "Application",
+   "difficulty_tier": 2,
+   "prompt": "One to two weeks after starting an ACE inhibitor, which blood tests should be checked?",
+   "choices": {
+    "a": "Glucose and HbA1c",
+    "b": "Potassium and creatinine",
+    "c": "Hemoglobin and platelets",
+    "d": "Liver enzymes and bilirubin"
+   },
+   "explanation": "ACE inhibitors can raise potassium and, by relaxing the efferent arteriole, raise creatinine (especially with renal artery stenosis or dehydration). A small rise in creatinine is expected; a large one needs review.",
+   "learning_objective": "Monitor potassium and kidney function after starting an ACE inhibitor.",
+   "xp_reward": null,
+   "lecture_id": "exam_b3",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  }
+ ]
+}

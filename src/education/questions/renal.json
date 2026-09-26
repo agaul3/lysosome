@@ -1,0 +1,131 @@
+{
+ "version": 1,
+ "questions": [
+  {
+   "id": "renal_clearance_01",
+   "discipline": "Physiology",
+   "topic": "Renal",
+   "subtopic": "Clearance",
+   "question_type": "Application",
+   "difficulty_tier": 2,
+   "prompt": "A substance has a urine concentration of 100 mg/dL and a plasma concentration of 1 mg/dL, and urine flow is 1 mL/min. What is its clearance?",
+   "choices": {
+    "a": "10 mL/min",
+    "b": "100 mL/min",
+    "c": "10,000 mL/min",
+    "d": "1 mL/min"
+   },
+   "explanation": "Clearance = (U × V) ÷ P = (100 mg/dL × 1 mL/min) ÷ 1 mg/dL = 100 mL/min: 100 mL of plasma is cleared of the substance each minute.",
+   "learning_objective": "Calculate renal clearance from urine and plasma concentrations and urine flow.",
+   "xp_reward": null,
+   "lecture_id": "renal_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "renal_nsaid_01",
+   "discipline": "Physiology",
+   "topic": "Renal",
+   "subtopic": "Glomerular hemodynamics",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 3,
+   "prompt": "A 74-year-old on lisinopril takes ibuprofen for a week of back pain during a bout of diarrhea. Her creatinine doubles. What is the mechanism?",
+   "choices": {
+    "a": "Afferent constriction (prostaglandins blocked) plus efferent dilation (angiotensin II blocked) lowers glomerular pressure.",
+    "b": "Ibuprofen directly poisons the collecting duct.",
+    "c": "Lisinopril constricts the efferent arteriole.",
+    "d": "Diarrhea raises renal blood flow."
+   },
+   "explanation": "With volume depletion, glomerular filtration depends on prostaglandins dilating the afferent arteriole and angiotensin II constricting the efferent. NSAIDs remove the first and ACE inhibitors the second, so glomerular pressure and GFR fall: prerenal acute kidney injury.",
+   "learning_objective": "Explain acute kidney injury from NSAIDs with ACE inhibitors in volume depletion.",
+   "xp_reward": null,
+   "lecture_id": "renal_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "renal_glucose_01",
+   "discipline": "Physiology",
+   "topic": "Renal",
+   "subtopic": "Glucose reabsorption",
+   "question_type": "Conceptual",
+   "difficulty_tier": 2,
+   "prompt": "Why do people with poorly controlled diabetes have glucose in their urine?",
+   "choices": {
+    "a": "Insulin normally pumps glucose back from urine.",
+    "b": "Filtered glucose exceeds the proximal tubule's SGLT capacity, so the rest is excreted.",
+    "c": "The glomerulus stops filtering glucose.",
+    "d": "The collecting duct secretes glucose."
+   },
+   "explanation": "Glucose is freely filtered and normally all reabsorbed in the proximal tubule by SGLT2 (and SGLT1). Above a plasma glucose of roughly 180–200 mg/dL, the transporters saturate and glucose appears in the urine. SGLT2 inhibitors exploit this.",
+   "learning_objective": "Explain glucosuria in terms of proximal tubular transport maximum.",
+   "xp_reward": null,
+   "lecture_id": "renal_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "renal_loop_01",
+   "discipline": "Physiology",
+   "topic": "Renal",
+   "subtopic": "Loop diuretics",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "Furosemide acts by inhibiting which transporter, in which segment?",
+   "choices": {
+    "a": "ENaC, in the collecting duct",
+    "b": "NCC, in the distal convoluted tubule",
+    "c": "NKCC2, in the thick ascending limb of the loop of Henle",
+    "d": "SGLT2, in the proximal tubule"
+   },
+   "explanation": "Loop diuretics block the Na⁺–K⁺–2Cl⁻ cotransporter (NKCC2) of the thick ascending limb, which reabsorbs about a quarter of filtered sodium, so they are the most potent diuretics. Side effects include hypokalemia, hypomagnesemia, hypocalcemia and ototoxicity.",
+   "learning_objective": "Identify the site and transporter targeted by loop diuretics.",
+   "xp_reward": null,
+   "lecture_id": "renal_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "renal_spironolactone_01",
+   "discipline": "Physiology",
+   "topic": "Renal",
+   "subtopic": "Potassium-sparing diuretics",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "A patient with heart failure takes lisinopril and is started on spironolactone. Which lab value most needs watching?",
+   "choices": {
+    "a": "Serum calcium (risk of hypercalcemia)",
+    "b": "Serum glucose (risk of hypoglycemia)",
+    "c": "Serum sodium (risk of hypernatremia)",
+    "d": "Serum potassium (risk of hyperkalemia)"
+   },
+   "explanation": "Spironolactone blocks aldosterone in the collecting duct, reducing K⁺ secretion; ACE inhibitors lower aldosterone too. Together they can cause dangerous hyperkalemia, especially with kidney impairment.",
+   "learning_objective": "Anticipate hyperkalemia with spironolactone and ACE inhibitors.",
+   "xp_reward": null,
+   "lecture_id": "renal_01",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "renal_adh_01",
+   "discipline": "Physiology",
+   "topic": "Renal",
+   "subtopic": "Antidiuretic hormone",
+   "question_type": "Conceptual",
+   "difficulty_tier": 2,
+   "prompt": "A patient with small-cell lung cancer has a serum sodium of 124 mEq/L, is not dehydrated, and has concentrated urine. What best explains this?",
+   "choices": {
+    "a": "Inappropriate ADH secretion (SIADH): water is retained through aquaporin-2",
+    "b": "Diabetes insipidus",
+    "c": "Excess aldosterone",
+    "d": "A loop diuretic"
+   },
+   "explanation": "SIADH (here from the tumor) keeps aquaporin-2 channels in the collecting duct, so water is retained and sodium diluted despite a normal volume, with inappropriately concentrated urine. Diabetes insipidus gives dilute urine and high or normal sodium.",
+   "learning_objective": "Recognize SIADH and explain it through ADH action in the collecting duct.",
+   "xp_reward": null,
+   "lecture_id": "renal_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  }
+ ]
+}

@@ -3,6 +3,7 @@ extends Control
 ## diagram. Drawn into a SubViewport and shown on the hall's screen. Curves use
 ## the real Hill equation on a log-concentration axis.
 const DoseResponse = preload("res://education/models/dose_response.gd")
+const FigureArt = preload("res://ui/figure_art.gd")
 const FONT = preload("res://assets/outfit_medium.tres")
 const BACKGROUND := Color("1d2a33")
 const INK := Color("eef2ef")
@@ -123,6 +124,7 @@ func _draw_diagram() -> void:
 		"graded_quantal": _quantal()
 		"clinical_opioid": _curves([[100.0, 1.0, ACCENT, "Full μ agonist"], [45.0, 0.3, SECOND, "Buprenorphine (partial)"]])
 		"summary": _curves([[100.0, 1.0, ACCENT, "Agonist"], [100.0, 10.0, SECOND, "Competitive"], [55.0, 1.0, THIRD, "Noncompetitive"]])
+		"figure": FigureArt.draw(diagram, slide.get("figure", {}), Rect2(Vector2.ZERO, diagram.size))
 
 func _plot_rect() -> Rect2:
 	return Rect2(Vector2(70, 20), diagram.size - Vector2(90, 110))
@@ -218,7 +220,7 @@ func _title_art() -> void:
 		var log_c := -2.0 + step / 120.0 * 5.0
 		points.append(_to_screen(log_c, DoseResponse.response(pow(10.0, log_c), 100.0, 1.0), rect))
 	diagram.draw_polyline(points, ACCENT, 6.0, true)
-	diagram.draw_string(FONT, Vector2(rect.position.x, rect.end.y + 50), "Lecture Hall A  ·  First-year Pharmacology", HORIZONTAL_ALIGNMENT_LEFT, -1, 26, MUTED)
+	diagram.draw_string(FONT, Vector2(rect.position.x, rect.end.y + 50), String(slide.get("caption", "Lecture Hall A  ·  First-year Pharmacology")), HORIZONTAL_ALIGNMENT_LEFT, -1, 26, MUTED)
 
 # --- Interactive model ---------------------------------------------------------
 

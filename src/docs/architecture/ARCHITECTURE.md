@@ -1,4 +1,4 @@
-# Architecture — Milestones 1–11
+# Architecture — Milestones 1–11 and the first year
 
 ## Application and scenes
 
@@ -371,3 +371,37 @@ The doors' collider is solid only while closed. `HospitalKit`/MeshKit gains a `c
   - wheelchair and radiology transports;
   - staff paths and their step-aside lanes.
   - At corners it assumes an on-the-spot turn, which is stricter than the real eased turn.
+
+## The first year — September 25, 2026
+
+The expansion that makes the whole first year playable (`docs/development/YEAR_ONE_PLAN.md`).
+
+**Autoloads**, after Transition in `project.godot`, in dependency order: `Skills`, `Wellbeing`, `Wallet`, `Achievements`, `YearCalendar`, `Clubs`; then `SaveGame` and `Flashcards`.
+- **YearCalendar** (`autoload/year_calendar.gd`, data in `data/year_one.json`): terms, six blocks, 28 story days and their 41 events, merged into `GameClock.config.events` so attendance, lateness and the schedule work for every event. `sleep()` ends the story day: absences, make-up exams, the day summary, the jump to the next ready day's 7:30 (or, after the last day, the next summer morning), energy, Well Rested and the monthly stipend. `completed(event)` is a finished lecture or a `done:<event>` flag set by `mark_completed`. `pass_time()` and `advance_to()` move the clock for activities; the clock never runs backward.
+- **Wallet** (cents): balance, transactions, carried snacks, clothing and study aids owned (`data/items.gd`: food, drink, snacks, study aids and vendors). `earn(amount, label, kind)` scales pay by perks; `buy`, `buy_clothing`, `buy_aid`.
+- **Wellbeing**: energy (spent by activities, restored by food, rest and sleep) and timed boosts in slots (drink, meal, rest, exercise, social). `xp_multiplier(context)` multiplies learning XP only, and is exactly 1 with no perks, no boosts and energy above 40.
+- **Skills**: skill points (one per level gained, plus achievement rewards) and perks from `data/skill_tree.gd` (four branches, twenty perks). `effect(key)` sums perks and study aids.
+- **Achievements**: lifetime stats (`bump`, `set_stat`) and moments (`set_flag`, `note_today`) checked against `data/achievements.gd` (46). Rewards are money, skill points or clothing, never XP.
+- **Clubs**: memberships (three at most), reputation and meetings (`data/clubs.gd`: seven clubs, meeting days, places and activities). `record()` turns a meeting's score into reputation and level rewards.
+- **SaveGame** keeps all of it in an optional `life` section of the version-1 save; saves without it load with starting values.
+
+**Buildings.** `world/interior/interior_scene.gd` is the base for the new interiors: zones laid out far apart in one scene, each built by a static builder into a `HospitalKit` (so hospital props and builders work unchanged), with the hospital's node API (signs, figures, doors, endpoints, seats, PCs, walkers) plus `add_station`, `add_transfer` and `add_walkers`. Subclasses: `world/med_ed/` (Medical Education Center, two levels), `world/library/` (two levels), `world/student_center/` (two levels), `world/anatomy/` (ground floor and the lower-level lab), `world/community/` (Harbor Street Community Center). `world/interior/campus_props.gd` holds their furniture. The campus gains the East Campus district (`world/campus/east_campus.gd`: the Health Sciences Walk, the East Green and the buildings' exteriors), the Club Fair and intramural pitch (`campus_events.gd`) and the shuttle (`ui/shuttle_panel.gd`). University Hospital gains a fifth zone, the Food Court (`world/hospital/hospital_food_court.gd`, 140 m south of the lobby), reached from the clinics corridor by a fade transfer, with shop counters (`add_shop`) and seats (`add_seat`); the lobby's café counter is now a shop too. In the overhead view the lobby draws the building around its corridors as cut mass.
+
+**Scheduled activities.** `world/activity_station.gd` is an endpoint placed in a room (scene key and room, matching the event's `place` and `room`). From 30 minutes before an event until it ends, and until it is completed, it offers the event and opens `education/activities/<content>.json`:
+- in `ui/activity_panel.gd` (steps: `say`, `figure`, `question`, `choice`, `history`, `exam`, `recap`, `reward`), which scores each part, gives the debrief and faculty comment, marks the event done, spends energy and moves the clock to the event's end; or
+- in `ui/exam_panel.gd` (kind `exam`), a timed exam in `ui/quiz_panel.gd`'s exam mode: answers change freely until submitted, then Pass or Honors, the merit award and the discipline breakdown.
+
+Stations: the Testing Center, histology lab, Clinical Skills Center, skills lab, small-group room and atrium in the Medical Education Center; the theatre and your table in Anatomy Hall; Hall A's doors; the ED's central station, 4 West and the clinics' doors; the quad.
+
+**Lectures** (`education/lectures/<id>.json`, twelve new) run in the existing lecture engine in Hall A or Hall B (`lecture_catalog.gd`), with figures drawn from data by `ui/figure_art.gd` (curves from named functions, flow, table, cycle, bars, micrographs and ECG strips). **Questions** live in per-topic banks in `education/questions/` (listed in `QuestionBank.PATHS`); an activity's questions carry its event id as `lecture_id`, so their flashcards arrive on the event's day, and a club's only for its members.
+
+**Other panels.** `ui/modal_panel.gd` is the shared dialog. Built on it: the shop, the Campus Store, the study group and tutoring shift (quiz runs), the gym, the club pages and club activities (`ui/clubs/`: the kitchen serving line, blood pressures, suturing, CPR, intramurals and the quiz clubs), the sleep dialog, the day summary and title card. The HUD adds the money and energy card with boost chips (`ui/life_hud.gd`) and toasts (`ui/toast_stack.gd`); the menu adds Journal, Skills, Wallet and a working Achievements page.
+
+**Verification.**
+- `tests/year_test.gd`: money, boosts, skills, achievements, sleep, make-ups, the stipend and saves.
+- `tests/east_campus_test.gd` and `tests/student_life_test.gd`: the district, shuttle, library, Medical Education Center, Student Center, Community Center, the clubs across a week and Anatomy Hall, walked with real movement.
+- `tests/interior_clearance_test.gd`: every zone of the new buildings, their walkers' routes and side lanes against the furniture and seats.
+- `tests/curriculum_test.gd`: every lecture script and figure validates and each new lecture plays in its hall on its day.
+- `tests/activities_test.gd`: every activity file validates, every activity event has its content and a station in its room, and a lab, an encounter, exams with Honors and below the pass mark, a case, Research Day, the OSCE, the ceremonies, an immersion shift and the last day play through, into summer.
+- `tests/food_court_test.gd`: the Food Court's doors both ways, ordering, a seat and the laptop, and the diners' loop against the furniture, in both views.
+

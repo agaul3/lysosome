@@ -1,0 +1,396 @@
+{
+ "version": 1,
+ "id": "diabetes_01",
+ "title": "Diabetes & Glucose Regulation",
+ "professor": "Dr. Jonah Weiss",
+ "segments": [
+  {
+   "id": "introduction",
+   "topic": "Introduction",
+   "slide": {
+    "heading": "Sugar",
+    "bullets": [],
+    "subheading": "Insulin, glucagon, and the diabetes you'll treat your whole career",
+    "diagram": "figure",
+    "figure": {
+     "type": "flow",
+     "nodes": [
+      {
+       "id": "meal",
+       "label": "A meal: glucose rises",
+       "x": 0.12,
+       "y": 0.3,
+       "color": "gold"
+      },
+      {
+       "id": "beta",
+       "label": "β cell releases insulin",
+       "x": 0.42,
+       "y": 0.3,
+       "color": "accent"
+      },
+      {
+       "id": "muscle",
+       "label": "Muscle and fat take up glucose (GLUT4)",
+       "x": 0.8,
+       "y": 0.15,
+       "color": "second"
+      },
+      {
+       "id": "liver",
+       "label": "Liver stores glycogen",
+       "x": 0.8,
+       "y": 0.5,
+       "color": "third"
+      },
+      {
+       "id": "fast",
+       "label": "Fasting: glucagon",
+       "x": 0.42,
+       "y": 0.82,
+       "color": "red"
+      }
+     ],
+     "edges": [
+      {
+       "from": "meal",
+       "to": "beta"
+      },
+      {
+       "from": "beta",
+       "to": "muscle"
+      },
+      {
+       "from": "beta",
+       "to": "liver"
+      }
+     ],
+     "text_size": 18
+    }
+   },
+   "lines": [
+    {
+     "text": "Good morning, I'm Jonah Weiss, endocrinology. About one American adult in ten has diabetes, and many more have prediabetes. Whatever you specialize in, you'll manage it.",
+     "gesture": "audience"
+    },
+    {
+     "text": "Today: how the β cell senses glucose, what insulin and glucagon do, the two main kinds of diabetes, and the drugs.",
+     "gesture": "screen"
+    }
+   ]
+  },
+  {
+   "id": "secretion",
+   "topic": "Insulin secretion",
+   "slide": {
+    "heading": "How the β cell senses glucose",
+    "bullets": [
+     "Glucose enters through GLUT2; glucokinase traps it",
+     "More ATP closes K-ATP channels",
+     "The cell depolarizes; Ca²⁺ channels open",
+     "Ca²⁺ triggers insulin release",
+     "Sulfonylureas close K-ATP directly"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "flow",
+     "nodes": [
+      {
+       "id": "glc",
+       "label": "Glucose in (GLUT2)",
+       "x": 0.1,
+       "y": 0.25,
+       "color": "gold"
+      },
+      {
+       "id": "atp",
+       "label": "↑ ATP",
+       "x": 0.35,
+       "y": 0.25,
+       "color": "accent"
+      },
+      {
+       "id": "katp",
+       "label": "K-ATP channels close",
+       "x": 0.62,
+       "y": 0.25,
+       "color": "second"
+      },
+      {
+       "id": "dep",
+       "label": "Depolarization",
+       "x": 0.88,
+       "y": 0.25,
+       "color": "third"
+      },
+      {
+       "id": "ca",
+       "label": "Ca²⁺ in",
+       "x": 0.88,
+       "y": 0.75,
+       "color": "red"
+      },
+      {
+       "id": "ins",
+       "label": "Insulin released",
+       "x": 0.55,
+       "y": 0.75,
+       "color": "green"
+      },
+      {
+       "id": "su",
+       "label": "Sulfonylureas",
+       "x": 0.62,
+       "y": 0.55,
+       "color": "muted"
+      }
+     ],
+     "edges": [
+      {
+       "from": "glc",
+       "to": "atp"
+      },
+      {
+       "from": "atp",
+       "to": "katp"
+      },
+      {
+       "from": "katp",
+       "to": "dep"
+      },
+      {
+       "from": "dep",
+       "to": "ca"
+      },
+      {
+       "from": "ca",
+       "to": "ins"
+      },
+      {
+       "from": "su",
+       "to": "katp"
+      }
+     ],
+     "text_size": 18
+    }
+   },
+   "lines": [
+    {
+     "text": "Glucose enters the β cell through GLUT2 and glucokinase phosphorylates it: remember glucokinase's high Km from the fall? This is where it matters.",
+     "gesture": "screen",
+     "reveal": 1
+    },
+    {
+     "text": "As glucose is burned, ATP rises and closes ATP-sensitive potassium channels. The cell depolarizes, voltage-gated calcium channels open, and calcium triggers insulin release.",
+     "gesture": "screen",
+     "reveal": 4
+    },
+    {
+     "text": "Sulfonylureas skip the glucose step and close those channels directly, which is why they can cause hypoglycemia.",
+     "gesture": "screen",
+     "reveal": 5
+    },
+    {
+     "question": "dm_katp_01"
+    }
+   ]
+  },
+  {
+   "id": "actions",
+   "topic": "Insulin and glucagon",
+   "slide": {
+    "heading": "Insulin and glucagon",
+    "bullets": [
+     "Insulin: GLUT4 to the surface of muscle and fat",
+     "Insulin: glycogen, fat and protein built",
+     "Insulin: lipolysis and ketones switched off",
+     "Glucagon: glycogenolysis, gluconeogenesis, ketones",
+     "C-peptide: released with the body's own insulin"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "Insulin is the hormone of the fed state. It sends GLUT4 transporters to the surface of muscle and fat cells, and tells the liver to store glycogen and stop making glucose.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "text": "Just as important, it switches off fat breakdown, and with it ketone production.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "text": "Glucagon does the opposite in fasting: it releases glucose from glycogen, makes new glucose, and lets the liver make ketones.",
+     "gesture": "screen",
+     "reveal": 4
+    },
+    {
+     "text": "Insulin is made as proinsulin, and the C-peptide is cut off and released with it. That gives you a way to tell the body's own insulin from injected insulin.",
+     "gesture": "screen",
+     "reveal": 5
+    },
+    {
+     "question": "dm_cpeptide_01"
+    }
+   ]
+  },
+  {
+   "id": "types",
+   "topic": "Type 1 and type 2",
+   "slide": {
+    "heading": "Type 1, type 2, and the diagnosis",
+    "bullets": [
+     "Type 1: autoimmune β-cell loss; no insulin",
+     "Type 2: insulin resistance, then β-cell failure",
+     "HbA1c ≥ 6.5%, or fasting glucose ≥ 126 mg/dL",
+     "2-h OGTT ≥ 200, or random ≥ 200 with symptoms",
+     "HbA1c: the average of about three months"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "table",
+     "columns": [
+      "Test",
+      "Diabetes",
+      "Prediabetes"
+     ],
+     "rows": [
+      [
+       "HbA1c",
+       "≥ 6.5%",
+       "5.7–6.4%"
+      ],
+      [
+       "Fasting glucose",
+       "≥ 126 mg/dL",
+       "100–125 mg/dL"
+      ],
+      [
+       "2-h glucose (OGTT)",
+       "≥ 200 mg/dL",
+       "140–199 mg/dL"
+      ]
+     ],
+     "widths": [
+      0.4,
+      0.3,
+      0.3
+     ]
+    }
+   },
+   "lines": [
+    {
+     "text": "Type one is autoimmune: the immune system destroys the β cells, usually in young people, and without insulin they make ketones.",
+     "gesture": "screen",
+     "reveal": 1
+    },
+    {
+     "text": "Type two is far commoner: tissues resist insulin, the β cells work harder, and over years they fail. Obesity and family history are the big risks.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "text": "We diagnose with any of these, confirmed on a repeat test unless the picture is unmistakable.",
+     "gesture": "screen",
+     "reveal": 4
+    },
+    {
+     "question": "dm_diagnosis_01"
+    },
+    {
+     "text": "The HbA1c is glucose stuck to hemoglobin. Red cells live about four months, so it reflects the last two to three.",
+     "gesture": "screen",
+     "reveal": 5
+    },
+    {
+     "question": "dm_a1c_01",
+     "remediation": "dm_a1c_remediation_01"
+    }
+   ]
+  },
+  {
+   "id": "dka",
+   "topic": "Diabetic ketoacidosis",
+   "slide": {
+    "heading": "Diabetic ketoacidosis",
+    "bullets": [
+     "No insulin: unchecked glucose and ketone production",
+     "Anion-gap metabolic acidosis; deep, fast breathing",
+     "Osmotic diuresis: severe dehydration",
+     "Treat: fluids, insulin infusion, potassium",
+     "Check potassium before starting insulin"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "Without insulin, fat breaks down unchecked and the liver pours out ketones: diabetic ketoacidosis.",
+     "gesture": "screen",
+     "reveal": 1
+    },
+    {
+     "text": "The blood becomes acidic with a raised anion gap, and the patient breathes deeply and fast to blow off carbon dioxide.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "text": "Glucose spills into the urine and drags water with it, so they're profoundly dehydrated.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "text": "Treatment is fluids, an insulin infusion, and potassium. Here's the trap.",
+     "gesture": "screen",
+     "reveal": 5
+    },
+    {
+     "question": "dm_dka_k_01"
+    }
+   ]
+  },
+  {
+   "id": "drugs",
+   "topic": "Treating type 2 diabetes",
+   "slide": {
+    "heading": "The drugs",
+    "bullets": [
+     "Metformin: less glucose from the liver; first line",
+     "Metformin: GI upset; rare lactic acidosis; B12",
+     "SGLT2 inhibitors: glucose out in the urine",
+     "SGLT2: genital infections; heart and kidney benefit",
+     "GLP-1 agonists: more insulin with meals, weight loss"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "Metformin is first line for most people with type two diabetes. It mainly reduces the liver's glucose output, doesn't cause hypoglycemia on its own, and is cheap.",
+     "gesture": "screen",
+     "reveal": 1
+    },
+    {
+     "question": "dm_metformin_01"
+    },
+    {
+     "text": "SGLT2 inhibitors block glucose reabsorption in the proximal tubule, from the renal lecture, so glucose leaves in the urine. They also protect the heart and kidneys.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "text": "The glucose in the urine is why they cause genital yeast infections.",
+     "gesture": "screen",
+     "reveal": 4
+    },
+    {
+     "question": "dm_sglt2_01"
+    },
+    {
+     "text": "GLP-1 receptor agonists boost insulin release only when glucose is high, suppress glucagon, slow the stomach and help with weight loss.",
+     "gesture": "screen",
+     "reveal": 5
+    }
+   ]
+  }
+ ]
+}

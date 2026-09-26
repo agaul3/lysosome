@@ -1,0 +1,205 @@
+{
+ "version": 1,
+ "id": "sp_chest_pain",
+ "kind": "encounter",
+ "eyebrow": "Clinical Skills Center · Room 2",
+ "title": "Standardized patient: chest pain",
+ "intro": "Door card: Mr. Robert Kim, 62, \"chest pain\". Twelve minutes, history and a focused exam. This one is played as an emergency: think about what you'd do first.",
+ "context": "clinical",
+ "minutes": 60,
+ "energy": 10,
+ "steps": [
+  {
+   "say": "Mr. Kim is sitting bolt upright, pale and sweaty, one fist pressed to his chest."
+  },
+  {
+   "choice": {
+    "prompt": "How do you begin?",
+    "category": "Communication",
+    "options": [
+     {
+      "text": "Introduce yourself briefly and ask, \"Tell me about the pain.\" Keep it short: he looks unwell.",
+      "reply": "\"Like an elephant sitting on me. Started forty minutes ago, shoveling the driveway.\"",
+      "score": 2
+     },
+     {
+      "text": "Take a full social history first, to build rapport.",
+      "reply": "He grimaces. \"Can we talk about the pain? It's bad.\"",
+      "score": 0
+     },
+     {
+      "text": "\"Is it a sharp pain?\"",
+      "reply": "\"No. Pressure.\" You're getting there slowly.",
+      "score": 1
+     }
+    ],
+    "lesson": "In an unwell patient, focus the history on the emergency first"
+   }
+  },
+  {
+   "history": {
+    "patient": "Mr. Robert Kim, 62",
+    "opening": "\"It's a pressure, right in the middle of my chest, and it won't let up.\"",
+    "limit": 8,
+    "items": [
+     {
+      "category": "The pain",
+      "ask": "When did it start, and what were you doing?",
+      "answer": "\"Forty minutes ago, shoveling snow.\"",
+      "key": true
+     },
+     {
+      "category": "The pain",
+      "ask": "Does it go anywhere?",
+      "answer": "\"Down my left arm. And my jaw aches.\"",
+      "key": true
+     },
+     {
+      "category": "The pain",
+      "ask": "Anything make it better or worse? Does it change when you breathe?",
+      "answer": "\"Resting didn't help. Breathing doesn't change it.\"",
+      "key": true
+     },
+     {
+      "category": "The pain",
+      "ask": "Any sweating, nausea or shortness of breath?",
+      "answer": "\"Soaked through. I feel sick.\"",
+      "key": true
+     },
+     {
+      "category": "The pain",
+      "ask": "Have you had anything like this before?",
+      "answer": "\"A bit of tightness walking uphill this month. It went away when I stopped.\"",
+      "key": true
+     },
+     {
+      "category": "Risk factors",
+      "ask": "Do you have high blood pressure, diabetes or high cholesterol?",
+      "answer": "\"Blood pressure and diabetes. My cholesterol's high but I stopped the pills.\"",
+      "key": true
+     },
+     {
+      "category": "Risk factors",
+      "ask": "Do you smoke?",
+      "answer": "\"Half a pack a day.\"",
+      "key": true
+     },
+     {
+      "category": "Risk factors",
+      "ask": "Any heart disease in your family?",
+      "answer": "\"My dad had a heart attack at fifty-eight.\"",
+      "key": false
+     },
+     {
+      "category": "Medications",
+      "ask": "What medicines do you take, and any allergies?",
+      "answer": "\"Metformin and lisinopril. No allergies.\"",
+      "key": true
+     },
+     {
+      "category": "Other causes",
+      "ask": "Any recent long travel, leg swelling, or coughing blood?",
+      "answer": "\"No.\"",
+      "key": false
+     },
+     {
+      "category": "Other causes",
+      "ask": "Any tearing pain going through to your back?",
+      "answer": "\"No, it's all in the front.\"",
+      "key": false
+     }
+    ]
+   },
+   "heading": "Take the history"
+  },
+  {
+   "exam": {
+    "limit": 4,
+    "maneuvers": [
+     {
+      "name": "Vital signs",
+      "finding": "BP 152/94 in both arms, HR 98 and regular, RR 20, SpO₂ 95%, temperature normal.",
+      "key": true
+     },
+     {
+      "name": "General appearance",
+      "finding": "Pale, sweaty and anxious.",
+      "key": true
+     },
+     {
+      "name": "Listen to the heart",
+      "finding": "Regular rhythm, normal S1 and S2, a soft S4, no murmur.",
+      "key": true
+     },
+     {
+      "name": "Listen to the lungs",
+      "finding": "Clear throughout.",
+      "key": true
+     },
+     {
+      "name": "Press on the chest wall",
+      "finding": "No tenderness: the pain isn't reproduced.",
+      "key": false
+     },
+     {
+      "name": "Examine the legs",
+      "finding": "No swelling or tenderness.",
+      "key": false
+     },
+     {
+      "name": "Check the abdomen",
+      "finding": "Soft, non-tender.",
+      "key": false
+     }
+    ]
+   },
+   "heading": "Examine the patient"
+  },
+  {
+   "choice": {
+    "prompt": "He grips your arm. \"Am I having a heart attack?\"",
+    "category": "Communication",
+    "options": [
+     {
+      "text": "\"I'm worried it could be your heart. That's why we're doing an ECG right now and getting the doctor. We're not going to waste any time.\"",
+      "reply": "He nods, holding on. \"OK. OK.\"",
+      "score": 2
+     },
+     {
+      "text": "\"No, you're fine. Probably a pulled muscle.\"",
+      "reply": "He relaxes, wrongly. The history says otherwise.",
+      "score": 0
+     },
+     {
+      "text": "\"I can't say anything. I'm only a student.\"",
+      "reply": "He looks more frightened than before.",
+      "score": 1
+     }
+    ],
+    "lesson": "Be honest about concern while acting quickly and reassuringly"
+   }
+  },
+  {
+   "question": "sp_cp_first_01",
+   "lead": "Your preceptor walks in: \"What first?\""
+  },
+  {
+   "question": "sp_cp_aspirin_01",
+   "lead": "\"And what does he get right now?\""
+  }
+ ],
+ "feedback": [
+  [
+   0.85,
+   "\"Fast, focused and kind. In the real ED, you'd have saved minutes, and minutes are muscle.\""
+  ],
+  [
+   0.6,
+   "\"Good. In chest pain, the ECG comes before everything but the introduction.\""
+  ],
+  [
+   0.0,
+   "\"Let's review the chest-pain algorithm. In ACS, time is myocardium.\""
+  ]
+ ]
+}

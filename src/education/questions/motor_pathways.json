@@ -1,0 +1,132 @@
+{
+ "version": 1,
+ "questions": [
+  {
+   "id": "mp_decussation_01",
+   "discipline": "Neuroscience",
+   "topic": "Motor Systems",
+   "subtopic": "Corticospinal tract",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "Where do most fibers of the corticospinal tract cross to the other side?",
+   "choices": {
+    "a": "At the level of the anterior horn cell they supply",
+    "b": "In the midbrain",
+    "c": "At the pyramidal decussation in the caudal medulla",
+    "d": "In the internal capsule"
+   },
+   "explanation": "About 85–90% of corticospinal fibers cross at the pyramidal decussation at the junction of the medulla and spinal cord and descend in the lateral corticospinal tract. The rest descend uncrossed in the anterior corticospinal tract.",
+   "learning_objective": "Locate the pyramidal decussation.",
+   "xp_reward": null,
+   "lecture_id": "motor_pathways_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "mp_umn_01",
+   "discipline": "Neuroscience",
+   "topic": "Motor Systems",
+   "subtopic": "Upper motor neuron signs",
+   "question_type": "Application",
+   "difficulty_tier": 1,
+   "prompt": "Which set of findings fits an upper motor neuron lesion?",
+   "choices": {
+    "a": "Normal strength with absent reflexes",
+    "b": "Weakness, spasticity, brisk reflexes and an extensor plantar response",
+    "c": "Marked early wasting with fasciculations",
+    "d": "Weakness, flaccidity, absent reflexes and fasciculations"
+   },
+   "explanation": "Upper motor neuron lesions remove descending inhibition: increased tone (spastic), hyperreflexia and a Babinski sign, with little early wasting. Flaccidity, areflexia, wasting and fasciculations are lower motor neuron signs.",
+   "learning_objective": "Distinguish upper from lower motor neuron signs.",
+   "xp_reward": null,
+   "lecture_id": "motor_pathways_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "mp_lmn_01",
+   "discipline": "Neuroscience",
+   "topic": "Motor Systems",
+   "subtopic": "Lower motor neuron signs",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "A man has weakness and wasting of the right hand's small muscles, visible twitching under the skin, and an absent reflex in that arm. Where is the lesion most likely?",
+   "choices": {
+    "a": "The left precentral gyrus",
+    "b": "The left internal capsule",
+    "c": "The right cerebral hemisphere",
+    "d": "The lower motor neuron: the anterior horn cells, roots or nerves supplying the hand"
+   },
+   "explanation": "Wasting, fasciculations and areflexia are lower motor neuron signs, localizing to the anterior horn, nerve root or peripheral nerve. A cortical or capsular lesion would cause upper motor neuron signs on the opposite side.",
+   "learning_objective": "Localize a lesion from lower motor neuron signs.",
+   "xp_reward": null,
+   "lecture_id": "motor_pathways_01",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "mp_brown_sequard_01",
+   "discipline": "Neuroscience",
+   "topic": "Motor Systems",
+   "subtopic": "Spinal cord syndromes",
+   "question_type": "Synthesis",
+   "difficulty_tier": 3,
+   "prompt": "A stab wound cuts the left half of the spinal cord at T10. What is expected below the lesion?",
+   "choices": {
+    "a": "Left leg weakness and loss of vibration sense; loss of pain and temperature on the right",
+    "b": "Loss of pain and temperature on both sides, strength normal",
+    "c": "Weakness and all sensory loss on the left only",
+    "d": "Right leg weakness; loss of pain and temperature on the left"
+   },
+   "explanation": "Brown-Séquard syndrome: the corticospinal tract and dorsal columns cross in the medulla, so weakness and loss of vibration and proprioception are ipsilateral; the spinothalamic tract crosses within a segment or two of entry, so pain and temperature are lost contralaterally, starting a level or two below the lesion.",
+   "learning_objective": "Predict the deficits of a spinal cord hemisection.",
+   "xp_reward": null,
+   "lecture_id": "motor_pathways_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "mp_brown_sequard_remediation_01",
+   "discipline": "Neuroscience",
+   "topic": "Motor Systems",
+   "subtopic": "Spinal cord pathways",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "Where do the fibers carrying pain and temperature (the spinothalamic tract) cross to the other side?",
+   "choices": {
+    "a": "In the spinal cord, within a segment or two of where they enter",
+    "b": "In the thalamus",
+    "c": "They never cross",
+    "d": "In the caudal medulla, with the dorsal columns"
+   },
+   "explanation": "Pain and temperature fibers synapse in the dorsal horn and the second neuron crosses in the anterior white commissure within a segment or two. Vibration and proprioception ascend on the same side in the dorsal columns and cross in the medulla.",
+   "learning_objective": "State where the spinothalamic tract and dorsal columns cross.",
+   "xp_reward": null,
+   "lecture_id": "motor_pathways_01",
+   "format": "multiple_choice",
+   "is_remediation": true,
+   "correct_answer": "a"
+  },
+  {
+   "id": "mp_als_01",
+   "discipline": "Neuroscience",
+   "topic": "Motor Systems",
+   "subtopic": "ALS",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "A 58-year-old has wasting and fasciculations in both hands, brisk reflexes in all four limbs, extensor plantar responses, and normal sensation. What is the most likely diagnosis?",
+   "choices": {
+    "a": "Multiple sclerosis",
+    "b": "Amyotrophic lateral sclerosis",
+    "c": "Guillain–Barré syndrome",
+    "d": "Cervical radiculopathy"
+   },
+   "explanation": "Upper and lower motor neuron signs together, with sensation spared, point to ALS. Guillain–Barré is a lower motor neuron (areflexic) neuropathy; multiple sclerosis gives upper motor neuron and sensory signs; a radiculopathy is segmental with sensory change.",
+   "learning_objective": "Recognize ALS from mixed upper and lower motor neuron signs.",
+   "xp_reward": null,
+   "lecture_id": "motor_pathways_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  }
+ ]
+}

@@ -79,7 +79,7 @@ func menu_tests() -> void:
 	await ticks(2)
 	check(menu.visible and menu.pages.current_tab == 0 and menu.page_title.text == "Overview", "Menu opens on the Overview")
 	check(sfx.history.back() == "ui_open", "Opening the menu plays a soft cue")
-	check(menu.nav_buttons.size() == 9 and menu.nav_buttons[0].has_focus(), "Nine sections; the current one has focus")
+	check(menu.nav_buttons.size() == 12 and menu.nav_buttons[0].has_focus(), "Twelve sections; the current one has focus")
 	check(not player.movement_enabled, "Player stands still while reading the menu")
 	var titles := []
 	for index in range(9):
@@ -89,6 +89,13 @@ func menu_tests() -> void:
 		check(menu.pages.get_child(index).is_visible_in_tree(), "Page visible: " + menu.page_title.text)
 		check(menu.nav_buttons[index].button_pressed, "Sidebar highlights: " + menu.page_title.text)
 	check(titles == ["Overview", "Today's Schedule", "Academic Calendar", "Campus Map", "Knowledge", "Lecture Notes", "Achievements", "Inventory", "Settings"], "Every section of spec §32 is present")
+	var first_year_titles := []
+	for index in range(9, 12):
+		menu.show_page(index)
+		await ticks(1)
+		first_year_titles.append(menu.page_title.text)
+		check(menu.pages.get_child(index).is_visible_in_tree() and menu.nav_buttons[index].button_pressed, "Page visible: " + menu.page_title.text)
+	check(first_year_titles == ["Skills", "Wallet & Wellbeing", "Journal"], "First-year pages: skills, wallet, journal")
 	# Keyboard navigation: focus moves down the sidebar and follows the page.
 	menu.show_page(0)
 	menu.nav_buttons[0].grab_focus()
@@ -120,10 +127,12 @@ func menu_tests() -> void:
 	# Achievements derive from progress.
 	var achievements: Control = menu.pages.get_child(6)
 	menu.show_page(6)
-	check(achievements.summary_text().contains("0 of 6 unlocked"), "Achievements start locked")
+	var total: int = preload("res://data/achievements.gd").ACHIEVEMENTS.size()
+	check(achievements.summary_text().contains("0 of %d unlocked" % total), "Achievements start locked")
 	academics.best_streak = 10
+	root.get_node("Achievements").check()
 	menu.show_page(6)
-	check(achievements.summary_text().contains("1 of 6 unlocked"), "Achievements reflect progress")
+	check(achievements.summary_text().contains("1 of %d unlocked" % total) and achievements.summary_text().contains("In the Zone"), "Achievements reflect progress")
 	academics.best_streak = 0
 	# Settings in game offers save and return.
 	menu.show_page(8)

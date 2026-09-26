@@ -1,0 +1,153 @@
+{
+ "version": 1,
+ "questions": [
+  {
+   "id": "cc_isovol_01",
+   "discipline": "Physiology",
+   "topic": "Cardiovascular",
+   "subtopic": "Isovolumetric contraction",
+   "question_type": "Conceptual",
+   "difficulty_tier": 1,
+   "prompt": "During isovolumetric contraction of the left ventricle:",
+   "choices": {
+    "a": "Ventricular pressure is falling.",
+    "b": "Both the mitral and aortic valves are closed, and pressure rises at constant volume.",
+    "c": "The aortic valve is open and blood is ejected.",
+    "d": "The mitral valve is open and the ventricle is filling."
+   },
+   "explanation": "Isovolumetric contraction runs from mitral closure (S1) until ventricular pressure exceeds aortic pressure and the aortic valve opens. With both valves shut, volume can't change, so pressure climbs steeply.",
+   "learning_objective": "Describe the valve positions and pressure changes in isovolumetric contraction.",
+   "xp_reward": null,
+   "lecture_id": "cardiac_cycle_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "cc_ef_01",
+   "discipline": "Physiology",
+   "topic": "Cardiovascular",
+   "subtopic": "Ejection fraction",
+   "question_type": "Application",
+   "difficulty_tier": 2,
+   "prompt": "A patient's left ventricle has an end-diastolic volume of 150 mL and an end-systolic volume of 60 mL. What is the ejection fraction?",
+   "choices": {
+    "a": "60%",
+    "b": "67%",
+    "c": "90%",
+    "d": "40%"
+   },
+   "explanation": "Stroke volume = EDV − ESV = 150 − 60 = 90 mL. Ejection fraction = SV ÷ EDV = 90 ÷ 150 = 0.6, or 60%.",
+   "learning_objective": "Calculate stroke volume and ejection fraction from ventricular volumes.",
+   "xp_reward": null,
+   "lecture_id": "cardiac_cycle_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "cc_ef_remediation_01",
+   "discipline": "Physiology",
+   "topic": "Cardiovascular",
+   "subtopic": "Ejection fraction",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "Which formula gives the ejection fraction?",
+   "choices": {
+    "a": "End-systolic volume ÷ end-diastolic volume",
+    "b": "End-diastolic volume ÷ stroke volume",
+    "c": "Stroke volume × heart rate",
+    "d": "(End-diastolic volume − end-systolic volume) ÷ end-diastolic volume"
+   },
+   "explanation": "The ejection fraction is the share of the filled ventricle's blood ejected with each beat: stroke volume (EDV − ESV) divided by EDV. Stroke volume × heart rate is cardiac output.",
+   "learning_objective": "State the definition of ejection fraction.",
+   "xp_reward": null,
+   "lecture_id": "cardiac_cycle_01",
+   "format": "multiple_choice",
+   "is_remediation": true,
+   "correct_answer": "d"
+  },
+  {
+   "id": "cc_s2_split_01",
+   "discipline": "Physiology",
+   "topic": "Cardiovascular",
+   "subtopic": "Heart sounds",
+   "question_type": "Conceptual",
+   "difficulty_tier": 2,
+   "prompt": "Why does the second heart sound split into two components during inspiration?",
+   "choices": {
+    "a": "Inspiration slows the heart.",
+    "b": "More venous return to the right heart lengthens right ventricular ejection, so the pulmonic valve closes later.",
+    "c": "The mitral valve closes twice.",
+    "d": "The aortic valve closes later because the left ventricle fills more."
+   },
+   "explanation": "Falling intrathoracic pressure in inspiration increases return to the right heart (and pooling in the lungs slightly reduces return to the left). Right ventricular ejection lasts longer, delaying P2 behind A2: physiologic splitting.",
+   "learning_objective": "Explain physiologic splitting of S2.",
+   "xp_reward": null,
+   "lecture_id": "cardiac_cycle_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "cc_as_01",
+   "discipline": "Physiology",
+   "topic": "Cardiovascular",
+   "subtopic": "Murmurs",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "A 78-year-old with exertional chest pain and fainting has a harsh crescendo–decrescendo systolic murmur at the right upper sternal border that radiates to the carotids. What is the most likely valve lesion?",
+   "choices": {
+    "a": "Mitral regurgitation",
+    "b": "Aortic regurgitation",
+    "c": "Aortic stenosis",
+    "d": "Mitral stenosis"
+   },
+   "explanation": "Aortic stenosis gives an ejection (crescendo–decrescendo) systolic murmur loudest at the right upper sternal border, radiating to the carotids; angina, syncope and heart failure are its classic symptoms. Mitral regurgitation is holosystolic at the apex; mitral stenosis and aortic regurgitation are diastolic.",
+   "learning_objective": "Recognize the murmur of aortic stenosis.",
+   "xp_reward": null,
+   "lecture_id": "cardiac_cycle_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "cc_starling_01",
+   "discipline": "Physiology",
+   "topic": "Cardiovascular",
+   "subtopic": "Frank–Starling",
+   "question_type": "Conceptual",
+   "difficulty_tier": 1,
+   "prompt": "According to the Frank–Starling relationship, giving intravenous fluid to a healthy person will, within limits:",
+   "choices": {
+    "a": "Decrease stroke volume by overstretching the heart",
+    "b": "Increase stroke volume only by raising the heart rate",
+    "c": "Increase end-diastolic volume and so increase stroke volume",
+    "d": "Leave stroke volume unchanged"
+   },
+   "explanation": "More filling stretches the sarcomeres toward their optimal overlap, so the ventricle contracts more forcefully and ejects more. The heart matches its output to its input.",
+   "learning_objective": "Apply the Frank–Starling law to changes in preload.",
+   "xp_reward": null,
+   "lecture_id": "cardiac_cycle_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "cc_afterload_01",
+   "discipline": "Physiology",
+   "topic": "Cardiovascular",
+   "subtopic": "Afterload",
+   "question_type": "Application",
+   "difficulty_tier": 2,
+   "prompt": "If aortic pressure (afterload) rises suddenly and contractility and preload stay the same, what happens?",
+   "choices": {
+    "a": "Stroke volume falls and end-systolic volume rises.",
+    "b": "End-systolic volume falls.",
+    "c": "Stroke volume rises.",
+    "d": "Ejection fraction rises."
+   },
+   "explanation": "Against a higher pressure, the ventricle stops ejecting at a larger volume: ESV rises, SV (and EF) fall. This is why afterload reduction helps a failing heart.",
+   "learning_objective": "Predict the effect of increased afterload on stroke volume.",
+   "xp_reward": null,
+   "lecture_id": "cardiac_cycle_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  }
+ ]
+}

@@ -37,6 +37,18 @@ func _ready() -> void:
 	hud.bind_player(player)
 	AppState.view_changed.connect(apply_view)
 	apply_view(AppState.first_person)
+	# The bed ends the day from 6 PM; before that it is just a bed.
+	bed.activated.connect(func() -> void:
+		if YearCalendar.can_sleep():
+			hud.request_sleep())
+	GameClock.minute_changed.connect(_refresh_bed)
+	_refresh_bed()
+	Achievements.visit("dorm")
+
+func _refresh_bed() -> void:
+	var evening := YearCalendar.can_sleep()
+	bed.display_name = "Go to sleep" if evening else "Inspect bed"
+	bed.response = "" if evening else "A freshly made bed. A quiet place to recharge after class. You can turn in from 6 PM."
 
 func apply_view(first_person: bool) -> void:
 	for mesh in cutaway:

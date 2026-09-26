@@ -14,6 +14,12 @@ const PlayerMenu = preload("res://ui/menu/player_menu.gd")
 const SettingsPanel = preload("res://ui/settings_panel.gd")
 const WardrobePanel = preload("res://ui/wardrobe_panel.gd")
 const Clothing = preload("res://data/clothing.gd")
+const LifeHUD = preload("res://ui/life_hud.gd")
+const ToastStack = preload("res://ui/toast_stack.gd")
+const DayCard = preload("res://ui/day_card.gd")
+const DaySummary = preload("res://ui/day_summary.gd")
+const SleepPanel = preload("res://ui/sleep_panel.gd")
+const Items = preload("res://data/items.gd")
 var player: CharacterBody3D
 var root: Control
 var prompt: Label
@@ -50,6 +56,12 @@ var laptop_model: Node3D
 var laptop_hint: Button
 ## False once a scene sets its own objective (e.g. during the lecture).
 var auto_objective := true
+## Money and energy beside the level card; notifications below the top bar.
+var life: VBoxContainer
+var toasts: VBoxContainer
+## The dialog currently open through open_modal() (sleep, shops…).
+var modal: Control
+var sleeping := false
 ## Set while another overlay (the lecture) owns the bottom of the screen.
 var suppress_context := false:
 	set(value):
@@ -71,6 +83,9 @@ func _ready() -> void:
 		auto_objective = false
 	_build_top_bar()
 	_build_bottom()
+	toasts = ToastStack.new()
+	toasts.name = "Toasts"
+	root.add_child(toasts)
 	_build_menu()
 	_build_crosshair()
 	laptop_hint = Button.new()
@@ -95,9 +110,14 @@ func _ready() -> void:
 	AcademicSession.attendance_recorded.connect(_arrival_feedback)
 	AppState.view_changed.connect(_on_view_changed)
 	AcademicSession.level_up.connect(_announce_unlocks)
+	AcademicSession.level_up.connect(_announce_skill_points)
 	AcademicSession.lecture_completed.connect(func(id: String) -> void:
 		if id == Clothing.FIRST_LECTURE:
 			show_message("Unlocked in your closet: %s (Legendary)" % ", ".join(Clothing.legendary_names()), 8.0))
+	Achievements.unlocked.connect(_on_achievement)
+	Wallet.changed.connect(_on_money)
+	Wellbeing.boost_started.connect(_on_boost)
+	YearCalendar.pass_out.connect(_on_pass_out)
 	_refresh_clock()
 	_refresh_context()
 
@@ -186,6 +206,9 @@ func _build_top_bar() -> void:
 	bar.add_child(UI.spacer(0, 0, true))
 	progression = preload("res://ui/progression_hud.gd").new()
 	bar.add_child(progression)
+	life = LifeHUD.new()
+	life.name = "Life"
+	bar.add_child(life)
 	# Date above time.
 	var clock_card := UI.hud_card()
 	clock_card.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
@@ -285,6 +308,9 @@ func _build_menu() -> void:
 	settings.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	settings_scroll.add_child(settings)
 	menu.add_page(settings_scroll)
+	menu.add_page(preload("res://ui/menu/skills_page.gd").new())
+	menu.add_page(preload("res://ui/menu/wallet_page.gd").new())
+	menu.add_page(preload("res://ui/menu/journal_page.gd").new())
 
 ## Unboxed HUD text: a dark outline keeps it readable over bright scenery.
 func _outlined(text: String, size: int, color: Color) -> Label:
@@ -308,10 +334,14 @@ func _show_target(target: Node3D) -> void:
 		prompt.text = target.display_name
 	_refresh_context()
 
+## An endpoint's fixed response. Endpoints without one (doors, shops,
+## activities) show their own messages from their handlers; those are left be.
 func _show_response(target: Node3D) -> void:
+	if String(target.response).is_empty():
+		_refresh_context()
+		return
 	message.text = target.response
-	if not message.text.is_empty():
-		message_timer.start()
+	message_timer.start()
 	_refresh_context()
 
 ## Scenes with several areas (the hospital's floors) update the location line.
@@ -341,8 +371,9 @@ func _clear_message() -> void:
 	_refresh_context()
 
 func _refresh_context() -> void:
-	message_card.visible = not settings_open and not closet_open and not computer_open and not suppress_context and not message.text.is_empty()
-	prompt_row.visible = not settings_open and not closet_open and not computer_open and not suppress_context and not prompt.text.is_empty()
+	var blocked := settings_open or closet_open or computer_open or suppress_context or modal_open()
+	message_card.visible = not blocked and not message.text.is_empty()
+	prompt_row.visible = not blocked and not prompt.text.is_empty()
 
 ## Opens or closes the player menu. The world keeps running either way.
 func set_settings_open(value: bool) -> void:
@@ -356,7 +387,7 @@ func set_settings_open(value: bool) -> void:
 		menu.close()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if computer_open:
+	if computer_open or modal_open() or sleeping:
 		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_L and not closet_open:
 		open_laptop()
@@ -462,3 +493,101 @@ func close_computer() -> void:
 	player.movement_enabled = true
 	player.interaction.enabled = not player.seating.stand_locked and player.seating.state in [player.seating.State.FREE, player.seating.State.SEATED]
 	_show_target(player.interaction.target if is_instance_valid(player.interaction.target) else null)
+
+# --- Dialogs, notifications and sleep -------------------------------------------------------------
+
+func modal_open() -> bool:
+	return is_instance_valid(modal)
+
+## Shows a dialog (ui/modal_panel.gd) over the world; movement and
+## interaction pause until it closes.
+func open_modal(panel: Control) -> void:
+	close_modal()
+	modal = panel
+	root.add_child(panel)
+	if panel.has_signal("closed"):
+		panel.closed.connect(close_modal)
+	if is_instance_valid(player):
+		player.movement_enabled = false
+		player.interaction.enabled = false
+	_refresh_context()
+
+func close_modal() -> void:
+	if not is_instance_valid(modal):
+		return
+	var panel := modal
+	modal = null
+	panel.queue_free()
+	if is_instance_valid(player) and not sleeping:
+		player.movement_enabled = true
+		player.interaction.enabled = not player.seating.stand_locked
+		_show_target(current_target if is_instance_valid(current_target) else null)
+	_refresh_context()
+
+func toast(eyebrow: String, title: String, detail := "", icon := "spark", color := UI.REWARD) -> void:
+	if is_instance_valid(toasts):
+		toasts.push(eyebrow, title, detail, icon, color)
+
+func _on_achievement(id: String, achievement: Dictionary) -> void:
+	toast("Achievement unlocked", String(achievement.title), Achievements.reward_text(id), String(achievement.icon), UI.REWARD)
+
+func _on_money(_balance: int, delta: int, label: String) -> void:
+	# Pay and awards get a notification; purchases are shown where they happen.
+	if delta >= 2000 and not label.begins_with("Achievement"):
+		toast("Money received", "+" + Items.format_money(delta), label, "coin", UI.SUCCESS)
+
+func _on_boost(boost: Dictionary) -> void:
+	if float(boost.get("xp", 0.0)) > 0.0:
+		toast("Boost", String(boost.name), "+%d%% XP from learning for %d min" % [int(round(float(boost.xp) * 100)), int(boost.get("minutes", 0))], String(boost.get("icon", "spark")), UI.REWARD)
+
+func _announce_skill_points(_from_level: int, _to_level: int) -> void:
+	if Skills.points_available() > 0:
+		toast("Skill point", "%d skill point%s to spend" % [Skills.points_available(), "" if Skills.points_available() == 1 else "s"], "Open the menu (Tab) · Skills", "tree", UI.ACCENT)
+
+## The bed: from 6 PM, the "Call it a night?" dialog.
+func request_sleep() -> void:
+	if not YearCalendar.can_sleep():
+		show_message("A freshly made bed. A quiet place to recharge after class. You can turn in from 6 PM.", 5.0)
+		return
+	var panel := SleepPanel.new()
+	panel.confirmed.connect(func() -> void: go_to_sleep())
+	open_modal(panel)
+
+## Sleeps: fade out, the day summary, then wake to the next story day.
+func go_to_sleep(late := false) -> void:
+	if sleeping:
+		return
+	sleeping = true
+	close_modal()
+	if is_instance_valid(player):
+		player.movement_enabled = false
+		player.interaction.enabled = false
+	await Transition.cover()
+	var summary := YearCalendar.sleep(late)
+	SaveGame.autosave()
+	var screen := DaySummary.new(summary)
+	add_child(screen)
+	await screen.continued
+	screen.queue_free()
+	var following: Dictionary = summary.get("next", {})
+	if late and AppState.location_key() != "dorm":
+		sleeping = false
+		AppState.enter_dorm()
+		return
+	Transition.reveal()
+	sleeping = false
+	if is_instance_valid(player):
+		player.movement_enabled = true
+		player.interaction.enabled = true
+	_refresh_clock()
+	if not following.is_empty():
+		var card := DayCard.new()
+		add_child(card)
+		card.show_day(following)
+
+## Past 2 AM the student falls asleep where they are and wakes in their room.
+func _on_pass_out() -> void:
+	if sleeping or not is_inside_tree():
+		return
+	show_message("It's past 2 AM. You fall asleep before you know it…", 3.0)
+	go_to_sleep(true)

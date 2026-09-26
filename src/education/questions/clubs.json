@@ -1,0 +1,893 @@
+{
+  "version": 1,
+  "questions": [
+    {
+      "id": "club_kitchen_sdoh_01",
+      "discipline": "Community Health",
+      "topic": "Social Determinants of Health",
+      "subtopic": "What counts as a determinant",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "Which of these is a social determinant of health?",
+      "choices": {
+        "a": "A BRCA1 mutation",
+        "b": "A hemoglobin A1c of 8.1%",
+        "c": "Access to affordable, nutritious food",
+        "d": "ABO blood group"
+      },
+      "correct_answer": "c",
+      "explanation": "Social determinants of health are the non-medical conditions in which people are born, grow, live, work and age (income, housing, education, neighborhood, and access to food among them). An A1c is a clinical measurement; blood group and BRCA1 status are biological.",
+      "learning_objective": "Distinguish social determinants of health from clinical and genetic factors.",
+      "xp_reward": null,
+      "lecture_id": "club_community_kitchen",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_kitchen_hvs_01",
+      "discipline": "Community Health",
+      "topic": "Social Determinants of Health",
+      "subtopic": "Screening for food insecurity",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "Two statements, each answered \"often true\", \"sometimes true\" or \"never true\" for the past 12 months: \"We worried whether our food would run out before we got money to buy more\" and \"The food we bought just didn't last and we didn't have money to get more.\" This validated screen is for:",
+      "choices": {
+        "a": "Food insecurity (the Hunger Vital Sign)",
+        "b": "Intimate partner violence",
+        "c": "Depression",
+        "d": "Unhealthy alcohol use"
+      },
+      "correct_answer": "a",
+      "explanation": "These two items are the Hunger Vital Sign, validated in pediatric practice (Hager and colleagues, 2010). An answer of \"often\" or \"sometimes true\" to either one is a positive screen for food insecurity.",
+      "learning_objective": "Recognize the two-item Hunger Vital Sign screen for food insecurity.",
+      "xp_reward": null,
+      "lecture_id": "club_community_kitchen",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_kitchen_wic_01",
+      "discipline": "Community Health",
+      "topic": "Social Determinants of Health",
+      "subtopic": "Food assistance programs",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "Which U.S. federal program provides specific nutritious foods, nutrition education and referrals to low-income pregnant and postpartum people, infants, and children under five?",
+      "choices": {
+        "a": "WIC",
+        "b": "The Ryan White HIV/AIDS Program",
+        "c": "Medicare Part D",
+        "d": "COBRA"
+      },
+      "correct_answer": "a",
+      "explanation": "WIC (the Special Supplemental Nutrition Program for Women, Infants, and Children) serves low-income pregnant, postpartum and breastfeeding people, infants and children up to age five. SNAP is the broader food benefit for households; Part D covers prescriptions for Medicare beneficiaries.",
+      "learning_objective": "Name the federal nutrition program for pregnant people, infants and young children.",
+      "xp_reward": null,
+      "lecture_id": "club_community_kitchen",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_kitchen_dm_01",
+      "discipline": "Community Health",
+      "topic": "Social Determinants of Health",
+      "subtopic": "Food insecurity and chronic disease",
+      "question_type": "Clinical Application",
+      "difficulty_tier": 2,
+      "prompt": "A patient with type 2 diabetes who takes a sulfonylurea screens positive for food insecurity. Which response is most appropriate?",
+      "choices": {
+        "a": "Advise them to skip their medicine only on days they eat nothing, without telling their doctor",
+        "b": "Nothing: food access is outside the scope of a medical visit",
+        "c": "Connect them with food resources (such as help applying for SNAP or a food bank referral) and review whether the regimen risks hypoglycemia when meals are skipped",
+        "d": "Document nonadherence to the diet and increase the sulfonylurea dose"
+      },
+      "correct_answer": "c",
+      "explanation": "Food insecurity is linked to worse glycemic control and to hypoglycemia, especially with insulin or sulfonylureas when meals are missed. The right response treats it as part of care: refer to food resources and adjust the regimen with the care team, rather than labeling the patient nonadherent.",
+      "learning_objective": "Respond to a positive food-insecurity screen in a patient with diabetes.",
+      "xp_reward": null,
+      "lecture_id": "club_community_kitchen",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_clinic_cuff_01",
+      "discipline": "Clinical Skills",
+      "topic": "Vital Signs",
+      "subtopic": "Blood pressure technique",
+      "question_type": "Conceptual",
+      "difficulty_tier": 1,
+      "prompt": "When measuring blood pressure, a cuff that is too small for the patient's arm will usually make the reading:",
+      "choices": {
+        "a": "Falsely high",
+        "b": "Impossible to obtain",
+        "c": "Falsely low",
+        "d": "Accurate, but harder to hear"
+      },
+      "correct_answer": "a",
+      "explanation": "A small cuff needs more pressure to compress the artery, so it overestimates blood pressure. The bladder should encircle about 80% of the arm; a cuff that is too large tends to underestimate.",
+      "learning_objective": "Explain how cuff size affects a blood pressure reading.",
+      "xp_reward": null,
+      "lecture_id": "club_free_clinic",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_clinic_arm_01",
+      "discipline": "Clinical Skills",
+      "topic": "Vital Signs",
+      "subtopic": "Blood pressure technique",
+      "question_type": "Conceptual",
+      "difficulty_tier": 2,
+      "prompt": "The arm should be supported with the cuff at heart level. If the patient's arm hangs down by their side, the reading will be:",
+      "choices": {
+        "a": "Falsely high",
+        "b": "High for systolic but low for diastolic",
+        "c": "Falsely low",
+        "d": "Unchanged"
+      },
+      "correct_answer": "a",
+      "explanation": "Below heart level, the column of blood adds hydrostatic pressure at the cuff, so both readings come out higher. A cuff above heart level reads low.",
+      "learning_objective": "Explain the effect of arm position on measured blood pressure.",
+      "xp_reward": null,
+      "lecture_id": "club_free_clinic",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_clinic_deflate_01",
+      "discipline": "Clinical Skills",
+      "topic": "Vital Signs",
+      "subtopic": "Blood pressure technique",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "When measuring blood pressure by auscultation, deflate the cuff at about:",
+      "choices": {
+        "a": "20 mmHg per heartbeat",
+        "b": "As fast as the valve allows",
+        "c": "10 mmHg per second",
+        "d": "2–3 mmHg per second"
+      },
+      "correct_answer": "d",
+      "explanation": "Slow deflation (about 2–3 mmHg per second) means the pressure falls only a little between heartbeats, so the first and last sounds are caught close to the true systolic and diastolic pressures. Deflating fast underestimates systolic and overestimates diastolic.",
+      "learning_objective": "State the recommended cuff deflation rate.",
+      "xp_reward": null,
+      "lecture_id": "club_free_clinic",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_clinic_korotkoff_01",
+      "discipline": "Clinical Skills",
+      "topic": "Vital Signs",
+      "subtopic": "Korotkoff sounds",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "In an adult, the systolic and diastolic pressures are recorded at:",
+      "choices": {
+        "a": "The loudest sound, and the first sound",
+        "b": "The pressure the cuff was pumped to, and the first sound",
+        "c": "The first sound, and the point where the sounds first become muffled, always",
+        "d": "The first of the tapping sounds (phase I), and the point where the sounds disappear (phase V)"
+      },
+      "correct_answer": "d",
+      "explanation": "Systolic is the first of at least two consecutive tapping (Korotkoff) sounds, phase I. In adults, diastolic is where the sounds disappear, phase V. Muffling (phase IV) is used only when sounds persist to zero.",
+      "learning_objective": "Identify the Korotkoff phases used to record systolic and diastolic pressure.",
+      "xp_reward": null,
+      "lecture_id": "club_free_clinic",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_clinic_severe_01",
+      "discipline": "Clinical Skills",
+      "topic": "Vital Signs",
+      "subtopic": "Acting on a reading",
+      "question_type": "Clinical Application",
+      "difficulty_tier": 2,
+      "prompt": "At the free clinic, a 52-year-old's blood pressure is 188/118 mmHg on a careful repeat. Since this morning he has had a severe headache and blurred vision. The best next step is:",
+      "choices": {
+        "a": "Have the supervising physician see him now and arrange emergency department evaluation",
+        "b": "Recheck at next month's clinic",
+        "c": "Give ibuprofen for the headache and recheck in an hour",
+        "d": "Advise less salt and send him home"
+      },
+      "correct_answer": "a",
+      "explanation": "A pressure of 180/120 or more with new symptoms suggesting organ damage (severe headache, visual change, chest pain, confusion) may be a hypertensive emergency and needs same-day emergency evaluation. A student's job is to recognize it and escalate at once.",
+      "learning_objective": "Recognize a blood pressure reading that needs immediate escalation.",
+      "xp_reward": null,
+      "lecture_id": "club_free_clinic",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_clinic_spo2_01",
+      "discipline": "Clinical Skills",
+      "topic": "Vital Signs",
+      "subtopic": "Pulse oximetry",
+      "question_type": "Application",
+      "difficulty_tier": 2,
+      "prompt": "A pulse oximeter reads 88% on room air in a comfortable patient whose hands are cold. What should you do first?",
+      "choices": {
+        "a": "Warm the hand, check the probe's position and the waveform, and recheck, then tell the supervising physician the result",
+        "b": "Start home oxygen",
+        "c": "Record 88% and move on",
+        "d": "Send her home: she looks well"
+      },
+      "correct_answer": "a",
+      "explanation": "Cold fingers, poor perfusion, motion and a badly placed probe all cause falsely low readings. Confirm a good signal and recheck, but report a low value either way: a real saturation of 88% at rest needs a physician's assessment.",
+      "learning_objective": "Troubleshoot a low pulse oximetry reading before acting on it.",
+      "xp_reward": null,
+      "lecture_id": "club_free_clinic",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_surgery_angle_01",
+      "discipline": "Clinical Skills",
+      "topic": "Suturing",
+      "subtopic": "Needle technique",
+      "question_type": "Conceptual",
+      "difficulty_tier": 1,
+      "prompt": "Why should the suture needle enter the skin at about 90 degrees?",
+      "choices": {
+        "a": "So the needle can't bend",
+        "b": "So the knot sits directly over the wound",
+        "c": "Because it's faster",
+        "d": "So the bite is at least as wide at its depth as at the surface, which everts the wound edges"
+      },
+      "correct_answer": "d",
+      "explanation": "A perpendicular entry, then following the needle's curve, takes a bite that is wider deep than at the surface. Tying it everts the edges slightly, which heals flatter; an oblique bite inverts the edges.",
+      "learning_objective": "Explain why a perpendicular needle entry everts the wound edges.",
+      "xp_reward": null,
+      "lecture_id": "club_surgery",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_surgery_spacing_01",
+      "discipline": "Clinical Skills",
+      "topic": "Suturing",
+      "subtopic": "Placing interrupted sutures",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "For simple interrupted sutures, a good rule for spacing is:",
+      "choices": {
+        "a": "One suture every 5 cm",
+        "b": "As close together as possible, so they touch",
+        "c": "The distance between sutures is about the same as each bite's distance from the wound edge",
+        "d": "Spacing doesn't matter if the knots are tight"
+      },
+      "correct_answer": "c",
+      "explanation": "Even spacing, with the gap between sutures roughly equal to the bite's distance from the edge, spreads tension evenly along the wound.",
+      "learning_objective": "Apply the spacing rule for simple interrupted sutures.",
+      "xp_reward": null,
+      "lecture_id": "club_surgery",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_surgery_knot_01",
+      "discipline": "Clinical Skills",
+      "topic": "Suturing",
+      "subtopic": "Tying",
+      "question_type": "Conceptual",
+      "difficulty_tier": 1,
+      "prompt": "Which of these is NOT a principle of good wound closure?",
+      "choices": {
+        "a": "Evert the wound edges",
+        "b": "Line the edges up without gaps or steps",
+        "c": "Lay the knots to one side of the incision",
+        "d": "Tie each knot as tight as possible"
+      },
+      "correct_answer": "d",
+      "explanation": "\"Approximate, don't strangulate\": knots that are too tight cut off the blood supply to the edges and leave cross-hatched scars. Everting and aligning the edges, and laying knots to the side, are all good practice.",
+      "learning_objective": "Recall the principles of tension and knot placement in wound closure.",
+      "xp_reward": null,
+      "lecture_id": "club_surgery",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_emig_rate_01",
+      "discipline": "Clinical Skills",
+      "topic": "Basic Life Support",
+      "subtopic": "Compressions",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "Chest compressions for an adult in cardiac arrest should be delivered at a rate of:",
+      "choices": {
+        "a": "100–120 per minute",
+        "b": "60–80 per minute",
+        "c": "As fast as possible",
+        "d": "140–160 per minute"
+      },
+      "correct_answer": "a",
+      "explanation": "Guidelines recommend 100–120 compressions a minute. Slower rates give less blood flow; faster ones don't allow the heart to refill and usually become too shallow.",
+      "learning_objective": "State the recommended rate for adult chest compressions.",
+      "xp_reward": null,
+      "lecture_id": "club_emig",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_emig_depth_01",
+      "discipline": "Clinical Skills",
+      "topic": "Basic Life Support",
+      "subtopic": "Compressions",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "For an adult, chest compressions should be:",
+      "choices": {
+        "a": "As deep as possible",
+        "b": "About 10 cm deep",
+        "c": "About 1–2 cm deep",
+        "d": "At least 5 cm (2 inches) deep, but not more than about 6 cm (2.4 inches)"
+      },
+      "correct_answer": "d",
+      "explanation": "Adult compressions should be at least 5 cm (2 inches) and no more than about 6 cm (2.4 inches) deep, on a firm surface, with full recoil after each one.",
+      "learning_objective": "State the recommended depth of adult chest compressions.",
+      "xp_reward": null,
+      "lecture_id": "club_emig",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_emig_recoil_01",
+      "discipline": "Clinical Skills",
+      "topic": "Basic Life Support",
+      "subtopic": "Compressions",
+      "question_type": "Conceptual",
+      "difficulty_tier": 1,
+      "prompt": "Why let the chest recoil completely between compressions?",
+      "choices": {
+        "a": "It lets the AED analyze",
+        "b": "Recoil lets blood flow back into the heart before the next compression",
+        "c": "It rests the rescuer's arms",
+        "d": "It prevents rib fractures entirely"
+      },
+      "correct_answer": "b",
+      "explanation": "Leaning on the chest keeps the pressure inside it up, so less blood returns to the heart and the next compression pumps less. Full recoil maximizes venous return.",
+      "learning_objective": "Explain why full chest recoil matters in CPR.",
+      "xp_reward": null,
+      "lecture_id": "club_emig",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_emig_aed_01",
+      "discipline": "Clinical Skills",
+      "topic": "Basic Life Support",
+      "subtopic": "The AED",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "When the AED announces that it is analyzing the heart rhythm, you should:",
+      "choices": {
+        "a": "Keep doing compressions",
+        "b": "Remove the pads to check them",
+        "c": "Give two rescue breaths",
+        "d": "Make sure no one is touching the patient"
+      },
+      "correct_answer": "d",
+      "explanation": "Movement and touch interfere with the rhythm analysis, and a shock may follow. Everyone stands clear; compressions resume right after the shock, or straight away if none is advised.",
+      "learning_objective": "Follow AED prompts safely.",
+      "xp_reward": null,
+      "lecture_id": "club_emig",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_emig_bleed_01",
+      "discipline": "Clinical Skills",
+      "topic": "Bleeding Control",
+      "subtopic": "Stop the Bleed",
+      "question_type": "Application",
+      "difficulty_tier": 1,
+      "prompt": "Someone has life-threatening bleeding from a deep cut on the thigh. After calling 911, the first thing to do is usually:",
+      "choices": {
+        "a": "Give them water to drink",
+        "b": "Raise the leg and wait for help",
+        "c": "Apply firm, direct pressure on the wound (and use a tourniquet above it if pressure doesn't control the bleeding)",
+        "d": "Wash the wound first"
+      },
+      "correct_answer": "c",
+      "explanation": "Stop the Bleed teaches firm, direct pressure (packing a deep wound), and for bleeding from a limb that pressure doesn't control, a tourniquet high and tight above the wound.",
+      "learning_objective": "Describe the first steps in controlling life-threatening bleeding.",
+      "xp_reward": null,
+      "lecture_id": "club_emig",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_spanish_01",
+      "discipline": "Medical Spanish",
+      "topic": "The History in Spanish",
+      "subtopic": "Phrases",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "What does \"¿Dónde le duele?\" mean?",
+      "choices": {
+        "a": "Do you have a fever?",
+        "b": "Where does it hurt?",
+        "c": "When did it start?",
+        "d": "How old are you?"
+      },
+      "correct_answer": "b",
+      "explanation": "\"¿Dónde le duele?\" means \"Where does it hurt?\". Formal usted forms are the default with patients.",
+      "learning_objective": "Understand and use common Spanish phrases for the medical history.",
+      "xp_reward": null,
+      "lecture_id": "club_spanish",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_spanish_02",
+      "discipline": "Medical Spanish",
+      "topic": "The History in Spanish",
+      "subtopic": "Phrases",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "What does \"¿Desde cuándo tiene el dolor?\" mean?",
+      "choices": {
+        "a": "How bad is the pain?",
+        "b": "Does anything make the pain better?",
+        "c": "Where is the pain?",
+        "d": "How long have you had the pain?"
+      },
+      "correct_answer": "d",
+      "explanation": "\"¿Desde cuándo tiene el dolor?\" means \"How long have you had the pain?\". Formal usted forms are the default with patients.",
+      "learning_objective": "Understand and use common Spanish phrases for the medical history.",
+      "xp_reward": null,
+      "lecture_id": "club_spanish",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_spanish_03",
+      "discipline": "Medical Spanish",
+      "topic": "The History in Spanish",
+      "subtopic": "Phrases",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "What does \"¿Es alérgico a algún medicamento?\" mean?",
+      "choices": {
+        "a": "Do you have any pain?",
+        "b": "Do you take any medicine?",
+        "c": "Have you ever had surgery?",
+        "d": "Are you allergic to any medicine?"
+      },
+      "correct_answer": "d",
+      "explanation": "\"¿Es alérgico a algún medicamento?\" means \"Are you allergic to any medicine?\". Formal usted forms are the default with patients.",
+      "learning_objective": "Understand and use common Spanish phrases for the medical history.",
+      "xp_reward": null,
+      "lecture_id": "club_spanish",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_spanish_04",
+      "discipline": "Medical Spanish",
+      "topic": "The History in Spanish",
+      "subtopic": "Phrases",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "What does \"Respire profundo.\" mean?",
+      "choices": {
+        "a": "Lie down, please.",
+        "b": "Hold your breath.",
+        "c": "Cough, please.",
+        "d": "Take a deep breath."
+      },
+      "correct_answer": "d",
+      "explanation": "\"Respire profundo.\" means \"Take a deep breath.\". Formal usted forms are the default with patients.",
+      "learning_objective": "Understand and use common Spanish phrases for the medical history.",
+      "xp_reward": null,
+      "lecture_id": "club_spanish",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_spanish_05",
+      "discipline": "Medical Spanish",
+      "topic": "The History in Spanish",
+      "subtopic": "Phrases",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "What does \"¿Tiene fiebre?\" mean?",
+      "choices": {
+        "a": "Are you tired?",
+        "b": "Do you have a fever?",
+        "c": "Are you hungry?",
+        "d": "Are you cold?"
+      },
+      "correct_answer": "b",
+      "explanation": "\"¿Tiene fiebre?\" means \"Do you have a fever?\". Formal usted forms are the default with patients.",
+      "learning_objective": "Understand and use common Spanish phrases for the medical history.",
+      "xp_reward": null,
+      "lecture_id": "club_spanish",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_spanish_06",
+      "discipline": "Medical Spanish",
+      "topic": "The History in Spanish",
+      "subtopic": "Phrases",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "What does \"Tome una pastilla dos veces al día.\" mean?",
+      "choices": {
+        "a": "Take one pill at night only.",
+        "b": "Take one pill every two days.",
+        "c": "Take one pill twice a day.",
+        "d": "Take two pills once a day."
+      },
+      "correct_answer": "c",
+      "explanation": "\"Tome una pastilla dos veces al día.\" means \"Take one pill twice a day.\". Formal usted forms are the default with patients.",
+      "learning_objective": "Understand and use common Spanish phrases for the medical history.",
+      "xp_reward": null,
+      "lecture_id": "club_spanish",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_spanish_07",
+      "discipline": "Medical Spanish",
+      "topic": "The History in Spanish",
+      "subtopic": "Phrases",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "What does \"Del uno al diez, ¿qué tan fuerte es el dolor?\" mean?",
+      "choices": {
+        "a": "Did the pain start ten days ago?",
+        "b": "On a scale of one to ten, how bad is the pain?",
+        "c": "Is the pain in one place or ten?",
+        "d": "How many times a day does it hurt?"
+      },
+      "correct_answer": "b",
+      "explanation": "\"Del uno al diez, ¿qué tan fuerte es el dolor?\" means \"On a scale of one to ten, how bad is the pain?\". Formal usted forms are the default with patients.",
+      "learning_objective": "Understand and use common Spanish phrases for the medical history.",
+      "xp_reward": null,
+      "lecture_id": "club_spanish",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_spanish_08",
+      "discipline": "Medical Spanish",
+      "topic": "The History in Spanish",
+      "subtopic": "Phrases",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "What does \"Voy a escuchar su corazón.\" mean?",
+      "choices": {
+        "a": "I'm going to look in your ears.",
+        "b": "I'm going to check your reflexes.",
+        "c": "I'm going to listen to your heart.",
+        "d": "I'm going to take your blood pressure."
+      },
+      "correct_answer": "c",
+      "explanation": "\"Voy a escuchar su corazón.\" means \"I'm going to listen to your heart.\". Formal usted forms are the default with patients.",
+      "learning_objective": "Understand and use common Spanish phrases for the medical history.",
+      "xp_reward": null,
+      "lecture_id": "club_spanish",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_spanish_09",
+      "discipline": "Medical Spanish",
+      "topic": "The History in Spanish",
+      "subtopic": "Phrases",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "What does \"¿Fuma?\" mean?",
+      "choices": {
+        "a": "Do you drink alcohol?",
+        "b": "Do you smoke?",
+        "c": "Do you exercise?",
+        "d": "Do you sleep well?"
+      },
+      "correct_answer": "b",
+      "explanation": "\"¿Fuma?\" means \"Do you smoke?\". Formal usted forms are the default with patients.",
+      "learning_objective": "Understand and use common Spanish phrases for the medical history.",
+      "xp_reward": null,
+      "lecture_id": "club_spanish",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_spanish_10",
+      "discipline": "Medical Spanish",
+      "topic": "The History in Spanish",
+      "subtopic": "Phrases",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "What does \"Me duele el pecho.\" mean?",
+      "choices": {
+        "a": "My back hurts.",
+        "b": "My stomach hurts.",
+        "c": "My chest hurts.",
+        "d": "My throat hurts."
+      },
+      "correct_answer": "c",
+      "explanation": "\"Me duele el pecho.\" means \"My chest hurts.\". Formal usted forms are the default with patients.",
+      "learning_objective": "Understand and use common Spanish phrases for the medical history.",
+      "xp_reward": null,
+      "lecture_id": "club_spanish",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_spanish_11",
+      "discipline": "Medical Spanish",
+      "topic": "The History in Spanish",
+      "subtopic": "Phrases",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "What does \"Estoy mareado.\" mean?",
+      "choices": {
+        "a": "I'm short of breath.",
+        "b": "I feel sick to my stomach.",
+        "c": "I'm very tired.",
+        "d": "I feel dizzy."
+      },
+      "correct_answer": "d",
+      "explanation": "\"Estoy mareado.\" means \"I feel dizzy.\". Formal usted forms are the default with patients.",
+      "learning_objective": "Understand and use common Spanish phrases for the medical history.",
+      "xp_reward": null,
+      "lecture_id": "club_spanish",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_spanish_12",
+      "discipline": "Medical Spanish",
+      "topic": "The History in Spanish",
+      "subtopic": "Phrases",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "What does \"¿Cuántos años tiene?\" mean?",
+      "choices": {
+        "a": "How long have you been sick?",
+        "b": "What year were you born?",
+        "c": "How old are you?",
+        "d": "How many children do you have?"
+      },
+      "correct_answer": "c",
+      "explanation": "\"¿Cuántos años tiene?\" means \"How old are you?\". Formal usted forms are the default with patients.",
+      "learning_objective": "Understand and use common Spanish phrases for the medical history.",
+      "xp_reward": null,
+      "lecture_id": "club_spanish",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_spanish_13",
+      "discipline": "Medical Spanish",
+      "topic": "The History in Spanish",
+      "subtopic": "Phrases",
+      "question_type": "Recall",
+      "difficulty_tier": 2,
+      "prompt": "What does \"embarazada\" mean?",
+      "choices": {
+        "a": "tired",
+        "b": "married",
+        "c": "embarrassed",
+        "d": "pregnant"
+      },
+      "correct_answer": "d",
+      "explanation": "\"embarazada\" means \"pregnant\". Formal usted forms are the default with patients.",
+      "learning_objective": "Understand and use common Spanish phrases for the medical history.",
+      "xp_reward": null,
+      "lecture_id": "club_spanish",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_spanish_interp_01",
+      "discipline": "Medical Spanish",
+      "topic": "Working with Interpreters",
+      "subtopic": "When to call an interpreter",
+      "question_type": "Application",
+      "difficulty_tier": 2,
+      "prompt": "A patient who speaks only Spanish comes in with her 10-year-old son, who offers to interpret. Your Spanish is basic. What should you do?",
+      "choices": {
+        "a": "Use your basic Spanish for the whole visit",
+        "b": "Use a professional medical interpreter, in person, by phone or by video",
+        "c": "Ask her to come back with an adult relative",
+        "d": "Let the son interpret: he knows her best"
+      },
+      "correct_answer": "b",
+      "explanation": "Ad hoc interpreters, especially children, make more errors and put family members in an unfair position; professional interpreters improve accuracy and safety. Use your own Spanish for rapport, and a qualified interpreter for the clinical content unless you are certified.",
+      "learning_objective": "Choose a professional interpreter over ad hoc interpreting for clinical care.",
+      "xp_reward": null,
+      "lecture_id": "club_spanish",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "club_journal_arr_01",
+      "discipline": "Evidence-Based Medicine",
+      "topic": "Critical Appraisal",
+      "subtopic": "Absolute risk reduction",
+      "question_type": "Application",
+      "difficulty_tier": 2,
+      "prompt": "In the fictional HARBOR trial, stroke at 3 years occurred in 4.0% of patients on Drug H and 6.0% on placebo. What is the absolute risk reduction?",
+      "choices": {
+        "a": "33%",
+        "b": "2 percentage points",
+        "c": "4%",
+        "d": "50%"
+      },
+      "correct_answer": "b",
+      "explanation": "The absolute risk reduction is the difference in event rates: 6.0% − 4.0% = 2.0 percentage points.",
+      "learning_objective": "Calculate an absolute risk reduction from event rates.",
+      "xp_reward": null,
+      "lecture_id": "club_journal",
+      "format": "multiple_choice",
+      "tags": [
+        "abstract_harbor"
+      ]
+    },
+    {
+      "id": "club_journal_nnt_01",
+      "discipline": "Evidence-Based Medicine",
+      "topic": "Critical Appraisal",
+      "subtopic": "Number needed to treat",
+      "question_type": "Application",
+      "difficulty_tier": 2,
+      "prompt": "HARBOR (fictional): stroke 4.0% on Drug H vs 6.0% on placebo over 3 years. How many patients must be treated for 3 years to prevent one stroke?",
+      "choices": {
+        "a": "20",
+        "b": "50",
+        "c": "33",
+        "d": "3"
+      },
+      "correct_answer": "b",
+      "explanation": "The number needed to treat is 1 ÷ absolute risk reduction = 1 ÷ 0.02 = 50 patients for 3 years.",
+      "learning_objective": "Calculate a number needed to treat.",
+      "xp_reward": null,
+      "lecture_id": "club_journal",
+      "format": "multiple_choice",
+      "tags": [
+        "abstract_harbor"
+      ]
+    },
+    {
+      "id": "club_journal_rrr_01",
+      "discipline": "Evidence-Based Medicine",
+      "topic": "Critical Appraisal",
+      "subtopic": "Relative risk reduction",
+      "question_type": "Application",
+      "difficulty_tier": 2,
+      "prompt": "HARBOR (fictional): stroke 4.0% on Drug H vs 6.0% on placebo. The drug company's press release says Drug H \"cuts stroke risk by a third\". That figure is the:",
+      "choices": {
+        "a": "Absolute risk reduction",
+        "b": "Relative risk reduction (2 ÷ 6 ≈ 33%)",
+        "c": "Number needed to treat",
+        "d": "Odds of major bleeding"
+      },
+      "correct_answer": "b",
+      "explanation": "The relative risk reduction is the absolute reduction divided by the control rate: 2.0 ÷ 6.0 ≈ 33%. Relative figures sound bigger than absolute ones; a patient deciding also needs the 2-point absolute benefit and the bleeding risk.",
+      "learning_objective": "Distinguish relative from absolute risk reduction.",
+      "xp_reward": null,
+      "lecture_id": "club_journal",
+      "format": "multiple_choice",
+      "tags": [
+        "abstract_harbor"
+      ]
+    },
+    {
+      "id": "club_journal_design_01",
+      "discipline": "Evidence-Based Medicine",
+      "topic": "Critical Appraisal",
+      "subtopic": "Study design",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "In the fictional Morning Cup study, 50,000 nurses reported their coffee intake every two years and were followed for 10 years for new liver disease. This design is a:",
+      "choices": {
+        "a": "Prospective cohort study",
+        "b": "Cross-sectional survey",
+        "c": "Case-control study",
+        "d": "Randomized controlled trial"
+      },
+      "correct_answer": "a",
+      "explanation": "Participants were grouped by an exposure they chose (coffee) and followed forward in time for outcomes: a prospective cohort. Nothing was assigned at random.",
+      "learning_objective": "Identify a prospective cohort design.",
+      "xp_reward": null,
+      "lecture_id": "club_journal",
+      "format": "multiple_choice",
+      "tags": [
+        "abstract_cohort"
+      ]
+    },
+    {
+      "id": "club_journal_causation_01",
+      "discipline": "Evidence-Based Medicine",
+      "topic": "Critical Appraisal",
+      "subtopic": "Association and causation",
+      "question_type": "Conceptual",
+      "difficulty_tier": 2,
+      "prompt": "Morning Cup (fictional) found coffee drinkers had less liver disease after adjusting for age, alcohol and BMI. Can it show that coffee prevents liver disease?",
+      "choices": {
+        "a": "Yes, because the study was large",
+        "b": "Yes: adjustment removes all confounding",
+        "c": "No: it shows an association; unmeasured differences between coffee drinkers and others could explain it",
+        "d": "No, because cohort studies can't measure risk"
+      },
+      "correct_answer": "c",
+      "explanation": "Observational studies can't exclude residual confounding: coffee drinkers may differ in ways that weren't measured. Size narrows the confidence interval but doesn't remove bias; a randomized trial is needed to show cause.",
+      "learning_objective": "Explain why an observational association doesn't prove causation.",
+      "xp_reward": null,
+      "lecture_id": "club_journal",
+      "format": "multiple_choice",
+      "tags": [
+        "abstract_cohort"
+      ]
+    },
+    {
+      "id": "club_journal_ci_01",
+      "discipline": "Evidence-Based Medicine",
+      "topic": "Critical Appraisal",
+      "subtopic": "Confidence intervals",
+      "question_type": "Interpretation",
+      "difficulty_tier": 2,
+      "prompt": "Morning Cup (fictional) reports a relative risk of 0.80 with a 95% confidence interval of 0.65 to 0.98. What does this mean?",
+      "choices": {
+        "a": "Coffee lowers risk by 65–98%",
+        "b": "The result is not significant, because 0.80 is close to 1",
+        "c": "The association is statistically significant at the 5% level, because the interval does not include 1",
+        "d": "The study was underpowered"
+      },
+      "correct_answer": "c",
+      "explanation": "For a ratio, 1 means no difference. A 95% confidence interval that excludes 1 (here 0.65–0.98) corresponds to p < 0.05. The plausible range runs from a 35% lower risk to a 2% lower risk.",
+      "learning_objective": "Interpret a confidence interval for a relative risk.",
+      "xp_reward": null,
+      "lecture_id": "club_journal",
+      "format": "multiple_choice",
+      "tags": [
+        "abstract_cohort"
+      ]
+    },
+    {
+      "id": "club_journal_sens_01",
+      "discipline": "Evidence-Based Medicine",
+      "topic": "Critical Appraisal",
+      "subtopic": "Sensitivity",
+      "question_type": "Application",
+      "difficulty_tier": 2,
+      "prompt": "In the fictional rapid strep study, 100 children had strep by culture and the rapid test was positive in 90 of them. What is the test's sensitivity?",
+      "choices": {
+        "a": "90%",
+        "b": "67%",
+        "c": "10%",
+        "d": "95%"
+      },
+      "correct_answer": "a",
+      "explanation": "Sensitivity is the share of people with the disease who test positive: 90 ÷ 100 = 90%.",
+      "learning_objective": "Calculate sensitivity from a two-by-two table.",
+      "xp_reward": null,
+      "lecture_id": "club_journal",
+      "format": "multiple_choice",
+      "tags": [
+        "abstract_rapid"
+      ]
+    },
+    {
+      "id": "club_journal_spec_01",
+      "discipline": "Evidence-Based Medicine",
+      "topic": "Critical Appraisal",
+      "subtopic": "Specificity",
+      "question_type": "Application",
+      "difficulty_tier": 2,
+      "prompt": "Rapid strep study (fictional): of 900 children without strep, the rapid test was negative in 855. What is its specificity?",
+      "choices": {
+        "a": "90%",
+        "b": "5%",
+        "c": "95%",
+        "d": "85.5%"
+      },
+      "correct_answer": "c",
+      "explanation": "Specificity is the share of people without the disease who test negative: 855 ÷ 900 = 95%.",
+      "learning_objective": "Calculate specificity from a two-by-two table.",
+      "xp_reward": null,
+      "lecture_id": "club_journal",
+      "format": "multiple_choice",
+      "tags": [
+        "abstract_rapid"
+      ]
+    },
+    {
+      "id": "club_journal_ppv_01",
+      "discipline": "Evidence-Based Medicine",
+      "topic": "Critical Appraisal",
+      "subtopic": "Predictive value",
+      "question_type": "Application",
+      "difficulty_tier": 3,
+      "prompt": "Rapid strep study (fictional): 1,000 children, 100 with strep. The test was positive in 90 with strep and in 45 without. If a child from this group tests positive, what is the chance they have strep (the positive predictive value)?",
+      "choices": {
+        "a": "About 67%",
+        "b": "About 33%",
+        "c": "95%",
+        "d": "90%"
+      },
+      "correct_answer": "a",
+      "explanation": "Positive predictive value = true positives ÷ all positives = 90 ÷ (90 + 45) = 90 ÷ 135 ≈ 67%. It depends on how common the disease is in the group tested, unlike sensitivity and specificity.",
+      "learning_objective": "Calculate a positive predictive value and relate it to prevalence.",
+      "xp_reward": null,
+      "lecture_id": "club_journal",
+      "format": "multiple_choice",
+      "tags": [
+        "abstract_rapid"
+      ]
+    }
+  ]
+}

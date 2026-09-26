@@ -47,7 +47,19 @@ func scheduler_checks() -> void:
 
 func collection_checks() -> void:
 	state.start_new_game()
-	check(collection.cards().size() == root.get_node("QuestionBank").records.size() - 1, "Standalone bank questions become cards; graph-only prompt excluded")
+	# Every standalone bank question taught by today is a card: not the
+	# graph-only prompt or figure questions, not lectures still to come, not
+	# a club's questions unless you're a member.
+	var calendar: Node = root.get_node("YearCalendar")
+	var expected := 0
+	for question in root.get_node("QuestionBank").records.values():
+		var source: Dictionary = calendar.event(String(question.lecture_id))
+		if question.id == "pd_viz_competitive_01" or question.has("figure") or String(question.lecture_id).begins_with("club_"):
+			continue
+		if not source.is_empty() and String(source.date) > calendar.today_date():
+			continue
+		expected += 1
+	check(expected >= 20 and collection.cards().size() == expected, "Standalone bank questions taught so far become cards; graph-only and future prompts excluded (%d of %d)" % [collection.cards().size(), expected])
 	var id: String = collection.cards()[0].id
 	check(collection.begin_review(id), "Due new card can start")
 	check(collection.rate(3).is_empty(), "Rating before revealing is rejected")

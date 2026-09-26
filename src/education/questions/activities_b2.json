@@ -1,0 +1,595 @@
+{
+ "version": 1,
+ "questions": [
+  {
+   "id": "anat_pec_minor_01",
+   "discipline": "Anatomy",
+   "topic": "Upper Limb",
+   "subtopic": "The axilla",
+   "question_type": "Recall",
+   "difficulty_tier": 2,
+   "prompt": "Pectoralis minor divides the axillary artery into three parts. Which is correct?",
+   "choices": {
+    "a": "The artery ends at pectoralis minor and becomes the brachial artery there.",
+    "b": "The first part is the longest and gives off three branches.",
+    "c": "The first part lies above (medial to) the muscle, the second behind it, the third below (lateral to) it.",
+    "d": "Each part is named after the cord it runs beside."
+   },
+   "explanation": "Pectoralis minor crosses in front of the axillary artery, marking its three parts: the first (one branch), the second behind the muscle (two branches), the third (three branches). The artery becomes the brachial artery at the lower border of teres major.",
+   "learning_objective": "Describe the three parts of the axillary artery.",
+   "xp_reward": null,
+   "lecture_id": "anatomy_lab_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "anat_median_m_01",
+   "discipline": "Anatomy",
+   "topic": "Upper Limb",
+   "subtopic": "The brachial plexus",
+   "question_type": "Conceptual",
+   "difficulty_tier": 2,
+   "prompt": "In the axilla you find a large nerve formed by one root from the lateral cord and one from the medial cord, making an \"M\" with its neighbors in front of the axillary artery. Which nerve is it?",
+   "choices": {
+    "a": "The axillary nerve",
+    "b": "The ulnar nerve",
+    "c": "The median nerve",
+    "d": "The radial nerve"
+   },
+   "explanation": "The median nerve forms from lateral and medial roots, which join in front of the third part of the axillary artery. With the musculocutaneous and ulnar nerves they make the classic \"M\", your landmark for the plexus in dissection.",
+   "learning_objective": "Identify the median nerve by its origin in dissection.",
+   "xp_reward": null,
+   "lecture_id": "anatomy_lab_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "anat_musculocutaneous_01",
+   "discipline": "Anatomy",
+   "topic": "Upper Limb",
+   "subtopic": "The arm",
+   "question_type": "Recall",
+   "difficulty_tier": 2,
+   "prompt": "Which nerve pierces coracobrachialis and supplies the muscles of the anterior compartment of the arm (biceps, brachialis)?",
+   "choices": {
+    "a": "The musculocutaneous nerve",
+    "b": "The radial nerve",
+    "c": "The axillary nerve",
+    "d": "The median nerve"
+   },
+   "explanation": "The musculocutaneous nerve (lateral cord, C5–C7) pierces coracobrachialis and supplies the flexors of the arm, ending as the lateral cutaneous nerve of the forearm.",
+   "learning_objective": "Name the nerve of the anterior compartment of the arm.",
+   "xp_reward": null,
+   "lecture_id": "anatomy_lab_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "anat_cephalic_01",
+   "discipline": "Anatomy",
+   "topic": "Upper Limb",
+   "subtopic": "Superficial veins",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "Which superficial vein runs in the deltopectoral groove before draining into the axillary vein?",
+   "choices": {
+    "a": "The basilic vein",
+    "b": "The brachial vein",
+    "c": "The cephalic vein",
+    "d": "The median cubital vein"
+   },
+   "explanation": "The cephalic vein ascends on the lateral side of the arm, runs in the deltopectoral groove and pierces the clavipectoral fascia to join the axillary vein. The basilic vein runs medially.",
+   "learning_objective": "Trace the cephalic vein.",
+   "xp_reward": null,
+   "lecture_id": "anatomy_lab_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "anat_long_thoracic_01",
+   "discipline": "Anatomy",
+   "topic": "Upper Limb",
+   "subtopic": "The axilla",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "As you clear the medial wall of the axilla, your instructor warns you not to cut a nerve running down the surface of serratus anterior. Why do surgeons protect it during axillary node dissection?",
+   "choices": {
+    "a": "It is the ulnar nerve, whose injury causes claw hand.",
+    "b": "It carries the blood supply to the breast.",
+    "c": "Cutting it causes wrist drop.",
+    "d": "Injuring the long thoracic nerve paralyzes serratus anterior, causing a winged scapula."
+   },
+   "explanation": "The long thoracic nerve (C5–C7) lies on serratus anterior on the medial axillary wall. Damage leaves the scapula's medial border lifting off the chest (winging), especially pushing against a wall.",
+   "learning_objective": "Relate the long thoracic nerve's course to surgical risk.",
+   "xp_reward": null,
+   "lecture_id": "anatomy_lab_01",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "sp_knee_dx_01",
+   "discipline": "Clinical Skills",
+   "topic": "Musculoskeletal Exam",
+   "subtopic": "The knee",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "Ms. Moreno planted her foot and twisted, felt a pop, couldn't continue, and her knee swelled within two hours. The Lachman test shows increased forward translation with a soft end point. What's the most likely injury?",
+   "choices": {
+    "a": "A medial collateral ligament sprain",
+    "b": "Patellofemoral pain",
+    "c": "Gout of the knee",
+    "d": "An anterior cruciate ligament tear"
+   },
+   "explanation": "A noncontact pivoting injury with a pop, rapid swelling (a hemarthrosis) and a positive Lachman test is classic for an ACL tear. MCL injuries follow a blow to the outside of the knee and cause medial pain with valgus stress.",
+   "learning_objective": "Recognize the history and examination findings of an ACL tear.",
+   "xp_reward": null,
+   "lecture_id": "sp_msk_01",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "sp_knee_lachman_01",
+   "discipline": "Clinical Skills",
+   "topic": "Musculoskeletal Exam",
+   "subtopic": "Special tests",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "Which examination maneuver is most sensitive for an acute ACL tear?",
+   "choices": {
+    "a": "The patellar apprehension test",
+    "b": "The Lachman test",
+    "c": "Valgus stress at 30 degrees",
+    "d": "McMurray's test"
+   },
+   "explanation": "The Lachman test (anterior translation of the tibia with the knee flexed about 20–30 degrees) is the most sensitive clinical test for ACL tears. McMurray's tests the menisci; valgus stress tests the MCL.",
+   "learning_objective": "Choose the best examination test for the ACL.",
+   "xp_reward": null,
+   "lecture_id": "sp_msk_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "prac_tag_radial_01",
+   "discipline": "Anatomy",
+   "topic": "Upper Limb",
+   "subtopic": "Practical: nerves",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "Station 1. The tag is on a nerve continuing from the posterior cord that runs into the radial groove of the humerus. Name it.",
+   "choices": {
+    "a": "Radial nerve",
+    "b": "Median nerve",
+    "c": "Ulnar nerve",
+    "d": "Musculocutaneous nerve"
+   },
+   "explanation": "The posterior cord's large terminal branch spirals in the radial groove behind the humerus: the radial nerve.",
+   "learning_objective": "Identify the radial nerve by its origin and course.",
+   "xp_reward": null,
+   "lecture_id": "anatomy_practical_b2",
+   "format": "multiple_choice",
+   "figure": {
+    "type": "flow",
+    "nodes": [
+     {
+      "id": "up",
+      "label": "Upper trunk",
+      "x": 0.12,
+      "y": 0.2,
+      "color": "second"
+     },
+     {
+      "id": "mid",
+      "label": "Middle trunk",
+      "x": 0.12,
+      "y": 0.5,
+      "color": "second"
+     },
+     {
+      "id": "low",
+      "label": "Lower trunk",
+      "x": 0.12,
+      "y": 0.8,
+      "color": "second"
+     },
+     {
+      "id": "lat",
+      "label": "Lateral cord",
+      "x": 0.45,
+      "y": 0.2,
+      "color": "gold"
+     },
+     {
+      "id": "post",
+      "label": "Posterior cord",
+      "x": 0.45,
+      "y": 0.5,
+      "color": "gold"
+     },
+     {
+      "id": "med",
+      "label": "Medial cord",
+      "x": 0.45,
+      "y": 0.8,
+      "color": "gold"
+     },
+     {
+      "id": "x",
+      "label": "Tagged nerve",
+      "x": 0.82,
+      "y": 0.5,
+      "color": "red"
+     },
+     {
+      "id": "mc",
+      "label": "Musculocutaneous",
+      "x": 0.82,
+      "y": 0.12,
+      "color": "muted"
+     },
+     {
+      "id": "uln",
+      "label": "Ulnar",
+      "x": 0.82,
+      "y": 0.9,
+      "color": "muted"
+     }
+    ],
+    "edges": [
+     {
+      "from": "up",
+      "to": "lat"
+     },
+     {
+      "from": "mid",
+      "to": "lat"
+     },
+     {
+      "from": "up",
+      "to": "post"
+     },
+     {
+      "from": "mid",
+      "to": "post"
+     },
+     {
+      "from": "low",
+      "to": "post"
+     },
+     {
+      "from": "low",
+      "to": "med"
+     },
+     {
+      "from": "lat",
+      "to": "mc"
+     },
+     {
+      "from": "post",
+      "to": "x"
+     },
+     {
+      "from": "med",
+      "to": "uln"
+     }
+    ],
+    "text_size": 16
+   },
+   "correct_answer": "a"
+  },
+  {
+   "id": "prac_tag_ulnar_01",
+   "discipline": "Anatomy",
+   "topic": "Upper Limb",
+   "subtopic": "Practical: nerves",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "Station 2. The tagged nerve comes from the medial cord and passes behind the medial epicondyle. Name it.",
+   "choices": {
+    "a": "Axillary nerve",
+    "b": "Radial nerve",
+    "c": "Median nerve",
+    "d": "Ulnar nerve"
+   },
+   "explanation": "The ulnar nerve (medial cord, C8–T1) runs behind the medial epicondyle into the forearm.",
+   "learning_objective": "Identify the ulnar nerve by its course.",
+   "xp_reward": null,
+   "lecture_id": "anatomy_practical_b2",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "prac_tag_supraspinatus_01",
+   "discipline": "Anatomy",
+   "topic": "Upper Limb",
+   "subtopic": "Practical: muscles",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "Station 3. The pin is in a muscle filling the fossa above the spine of the scapula; its tendon passes under the acromion to the greater tubercle. Name it.",
+   "choices": {
+    "a": "Teres minor",
+    "b": "Supraspinatus",
+    "c": "Subscapularis",
+    "d": "Infraspinatus"
+   },
+   "explanation": "Supraspinatus lies in the supraspinous fossa and inserts on the superior facet of the greater tubercle, passing beneath the acromion.",
+   "learning_objective": "Identify supraspinatus.",
+   "xp_reward": null,
+   "lecture_id": "anatomy_practical_b2",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "prac_tag_biceps_01",
+   "discipline": "Anatomy",
+   "topic": "Upper Limb",
+   "subtopic": "Practical: muscles",
+   "question_type": "Interpretation",
+   "difficulty_tier": 1,
+   "prompt": "Station 4. The tag is on a two-headed muscle of the anterior arm whose tendon inserts on the radial tuberosity. What is its main action at the forearm, besides elbow flexion?",
+   "choices": {
+    "a": "Supination",
+    "b": "Shoulder abduction",
+    "c": "Wrist extension",
+    "d": "Pronation"
+   },
+   "explanation": "Biceps brachii inserts on the radial tuberosity and is the most powerful supinator of the forearm, as well as an elbow flexor.",
+   "learning_objective": "Name biceps brachii's actions.",
+   "xp_reward": null,
+   "lecture_id": "anatomy_practical_b2",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "prac_tag_axillary_artery_01",
+   "discipline": "Anatomy",
+   "topic": "Upper Limb",
+   "subtopic": "Practical: vessels",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "Station 5. The tagged artery is the continuation of the axillary artery below the lower border of teres major. Name it.",
+   "choices": {
+    "a": "Profunda brachii (deep brachial) artery",
+    "b": "Subclavian artery",
+    "c": "Brachial artery",
+    "d": "Radial artery"
+   },
+   "explanation": "The axillary artery becomes the brachial artery at the lower border of teres major; the deep brachial artery is one of its branches.",
+   "learning_objective": "Name the vessel continuing from the axillary artery.",
+   "xp_reward": null,
+   "lecture_id": "anatomy_practical_b2",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "prac_tag_scaphoid_01",
+   "discipline": "Anatomy",
+   "topic": "Upper Limb",
+   "subtopic": "Practical: bones",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "Station 6. The pin marks the carpal bone in the floor of the anatomical snuffbox. Name it.",
+   "choices": {
+    "a": "Scaphoid",
+    "b": "Hamate",
+    "c": "Trapezium",
+    "d": "Lunate"
+   },
+   "explanation": "The scaphoid lies in the floor of the anatomical snuffbox; tenderness there after a fall suggests a scaphoid fracture, which can compromise its blood supply.",
+   "learning_objective": "Identify the scaphoid and its clinical significance.",
+   "xp_reward": null,
+   "lecture_id": "anatomy_practical_b2",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "prac_tag_deltoid_01",
+   "discipline": "Anatomy",
+   "topic": "Upper Limb",
+   "subtopic": "Practical: muscles",
+   "question_type": "Interpretation",
+   "difficulty_tier": 1,
+   "prompt": "Station 7. The tag is on the muscle forming the rounded contour of the shoulder. Which nerve supplies it?",
+   "choices": {
+    "a": "Long thoracic nerve",
+    "b": "Axillary nerve",
+    "c": "Radial nerve",
+    "d": "Suprascapular nerve"
+   },
+   "explanation": "The deltoid is supplied by the axillary nerve (posterior cord, C5–C6), which also supplies teres minor.",
+   "learning_objective": "Name the innervation of the deltoid.",
+   "xp_reward": null,
+   "lecture_id": "anatomy_practical_b2",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "prac_tag_median_01",
+   "discipline": "Anatomy",
+   "topic": "Upper Limb",
+   "subtopic": "Practical: nerves",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "Station 8. The tagged nerve passes through the carpal tunnel with the long flexor tendons. Name it.",
+   "choices": {
+    "a": "Median nerve",
+    "b": "Anterior interosseous artery",
+    "c": "Ulnar nerve",
+    "d": "Radial nerve"
+   },
+   "explanation": "The median nerve travels through the carpal tunnel beneath the flexor retinaculum with the nine flexor tendons.",
+   "learning_objective": "Identify the median nerve in the carpal tunnel.",
+   "xp_reward": null,
+   "lecture_id": "anatomy_practical_b2",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "exb2_klumpke_01",
+   "discipline": "Anatomy",
+   "topic": "Upper Limb",
+   "subtopic": "Lower trunk injury",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "A man grabbed a branch to break his fall from a tree. He now has weakness of all the small muscles of the hand, numbness of the medial forearm and hand, and a drooping right eyelid with a small pupil. Which roots are injured?",
+   "choices": {
+    "a": "The radial nerve at the humerus",
+    "b": "C5 and C6 (upper trunk)",
+    "c": "C8 and T1 (lower trunk)",
+    "d": "C7 alone"
+   },
+   "explanation": "Forced abduction stretches the lower trunk (C8–T1): intrinsic hand weakness (claw hand) and medial arm sensory loss. Involvement of T1's sympathetic fibers adds Horner syndrome (ptosis, miosis).",
+   "learning_objective": "Recognize a lower-trunk (Klumpke) injury with Horner syndrome.",
+   "xp_reward": null,
+   "lecture_id": "exam_b2",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "exb2_winging_01",
+   "discipline": "Anatomy",
+   "topic": "Upper Limb",
+   "subtopic": "Long thoracic nerve",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 1,
+   "prompt": "After an axillary lymph node dissection, a woman's scapula juts out when she pushes against a wall. Which muscle is weak?",
+   "choices": {
+    "a": "Pectoralis minor",
+    "b": "Trapezius",
+    "c": "Latissimus dorsi",
+    "d": "Serratus anterior"
+   },
+   "explanation": "Serratus anterior holds the scapula against the chest wall; its nerve, the long thoracic, lies on the medial axillary wall where it can be injured in node dissection.",
+   "learning_objective": "Link winged scapula to serratus anterior and the long thoracic nerve.",
+   "xp_reward": null,
+   "lecture_id": "exam_b2",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "exb2_tetanus_01",
+   "discipline": "Physiology",
+   "topic": "Muscle",
+   "subtopic": "Summation",
+   "question_type": "Conceptual",
+   "difficulty_tier": 2,
+   "prompt": "Why does stimulating a skeletal muscle fiber at a high frequency produce a stronger contraction than a single twitch?",
+   "choices": {
+    "a": "Calcium stays high between stimuli, so contractions summate into a sustained, stronger tetanus.",
+    "b": "Each stimulus recruits new muscle fibers in the same motor unit.",
+    "c": "ATP use falls at high frequency.",
+    "d": "High frequency increases the number of sarcomeres."
+   },
+   "explanation": "A twitch ends when Ca²⁺ is pumped back into the SR. At high firing rates, the next stimulus arrives before Ca²⁺ is cleared, so force summates up to fused tetanus.",
+   "learning_objective": "Explain summation and tetanus in skeletal muscle.",
+   "xp_reward": null,
+   "lecture_id": "exam_b2",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "exb2_smooth_01",
+   "discipline": "Physiology",
+   "topic": "Muscle",
+   "subtopic": "Smooth muscle",
+   "question_type": "Recall",
+   "difficulty_tier": 2,
+   "prompt": "In smooth muscle, calcium triggers contraction by binding:",
+   "choices": {
+    "a": "Actin, which exposes myosin sites",
+    "b": "Calmodulin, which activates myosin light-chain kinase",
+    "c": "Troponin C, which moves tropomyosin",
+    "d": "The ryanodine receptor directly"
+   },
+   "explanation": "Smooth muscle lacks troponin. Ca²⁺–calmodulin activates myosin light-chain kinase, which phosphorylates myosin light chains so cross-bridges can cycle.",
+   "learning_objective": "Contrast calcium's role in smooth and skeletal muscle.",
+   "xp_reward": null,
+   "lecture_id": "exam_b2",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "exb2_pth_01",
+   "discipline": "Physiology",
+   "topic": "Bone",
+   "subtopic": "Parathyroid hormone",
+   "question_type": "Conceptual",
+   "difficulty_tier": 2,
+   "prompt": "How does a continuously high level of parathyroid hormone (as in hyperparathyroidism) affect bone?",
+   "choices": {
+    "a": "It has no effect on bone.",
+    "b": "It only increases bone formation.",
+    "c": "It stimulates osteoclasts directly through PTH receptors on them.",
+    "d": "It increases osteoclast activity (via RANKL from osteoblasts), releasing calcium from bone."
+   },
+   "explanation": "PTH acts on osteoblasts, which increase RANKL and decrease OPG, driving osteoclast resorption and releasing calcium. Given intermittently (teriparatide), PTH is anabolic instead.",
+   "learning_objective": "Explain PTH's effect on bone remodeling.",
+   "xp_reward": null,
+   "lecture_id": "exam_b2",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "exb2_vitd_01",
+   "discipline": "Physiology",
+   "topic": "Bone",
+   "subtopic": "Vitamin D",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "Where is vitamin D converted to its active form, calcitriol (1,25-dihydroxyvitamin D)?",
+   "choices": {
+    "a": "In the parathyroid glands",
+    "b": "In the kidney, by 1-alpha-hydroxylase",
+    "c": "In the skin, by sunlight alone",
+    "d": "In the liver, by 25-hydroxylase alone"
+   },
+   "explanation": "Vitamin D is hydroxylated in the liver (to 25-hydroxyvitamin D) and then in the kidney by 1-alpha-hydroxylase, which PTH stimulates, making calcitriol. That's why kidney disease causes calcitriol deficiency.",
+   "learning_objective": "Trace the activation of vitamin D.",
+   "xp_reward": null,
+   "lecture_id": "exam_b2",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "exb2_meniscus_01",
+   "discipline": "Clinical Skills",
+   "topic": "Musculoskeletal Exam",
+   "subtopic": "The knee",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "A runner's knee locks and catches after a twisting injury, with pain along the medial joint line. Which structure is most likely injured?",
+   "choices": {
+    "a": "The anterior cruciate ligament",
+    "b": "The medial meniscus",
+    "c": "The patellar tendon",
+    "d": "The lateral collateral ligament"
+   },
+   "explanation": "Locking, catching and joint-line tenderness suggest a meniscal tear (the medial meniscus is torn more often); McMurray's test may reproduce a click. Instability without locking suggests the ACL.",
+   "learning_objective": "Recognize the features of a meniscal tear.",
+   "xp_reward": null,
+   "lecture_id": "exam_b2",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "exb2_ottawa_knee_01",
+   "discipline": "Clinical Skills",
+   "topic": "Musculoskeletal Exam",
+   "subtopic": "Imaging decisions",
+   "question_type": "Application",
+   "difficulty_tier": 2,
+   "prompt": "Which finding after a knee injury is a reason to X-ray the knee under the Ottawa knee rules?",
+   "choices": {
+    "a": "Any swelling of the knee",
+    "b": "Pain when walking downstairs",
+    "c": "Inability to bear weight for four steps, both right after the injury and in the emergency department",
+    "d": "Age under 55 with a full range of motion"
+   },
+   "explanation": "The Ottawa knee rules recommend an X-ray for age 55 or older, isolated patellar tenderness, fibular head tenderness, inability to flex to 90 degrees, or inability to bear weight for four steps immediately and at assessment.",
+   "learning_objective": "Apply the Ottawa knee rules.",
+   "xp_reward": null,
+   "lecture_id": "exam_b2",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  }
+ ]
+}

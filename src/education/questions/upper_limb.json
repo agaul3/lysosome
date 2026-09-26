@@ -1,0 +1,195 @@
+{
+ "version": 1,
+ "questions": [
+  {
+   "id": "ul_plexus_cord_01",
+   "discipline": "Anatomy",
+   "topic": "Upper Limb",
+   "subtopic": "Brachial plexus",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "The axillary and radial nerves both arise from which part of the brachial plexus?",
+   "choices": {
+    "a": "The lower trunk",
+    "b": "The medial cord",
+    "c": "The posterior cord",
+    "d": "The lateral cord"
+   },
+   "explanation": "All three posterior divisions join to form the posterior cord, which gives the axillary and radial nerves (and the subscapular and thoracodorsal nerves). They supply the extensors of the arm.",
+   "learning_objective": "Name the terminal branches of the posterior cord of the brachial plexus.",
+   "xp_reward": null,
+   "lecture_id": "upper_limb_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "ul_plexus_remediation_01",
+   "discipline": "Anatomy",
+   "topic": "Upper Limb",
+   "subtopic": "Brachial plexus",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "In order from the spinal cord outward, the parts of the brachial plexus are:",
+   "choices": {
+    "a": "Trunks, roots, divisions, branches, cords",
+    "b": "Roots, divisions, trunks, branches, cords",
+    "c": "Roots, cords, trunks, divisions, branches",
+    "d": "Roots, trunks, divisions, cords, branches"
+   },
+   "explanation": "Roots (C5–T1 ventral rami), trunks (upper, middle, lower), divisions (anterior and posterior), cords (lateral, posterior, medial), then the terminal branches.",
+   "learning_objective": "Recall the order of the brachial plexus's parts.",
+   "xp_reward": null,
+   "lecture_id": "upper_limb_01",
+   "format": "multiple_choice",
+   "is_remediation": true,
+   "correct_answer": "d"
+  },
+  {
+   "id": "ul_erb_01",
+   "discipline": "Anatomy",
+   "topic": "Upper Limb",
+   "subtopic": "Upper trunk injury",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "After a difficult delivery with shoulder dystocia, a newborn's right arm hangs adducted and internally rotated, the elbow extended and the forearm pronated. Which part of the brachial plexus is injured?",
+   "choices": {
+    "a": "The lower trunk (C8–T1)",
+    "b": "The upper trunk (C5–C6)",
+    "c": "The median nerve at the wrist",
+    "d": "The posterior cord"
+   },
+   "explanation": "This is Erb palsy, the \"waiter's tip\": stretching the upper trunk loses the shoulder's abductors and external rotators and the elbow's flexors and supinators (C5–C6), so the arm falls adducted, internally rotated, extended and pronated.",
+   "learning_objective": "Recognize Erb palsy as an upper-trunk (C5–C6) injury.",
+   "xp_reward": null,
+   "lecture_id": "upper_limb_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "ul_axillary_01",
+   "discipline": "Anatomy",
+   "topic": "Upper Limb",
+   "subtopic": "Axillary nerve",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "An older woman falls on her shoulder and fractures the surgical neck of the humerus. Afterward she can't abduct the arm well and has a numb patch over the lateral shoulder. Which nerve is injured?",
+   "choices": {
+    "a": "The musculocutaneous nerve",
+    "b": "The long thoracic nerve",
+    "c": "The radial nerve",
+    "d": "The axillary nerve"
+   },
+   "explanation": "The axillary nerve winds around the surgical neck with the posterior circumflex humeral artery. It supplies the deltoid and teres minor and the skin over the lower deltoid (the \"regimental badge\" area).",
+   "learning_objective": "Link surgical-neck fractures and shoulder dislocation to axillary nerve injury.",
+   "xp_reward": null,
+   "lecture_id": "upper_limb_01",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "ul_radial_01",
+   "discipline": "Anatomy",
+   "topic": "Upper Limb",
+   "subtopic": "Radial nerve",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "A man breaks the shaft of his humerus. Afterward he can't extend his wrist or fingers. Which nerve was injured, and where?",
+   "choices": {
+    "a": "The median nerve, in the carpal tunnel",
+    "b": "The radial nerve, in the radial groove of the humeral shaft",
+    "c": "The ulnar nerve, behind the medial epicondyle",
+    "d": "The axillary nerve, at the surgical neck"
+   },
+   "explanation": "The radial nerve spirals around the back of the humeral shaft in the radial groove, so shaft fractures can injure it. It supplies the wrist and finger extensors: the result is wrist drop.",
+   "learning_objective": "Explain wrist drop after a humeral shaft fracture.",
+   "xp_reward": null,
+   "lecture_id": "upper_limb_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "ul_carpal_01",
+   "discipline": "Anatomy",
+   "topic": "Upper Limb",
+   "subtopic": "Median nerve",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 1,
+   "prompt": "A data-entry clerk has tingling in the thumb, index and middle fingers that wakes her at night, and wasting of the thenar eminence. Where is the nerve compressed?",
+   "choices": {
+    "a": "The median nerve in the carpal tunnel",
+    "b": "The ulnar nerve in Guyon's canal",
+    "c": "The radial nerve at the elbow",
+    "d": "The C8 root in the neck"
+   },
+   "explanation": "Carpal tunnel syndrome: the median nerve is compressed under the flexor retinaculum. It supplies sensation to the thumb, index, middle and radial half of the ring finger and the thenar muscles; symptoms are often worse at night.",
+   "learning_objective": "Recognize carpal tunnel syndrome as median nerve compression at the wrist.",
+   "xp_reward": null,
+   "lecture_id": "upper_limb_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "ul_ulnar_01",
+   "discipline": "Anatomy",
+   "topic": "Upper Limb",
+   "subtopic": "Ulnar nerve",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "A patient who leans on his elbows at work has numbness of the little finger and half the ring finger, weak finger spreading, and clawing of the ring and little fingers. Which nerve is affected?",
+   "choices": {
+    "a": "The ulnar nerve",
+    "b": "The radial nerve",
+    "c": "The median nerve",
+    "d": "The musculocutaneous nerve"
+   },
+   "explanation": "The ulnar nerve runs behind the medial epicondyle (the funny bone), where pressure injures it. It supplies most of the intrinsic hand muscles, including the interossei (spreading the fingers), and sensation to the little finger and the ulnar half of the ring finger.",
+   "learning_objective": "Recognize ulnar neuropathy at the elbow.",
+   "xp_reward": null,
+   "lecture_id": "upper_limb_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "ul_cuff_01",
+   "discipline": "Anatomy",
+   "topic": "Upper Limb",
+   "subtopic": "Rotator cuff",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "Which rotator cuff muscle initiates abduction of the arm and is the one most often torn?",
+   "choices": {
+    "a": "Supraspinatus",
+    "b": "Infraspinatus",
+    "c": "Subscapularis",
+    "d": "Teres minor"
+   },
+   "explanation": "Supraspinatus starts abduction (then the deltoid takes over) and passes under the acromion, where it is impinged and degenerates. Infraspinatus and teres minor externally rotate; subscapularis internally rotates.",
+   "learning_objective": "Name the rotator cuff muscles and their actions.",
+   "xp_reward": null,
+   "lecture_id": "upper_limb_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "ul_case_01",
+   "discipline": "Anatomy",
+   "topic": "Upper Limb",
+   "subtopic": "Localizing a lesion",
+   "question_type": "Synthesis",
+   "difficulty_tier": 3,
+   "prompt": "A cyclist who fell has a weak deltoid, can't lift his wrist, and has weak elbow and finger extension, while his hand grip and elbow flexion are normal. Which part of the brachial plexus best explains all of this?",
+   "choices": {
+    "a": "The musculocutaneous nerve",
+    "b": "The medial cord",
+    "c": "The posterior cord",
+    "d": "The lateral cord"
+   },
+   "explanation": "The deltoid (axillary nerve) and the extensors of the elbow, wrist and fingers (radial nerve) are all supplied by branches of the posterior cord. Normal grip (median and ulnar) and elbow flexion (musculocutaneous) spare the other cords.",
+   "learning_objective": "Localize a lesion to the posterior cord from the pattern of weakness.",
+   "xp_reward": null,
+   "lecture_id": "upper_limb_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  }
+ ]
+}

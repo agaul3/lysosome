@@ -27,6 +27,8 @@ const RARITY_COLORS := {
 	"epic": Color("b58be6"), "legendary": Color("f2c46d"),
 }
 const FIRST_LECTURE := "pharmacodynamics_01"
+## Given, never unlocked by level: each student organization's shirt.
+const REWARD_ONLY := ["kitchen_tee", "clinic_tee", "surgery_tee", "emig_tee", "spanish_tee", "journal_tee", "intramural_jersey"]
 
 ## id: [name, slot, rarity, kind, colors, style, comfort, warmth, description]
 const ITEMS := {
@@ -61,6 +63,16 @@ const ITEMS := {
 	"oxford_tie": ["Oxford Shirt & Tie", "top", "uncommon", "oxford", ["dfe8f3", "6b2f3a", "b9c7d6"], 8, 5, 3, "Pale blue oxford with a burgundy tie."],
 	"red_flannel": ["Red Flannel Shirt", "top", "uncommon", "flannel", ["a3312c", "2a2224", "d9cfc0"], 7, 7, 5, "Brushed flannel in a red and black check."],
 	"black_turtleneck": ["Black Turtleneck", "top", "rare", "turtleneck", ["202226", "16171a"], 8, 7, 6, "Fine-knit turtleneck. Very lab-to-gallery."],
+	"class_crewneck": ["Class of 2030 Crewneck", "top", "rare", "sweater", ["2f4a6b", "24394f"], 8, 8, 6, "Navy crewneck from the Campus Store, CLASS OF 2030 across the chest."],
+	"asclepius_tee": ["Rod of Asclepius Tee", "top", "uncommon", "tee", ["e9e4da", "cfc8ba"], 6, 8, 3, "The single serpent on a staff: medicine's own symbol, in slate on oatmeal cotton."],
+	# Club shirts: given at reputation level 2 in a student organization.
+	"kitchen_tee": ["Community Kitchen Volunteer Tee", "top", "epic", "tee", ["c2452d", "9a3525"], 7, 8, 3, "Tomato-red volunteer tee. Worn at the serving line on Harbor Street."],
+	"clinic_tee": ["Free Clinic Volunteer Tee", "top", "epic", "tee", ["2f8f82", "236b62"], 7, 8, 3, "Teal tee from the Student-Run Free Clinic."],
+	"surgery_tee": ["Surgery Interest Group Tee", "top", "epic", "tee", ["3d86c6", "2a6399"], 7, 8, 3, "Surgical blue, with a knot-tying diagram on the back."],
+	"emig_tee": ["Emergency Medicine Interest Group Tee", "top", "epic", "tee", ["26282b", "c2452d"], 7, 8, 3, "Black with a red ECG line across the chest."],
+	"spanish_tee": ["Medical Spanish Tee", "top", "epic", "tee", ["e8b923", "b58a15"], 7, 8, 3, "Sunflower yellow: ¿Cómo se siente hoy?"],
+	"journal_tee": ["Journal Club Tee", "top", "epic", "tee", ["4f5b66", "3a444d"], 7, 8, 3, "Slate grey, with a forest plot printed small on the sleeve."],
+	"intramural_jersey": ["Intramural Jersey", "top", "epic", "tee", ["2f7a4a", "f2f2ef"], 8, 8, 2, "Green team jersey, number 1 for M1."],
 	# Bottoms (base layer: legs, with a belt at the waist for belted styles).
 	"dark_jeans": ["Dark Wash Jeans", "bottom", "common", "jeans", ["2e3d57", "243047", "6b4a2e"], 5, 6, 4, "Dark indigo denim with a leather belt."],
 	"light_jeans": ["Light Wash Jeans", "bottom", "common", "jeans", ["6f8db3", "5a769a", "3a2c25"], 5, 6, 4, "Faded light-wash denim."],
@@ -132,6 +144,8 @@ static func items_for(slot: String) -> Array:
 ## Whether an item is available yet, and the requirement in words:
 ## {"met": bool, "text": String}.
 static func requirement(id: String) -> Dictionary:
+	if id in REWARD_ONLY:
+		return {"met": false, "text": "A student organization's shirt"}
 	var rarity: String = ITEMS[id][2] if ITEMS.has(id) else "common"
 	match rarity:
 		"rare":
@@ -142,8 +156,19 @@ static func requirement(id: String) -> Dictionary:
 			return {"met": _lecture_done(), "text": "Complete your first lecture"}
 	return {"met": true, "text": ""}
 
+## Available: its rarity requirement is met, or the student owns it outright
+## (bought at the student store or given as a reward, e.g. at the White Coat
+## Ceremony).
 static func unlocked(id: String) -> bool:
-	return exists(id) and requirement(id).met
+	return exists(id) and (requirement(id).met or _owned(id))
+
+static func item_name(id: String) -> String:
+	return String(ITEMS[id][0]) if ITEMS.has(id) else id
+
+static func _owned(id: String) -> bool:
+	var tree := Engine.get_main_loop() as SceneTree
+	var wallet: Node = tree.root.get_node_or_null("Wallet") if tree else null
+	return wallet != null and wallet.owns_clothing(id)
 
 ## Items unlocked by reaching `level` from `previous` (for the HUD notice).
 static func unlocked_by_level(previous: int, level: int) -> Array:
@@ -151,6 +176,8 @@ static func unlocked_by_level(previous: int, level: int) -> Array:
 	for id in ITEMS:
 		var rarity: String = ITEMS[id][2]
 		var needed := 2 if rarity == "rare" else (3 if rarity == "epic" else 0)
+		if id in REWARD_ONLY:
+			continue
 		if needed > previous and needed <= level:
 			names.append(ITEMS[id][0])
 	return names

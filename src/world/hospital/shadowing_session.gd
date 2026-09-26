@@ -57,6 +57,7 @@ func setup(target: Node3D, target_ui: CanvasLayer, target_physician: Node3D) -> 
 			event = candidate
 	question = QuestionBeat.new()
 	question.name = "QuestionBeat"
+	question.context = "clinical"
 	add_child(question)
 	question.finished.connect(_next_step)
 	ui.typing_changed.connect(func(typing: bool) -> void: physician.set_speaking(typing and speaker == "okafor"))
@@ -329,6 +330,8 @@ func _finish() -> void:
 	AcademicSession.notes_progress[id()] = _stops().size()
 	if first_time:
 		AcademicSession.lecture_completed.emit(id())
+		Achievements.bump("immersion_shifts")
+		Wellbeing.spend(12.0, "shadowing")
 	speaker = "okafor"
 	physician.set_speaking(false)
 	_hold()

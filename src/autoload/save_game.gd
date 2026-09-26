@@ -7,12 +7,17 @@ extends Node
 ## location, lecture completion and notes progress, attendance (lateness) and
 ## the autonomous NPC event, so a reload resumes exactly where the student was.
 ##
+## The first-year systems live in an optional "life" section: money, energy
+## and boosts, skills, achievements and stats, the calendar (finished days,
+## absences, make-up exams, the last stipend) and club memberships. Saves from before it
+## load with those systems at their starting values.
+##
 ## Writes are atomic (temp file, verified, then renamed over the old save) and
 ## loads are all-or-nothing: the file is fully parsed and validated before any
 ## game state is touched, so a damaged file can never half-apply.
 signal saved(summary: Dictionary)
 const VERSION := 1
-const LOCATIONS := ["dorm", "campus", "lecture_building", "lecture_hall", "hospital"]
+const LOCATIONS := ["dorm", "campus", "lecture_building", "lecture_hall", "hospital", "med_ed", "library", "student_center", "anatomy", "community"]
 var path := "user://savegame.json"
 var last_error := ""
 ## Autosaves are skipped while this is false (e.g. before a game has begun).
@@ -39,7 +44,7 @@ func snapshot() -> Dictionary:
 		"selected_character": AppState.selected_character,
 		"look": AppState.player_look,
 		"name": AppState.player_name,
-		"location": {"scene": AppState.location_key(), "campus_entry": AppState.campus_entry, "hospital_entry": AppState.hospital_entry},
+		"location": {"scene": AppState.location_key(), "campus_entry": AppState.campus_entry, "hospital_entry": AppState.hospital_entry, "hall": AppState.current_hall, "med_ed_entry": AppState.med_ed_entry, "interior_entry": AppState.interior_entry},
 		"clock": {"elapsed_seconds": GameClock.elapsed_seconds},
 		"academic": {
 			"xp_balance": AcademicSession.xp_balance,
@@ -56,6 +61,14 @@ func snapshot() -> Dictionary:
 		},
 		"npc": NPCSchedule.snapshot(),
 		"flashcards": Flashcards.snapshot(),
+		"life": {
+			"wallet": Wallet.snapshot(),
+			"wellbeing": Wellbeing.snapshot(),
+			"skills": Skills.snapshot(),
+			"achievements": Achievements.snapshot(),
+			"calendar": YearCalendar.snapshot(),
+			"clubs": Clubs.snapshot(),
+		},
 	}
 
 ## Writes the current game. Returns false (with last_error) on failure.
@@ -111,7 +124,7 @@ func summary(data: Dictionary = {}) -> Dictionary:
 		data = read()
 	if data.is_empty():
 		return {}
-	var names := {"dorm": "Cedar Residence", "campus": "Student Commons", "lecture_building": "Learning Center", "lecture_hall": "Lecture Hall A", "hospital": "University Hospital"}
+	var names := {"dorm": "Cedar Residence", "campus": "Student Commons", "lecture_building": "Learning Center", "lecture_hall": "Lecture Hall A" if String(data.location.get("hall", "hall_a")) == "hall_a" else "Lecture Hall B", "hospital": "University Hospital", "med_ed": "Medical Education Center", "library": "Biomedical Library", "student_center": "Student Center", "anatomy": "Anatomy Hall", "community": "Harbor Street Community Center"}
 	var start := Time.get_unix_time_from_datetime_string(GameClock.config.start_datetime)
 	var moment := Time.get_datetime_dict_from_unix_time(int(start + float(data.clock.elapsed_seconds)))
 	var hour: int = int(moment.hour) % 12
@@ -138,6 +151,9 @@ func apply(data: Dictionary) -> bool:
 	AppState.look_changed.emit(AppState.player_look)
 	AppState.campus_entry = data.location.campus_entry
 	AppState.hospital_entry = String(data.location.get("hospital_entry", "main"))
+	AppState.current_hall = String(data.location.get("hall", "hall_a"))
+	AppState.med_ed_entry = String(data.location.get("med_ed_entry", "main"))
+	AppState.interior_entry = String(data.location.get("interior_entry", "main"))
 	GameClock.elapsed_seconds = float(data.clock.elapsed_seconds)
 	var academic: Dictionary = data.academic
 	AcademicSession.reset()
@@ -154,6 +170,16 @@ func apply(data: Dictionary) -> bool:
 	AcademicSession.notes_progress = academic.notes_progress
 	Flashcards.restore(data.get("flashcards", {}))
 	NPCSchedule.restore(data.npc)
+	var life: Dictionary = data.get("life", {})
+	Skills.restore(life.get("skills", {}))
+	Wallet.restore(life.get("wallet", {}))
+	Wellbeing.restore_state(life.get("wellbeing", {}))
+	Achievements.restore(life.get("achievements", {}))
+	if life.has("calendar"):
+		YearCalendar.restore(life.calendar)
+	else:
+		YearCalendar.reset()
+	Clubs.restore(life.get("clubs", {}))
 	GameClock.minute_changed.emit()
 	return true
 
@@ -194,6 +220,23 @@ static func validate(data: Variant) -> String:
 		return "Save file progress is inconsistent."
 	if typeof(data.npc) != TYPE_DICTIONARY or not data.npc.has("stage"):
 		return "Save file has an invalid NPC state."
+	if data.has("life"):
+		var life: Variant = data.life
+		if typeof(life) != TYPE_DICTIONARY:
+			return "Save file has invalid first-year data."
+		var checks := [
+			["wallet", Wallet.validate],
+			["wellbeing", Wellbeing.validate],
+			["skills", Skills.validate],
+			["achievements", Achievements.validate],
+			["calendar", YearCalendar.validate_save],
+			["clubs", Clubs.validate],
+		]
+		for entry in checks:
+			if life.has(entry[0]):
+				var error: String = entry[1].call(life[entry[0]])
+				if not error.is_empty():
+					return error
 	return ""
 
 ## JSON numbers load as floats; restore whole numbers to ints recursively so

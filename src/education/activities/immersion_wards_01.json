@@ -1,0 +1,87 @@
+{
+ "version": 1,
+ "id": "immersion_wards_01",
+ "kind": "immersion",
+ "eyebrow": "4 West · Clinical Immersion",
+ "title": "Rounds on 4 West",
+ "intro": "Clinical Immersion: an afternoon on the internal medicine team. Dr. Okafor's team rounds at two: an attending, a senior resident, two interns, a pharmacist, and now you.",
+ "context": "immersion",
+ "minutes": 150,
+ "energy": 14,
+ "steps": [
+  {
+   "say": "\"Stand where the patient can see you, and introduce yourself to every one of them. We'll start with bed 4.\"",
+   "speaker": "Dr. Okafor, internal medicine"
+  },
+  {
+   "choice": {
+    "prompt": "\"You've read Mr. Lopez's chart. Present him.\"",
+    "category": "Presentation",
+    "options": [
+     {
+      "text": "\"Mr. Lopez is a 67-year-old man on day 3 of treatment for right lower lobe pneumonia. Overnight he was comfortable; he's been afebrile for 36 hours…\" then the exam, labs, and a plan.",
+      "reply": "Dr. Okafor nods through it. \"One line to start, then the story in order. Well done.\"",
+      "score": 2
+     },
+     {
+      "text": "Read out every vital sign since his admission.",
+      "reply": "Four minutes in, the intern is looking at the floor. \"The trend is enough,\" Dr. Okafor says gently.",
+      "score": 0
+     },
+     {
+      "text": "\"He's fine. Better, I think.\"",
+      "reply": "\"Tell me why you think so,\" says Dr. Okafor, and waits.",
+      "score": 1
+     }
+    ],
+    "lesson": "Present with a one-line summary first, then events, exam, results, assessment and plan"
+   }
+  },
+  {
+   "question": "imm_wards_ivpo_01",
+   "lead": "\"So, what do we do with his antibiotics?\""
+  },
+  {
+   "say": "Bed 9: Ms. Nguyen, 24, admitted two nights ago in diabetic ketoacidosis after missing insulin doses when her pharmacy closed."
+  },
+  {
+   "question": "imm_wards_dka_01",
+   "lead": "The senior resident turns to you:"
+  },
+  {
+   "say": "Bed 12 has a sign on the door: contact precautions. Mr. Harris, next door in bed 14, is shouting for his wife, who died years ago."
+  },
+  {
+   "question": "imm_wards_cdiff_01",
+   "lead": "Coming out of bed 12, the pharmacist raises an eyebrow at the hand-rub dispenser."
+  },
+  {
+   "question": "imm_wards_delirium_01",
+   "lead": "\"Mr. Harris. What's going on?\""
+  },
+  {
+   "question": "imm_wards_delirium_02",
+   "lead": "\"And what do we do about it?\""
+  },
+  {
+   "say": "You sit with Mr. Harris for ten minutes while the nurse calls his daughter. You find his glasses in the drawer. He puts them on and looks at you properly for the first time. \"You're a doctor?\" \"A student.\" \"Well. Good.\""
+  },
+  {
+   "say": "At half past four, Dr. Okafor signs your immersion form. \"You'll be back on these wards in two years. Keep the habit of finding the glasses.\""
+  }
+ ],
+ "feedback": [
+  [
+   0.85,
+   "Dr. Okafor writes: \"Presented like a third-year. Kind to the patients, quick with the plan.\""
+  ],
+  [
+   0.6,
+   "Dr. Okafor writes: \"Good afternoon. Practice the one-line summary.\""
+  ],
+  [
+   0.0,
+   "Dr. Okafor writes: \"Read up on pneumonia, DKA and delirium: you'll see them every day as a resident.\""
+  ]
+ ]
+}

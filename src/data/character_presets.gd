@@ -42,6 +42,39 @@ const PRESETS: Array[Dictionary] = [
 
 ## Non-selectable looks for classmates and faculty; same schema as PRESETS.
 const EXTRAS: Array[Dictionary] = [
+	# First-year faculty and staff.
+	{"id": "ortiz", "name": "Dr. Rafael Ortiz", "description": "Biochemistry · navy quarter-zip", "look": {
+		"build": "classic", "skin": "b98263", "hair_style": "side_part", "hair_color": "2a211c", "eye_style": "classic", "eye_color": "4a3322",
+		"brows": "straight", "mouth": "smile", "facial_hair": "mustache", "cheeks": "none", "height": 1.0,
+		"outfit": {"head": "", "eyewear": "rect_glasses", "outerwear": "navy_quarter_zip", "top": "oxford_tie", "bottom": "khaki_chinos", "shoes": "brown_loafers", "neck": "", "back": ""}}},
+	{"id": "marsh", "name": "Dr. Helen Marsh", "description": "Anatomy · scrubs under a long coat", "look": {
+		"build": "slim", "skin": "f0c7a8", "hair_style": "bob", "hair_color": "8a6a45", "eye_style": "calm", "eye_color": "4f6a55",
+		"brows": "soft", "mouth": "neutral", "facial_hair": "none", "cheeks": "freckles", "height": 0.98,
+		"outfit": {"head": "", "eyewear": "round_glasses", "outerwear": "long_white_coat", "top": "ceil_scrub_top", "bottom": "ceil_scrub_pants", "shoes": "hospital_clogs", "neck": "", "back": ""}}},
+	{"id": "adeyemi", "name": "Dr. Samuel Adeyemi", "description": "Cardiology · long coat and tie", "look": {
+		"build": "classic", "skin": "6b4130", "hair_style": "buzz", "hair_color": "1b1a1f", "eye_style": "classic", "eye_color": "2a1a12",
+		"brows": "bold", "mouth": "smile", "facial_hair": "stubble", "cheeks": "none", "height": 1.05,
+		"outfit": {"head": "", "eyewear": "", "outerwear": "long_white_coat", "top": "oxford_tie", "bottom": "charcoal_trousers", "shoes": "brown_loafers", "neck": "stethoscope", "back": ""}}},
+	{"id": "chen", "name": "Dr. Mei Chen", "description": "Neurology · black turtleneck", "look": {
+		"build": "slim", "skin": "e8c19f", "hair_style": "long", "hair_color": "1b1a1f", "eye_style": "narrow", "eye_color": "35231a",
+		"brows": "straight", "mouth": "neutral", "facial_hair": "none", "cheeks": "none", "height": 0.97,
+		"outfit": {"head": "", "eyewear": "rect_glasses", "outerwear": "charcoal_blazer", "top": "black_turtleneck", "bottom": "slate_trousers", "shoes": "brown_loafers", "neck": "", "back": ""}}},
+	{"id": "dean", "name": "Dean Whitfield", "description": "Dean of the medical school", "look": {
+		"build": "classic", "skin": "d9a582", "hair_style": "short", "hair_color": "d9d6d0", "eye_style": "calm", "eye_color": "5a6a7a",
+		"brows": "soft", "mouth": "smile", "facial_hair": "none", "cheeks": "none", "height": 1.0,
+		"outfit": {"head": "", "eyewear": "", "outerwear": "long_white_coat", "top": "oxford_tie", "bottom": "charcoal_trousers", "shoes": "brown_loafers", "neck": "", "back": ""}}},
+	{"id": "barista", "name": "Barista", "description": "Food-court server", "look": {
+		"build": "classic", "skin": "c79a74", "hair_style": "short", "hair_color": "3a2a22", "eye_style": "bright", "eye_color": "4a3322",
+		"brows": "soft", "mouth": "smile", "facial_hair": "none", "cheeks": "none", "height": 1.0,
+		"outfit": {"head": "navy_cap", "eyewear": "", "outerwear": "", "top": "black_tee", "bottom": "black_joggers", "shoes": "black_hightops", "neck": "", "back": ""}}},
+	{"id": "librarian", "name": "Librarian", "description": "Reference desk", "look": {
+		"build": "slim", "skin": "a8704f", "hair_style": "bun", "hair_color": "2a211c", "eye_style": "round", "eye_color": "35231a",
+		"brows": "soft", "mouth": "smile", "facial_hair": "none", "cheeks": "none", "height": 0.97,
+		"outfit": {"head": "", "eyewear": "round_glasses", "outerwear": "plum_cardigan", "top": "breton_stripe", "bottom": "navy_chinos", "shoes": "brown_loafers", "neck": "", "back": ""}}},
+	{"id": "coordinator", "name": "Skills Center coordinator", "description": "Clinical Skills Center", "look": {
+		"build": "classic", "skin": "e3b08c", "hair_style": "side_part", "hair_color": "5b3b27", "eye_style": "classic", "eye_color": "4f6a55",
+		"brows": "straight", "mouth": "smile", "facial_hair": "none", "cheeks": "none", "height": 1.0,
+		"outfit": {"head": "", "eyewear": "", "outerwear": "white_jacket", "top": "navy_tee", "bottom": "slate_trousers", "shoes": "white_sneakers", "neck": "student_lanyard", "back": ""}}},
 	{"id": "professor", "name": "Professor", "description": "Long white coat · silver hair", "look": {
 		"build": "classic", "skin": "c89373", "hair_style": "short", "hair_color": "b9b6b0", "eye_style": "calm", "eye_color": "5a3a24",
 		"brows": "bold", "mouth": "neutral", "facial_hair": "beard", "cheeks": "none", "height": 1.02,

@@ -4,7 +4,84 @@
 
 **Project:** Godot 4.7.2, Compatibility renderer. Open `src/project.godot`. The authoritative product requirements are in `src/docs/design/medical_school_rpg_spec.md` (also snapshotted as `src/PROJECT_SPEC.md`). Run-specific instructions live in `src/docs/prompts/` and `src/docs/development/`. User instructions in the current task take precedence over this handoff.
 
-**Current state:** Milestones 1–6 are implemented and committed. Milestones 1–10 are complete: the v0.1 vertical slice is feature-complete per the spec. Milestone 11 (University Hospital, physician shadowing) is implemented and committed (see the 2026-09-24 06:51 entry). The Emergency Department, with Emergency Radiology and the campus ambulance, is implemented but not yet committed (see the 2026-09-24 12:17 entry). Remaining work is human medical review and any new scope from the user. The more recent visual, room, and UI improvements below sit on top of Milestones 1–6. (This note originally said the work was uncommitted; it has since been committed — see the 2026-09-23 documentation entry above.)
+**Current state:** Milestones 1–10 are complete: the v0.1 vertical slice is feature-complete per the spec. Milestone 11 (University Hospital, physician shadowing) and the Emergency Department are implemented and committed (`bf38912`, `56202a0`). The first-year expansion (the whole first year as story days, money, skills and achievements, the East Campus buildings and the hospital Food Court, clubs and the full M1 curriculum) is implemented, committed and pushed (see the 2026-09-25 entry). Remaining work is human medical review and any new scope from the user.
+
+## 2026-09-25 13:07 PDT — The first year: story days, money and skills, the East Campus, clubs and the whole M1 curriculum
+
+User request (2026-09-24, after the Emergency Department):
+- Finish the rest of the game: the storyline and progression for a first-year medical student, with other lectures, exams, more Anki flashcards, clinical rotations, more buildings and the other things first-years take part in.
+- Student-run clubs the player can join (school, medicine or other; for example, serving food at a food shelter).
+- Complete the campus with more buildings and lecture halls, with lecture rooms, lobbies and hallways laid out the way real medical centers are; food courts in the hospital and the medical school; a library where the player can study at the PCs or sit down with a laptop.
+- A meaningful level-up system, an expanded achievement and skill tree, boosts (such as XP boosts) and a currency.
+- Grandiose but accurate, with the feel of a large open-world AAA RPG.
+
+A later instruction in the run: XP must reflect learning, so achievements pay money, skill points or items and never XP.
+
+Committed and pushed at the user's request (2026-09-25 18:43 PDT). The plan, the design and the status are in `src/docs/development/YEAR_ONE_PLAN.md`; limitations in `KNOWN_ISSUES.md`; every new medical item in `MEDICAL_CONTENT_REVIEW.md`.
+
+**The year** (`autoload/year_calendar.gd`, `data/year_one.json`).
+- Two terms, six blocks and 28 story days, from Monday 21 September 2026 to Friday 28 May 2027, with 41 events (lectures, labs, encounters, immersion shifts, ceremonies, exams, the Club Fair, the Thanksgiving meal, Research Day and the celebration). Every day is ready to play.
+- Each day opens with a title card (`ui/day_card.gd`). Sleeping from 6 PM ends it (`ui/sleep_panel.gd` warns about missed classes): absences are recorded, a missed exam gets a 1 PM make-up on the next story day, and the day summary (`ui/day_summary.gd`) shows XP, questions, flashcards, money, achievements and events before the next story day's 7:30. After 2 AM you fall asleep where you stand. The monthly financial-aid disbursement arrives on the first story day of a month.
+- After the last day, each night leads to a free summer morning.
+
+**Money, energy, boosts, skills and achievements.**
+- `Wallet` (cents): the stipend, merit awards, tutoring pay and achievement rewards in; food, drink, the Campus Store's clothing and study aids out. The HUD's money and energy card shows the balance, energy and boost chips (`ui/life_hud.gd`); toasts announce pay, boosts, achievements and skill points (`ui/toast_stack.gd`).
+- `Wellbeing`: energy spent by activities and restored by food, rest and sleep, and timed XP boosts from drink, meals, sleep, workouts and the study group. They multiply learning XP only; low energy reduces it.
+- `Skills`: a point per level gained and from achievements; four branches (Scholar, Clinician, Wellbeing, Leadership) of twenty perks that raise XP in a context, pay, discounts, energy, boost length or exam time, and never answer for you.
+- `Achievements`: 46 in six categories, from stats and moments across the game, paying money, skill points or clothing.
+- Menu pages: Journal (today's chapter and the year, block by block), Skills, Wallet & Wellbeing, and a working Achievements page.
+- Saves keep all of it in a `life` section; older saves load with starting values.
+
+**The campus** (`world/campus/east_campus.gd`, `world/interior/`).
+- The East Campus district along the Health Sciences Walk and the East Green, laid out like an academic medical center's teaching blocks; Anatomy Hall north-west of the quad; a campus shuttle between four stops, including the Harbor Street Community Center off campus; the map and directory updated.
+- The new interiors share `interior_scene.gd` (zones built by static builders into the hospital's kit, working in both views):
+  - **Medical Education Center:** the atrium and welcome desk, the Commons food court (four vendors), Lecture Hall B, the Testing Center, the student lounge; upstairs, the Clinical Skills & Simulation Center, small-group rooms, the histology lab and the skills lab.
+  - **Biomedical Library:** the Computer Commons (PCs with the flashcard app), laptop tables, group study rooms and the Stacks Café; the quiet floor with the reading room, carrels, stacks and a history-of-medicine exhibit. The class study group meets in Room 2.
+  - **Student Center:** the Office of Student Life, the Campus Store, the lounge, the juice bar, Peer Tutoring (a paid shift); upstairs, the Fitness Center and the club rooms.
+  - **Anatomy Hall:** the donor memorial, the old anatomical theatre and, below, the Gross Anatomy Laboratory (PPE room, model room, your group's table), open from the donor dedication.
+  - **Harbor Street Community Center:** the dining room and serving line, the client-choice pantry and the free clinic.
+- **University Hospital's Food Court** (`world/hospital/hospital_food_court.gd`, today): glass doors off the corridor to the Outpatient Clinics lead to a fifth zone of the hospital scene, with Grill 24, Fresh Market and Rounds Coffee along the servery, drinks coolers and a condiment station, communal tables you can sit at (with the laptop), four-tops full of staff and visitors, a window counter onto a courtyard garden, and two passers-by. The lobby's Atrium Café is now a real counter. Overhead, the rest of the building around the lobby's corridors is drawn as cut mass, and the lobby camera follows into the clinics corridor.
+
+**Clubs** (`data/clubs.gd`, `autoload/clubs.gd`, `ui/clubs/`). Join up to three at the Club Fair on the quad or the Office of Student Life. Each meets on its own days, has an original activity and builds reputation (a shirt at level 2, a skill point at 3, Club Officer at 5):
+- Community Kitchen Volunteers: serving supper on Harbor Street, matching each guest's request against the clock (and the Thanksgiving meal, open to everyone);
+- Student-Run Free Clinic: manual blood pressures;
+- Surgery Interest Group: a suturing workshop;
+- Emergency Medicine Interest Group: CPR at 100–120 a minute;
+- Medical Spanish and Journal Club: phrase practice and fictional abstracts, with questions;
+- Intramural soccer on the lawn.
+
+**The curriculum.**
+- **Lectures:** twelve new ones (Pharmacokinetics; Enzymes & Metabolism; the Upper Limb; Muscle & Bone; the Cardiac Cycle; Blood Pressure; Respiratory Mechanics; Renal Physiology; Diabetes; Digestion & the Liver; Motor Pathways; Stroke) in Hall A or Hall B, taught by ten faculty, each with narration, figures drawn from data and a question bank.
+- **Figures** (`ui/figure_art.gd`): curves sampled from named functions, flow diagrams, tables, cycles and bars, H&E micrographs of eleven tissues and ECG rhythm strips, all drawn in code.
+- **Activities** (`education/activities/`, 27, played at stations with `ui/activity_panel.gd` and `ui/exam_panel.gd`):
+  - labs: histology, the anatomy lab, ECG, spirometry, neuroanatomy;
+  - standardized patients: a cough, a knee, chest pain, breathlessness (heart failure), abdominal pain (appendicitis), sudden weakness (stroke), and the two-station OSCE, each with a history board, an examination board, communication choices and debrief questions;
+  - Clinical Immersion: an evening in the Emergency Department, an afternoon of family medicine, rounds on 4 West;
+  - a small-group nutrition case on diabetes and food insecurity; Research Day's posters (biostatistics);
+  - the White Coat Ceremony (the coat is given and worn), the donor dedication, and the end-of-year celebration with your year in numbers;
+  - six block exams and the anatomy practical: timed, answers changeable until submitted, Pass or Honors and merit awards.
+- **Questions and flashcards:** the bank grows to 276 questions in per-topic files. Every bank question becomes a flashcard on the day it's taught; a club's questions only for its members.
+- **Around the edges:** the study group (a boost), the tutoring shift (paid by questions answered correctly), the gym (an Endorphins boost), the lounge's breaks.
+
+**Fixes found while testing this entry.**
+- `ui/activity_panel.gd` didn't compile (a type-inference error), so no station could open an activity and the campus scene script failed to load in that state; found by the new activities test.
+- The end-of-year night left the clock stuck; it now rolls into summer mornings, and summer days aren't counted as story days.
+- An exam's and the OSCE's failure texts promised a remediation exam and retakes that don't exist; they now say what actually happens.
+- The east campus test walked into the library's and Medical Education Center's passers-by; it now parks them, as the student-life test does.
+- A Community Kitchen guest shared the attending's surname, and the library's anesthesia plaque named a real hospital; both changed.
+- Older suites assumed the earlier content: the hospital test counted four floors, and the knowledge test two disciplines and the lecture's nine Pharmacodynamics subtopics (the Block 1 exam adds Partial agonists). They now read these from the scene and the bank.
+- Calendar details: the ECG and spirometry labs are in the Skills Lab (the spirometry lab reads volume–time curves, not flow–volume loops), the nutrition case is in Room 202 where its station is, and the stroke encounter is titled for what it is.
+
+**Tests.** New: `tests/activities_test.gd` (every activity validates, every activity event has its content and a station in its room, and eleven activities are played through in date order into summer) and `tests/food_court_test.gd` (the doors both ways, ordering, a seat and the laptop, the diners' loop against the furniture, both views). Earlier in the run: `year_test.gd`, `east_campus_test.gd`, `student_life_test.gd`, `interior_clearance_test.gd`, `curriculum_test.gd`. The full regression, one suite at a time: **29 suites, 1,798 checks, 0 failures** (activities 103/0, food_court 21/0, student_life 101/0, east_campus 52/0, interior_clearance 15/0, curriculum 164/0, year 74/0, ed_clearance 8/0, emergency 68/0, hospital 108/0, foundation 54/0, academic 78/0, knowledge 18/0, flashcard 78/0, save 37/0, ui 64/0, progression 34/0, npc 37/0, ambient 30/0, campus 40/0, dorm 87/0, lecture 118/0, acceptance 47/0, first_person 58/0, seating 147/0, room_polish 27/0, wardrobe 74/0, visual_motion 23/0, cafe_exit 33/0). The save suite's two logged errors are its deliberate corrupt-file checks.
+
+**Graphical checks:** the Food Court overhead and in first person (the servery, the dining room, the coolers, the windows onto the garden) and the lobby-side doors in both views; activity panels with their figures (a micrograph at the histology lab, an inferior STEMI strip at the ECG lab, the three spirometry curves), a patient's history board, the year-end recap and the summer day summary.
+
+Commands (from `src`):
+```sh
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path . --script res://tests/activities_test.gd
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path . --script res://tests/food_court_test.gd
+/Applications/Godot.app/Contents/MacOS/Godot --path . --resolution 1280x720 --script res://tests/food_court_test.gd -- --capture-dir=/absolute/existing/directory
+```
 
 ## 2026-09-24 12:17 PDT — Emergency Department: Level I trauma center, Emergency Radiology and the campus ambulance
 

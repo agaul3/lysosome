@@ -1,0 +1,195 @@
+{
+  "version": 1,
+  "questions": [
+    {
+      "id": "pk_bioavailability_01",
+      "discipline": "Pharmacology",
+      "topic": "Pharmacokinetics",
+      "subtopic": "Absorption and bioavailability",
+      "question_type": "Application",
+      "difficulty_tier": 1,
+      "prompt": "The same dose of a drug is given orally and, on another day, intravenously. The area under the concentration-time curve (AUC) is 40 mg·h/L after the oral dose and 100 mg·h/L after the IV dose. What is the drug's oral bioavailability?",
+      "choices": {
+        "a": "40%",
+        "b": "60%",
+        "c": "250%",
+        "d": "It cannot be calculated without the volume of distribution."
+      },
+      "correct_answer": "a",
+      "explanation": "Bioavailability (F) is the fraction of a dose that reaches the systemic circulation unchanged. With equal doses, F = AUC(oral) / AUC(IV) = 40/100 = 0.4. The volume of distribution is not needed, and F can never exceed 100%.",
+      "learning_objective": "Calculate oral bioavailability from AUC ratios.",
+      "xp_reward": null,
+      "lecture_id": "pharmacokinetics_01",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "pk_first_pass_01",
+      "discipline": "Pharmacology",
+      "topic": "Pharmacokinetics",
+      "subtopic": "Absorption and bioavailability",
+      "question_type": "Conceptual",
+      "difficulty_tier": 1,
+      "prompt": "A drug undergoes extensive first-pass metabolism. Why does its oral dose need to be much larger than its intravenous dose?",
+      "choices": {
+        "a": "Much of an oral dose is metabolized by the gut wall and liver before it reaches the systemic circulation.",
+        "b": "Intravenous drugs are eliminated more slowly than oral drugs.",
+        "c": "Oral drugs have a larger volume of distribution.",
+        "d": "Stomach acid increases the drug's renal clearance."
+      },
+      "correct_answer": "a",
+      "explanation": "Oral drugs are absorbed into the portal circulation and pass through the gut wall and liver before reaching the rest of the body. Metabolism on that first pass lowers bioavailability, so a larger oral dose delivers the same systemic exposure. An IV dose bypasses it (F = 1).",
+      "learning_objective": "Explain how first-pass metabolism reduces oral bioavailability.",
+      "xp_reward": null,
+      "lecture_id": "pharmacokinetics_01",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "pk_loading_dose_01",
+      "discipline": "Pharmacology",
+      "topic": "Pharmacokinetics",
+      "subtopic": "Distribution and loading doses",
+      "question_type": "Application",
+      "difficulty_tier": 2,
+      "prompt": "A drug given intravenously (F = 1) has a volume of distribution of 50 L. You want to reach a plasma concentration of 4 mg/L straight away. Which loading dose achieves that?",
+      "choices": {
+        "a": "12.5 mg",
+        "b": "54 mg",
+        "c": "200 mg",
+        "d": "800 mg"
+      },
+      "correct_answer": "c",
+      "explanation": "Loading dose = Vd × target concentration ÷ F = 50 L × 4 mg/L ÷ 1 = 200 mg. 12.5 mg divides instead of multiplying, and 54 mg adds the numbers.",
+      "learning_objective": "Calculate a loading dose from the volume of distribution and target concentration.",
+      "xp_reward": null,
+      "lecture_id": "pharmacokinetics_01",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "pk_vd_meaning_01",
+      "discipline": "Pharmacology",
+      "topic": "Pharmacokinetics",
+      "subtopic": "Distribution and loading doses",
+      "question_type": "Conceptual",
+      "difficulty_tier": 2,
+      "prompt": "In a 70-kg adult, drug X has a volume of distribution of about 3 L and drug Y about 500 L. Which interpretation is most consistent with these values?",
+      "choices": {
+        "a": "X stays largely in the plasma, for example because it is large or highly protein bound; Y is taken up extensively into tissues.",
+        "b": "Y is cleared faster than X because its volume of distribution is larger.",
+        "c": "X is more potent than Y.",
+        "d": "Y must have a lower oral bioavailability than X."
+      },
+      "correct_answer": "a",
+      "explanation": "Vd relates the amount of drug in the body to its plasma concentration. A Vd near plasma volume (about 3 L) means the drug stays in the blood. A Vd far larger than total body water means tissue binding keeps the plasma concentration low. Vd says nothing about potency, clearance or bioavailability on its own.",
+      "learning_objective": "Interpret small and large volumes of distribution.",
+      "xp_reward": null,
+      "lecture_id": "pharmacokinetics_01",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "pk_zero_order_01",
+      "discipline": "Pharmacology",
+      "topic": "Pharmacokinetics",
+      "subtopic": "Clearance and elimination",
+      "question_type": "Conceptual",
+      "difficulty_tier": 1,
+      "prompt": "At intoxicating concentrations, ethanol is eliminated at roughly the same number of grams per hour whatever the blood level. What kind of elimination is this?",
+      "choices": {
+        "a": "First-order elimination",
+        "b": "Zero-order elimination",
+        "c": "Elimination with a constant half-life",
+        "d": "Flow-limited hepatic clearance"
+      },
+      "correct_answer": "b",
+      "explanation": "When the metabolizing enzyme (alcohol dehydrogenase) is saturated, a constant amount is removed per unit time: zero-order kinetics. In first-order elimination, a constant fraction is removed per unit time, which gives a constant half-life.",
+      "learning_objective": "Distinguish zero-order from first-order elimination.",
+      "xp_reward": null,
+      "lecture_id": "pharmacokinetics_01",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "pk_half_life_01",
+      "discipline": "Pharmacology",
+      "topic": "Pharmacokinetics",
+      "subtopic": "Half-life and steady state",
+      "question_type": "Application",
+      "difficulty_tier": 2,
+      "prompt": "A drug with first-order elimination and a half-life of 6 hours has a plasma concentration of 80 mg/L. No more doses are given. What is the concentration 18 hours later?",
+      "choices": {
+        "a": "10 mg/L",
+        "b": "20 mg/L",
+        "c": "26.7 mg/L",
+        "d": "0 mg/L"
+      },
+      "correct_answer": "a",
+      "explanation": "18 hours is three half-lives: 80 → 40 → 20 → 10 mg/L. With first-order kinetics the concentration halves every half-life; it does not fall in equal steps (26.7 would be 80 divided by 3) and never simply reaches zero.",
+      "learning_objective": "Apply half-life to predict concentrations after first-order elimination.",
+      "xp_reward": null,
+      "lecture_id": "pharmacokinetics_01",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "pk_half_life_remediation_01",
+      "discipline": "Pharmacology",
+      "topic": "Pharmacokinetics",
+      "subtopic": "Half-life and steady state",
+      "question_type": "Recall",
+      "difficulty_tier": 1,
+      "prompt": "After how many half-lives has about 94% of a drug been eliminated, with no further doses?",
+      "choices": {
+        "a": "2",
+        "b": "3",
+        "c": "4",
+        "d": "10"
+      },
+      "correct_answer": "c",
+      "explanation": "Each half-life removes half of what remains: 50% after one, 75% after two, 87.5% after three and about 94% after four.",
+      "learning_objective": "Recall the fraction eliminated after successive half-lives.",
+      "xp_reward": null,
+      "lecture_id": "pharmacokinetics_01",
+      "format": "multiple_choice",
+      "is_remediation": true
+    },
+    {
+      "id": "pk_steady_state_01",
+      "discipline": "Pharmacology",
+      "topic": "Pharmacokinetics",
+      "subtopic": "Half-life and steady state",
+      "question_type": "Conceptual",
+      "difficulty_tier": 1,
+      "prompt": "A drug with first-order elimination is started as a constant intravenous infusion, with no loading dose. About how long until it reaches steady state?",
+      "choices": {
+        "a": "About one half-life",
+        "b": "About four to five half-lives",
+        "c": "It depends on the infusion rate: a faster infusion reaches steady state sooner.",
+        "d": "About ten half-lives"
+      },
+      "correct_answer": "b",
+      "explanation": "Accumulation follows the same exponential as elimination, so a drug is at about 94–97% of its steady-state level after four to five half-lives. The infusion rate changes the steady-state concentration, not the time taken to reach it. A loading dose is how you get there faster.",
+      "learning_objective": "Relate the time to steady state to the half-life.",
+      "xp_reward": null,
+      "lecture_id": "pharmacokinetics_01",
+      "format": "multiple_choice"
+    },
+    {
+      "id": "pk_renal_dosing_01",
+      "discipline": "Pharmacology",
+      "topic": "Pharmacokinetics",
+      "subtopic": "Dosing and clearance",
+      "question_type": "Clinical Application",
+      "difficulty_tier": 3,
+      "prompt": "A 72-year-old woman's kidney function is about half of normal. She needs a drug that is eliminated almost entirely unchanged by the kidneys. Compared with a patient with normal kidney function, how should her dosing change?",
+      "choices": {
+        "a": "A lower loading dose, and the usual maintenance dose",
+        "b": "The usual loading dose, and a lower maintenance dose or a longer dosing interval",
+        "c": "No change: kidney function does not affect half-life.",
+        "d": "A higher maintenance dose, to overcome the reduced clearance"
+      },
+      "correct_answer": "b",
+      "explanation": "The loading dose depends on the volume of distribution, which kidney failure does not change much. The maintenance dose must replace what is cleared, so when clearance halves, the maintenance dose (or dosing frequency) must fall to avoid accumulation. Half-life (0.693 × Vd / CL) lengthens.",
+      "learning_objective": "Adjust loading and maintenance doses when renal clearance falls.",
+      "xp_reward": null,
+      "lecture_id": "pharmacokinetics_01",
+      "format": "multiple_choice"
+    }
+  ]
+}

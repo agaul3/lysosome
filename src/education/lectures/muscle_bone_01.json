@@ -1,0 +1,428 @@
+{
+ "version": 1,
+ "id": "muscle_bone_01",
+ "title": "Muscle & Bone",
+ "professor": "Dr. Kwame Asante",
+ "segments": [
+  {
+   "id": "introduction",
+   "topic": "Introduction",
+   "slide": {
+    "heading": "Muscle & Bone",
+    "bullets": [],
+    "subheading": "How muscles contract, and how bone is always being rebuilt",
+    "diagram": "figure",
+    "figure": {
+     "type": "cycle",
+     "steps": [
+      "Action potential",
+      "Ca²⁺ released",
+      "Cross-bridges form",
+      "Power stroke",
+      "Ca²⁺ pumped back"
+     ],
+     "center": "Contraction"
+    }
+   },
+   "lines": [
+    {
+     "text": "Good morning. I'm Kwame Asante, physiology. Wednesday you meet the muscles in the lab; today, how they work.",
+     "gesture": "audience"
+    },
+    {
+     "text": "Every movement starts with an action potential and ends with two proteins sliding past each other. Calcium is the switch.",
+     "gesture": "screen"
+    },
+    {
+     "text": "And in the second half: bone, which looks inert but is being torn down and rebuilt all your life.",
+     "gesture": "audience"
+    }
+   ]
+  },
+  {
+   "id": "coupling",
+   "topic": "Excitation–contraction coupling",
+   "slide": {
+    "heading": "From action potential to calcium",
+    "bullets": [
+     "ACh at the neuromuscular junction: end-plate potential",
+     "Action potential runs down the T-tubules",
+     "DHP receptor (voltage sensor) pulls open RyR1",
+     "Ca²⁺ floods out of the sarcoplasmic reticulum",
+     "Ca²⁺ binds troponin C; tropomyosin moves"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "flow",
+     "nodes": [
+      {
+       "id": "ach",
+       "label": "ACh → nicotinic receptor",
+       "x": 0.12,
+       "y": 0.2,
+       "color": "second"
+      },
+      {
+       "id": "ap",
+       "label": "Action potential, T-tubules",
+       "x": 0.4,
+       "y": 0.2,
+       "color": "accent"
+      },
+      {
+       "id": "dhp",
+       "label": "DHP receptor",
+       "x": 0.68,
+       "y": 0.2,
+       "color": "third"
+      },
+      {
+       "id": "ryr",
+       "label": "RyR1 opens: Ca²⁺ out of SR",
+       "x": 0.68,
+       "y": 0.62,
+       "color": "gold"
+      },
+      {
+       "id": "tn",
+       "label": "Ca²⁺ + troponin C",
+       "x": 0.4,
+       "y": 0.62,
+       "color": "green"
+      },
+      {
+       "id": "xb",
+       "label": "Cross-bridges form",
+       "x": 0.12,
+       "y": 0.62,
+       "color": "red"
+      }
+     ],
+     "edges": [
+      {
+       "from": "ach",
+       "to": "ap"
+      },
+      {
+       "from": "ap",
+       "to": "dhp"
+      },
+      {
+       "from": "dhp",
+       "to": "ryr"
+      },
+      {
+       "from": "ryr",
+       "to": "tn"
+      },
+      {
+       "from": "tn",
+       "to": "xb"
+      }
+     ],
+     "text_size": 18
+    }
+   },
+   "lines": [
+    {
+     "text": "At the neuromuscular junction, acetylcholine opens nicotinic receptors and the muscle fiber fires an action potential.",
+     "gesture": "screen",
+     "reveal": 1
+    },
+    {
+     "text": "It dives into the fiber along the T-tubules. There, in skeletal muscle, a voltage sensor, the dihydropyridine receptor, is physically linked to the ryanodine receptor in the sarcoplasmic reticulum, and pulls it open.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "text": "Calcium pours out, binds troponin C, and tropomyosin rolls off the myosin-binding sites on actin.",
+     "gesture": "screen",
+     "reveal": 5
+    },
+    {
+     "question": "mb_troponin_01"
+    },
+    {
+     "text": "A rare mutation in the ryanodine receptor makes it open in response to certain anesthetics. The result is malignant hyperthermia, and you should know its antidote.",
+     "gesture": "audience"
+    },
+    {
+     "question": "mb_ryr_01"
+    }
+   ]
+  },
+  {
+   "id": "crossbridge",
+   "topic": "The cross-bridge cycle",
+   "slide": {
+    "heading": "The cross-bridge cycle",
+    "bullets": [
+     "Myosin head binds actin",
+     "Power stroke as phosphate is released",
+     "ATP binds: myosin lets go of actin",
+     "ATP hydrolysis re-cocks the head",
+     "No ATP: rigor"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "cycle",
+     "steps": [
+      "Myosin binds actin",
+      "Power stroke (Pi released)",
+      "ATP binds: detaches",
+      "ATP → ADP + Pi: head cocked"
+     ],
+     "center": "Cross-bridge"
+    }
+   },
+   "lines": [
+    {
+     "text": "With the sites exposed, a cocked myosin head binds actin and releases its phosphate: the power stroke pulls the filament along.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "text": "Here's the counterintuitive part. It takes a new ATP molecule to make myosin let go.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "text": "Hydrolyzing it re-cocks the head for the next stroke. So when ATP runs out after death, the heads stay stuck: rigor mortis.",
+     "gesture": "screen",
+     "reveal": 5
+    },
+    {
+     "question": "mb_atp_01",
+     "remediation": "mb_atp_remediation_01"
+    }
+   ]
+  },
+  {
+   "id": "force",
+   "topic": "Grading force",
+   "slide": {
+    "heading": "Motor units and force",
+    "bullets": [
+     "A motor unit: one motor neuron and its fibers",
+     "Size principle: small units are recruited first",
+     "Faster firing: summation, then tetanus",
+     "Type I: slow, oxidative, fatigue-resistant",
+     "Type II: fast, glycolytic, powerful, fatigable"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "How do you pick up an egg without crushing it? You grade force two ways.",
+     "gesture": "audience"
+    },
+    {
+     "text": "One motor neuron and all the fibers it supplies are a motor unit. As effort rises you recruit more units, small ones first and big ones last. That's the size principle.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "question": "mb_size_01"
+    },
+    {
+     "text": "You also fire each unit faster, so the twitches summate into a smooth tetanus.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "text": "Postural muscles are rich in slow, oxidative type I fibers; a sprinter's are rich in fast type II.",
+     "gesture": "audience",
+     "reveal": 5
+    }
+   ]
+  },
+  {
+   "id": "remodeling",
+   "topic": "Bone remodeling",
+   "slide": {
+    "heading": "Bone is always being rebuilt",
+    "bullets": [
+     "Osteoblasts lay down osteoid, then mineralize it",
+     "Osteoclasts resorb bone (from the macrophage line)",
+     "RANKL on osteoblasts activates RANK on osteoclasts",
+     "Osteoprotegerin (OPG) is a decoy for RANKL",
+     "PTH and vitamin D tune the balance"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "flow",
+     "nodes": [
+      {
+       "id": "ob",
+       "label": "Osteoblast",
+       "x": 0.15,
+       "y": 0.3,
+       "color": "second"
+      },
+      {
+       "id": "rankl",
+       "label": "RANKL",
+       "x": 0.45,
+       "y": 0.3,
+       "color": "gold"
+      },
+      {
+       "id": "rank",
+       "label": "RANK on osteoclast precursor",
+       "x": 0.8,
+       "y": 0.3,
+       "color": "accent"
+      },
+      {
+       "id": "oc",
+       "label": "Osteoclast: bone resorption",
+       "x": 0.8,
+       "y": 0.75,
+       "color": "red"
+      },
+      {
+       "id": "opg",
+       "label": "OPG (decoy)",
+       "x": 0.45,
+       "y": 0.75,
+       "color": "third"
+      }
+     ],
+     "edges": [
+      {
+       "from": "ob",
+       "to": "rankl"
+      },
+      {
+       "from": "rankl",
+       "to": "rank"
+      },
+      {
+       "from": "rank",
+       "to": "oc"
+      },
+      {
+       "from": "opg",
+       "to": "rankl"
+      }
+     ],
+     "text_size": 18
+    }
+   },
+   "lines": [
+    {
+     "text": "Your skeleton is replaced about every ten years. Two cells do the work.",
+     "gesture": "audience"
+    },
+    {
+     "text": "Osteoblasts build: they lay down osteoid and mineralize it. Osteoclasts, big multinucleated cells from the macrophage line, dissolve it.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "text": "They talk to each other. Osteoblasts display RANKL, which binds RANK on osteoclast precursors and makes them mature. Osteoprotegerin is a decoy that soaks up RANKL.",
+     "gesture": "screen",
+     "reveal": 4
+    },
+    {
+     "question": "mb_rankl_01"
+    },
+    {
+     "text": "Parathyroid hormone and vitamin D tune the balance, to keep the blood calcium steady.",
+     "gesture": "audience",
+     "reveal": 5
+    }
+   ]
+  },
+  {
+   "id": "osteoporosis",
+   "topic": "Osteoporosis",
+   "slide": {
+    "heading": "Osteoporosis",
+    "bullets": [
+     "Too little bone, poorly organized: fractures",
+     "Estrogen loss after menopause speeds resorption",
+     "DEXA T-score ≤ −2.5",
+     "Bisphosphonates: bind bone, poison osteoclasts",
+     "Take upright with water; rare jaw necrosis"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "bars",
+     "bars": [
+      {
+       "label": "Normal",
+       "value": 0.5,
+       "color": "green",
+       "text": "T ≥ −1"
+      },
+      {
+       "label": "Low bone mass",
+       "value": 1.8,
+       "color": "gold",
+       "text": "−1 to −2.5"
+      },
+      {
+       "label": "Osteoporosis",
+       "value": 3.0,
+       "color": "red",
+       "text": "≤ −2.5"
+      }
+     ],
+     "y_label": "SDs below a young adult",
+     "max": 3.4
+    }
+   },
+   "lines": [
+    {
+     "text": "When resorption outruns formation for years, you get osteoporosis: fragile bones and fractures of the hip, spine and wrist.",
+     "gesture": "audience",
+     "reveal": 1
+    },
+    {
+     "text": "Estrogen restrains osteoclasts, so bone loss speeds up after menopause.",
+     "gesture": "audience",
+     "reveal": 2
+    },
+    {
+     "text": "We diagnose it with a DEXA scan: a T-score of minus two and a half or below.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "text": "The first-line drugs are bisphosphonates. They bind to bone and are taken up by osteoclasts, which then die.",
+     "gesture": "screen",
+     "reveal": 4
+    },
+    {
+     "question": "mb_bisphosphonate_01"
+    }
+   ]
+  },
+  {
+   "id": "summary",
+   "topic": "Summary",
+   "slide": {
+    "heading": "Summary",
+    "bullets": [
+     "Ca²⁺ from the SR, via RyR1, binds troponin C",
+     "ATP is needed to release myosin",
+     "Recruit small motor units first",
+     "RANKL drives osteoclasts; bisphosphonates stop them"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "To sum up: calcium switches contraction on, ATP lets go, and bone is a balance between the osteoblast and the osteoclast.",
+     "gesture": "audience",
+     "reveal": 4
+    },
+    {
+     "text": "This afternoon, the anatomy lab: the muscles of the arm and the axilla. Bring your atlas.",
+     "gesture": "audience"
+    }
+   ]
+  }
+ ]
+}

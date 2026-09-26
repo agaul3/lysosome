@@ -1,9 +1,32 @@
 extends Node
 ## Shared JSON database for future lecture and study clients. Grading is independent of UI.
 const DEFAULT_PATH := "res://education/questions/pharmacodynamics.json"
-## Every content file the game loads at start: the Pharmacodynamics lecture and
-## the Hospital Orientation shadowing session (Clinical Skills).
-const PATHS := [DEFAULT_PATH, "res://education/questions/hospital_orientation.json"]
+## Every content file the game loads at start: the lectures, the shadowing
+## sessions (Clinical Skills), and the first year's labs, encounters and exams.
+const PATHS := [
+	DEFAULT_PATH,
+	"res://education/questions/hospital_orientation.json",
+	"res://education/questions/pharmacokinetics.json",
+	"res://education/questions/enzymes.json",
+	"res://education/questions/upper_limb.json",
+	"res://education/questions/muscle_bone.json",
+	"res://education/questions/cardiac_cycle.json",
+	"res://education/questions/blood_pressure.json",
+	"res://education/questions/respiratory.json",
+	"res://education/questions/renal.json",
+	"res://education/questions/diabetes.json",
+	"res://education/questions/gi_liver.json",
+	"res://education/questions/motor_pathways.json",
+	"res://education/questions/stroke.json",
+	# Labs, patient encounters, immersion shifts and block exams (education/activities/).
+	"res://education/questions/activities_b1.json",
+	"res://education/questions/activities_b2.json",
+	"res://education/questions/activities_b3.json",
+	"res://education/questions/activities_b4.json",
+	"res://education/questions/activities_b5.json",
+	"res://education/questions/activities_b6.json",
+	"res://education/questions/clubs.json",
+]
 const TYPES := ["Recall", "Conceptual", "Application", "Clinical Application", "Interpretation", "Synthesis"]
 var records: Dictionary = {}
 var last_error := ""
@@ -98,6 +121,15 @@ func validate(question: Variant) -> String:
 		return "Unsupported answer format"
 	return ""
 
+## Questions that make sense on their own, away from the lecture slide:
+## multiple choice, no figure, and not the one prompt written for a live
+## graph (pd_viz_competitive_01). Flashcards, study groups and tutoring use
+## only these.
+const SLIDE_ONLY := ["pd_viz_competitive_01"]
+
+static func standalone(question: Dictionary) -> bool:
+	return not question.has("figure") and question.get("format", "multiple_choice") == "multiple_choice" and not SLIDE_ONLY.has(String(question.get("id", "")))
+
 func get_question(id: String) -> Dictionary:
 	return records.get(id, {}).duplicate(true)
 
@@ -118,7 +150,12 @@ func grade(id: String, answer: Variant) -> Dictionary:
 	var reward: int = int(question.xp_reward) if question.xp_reward != null else int(GameClock.config.xp_by_tier[str(int(question.difficulty_tier))])
 	return {"valid": true, "question_id": id, "answer": answer, "correct": correct_answer, "correct_answer": question.correct_answer, "explanation": question.explanation, "learning_objective": question.learning_objective, "xp_reward": reward if correct_answer else 0}
 
-func submit(id: String, answer: Variant, attempt_id: String) -> Dictionary:
+## `context` names the activity for boosts and perks (lecture, exam,
+## clinical, immersion, club, tutoring; "" counts as lecture). The XP
+## committed is the tier reward times Wellbeing.xp_multiplier(context), which
+## is exactly 1 with no perks, no boosts and energy of 40 or more;
+## `base_xp` keeps the unboosted reward.
+func submit(id: String, answer: Variant, attempt_id: String, context := "") -> Dictionary:
 	if attempt_id.strip_edges().is_empty():
 		return {"valid": false, "error": "An attempt ID is required"}
 	if AcademicSession.question_history.has(attempt_id):
@@ -128,6 +165,9 @@ func submit(id: String, answer: Variant, attempt_id: String) -> Dictionary:
 		return previous.duplicate(true)
 	var result := grade(id, answer)
 	if result.valid:
+		result.base_xp = int(result.xp_reward)
+		result.context = "lecture" if context.is_empty() else context
+		result.xp_reward = Wellbeing.apply(int(result.xp_reward), result.context)
 		AcademicSession.commit_answer(attempt_id, records[id], result)
 	return result
 

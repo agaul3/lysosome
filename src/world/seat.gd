@@ -30,6 +30,8 @@ const EXIT_POINT := Vector3(0, 0, -0.72)
 ## Someone else's seat: no interaction, and a collider covers the seated legs.
 @export var occupied := false
 @export var occupant_preset := ""
+## A full look for the occupant (data/looks.gd), used instead of a preset.
+var occupant_look := {}
 var interactable: Node3D
 var occupant: Node3D
 var seated_figure: Node3D
@@ -54,11 +56,14 @@ func _ready() -> void:
 		# Seated knees and feet project past the cushion; keep walkers out of them.
 		var legs := Geometry.box(self, "SeatedLegs", Vector3(0.48, 0.5, 0.32), Vector3(0, 0.25, -0.42), Color.BLACK, true)
 		legs.get_child(0).visible = false
-		if not occupant_preset.is_empty():
+		if not occupant_preset.is_empty() or not occupant_look.is_empty():
 			seated_figure = Appearance.new()
 			seated_figure.position = SIT_POINT
 			add_child(seated_figure)
-			seated_figure.apply_preset(occupant_preset)
+			if occupant_look.is_empty():
+				seated_figure.apply_preset(occupant_preset)
+			else:
+				seated_figure.apply_look(occupant_look)
 			seated_figure.set_seated(true)
 	else:
 		interactable = preload("res://world/interactable.gd").new()

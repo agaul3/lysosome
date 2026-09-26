@@ -90,7 +90,16 @@ static func seat_z(row: int) -> float:
 static func walkway_z(row: int) -> float:
 	return seat_z(row) + Seat.FRONT_POINT.z
 
+## "hall_a" (Learning Center) or "hall_b" (Medical Education Center); the
+## session runs the lecture scheduled in this hall today.
+var hall_id := "hall_a"
+
+## Hall A's seats are the school's orange; Hall B's are blue.
+func seat_color() -> Color:
+	return SEAT_COLOR if hall_id != "hall_b" else Color("3f6fb0")
+
 func _ready() -> void:
+	hall_id = AppState.current_hall
 	_build_room()
 	_build_tiers()
 	_build_aisles()
@@ -99,9 +108,9 @@ func _ready() -> void:
 	_build_navigation()
 	_build_lighting()
 	exit_door = preload("res://world/interactable.gd").new()
-	exit_door.display_name = "Return to lobby"
+	exit_door.display_name = "Return to lobby" if AppState.current_hall == "hall_a" else "Return to the atrium"
 	exit_door.position = Vector3(-HALF_WIDTH + 0.6, 1, DOOR_Z)
-	exit_door.activated.connect(AppState.enter_lecture_building)
+	exit_door.activated.connect(AppState.leave_lecture_hall)
 	add_child(exit_door)
 	actor = preload("res://npc/student.tscn").instantiate()
 	actor.world_zone = "lecture_hall"
@@ -444,7 +453,7 @@ func _build_seats() -> void:
 				var key := "%d:%s" % [row, _fmt(x)]
 				var seat := Seat.new()
 				seat.style = "auditorium"
-				seat.color = SEAT_COLOR
+				seat.color = seat_color()
 				seat.name = "Seat_R%d_%s%d" % [row, section.left(1).to_upper(), index]
 				seat.position = Vector3(x, tier_height(row), seat_z(row))
 				seat.occupied = CLASSMATES.has(key) or key == ALEX_SEAT
@@ -464,7 +473,7 @@ func _build_seats() -> void:
 			for end_x in [xs[0] - Seat.AUDITORIUM_PITCH / 2, xs[xs.size() - 1] + Seat.AUDITORIUM_PITCH / 2]:
 				if absf(end_x) > HALF_WIDTH - 0.3:
 					continue
-				Geometry.box(self, "RowEndPanel", Vector3(0.06, 0.7, 0.62), Vector3(end_x, tier_height(row) + 0.35, seat_z(row) + 0.02), SEAT_COLOR.darkened(0.35))
+				Geometry.box(self, "RowEndPanel", Vector3(0.06, 0.7, 0.62), Vector3(end_x, tier_height(row) + 0.35, seat_z(row) + 0.02), seat_color().darkened(0.35))
 
 static func _fmt(value: float) -> String:
 	return "%.2f" % value

@@ -8,7 +8,8 @@ signal line_started(line: Dictionary)
 signal finished
 const GESTURES := ["audience", "screen", "none"]
 const ACTIVITIES := ["competitive_antagonism"]
-const DIAGRAMS := ["title", "receptor_binding", "full_partial", "antagonist_block", "competitive_shift", "noncompetitive", "potency", "efficacy", "graded_quantal", "clinical_opioid", "summary"]
+const DIAGRAMS := ["title", "receptor_binding", "full_partial", "antagonist_block", "competitive_shift", "noncompetitive", "potency", "efficacy", "graded_quantal", "clinical_opioid", "summary", "figure"]
+const FigureArt = preload("res://ui/figure_art.gd")
 
 var script_data: Dictionary = {}
 var segment_index := -1
@@ -57,6 +58,10 @@ static func validate(data: Variant) -> String:
 			return "Segment %s has too many bullets for one slide" % segment.id
 		if not DIAGRAMS.has(slide.get("diagram", "")):
 			return "Segment %s has an unknown diagram" % segment.id
+		if slide.get("diagram", "") == "figure":
+			var figure_error := FigureArt.validate(slide.get("figure"))
+			if not figure_error.is_empty():
+				return "Segment %s: %s" % [segment.id, figure_error]
 		var lines: Variant = segment.get("lines")
 		if typeof(lines) != TYPE_ARRAY or lines.is_empty():
 			return "Segment %s needs professor lines" % segment.id

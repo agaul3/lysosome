@@ -1,0 +1,59 @@
+{
+ "version": 1,
+ "id": "year_end",
+ "kind": "ceremony",
+ "eyebrow": "The Quad",
+ "title": "The end of the first year",
+ "intro": "String lights between the trees, a food truck with a line to the fountain, and your whole class on the lawn as the sun goes down.",
+ "context": "lecture",
+ "minutes": 180,
+ "energy": 2,
+ "steps": [
+  {
+   "say": "\"A year ago you didn't know each other's names. Tonight you know the brachial plexus, the Frank–Starling curve, how to break bad news, and how to ask someone whether they want to live. That's a lot for one year.\"",
+   "speaker": "Dr. Evelyn Carter, Dean"
+  },
+  {
+   "say": "\"Rest this summer. Some of you are doing research, some are going home, some are volunteering. All of you have earned the break. We'll see you in August, as second-years.\"",
+   "speaker": "Dr. Evelyn Carter, Dean"
+  },
+  {
+   "say": "Someone hands you a paper plate. Your study group finds a patch of grass and you sit together, talking about everything except medicine."
+  },
+  {
+   "recap": true,
+   "heading": "Your first year"
+  },
+  {
+   "choice": {
+    "prompt": "A first-year from next year's class, visiting for orientation, asks for one piece of advice.",
+    "category": "Reflection",
+    "options": [
+     {
+      "text": "\"Do the flashcards every day. Even the days you don't want to.\"",
+      "reply": "\"Every day,\" they repeat, and write it on their hand.",
+      "score": 1
+     },
+     {
+      "text": "\"Find something outside of school that's yours, and keep doing it.\"",
+      "reply": "\"Like what?\" You point at the intramural team losing at frisbee on the lawn.",
+      "score": 1
+     },
+     {
+      "text": "\"Be kind to the patients. And to yourself.\"",
+      "reply": "They nod, and look at you like a second-year. Which, now, you are.",
+      "score": 1
+     }
+    ]
+   }
+  },
+  {
+   "reward": {
+    "flag": "year_end_celebration"
+   }
+  },
+  {
+   "say": "The sun goes down behind the library. Someone starts a speaker, and nobody goes home for a long time."
+  }
+ ]
+}

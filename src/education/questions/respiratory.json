@@ -1,0 +1,184 @@
+{
+ "version": 1,
+ "questions": [
+  {
+   "id": "resp_frc_01",
+   "discipline": "Physiology",
+   "topic": "Respiratory",
+   "subtopic": "Lung volumes",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "The functional residual capacity (FRC) is:",
+   "choices": {
+    "a": "The volume measured in the first second of a forced breath out",
+    "b": "The expiratory reserve volume plus the residual volume",
+    "c": "The tidal volume plus the residual volume",
+    "d": "The vital capacity minus the tidal volume"
+   },
+   "explanation": "FRC is the volume left in the lungs at the end of a quiet breath, where lung recoil and chest-wall recoil balance: ERV + RV. Because it includes the residual volume, spirometry alone can't measure it.",
+   "learning_objective": "Define FRC and explain why spirometry cannot measure it.",
+   "xp_reward": null,
+   "lecture_id": "respiratory_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "resp_obstructive_01",
+   "discipline": "Physiology",
+   "topic": "Respiratory",
+   "subtopic": "Spirometry",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "A 62-year-old smoker's spirometry shows FEV1 1.8 L and FVC 3.6 L. What pattern is this?",
+   "choices": {
+    "a": "Obstructive: FEV1/FVC is 0.5",
+    "b": "Mixed restrictive and obstructive, proven",
+    "c": "Restrictive: the FVC is reduced",
+    "d": "Normal: both values are within range"
+   },
+   "explanation": "FEV1/FVC = 1.8/3.6 = 0.5, well below 0.7: airflow obstruction, as in COPD. Restriction is suggested by low volumes with a normal or high ratio and confirmed by a low TLC.",
+   "learning_objective": "Interpret FEV1/FVC to identify an obstructive pattern.",
+   "xp_reward": null,
+   "lecture_id": "respiratory_01",
+   "format": "multiple_choice",
+   "figure": {
+    "type": "curves",
+    "x": {
+     "label": "Time (s)",
+     "min": 0,
+     "max": 6
+    },
+    "y": {
+     "label": "Volume exhaled (L)",
+     "min": 0,
+     "max": 5
+    },
+    "series": [
+     {
+      "label": "Patient",
+      "fn": "saturating",
+      "params": {
+       "ymax": 3.6,
+       "tau": 1.5
+      },
+      "color": "red"
+     }
+    ],
+    "vlines": [
+     {
+      "x": 1,
+      "label": "1 s",
+      "color": "muted"
+     }
+    ]
+   },
+   "correct_answer": "a"
+  },
+  {
+   "id": "resp_surfactant_01",
+   "discipline": "Physiology",
+   "topic": "Respiratory",
+   "subtopic": "Surfactant",
+   "question_type": "Conceptual",
+   "difficulty_tier": 2,
+   "prompt": "A baby born at 28 weeks develops rapid breathing, grunting and collapsing alveoli within hours of birth. What is missing?",
+   "choices": {
+    "a": "Elastin in the alveolar walls",
+    "b": "Type I pneumocytes",
+    "c": "Surfactant, made by type II pneumocytes",
+    "d": "Fetal hemoglobin"
+   },
+   "explanation": "Surfactant lowers alveolar surface tension, which would otherwise collapse small alveoli (Laplace: P = 2T/r). Type II pneumocytes make enough of it only late in gestation, so premature infants develop neonatal respiratory distress syndrome; antenatal corticosteroids speed its production.",
+   "learning_objective": "Explain the role of surfactant and neonatal respiratory distress syndrome.",
+   "xp_reward": null,
+   "lecture_id": "respiratory_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "resp_shunt_01",
+   "discipline": "Physiology",
+   "topic": "Respiratory",
+   "subtopic": "V/Q mismatch",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 3,
+   "prompt": "A patient with a dense lobar pneumonia stays hypoxemic even on 100% oxygen. What is the main mechanism?",
+   "choices": {
+    "a": "Shunt: blood passes through alveoli that are filled and not ventilated",
+    "b": "A left shift of the oxygen–hemoglobin curve",
+    "c": "Hypoventilation from a weak diaphragm",
+    "d": "Dead space: alveoli ventilated but not perfused"
+   },
+   "explanation": "Consolidated alveoli are perfused but not ventilated (V/Q = 0), so that blood returns deoxygenated and mixes with oxygenated blood. Extra inspired oxygen can't reach it, so shunt hypoxemia responds poorly to supplemental O₂, unlike V/Q mismatch.",
+   "learning_objective": "Recognize shunt physiology and its poor response to oxygen.",
+   "xp_reward": null,
+   "lecture_id": "respiratory_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "resp_right_shift_01",
+   "discipline": "Physiology",
+   "topic": "Respiratory",
+   "subtopic": "Oxygen–hemoglobin curve",
+   "question_type": "Conceptual",
+   "difficulty_tier": 2,
+   "prompt": "Which change shifts the oxygen–hemoglobin dissociation curve to the right?",
+   "choices": {
+    "a": "Hypothermia",
+    "b": "A rise in PCO₂ and fall in pH, as in exercising muscle",
+    "c": "Fetal hemoglobin",
+    "d": "Carbon monoxide"
+   },
+   "explanation": "Increased CO₂, H⁺ (the Bohr effect), 2,3-BPG and temperature lower hemoglobin's affinity for O₂, shifting the curve right and aiding unloading in tissues. Carbon monoxide, fetal hemoglobin, cold and alkalosis shift it left.",
+   "learning_objective": "List the factors that shift the oxygen–hemoglobin curve right.",
+   "xp_reward": null,
+   "lecture_id": "respiratory_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "resp_aa_01",
+   "discipline": "Physiology",
+   "topic": "Respiratory",
+   "subtopic": "The A–a gradient",
+   "question_type": "Application",
+   "difficulty_tier": 3,
+   "prompt": "Breathing room air at sea level, a patient has PaCO₂ 40 mmHg and PaO₂ 60 mmHg. Using PAO₂ ≈ 150 − PaCO₂/0.8, what is the A–a gradient, and what does it suggest?",
+   "choices": {
+    "a": "About 40 mmHg: normal for any age",
+    "b": "About 90 mmHg: hypoventilation",
+    "c": "About 40 mmHg: elevated, pointing to a problem in the lung (V/Q mismatch, shunt or diffusion)",
+    "d": "Zero: the lungs are normal"
+   },
+   "explanation": "PAO₂ ≈ 150 − 40/0.8 = 100 mmHg; A–a gradient = 100 − 60 = 40 mmHg, well above normal (roughly 5–15, higher with age). Pure hypoventilation lowers PaO₂ with a normal gradient.",
+   "learning_objective": "Calculate and interpret the alveolar–arterial oxygen gradient.",
+   "xp_reward": null,
+   "lecture_id": "respiratory_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "resp_aa_remediation_01",
+   "discipline": "Physiology",
+   "topic": "Respiratory",
+   "subtopic": "The A–a gradient",
+   "question_type": "Conceptual",
+   "difficulty_tier": 1,
+   "prompt": "A patient is hypoxemic only because an opioid overdose has slowed his breathing. What happens to the A–a gradient?",
+   "choices": {
+    "a": "It widens, as in pneumonia.",
+    "b": "It becomes negative.",
+    "c": "It can't be calculated in hypoventilation.",
+    "d": "It stays normal: alveolar and arterial O₂ fall together."
+   },
+   "explanation": "Hypoventilation raises PaCO₂, which lowers alveolar O₂; the lungs still transfer oxygen normally, so arterial O₂ falls with it and the gradient is preserved.",
+   "learning_objective": "Distinguish hypoventilation from lung disease with the A–a gradient.",
+   "xp_reward": null,
+   "lecture_id": "respiratory_01",
+   "format": "multiple_choice",
+   "is_remediation": true,
+   "correct_answer": "d"
+  }
+ ]
+}

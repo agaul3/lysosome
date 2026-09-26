@@ -1,0 +1,509 @@
+{
+ "version": 1,
+ "questions": [
+  {
+   "id": "nut_a1c_target_01",
+   "discipline": "Clinical Skills",
+   "topic": "Nutrition",
+   "subtopic": "Glycemic targets",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "For most non-pregnant adults with type 2 diabetes, what HbA1c goal is generally recommended?",
+   "choices": {
+    "a": "Below 10%",
+    "b": "There is no target; HbA1c isn't used in treatment",
+    "c": "Below about 7%, individualized: looser for people at risk of hypoglycemia or with frailty",
+    "d": "Below 5%, for everyone"
+   },
+   "explanation": "Guidelines suggest an HbA1c below about 7% for many adults, tighter if it can be reached safely, and looser (around 8%) for older adults with frailty, limited life expectancy or a high risk of hypoglycemia.",
+   "learning_objective": "State an individualized HbA1c target.",
+   "xp_reward": null,
+   "lecture_id": "nutrition_case_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "nut_sulfonylurea_01",
+   "discipline": "Pharmacology",
+   "topic": "Nutrition",
+   "subtopic": "Hypoglycemia risk",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "Ms. Walker takes metformin, glipizide, lisinopril and atorvastatin. Which one makes skipping meals dangerous?",
+   "choices": {
+    "a": "Lisinopril",
+    "b": "Atorvastatin",
+    "c": "Metformin",
+    "d": "Glipizide, a sulfonylurea, which can cause hypoglycemia"
+   },
+   "explanation": "Sulfonylureas make the pancreas release insulin whatever the glucose level, so a missed meal can bring on hypoglycemia. Metformin alone rarely does. For people who can't count on regular meals, choose drugs with a low risk of hypoglycemia.",
+   "learning_objective": "Identify the hypoglycemia risk of sulfonylureas with irregular meals.",
+   "xp_reward": null,
+   "lecture_id": "nutrition_case_01",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "nut_hunger_vital_sign_01",
+   "discipline": "Behavioral Science",
+   "topic": "Nutrition",
+   "subtopic": "Food insecurity",
+   "question_type": "Recall",
+   "difficulty_tier": 2,
+   "prompt": "Which of these is a validated two-question screen for food insecurity?",
+   "choices": {
+    "a": "Her weight and body mass index",
+    "b": "Two statements about the past 12 months: worrying that food would run out before there was money to buy more, and food not lasting with no money to get more",
+    "c": "Her HbA1c",
+    "d": "Asking what she ate yesterday"
+   },
+   "explanation": "The Hunger Vital Sign asks whether each statement was often, sometimes or never true over the past year. \"Often\" or \"sometimes\" to either is a positive screen, and it takes under a minute.",
+   "learning_objective": "Screen for food insecurity.",
+   "xp_reward": null,
+   "lecture_id": "nutrition_case_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "nut_plate_01",
+   "discipline": "Clinical Skills",
+   "topic": "Nutrition",
+   "subtopic": "Dietary advice",
+   "question_type": "Application",
+   "difficulty_tier": 2,
+   "prompt": "Which dietary advice is most practical for Ms. Walker?",
+   "choices": {
+    "a": "Skipping breakfast to lose weight",
+    "b": "The plate method: half the plate non-starchy vegetables (frozen or canned are fine), a quarter lean protein such as beans, eggs or canned fish, a quarter starch",
+    "c": "Only fresh, organic produce",
+    "d": "A strict ketogenic diet with specialty foods"
+   },
+   "explanation": "The plate method needs no counting, works with pantry and budget foods, and improves glucose control. Advice has to fit the patient's budget and the food she can actually get.",
+   "learning_objective": "Give practical, affordable dietary advice in diabetes.",
+   "xp_reward": null,
+   "lecture_id": "nutrition_case_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "sp_abd_migration_01",
+   "discipline": "Anatomy",
+   "topic": "Acute Abdomen",
+   "subtopic": "Appendicitis",
+   "question_type": "Conceptual",
+   "difficulty_tier": 2,
+   "prompt": "Why does appendicitis pain usually start around the umbilicus and then move to the right lower quadrant?",
+   "choices": {
+    "a": "The appendix physically moves during the illness",
+    "b": "The pain follows the path of the right ureter",
+    "c": "The nerves to the appendix pass through the umbilicus",
+    "d": "Early pain is visceral, felt in the midgut's T10 dermatome; later the inflamed appendix irritates the parietal peritoneum, which localizes pain precisely"
+   },
+   "explanation": "Visceral afferents from the midgut, including the appendix, enter the cord around T10, so early pain is vague and central. Once inflammation reaches the parietal peritoneum, which has somatic innervation, the pain settles at McBurney's point.",
+   "learning_objective": "Explain the migration of pain in appendicitis.",
+   "xp_reward": null,
+   "lecture_id": "sp_abdominal_01",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "sp_abd_ct_01",
+   "discipline": "Clinical Skills",
+   "topic": "Acute Abdomen",
+   "subtopic": "Imaging",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "Which imaging is best for suspected appendicitis in an adult man?",
+   "choices": {
+    "a": "A plain abdominal X-ray",
+    "b": "CT of the abdomen and pelvis",
+    "c": "None ever: everyone with right lower quadrant pain goes to theater",
+    "d": "An MRI of the lumbar spine"
+   },
+   "explanation": "CT is the most accurate test in adults. Ultrasound comes first in children and in pregnancy (with MRI if the ultrasound doesn't settle it) to avoid radiation. Plain films add little. With a classic picture, surgeons may operate on the clinical findings.",
+   "learning_objective": "Choose imaging for suspected appendicitis.",
+   "xp_reward": null,
+   "lecture_id": "sp_abdominal_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "sp_abd_analgesia_01",
+   "discipline": "Clinical Skills",
+   "topic": "Acute Abdomen",
+   "subtopic": "Analgesia",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "Should he have pain relief before the surgeon examines him?",
+   "choices": {
+    "a": "Only after the CT result",
+    "b": "No: morphine masks peritonitis and must be withheld",
+    "c": "Only acetaminophen, never an opioid",
+    "d": "Yes: analgesia doesn't hide the diagnosis, and withholding it is unkind"
+   },
+   "explanation": "Trials show that giving opioids for acute abdominal pain doesn't reduce diagnostic accuracy. The old teaching to withhold analgesia until the surgeon arrives is outdated.",
+   "learning_objective": "Give analgesia early in acute abdominal pain.",
+   "xp_reward": null,
+   "lecture_id": "sp_abdominal_01",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "res_ci_01",
+   "discipline": "Biostatistics",
+   "topic": "Research Methods",
+   "subtopic": "Confidence intervals",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "A poster reports that a walking program lowered systolic blood pressure by 6 mmHg (95% confidence interval 2 to 10 mmHg). What does the interval tell you?",
+   "choices": {
+    "a": "The result isn't significant because the interval is wide",
+    "b": "The data are compatible with a true reduction from about 2 to 10 mmHg; because the interval excludes zero, the result is significant at the 5% level",
+    "c": "95% of participants had a fall of between 2 and 10 mmHg",
+    "d": "There is a 95% chance the program lowers blood pressure by exactly 6 mmHg"
+   },
+   "explanation": "A confidence interval is the range of true effects compatible with the data. If a 95% interval for a difference excludes zero, p is below 0.05. It says nothing about the spread of individual participants' results.",
+   "learning_objective": "Interpret a confidence interval.",
+   "xp_reward": null,
+   "lecture_id": "research_day",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "res_confounding_01",
+   "discipline": "Biostatistics",
+   "topic": "Research Methods",
+   "subtopic": "Confounding",
+   "question_type": "Conceptual",
+   "difficulty_tier": 2,
+   "prompt": "An observational poster finds that coffee drinkers have more lung cancer. What's the most likely explanation?",
+   "choices": {
+    "a": "Confounding by smoking, which is linked to both coffee drinking and lung cancer",
+    "b": "Bias from randomization",
+    "c": "Coffee causes lung cancer",
+    "d": "Lung cancer makes people drink coffee"
+   },
+   "explanation": "A confounder is associated with both the exposure and the outcome and isn't on the causal path between them. Adjusting for smoking removes the association. Randomization is how trials avoid confounding, not a cause of it.",
+   "learning_objective": "Recognize confounding in an observational study.",
+   "xp_reward": null,
+   "lecture_id": "research_day",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "res_nnt_01",
+   "discipline": "Biostatistics",
+   "topic": "Research Methods",
+   "subtopic": "Number needed to treat",
+   "question_type": "Application",
+   "difficulty_tier": 2,
+   "prompt": "A drug reduces the five-year risk of stroke from 4% to 3%. What is the number needed to treat?",
+   "choices": {
+    "a": "4",
+    "b": "25",
+    "c": "100",
+    "d": "33"
+   },
+   "explanation": "Absolute risk reduction = 4% − 3% = 1% (0.01), and the NNT = 1 ÷ 0.01 = 100: a hundred people treated for five years to prevent one stroke. The relative risk reduction is 25%, which sounds far more impressive.",
+   "learning_objective": "Calculate the number needed to treat.",
+   "xp_reward": null,
+   "lecture_id": "research_day",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "res_sensitivity_01",
+   "discipline": "Biostatistics",
+   "topic": "Research Methods",
+   "subtopic": "Sensitivity",
+   "question_type": "Conceptual",
+   "difficulty_tier": 2,
+   "prompt": "A screening test has 98% sensitivity and 60% specificity. What is it good for?",
+   "choices": {
+    "a": "Ruling a disease out when the result is negative",
+    "b": "Measuring how common the disease is",
+    "c": "Nothing: a test needs both to be high",
+    "d": "Ruling a disease in when the result is positive"
+   },
+   "explanation": "A highly sensitive test rarely misses disease, so a negative result makes it unlikely (\"SnNout\"). With only 60% specificity, many positives will be false, so a positive result needs a more specific test to confirm it (\"SpPin\").",
+   "learning_objective": "Apply sensitivity and specificity.",
+   "xp_reward": null,
+   "lecture_id": "research_day",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "imm_wards_ivpo_01",
+   "discipline": "Clinical Skills",
+   "topic": "Internal Medicine",
+   "subtopic": "Pneumonia",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "Mr. Lopez is on day 3 of IV ceftriaxone for community-acquired pneumonia: no fever for 36 hours, eating, HR 84, SpO₂ 95% on room air. What's the plan for his antibiotic?",
+   "choices": {
+    "a": "Switch to an oral antibiotic and plan his discharge",
+    "b": "Add a second IV antibiotic",
+    "c": "Continue IV for a full fourteen days",
+    "d": "Keep IV antibiotics until the chest X-ray is clear"
+   },
+   "explanation": "Once a patient is clinically stable (no fever, stable vital signs, eating, alert, able to take tablets), IV antibiotics can switch to oral. Many need only about five days in total. The chest X-ray lags weeks behind clinical recovery, so it isn't used to decide.",
+   "learning_objective": "Switch from IV to oral antibiotics when stable.",
+   "xp_reward": null,
+   "lecture_id": "immersion_wards_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "imm_wards_dka_01",
+   "discipline": "Pharmacology",
+   "topic": "Internal Medicine",
+   "subtopic": "Diabetic ketoacidosis",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 3,
+   "prompt": "Ms. Nguyen's diabetic ketoacidosis has resolved: the anion gap has closed and she's eating breakfast. How is the insulin infusion stopped?",
+   "choices": {
+    "a": "Switch her straight to metformin",
+    "b": "Stop the infusion first, and give insulin when her glucose rises",
+    "c": "Stop the infusion as soon as her glucose is under 200 mg/dL",
+    "d": "Give subcutaneous basal insulin first, and stop the infusion only after an overlap of about two hours"
+   },
+   "explanation": "IV insulin stops working within minutes of the infusion stopping. Without an overlap, ketoacidosis can return within hours, so basal insulin is given subcutaneously and the infusion continued for about two hours before it is stopped. Resolution is judged by the closed anion gap and falling ketones, not by the glucose alone.",
+   "learning_objective": "Transition from IV to subcutaneous insulin after DKA.",
+   "xp_reward": null,
+   "lecture_id": "immersion_wards_01",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "imm_wards_delirium_01",
+   "discipline": "Clinical Skills",
+   "topic": "Internal Medicine",
+   "subtopic": "Delirium",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "Mr. Harris, 84, two days after hip surgery, became confused overnight, pulled at his IV, and is drowsy this morning; his attention comes and goes. What's the most likely diagnosis?",
+   "choices": {
+    "a": "A primary psychotic illness",
+    "b": "Normal aging",
+    "c": "Delirium",
+    "d": "Alzheimer disease"
+   },
+   "explanation": "An acute onset, a fluctuating course, inattention and an altered level of consciousness define delirium, which can be hyperactive, hypoactive or mixed. Look for the causes: infection, drugs (opioids, anticholinergics, benzodiazepines), pain, urinary retention, constipation, dehydration, low oxygen and electrolytes.",
+   "learning_objective": "Recognize delirium.",
+   "xp_reward": null,
+   "lecture_id": "immersion_wards_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "imm_wards_delirium_02",
+   "discipline": "Clinical Skills",
+   "topic": "Internal Medicine",
+   "subtopic": "Delirium",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "What should the team do first for Mr. Harris's delirium?",
+   "choices": {
+    "a": "Find and treat the causes, and use non-drug measures: reorientation, glasses and hearing aids, sleep at night, mobilizing, family visits",
+    "b": "Nothing: it always settles on its own",
+    "c": "A higher opioid dose to settle him",
+    "d": "Restraints and a benzodiazepine at night"
+   },
+   "explanation": "Benzodiazepines worsen delirium (except in alcohol withdrawal) and restraints increase agitation and injury. Treating causes and supportive care come first; a low-dose antipsychotic is only for severe distress or danger.",
+   "learning_objective": "Manage delirium without harm.",
+   "xp_reward": null,
+   "lecture_id": "immersion_wards_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "imm_wards_cdiff_01",
+   "discipline": "Microbiology",
+   "topic": "Internal Medicine",
+   "subtopic": "Infection control",
+   "question_type": "Application",
+   "difficulty_tier": 1,
+   "prompt": "Leaving the room of a patient with Clostridioides difficile, how should you clean your hands?",
+   "choices": {
+    "a": "Gloves mean you don't need to",
+    "b": "Wipe the gloves with chlorhexidine and reuse them",
+    "c": "Alcohol hand rub is enough",
+    "d": "Soap and water: alcohol hand rub doesn't kill its spores"
+   },
+   "explanation": "C. difficile forms spores that survive alcohol. Wear gloves and a gown in the room, then wash with soap and water to remove spores mechanically. Surfaces are cleaned with a sporicidal agent such as bleach.",
+   "learning_objective": "Apply hand hygiene for C. difficile.",
+   "xp_reward": null,
+   "lecture_id": "immersion_wards_01",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "exb5_hypothyroid_01",
+   "discipline": "Physiology",
+   "topic": "Endocrine",
+   "subtopic": "Hypothyroidism",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "Fatigue, weight gain, feeling cold and constipation; TSH 12 mU/L (high) and free T4 low. What is the diagnosis and its most common cause where iodine is sufficient?",
+   "choices": {
+    "a": "Subclinical hypothyroidism",
+    "b": "Secondary hypothyroidism from a pituitary tumor",
+    "c": "Graves disease",
+    "d": "Primary hypothyroidism, most often Hashimoto thyroiditis"
+   },
+   "explanation": "A high TSH with a low free T4 means the thyroid itself is failing and the pituitary is pushing it: primary hypothyroidism. Autoimmune Hashimoto thyroiditis (anti-TPO antibodies) is the commonest cause in iodine-sufficient countries; worldwide, iodine deficiency is. It's treated with levothyroxine.",
+   "learning_objective": "Diagnose primary hypothyroidism.",
+   "xp_reward": null,
+   "lecture_id": "exam_b5",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "exb5_graves_01",
+   "discipline": "Physiology",
+   "topic": "Endocrine",
+   "subtopic": "Hyperthyroidism",
+   "question_type": "Conceptual",
+   "difficulty_tier": 2,
+   "prompt": "Weight loss, tremor, heat intolerance, bulging eyes and a smooth, enlarged thyroid; TSH suppressed. What causes it?",
+   "choices": {
+    "a": "A TSH-secreting pituitary adenoma",
+    "b": "Antibodies that stimulate the TSH receptor: Graves disease",
+    "c": "Iodine deficiency",
+    "d": "Hashimoto thyroiditis"
+   },
+   "explanation": "In Graves disease, antibodies switch on the TSH receptor, so the gland grows and overproduces hormone, and high T4 and T3 suppress TSH. The eye disease (ophthalmopathy) is specific to Graves.",
+   "learning_objective": "Explain the mechanism of Graves disease.",
+   "xp_reward": null,
+   "lecture_id": "exam_b5",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "exb5_addison_01",
+   "discipline": "Physiology",
+   "topic": "Endocrine",
+   "subtopic": "Adrenal insufficiency",
+   "question_type": "Conceptual",
+   "difficulty_tier": 3,
+   "prompt": "Which features point to primary adrenal insufficiency (Addison disease) rather than a pituitary cause?",
+   "choices": {
+    "a": "Darkened skin and a high potassium",
+    "b": "A low cortisol level",
+    "c": "Fatigue and weight loss",
+    "d": "Low blood pressure"
+   },
+   "explanation": "When the adrenal glands fail, cortisol falls and ACTH rises; its precursor also stimulates melanocytes, darkening the skin. Aldosterone is lost too, so potassium rises and salt is wasted. In pituitary disease ACTH is low (no pigmentation) and aldosterone, driven by renin, is preserved.",
+   "learning_objective": "Distinguish primary from secondary adrenal insufficiency.",
+   "xp_reward": null,
+   "lecture_id": "exam_b5",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "exb5_pancreatitis_01",
+   "discipline": "Clinical Skills",
+   "topic": "Gastrointestinal",
+   "subtopic": "Pancreatitis",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "Severe epigastric pain going through to the back after a night of heavy drinking; lipase is five times the upper limit of normal. What is the diagnosis?",
+   "choices": {
+    "a": "Acute pancreatitis",
+    "b": "Biliary colic",
+    "c": "A perforated peptic ulcer",
+    "d": "Acute cholecystitis"
+   },
+   "explanation": "Pancreatitis is diagnosed with two of three: typical pain, lipase (or amylase) at least three times the upper limit, and imaging findings. Gallstones and alcohol are the commonest causes. Treatment is fluids, analgesia and early feeding.",
+   "learning_objective": "Diagnose acute pancreatitis.",
+   "xp_reward": null,
+   "lecture_id": "exam_b5",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "exb5_hpylori_01",
+   "discipline": "Microbiology",
+   "topic": "Gastrointestinal",
+   "subtopic": "Peptic ulcer disease",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "A duodenal ulcer is found at endoscopy. Which infection should be tested for and treated?",
+   "choices": {
+    "a": "Hepatitis A",
+    "b": "Giardia",
+    "c": "Helicobacter pylori",
+    "d": "Clostridioides difficile"
+   },
+   "explanation": "H. pylori, with NSAIDs, causes most peptic ulcers. Eradicating it (for example with bismuth quadruple therapy) heals the ulcer and prevents it coming back.",
+   "learning_objective": "Link peptic ulcers to H. pylori.",
+   "xp_reward": null,
+   "lecture_id": "exam_b5",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "exb5_celiac_01",
+   "discipline": "Pathology",
+   "topic": "Gastrointestinal",
+   "subtopic": "Celiac disease",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "Diarrhea, bloating and iron-deficiency anemia; tissue transglutaminase IgA is high. What does the duodenal biopsy show, and what is the treatment?",
+   "choices": {
+    "a": "Crypt abscesses in the colon; mesalamine",
+    "b": "Villous atrophy with crypt hyperplasia; a lifelong gluten-free diet",
+    "c": "Normal villi; antibiotics",
+    "d": "Transmural granulomas; steroids"
+   },
+   "explanation": "Celiac disease is an immune reaction to gluten. The biopsy shows flattened villi, deep crypts and many intraepithelial lymphocytes. Iron is absorbed in the duodenum, so iron deficiency is common. Treatment is a strict gluten-free diet for life. (Granulomas suggest Crohn disease; crypt abscesses, ulcerative colitis.)",
+   "learning_objective": "Recognize celiac disease.",
+   "xp_reward": null,
+   "lecture_id": "exam_b5",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "exb5_hypoglycemia_01",
+   "discipline": "Pharmacology",
+   "topic": "Endocrine",
+   "subtopic": "Hypoglycemia",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 1,
+   "prompt": "A man on insulin is sweaty, shaky and muddled, with a glucose of 45 mg/dL. He can swallow safely. What first?",
+   "choices": {
+    "a": "His usual insulin dose",
+    "b": "Wait an hour and recheck",
+    "c": "15–20 g of fast-acting glucose by mouth, then recheck in 15 minutes",
+    "d": "A large, fatty meal"
+   },
+   "explanation": "The rule of 15: 15–20 g of fast carbohydrate (glucose tablets or juice), recheck after 15 minutes, repeat if still below 70 mg/dL, then a snack or meal. Fat slows absorption. If he can't swallow safely: glucagon or IV dextrose.",
+   "learning_objective": "Treat hypoglycemia.",
+   "xp_reward": null,
+   "lecture_id": "exam_b5",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "exb5_ascites_01",
+   "discipline": "Physiology",
+   "topic": "Gastrointestinal",
+   "subtopic": "Cirrhosis",
+   "question_type": "Conceptual",
+   "difficulty_tier": 3,
+   "prompt": "A man with cirrhosis has a swollen abdomen with shifting dullness. What mainly causes the fluid?",
+   "choices": {
+    "a": "Blocked lymphatics from cancer",
+    "b": "Heart failure caused by alcohol",
+    "c": "Portal hypertension, plus salt and water retention driven by the renin–angiotensin–aldosterone system, with low albumin adding to it",
+    "d": "Drinking too much water"
+   },
+   "explanation": "Scarring raises portal pressure; splanchnic vasodilation lowers the effective circulating volume, switching on renin–angiotensin–aldosterone and ADH, so the kidneys retain salt and water. Low albumin lowers oncotic pressure. Treatment: salt restriction, spironolactone (with furosemide) and paracentesis.",
+   "learning_objective": "Explain ascites in cirrhosis.",
+   "xp_reward": null,
+   "lecture_id": "exam_b5",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  }
+ ]
+}

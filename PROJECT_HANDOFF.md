@@ -1,7 +1,7 @@
 # PROJECT_HANDOFF.md — rpg_med
 
-## Current status (updated 2026-09-24)
-Milestones 1–10 are complete; the v0.1 vertical slice is feature-complete. Milestone 11 (University Hospital and physician shadowing) is implemented on top of it, and the hospital now has an Emergency Department with Emergency Radiology. `CHANGELOG.md` at the repository root is the running, timestamped record of current state and supersedes the historical notes below. `CLAUDE.md` holds standing agent instructions.
+## Current status (updated 2026-09-25)
+Milestones 1–10 are complete; the v0.1 vertical slice is feature-complete. Milestone 11 (University Hospital and physician shadowing) is implemented on top of it, and the hospital has an Emergency Department with Emergency Radiology. The first-year expansion makes the whole first year playable: story days, money, skills, achievements, the East Campus buildings, clubs and the full curriculum; see `src/docs/development/YEAR_ONE_PLAN.md`. `CHANGELOG.md` at the repository root is the running, timestamped record of current state and supersedes the historical notes below. `CLAUDE.md` holds standing agent instructions.
 
 ## Purpose
 This file is the cross-agent handoff for the ongoing `rpg_med` project.
@@ -37,6 +37,7 @@ The player is a medical student. Real medical learning should drive XP, levels, 
 - After Milestone 10: in-world computers (Windows and macOS shells) and an Anki-style flashcard collection; see `CHANGELOG.md`.
 - Milestone 11 (University Hospital, physician shadowing): see `src/docs/development/MILESTONE_11_ACCEPTANCE.md`.
 - After Milestone 11: the Emergency Department (Level I trauma center, ESI areas, EMS arrivals, automatic doors, Emergency Radiology) and the campus ambulance; see `src/docs/development/EMERGENCY_DEPARTMENT_ACCEPTANCE.md`.
+- The first-year expansion (September 24–25, 2026): the year's calendar, economy and progression, the East Campus buildings and the hospital Food Court, clubs, and the curriculum; see `src/docs/development/YEAR_ONE_PLAN.md` and `src/docs/development/FIRST_YEAR_ACCEPTANCE.md`.
 
 Verify against `git log` rather than trusting this list.
 

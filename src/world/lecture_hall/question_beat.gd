@@ -14,6 +14,8 @@ var ui: CanvasLayer
 var professor: Node3D
 var current_id := ""
 var last_result: Dictionary = {}
+## Activity for boosts and perks: "lecture", or "clinical" on a shadowing shift.
+var context := "lecture"
 
 func begin(beat: Dictionary, lecture: String, speaker_name: String, target_ui: CanvasLayer, target_professor: Node3D) -> void:
 	line = beat
@@ -41,7 +43,7 @@ func attempt_id(id: String) -> String:
 	return "%s:%s" % [lecture_id, id]
 
 func answer(key: String) -> void:
-	var result := QuestionBank.submit(current_id, key, attempt_id(current_id))
+	var result := QuestionBank.submit(current_id, key, attempt_id(current_id), context)
 	if not result.get("valid", false):
 		return
 	last_result = result

@@ -1,0 +1,55 @@
+{
+ "version": 1,
+ "id": "donor_dedication",
+ "kind": "ceremony",
+ "eyebrow": "The Anatomical Theatre",
+ "title": "The donor dedication",
+ "intro": "Before the first day of lab, the class gathers in the old anatomical theatre. The tiers are full and quiet. On the central table, instead of a body, there is a single white candle and a vase of flowers.",
+ "context": "lecture",
+ "minutes": 45,
+ "energy": 2,
+ "steps": [
+  {
+   "say": "\"Every one of the people who will teach you this year made a decision, while they were alive, to give you their body so that you could learn. Most of them never met a medical student. They trusted you anyway.\"",
+   "speaker": "Dr. Helen Marsh, Course Director"
+  },
+  {
+   "say": "A second-year reads a letter from the family of last year's donors: \"Our father was a machinist. He liked to take things apart to see how they worked. He said this was the last thing he could take apart for somebody. Please learn everything you can.\""
+  },
+  {
+   "say": "For one minute, nobody moves. You can hear the old building tick."
+  },
+  {
+   "choice": {
+    "prompt": "Each student is invited to write a line for the book of remembrance. You write:",
+    "category": "Reflection",
+    "options": [
+     {
+      "text": "\"Thank you for trusting a stranger. I'll try to deserve it.\"",
+      "reply": "You close the book gently and pass it along the row.",
+      "score": 1
+     },
+     {
+      "text": "\"I don't know your name, but I'll remember you as my first teacher.\"",
+      "reply": "You close the book gently and pass it along the row.",
+      "score": 1
+     },
+     {
+      "text": "\"I promise to be careful, and to learn.\"",
+      "reply": "You close the book gently and pass it along the row.",
+      "score": 1
+     }
+    ]
+   }
+  },
+  {
+   "say": "\"In the lab we'll use their first names only if their families wished it. We don't photograph, we don't joke about them, and we cover them when we're not working. Treat each of them the way you would want someone to treat your own family.\"",
+   "speaker": "Dr. Helen Marsh, Course Director"
+  },
+  {
+   "reward": {
+    "flag": "donor_dedication"
+   }
+  }
+ ]
+}

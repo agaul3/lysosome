@@ -1,0 +1,404 @@
+{
+ "version": 1,
+ "questions": [
+  {
+   "id": "neuro_csf_01",
+   "discipline": "Anatomy",
+   "topic": "Neuroanatomy",
+   "subtopic": "Ventricles and CSF",
+   "question_type": "Recall",
+   "difficulty_tier": 2,
+   "prompt": "Trace cerebrospinal fluid from where most of it is made:",
+   "choices": {
+    "a": "Arachnoid granulations → fourth ventricle → cerebral aqueduct → third ventricle → lateral ventricles",
+    "b": "Subarachnoid space → lateral ventricles → venous sinuses → third ventricle",
+    "c": "Choroid plexus of the lateral ventricles → interventricular foramina → third ventricle → cerebral aqueduct → fourth ventricle → subarachnoid space → arachnoid granulations",
+    "d": "Choroid plexus → fourth ventricle → third ventricle → lateral ventricles → spinal canal"
+   },
+   "explanation": "Most CSF is secreted by the choroid plexus, mostly in the lateral ventricles. It flows through the interventricular foramina to the third ventricle, down the aqueduct to the fourth, out through its median and lateral apertures into the subarachnoid space, and is absorbed through arachnoid granulations into the dural venous sinuses. A blocked aqueduct enlarges the lateral and third ventricles only.",
+   "learning_objective": "Trace the circulation of cerebrospinal fluid.",
+   "xp_reward": null,
+   "lecture_id": "neuroanatomy_lab_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "neuro_broca_01",
+   "discipline": "Anatomy",
+   "topic": "Neuroanatomy",
+   "subtopic": "Language areas",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "Damage to which area, in the inferior frontal gyrus of the dominant hemisphere, leaves speech halting and effortful but comprehension good?",
+   "choices": {
+    "a": "The angular gyrus",
+    "b": "Broca area",
+    "c": "The leg area of the motor cortex",
+    "d": "Wernicke area"
+   },
+   "explanation": "Broca area (inferior frontal gyrus) → expressive, nonfluent aphasia: patients understand but struggle to speak, and know it. Wernicke area (posterior superior temporal gyrus) → fluent speech that makes little sense, with poor comprehension.",
+   "learning_objective": "Localize expressive aphasia.",
+   "xp_reward": null,
+   "lecture_id": "neuroanatomy_lab_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "neuro_homunculus_01",
+   "discipline": "Anatomy",
+   "topic": "Neuroanatomy",
+   "subtopic": "Motor cortex",
+   "question_type": "Conceptual",
+   "difficulty_tier": 2,
+   "prompt": "On the brain model, where is the leg area of the primary motor cortex, and which artery supplies it?",
+   "choices": {
+    "a": "In the occipital lobe, supplied by the posterior cerebral artery",
+    "b": "On the medial surface, in the paracentral lobule, supplied by the anterior cerebral artery",
+    "c": "In the cerebellum, supplied by the basilar artery",
+    "d": "On the lateral surface by the lateral sulcus, supplied by the middle cerebral artery"
+   },
+   "explanation": "The motor homunculus drapes the face and hand over the lateral surface (middle cerebral artery) and the leg and foot over the medial surface (anterior cerebral artery). That's why an ACA stroke weakens the leg more than the arm, and an MCA stroke the face and arm.",
+   "learning_objective": "Map the motor homunculus to its blood supply.",
+   "xp_reward": null,
+   "lecture_id": "neuroanatomy_lab_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "neuro_cn3_01",
+   "discipline": "Anatomy",
+   "topic": "Neuroanatomy",
+   "subtopic": "Cranial nerves",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 3,
+   "prompt": "A cranial nerve emerges from the front of the midbrain and passes between the posterior cerebral and superior cerebellar arteries. An aneurysm of the posterior communicating artery can compress it. What would you see?",
+   "choices": {
+    "a": "An eye that can't look outward: the abducens nerve",
+    "b": "Weakness of one side of the face: the facial nerve",
+    "c": "Difficulty looking down and in: the trochlear nerve",
+    "d": "An eye turned down and out, with a drooping lid and a dilated pupil: the oculomotor nerve"
+   },
+   "explanation": "The oculomotor nerve (III) runs past the posterior communicating artery. Its parasympathetic pupil fibers run on the outside of the nerve, so compression dilates the pupil early; a painful third-nerve palsy with a dilated pupil is an aneurysm until proven otherwise.",
+   "learning_objective": "Recognize an oculomotor nerve palsy from compression.",
+   "xp_reward": null,
+   "lecture_id": "neuroanatomy_lab_01",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "neuro_cerebellum_01",
+   "discipline": "Anatomy",
+   "topic": "Neuroanatomy",
+   "subtopic": "Cerebellum",
+   "question_type": "Conceptual",
+   "difficulty_tier": 2,
+   "prompt": "A lesion in one cerebellar hemisphere causes which finding?",
+   "choices": {
+    "a": "Weakness on the opposite side",
+    "b": "A resting tremor",
+    "c": "Clumsiness and an intention tremor on the same side as the lesion",
+    "d": "Loss of pain sensation on the opposite side"
+   },
+   "explanation": "Each cerebellar hemisphere coordinates the limbs on its own side (its pathways cross twice). Signs: dysmetria, intention tremor, difficulty with rapid alternating movements and an ataxic gait. A resting tremor suggests Parkinson disease.",
+   "learning_objective": "Localize cerebellar signs.",
+   "xp_reward": null,
+   "lecture_id": "neuroanatomy_lab_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "sp_weak_localize_01",
+   "discipline": "Anatomy",
+   "topic": "Stroke",
+   "subtopic": "Localization",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "Left face and arm weakness, left-sided neglect, and eyes resting to the right. Where is the lesion?",
+   "choices": {
+    "a": "The left middle cerebral artery territory",
+    "b": "The right middle cerebral artery territory",
+    "c": "The right anterior cerebral artery territory",
+    "d": "The cerebellum"
+   },
+   "explanation": "A right hemisphere MCA stroke weakens the left face and arm more than the leg, can cause a left visual field loss and neglect of the left side (the non-dominant parietal lobe), and pulls the eyes toward the lesion. Language is usually in the left hemisphere, so there's no aphasia.",
+   "learning_objective": "Localize a right middle cerebral artery stroke.",
+   "xp_reward": null,
+   "lecture_id": "sp_neuro_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "sp_weak_forehead_01",
+   "discipline": "Anatomy",
+   "topic": "Stroke",
+   "subtopic": "Facial weakness",
+   "question_type": "Conceptual",
+   "difficulty_tier": 2,
+   "prompt": "Her lower face droops on the left, but she can wrinkle her forehead normally on both sides. Why?",
+   "choices": {
+    "a": "The facial nerve doesn't reach the forehead",
+    "b": "It's a sign of Bell palsy",
+    "c": "The upper face receives input from both motor cortices, so a one-sided upper motor neuron lesion spares it",
+    "d": "The forehead has no muscles"
+   },
+   "explanation": "The part of the facial nucleus that serves the forehead gets input from both hemispheres, so a stroke weakens only the lower face. A lower motor neuron lesion of the facial nerve itself (Bell palsy) weakens the whole side, forehead included.",
+   "learning_objective": "Distinguish upper from lower motor neuron facial weakness.",
+   "xp_reward": null,
+   "lecture_id": "sp_neuro_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "sp_weak_next_01",
+   "discipline": "Clinical Skills",
+   "topic": "Stroke",
+   "subtopic": "Code stroke",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "Her glucose is normal and she was last known well 45 minutes ago. What comes next?",
+   "choices": {
+    "a": "An emergency non-contrast CT (with CT angiography) to rule out bleeding and look for a blocked large vessel, heading for thrombolysis if she's eligible",
+    "b": "Admit her and repeat the examination in the morning",
+    "c": "Aspirin now, before any scan",
+    "d": "An MRI of the spine"
+   },
+   "explanation": "In a code stroke, the CT excludes hemorrhage and the CT angiogram looks for a large-vessel occlusion that thrombectomy can open. Aspirin waits until bleeding is excluded (and for 24 hours after thrombolysis). Every minute of delay costs neurons.",
+   "learning_objective": "Sequence the first steps in acute stroke.",
+   "xp_reward": null,
+   "lecture_id": "sp_neuro_01",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "osce_sah_01",
+   "discipline": "Clinical Skills",
+   "topic": "OSCE",
+   "subtopic": "Thunderclap headache",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 3,
+   "prompt": "Ms. Rahman's headache reached its worst within a minute of starting, while she was lifting weights. What is the most appropriate next step?",
+   "choices": {
+    "a": "A referral to physical therapy for neck strain",
+    "b": "Reassurance, a migraine medicine, and follow-up with her family doctor",
+    "c": "An urgent non-contrast CT of the head, then a lumbar puncture if it's normal and the scan was late",
+    "d": "An MRI in six weeks"
+   },
+   "explanation": "A thunderclap headache (maximal within a minute) is a subarachnoid hemorrhage until proven otherwise. A CT within six hours of onset is very sensitive; after that, a normal CT is followed by a lumbar puncture (looking for xanthochromia) or CT angiography.",
+   "learning_objective": "Investigate a thunderclap headache.",
+   "xp_reward": null,
+   "lecture_id": "osce_01",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "osce_metformin_side_01",
+   "discipline": "Pharmacology",
+   "topic": "OSCE",
+   "subtopic": "Metformin counseling",
+   "question_type": "Recall",
+   "difficulty_tier": 1,
+   "prompt": "Which side effect is most common when starting metformin?",
+   "choices": {
+    "a": "Weight gain",
+    "b": "Hypoglycemia",
+    "c": "Hair loss",
+    "d": "Stomach upset: nausea, bloating and diarrhea"
+   },
+   "explanation": "Gastrointestinal effects are the commonest, and are reduced by starting low, taking it with food, increasing slowly, or using an extended-release form. On its own metformin doesn't cause hypoglycemia, and it is weight-neutral or helps weight loss. Over years it can lower vitamin B12.",
+   "learning_objective": "Counsel on metformin's side effects.",
+   "xp_reward": null,
+   "lecture_id": "osce_01",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "osce_metformin_sick_01",
+   "discipline": "Pharmacology",
+   "topic": "OSCE",
+   "subtopic": "Sick-day rules",
+   "question_type": "Application",
+   "difficulty_tier": 2,
+   "prompt": "What should Mr. Otieno do with his metformin if he has vomiting and diarrhea and can't keep fluids down?",
+   "choices": {
+    "a": "Double the dose",
+    "b": "Pause it until he's eating and drinking normally, and get medical advice",
+    "c": "Stop it permanently",
+    "d": "Carry on as usual"
+   },
+   "explanation": "Dehydration can reduce kidney function and let metformin accumulate, rarely causing lactic acidosis. \"Sick-day rules\" pause metformin (and drugs like SGLT2 inhibitors, ACE inhibitors, diuretics and NSAIDs) during dehydrating illness, restarting them once eating and drinking again.",
+   "learning_objective": "Teach sick-day rules for metformin.",
+   "xp_reward": null,
+   "lecture_id": "osce_01",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "exb6_parkinson_01",
+   "discipline": "Pathology",
+   "topic": "Neurology",
+   "subtopic": "Parkinson disease",
+   "question_type": "Recall",
+   "difficulty_tier": 2,
+   "prompt": "A resting tremor, slowness and rigidity result from the loss of which neurons?",
+   "choices": {
+    "a": "Dopaminergic neurons of the substantia nigra pars compacta",
+    "b": "Motor neurons in the anterior horn",
+    "c": "Cholinergic neurons of the basal forebrain",
+    "d": "Purkinje cells of the cerebellum"
+   },
+   "explanation": "Parkinson disease is the loss of the nigrostriatal dopaminergic neurons, with Lewy bodies (α-synuclein). Levodopa, given with carbidopa to stop it being converted outside the brain, is the most effective treatment.",
+   "learning_objective": "Identify the neurons lost in Parkinson disease.",
+   "xp_reward": null,
+   "lecture_id": "exam_b6",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "exb6_myasthenia_01",
+   "discipline": "Pathology",
+   "topic": "Neurology",
+   "subtopic": "Myasthenia gravis",
+   "question_type": "Conceptual",
+   "difficulty_tier": 2,
+   "prompt": "Drooping eyelids and double vision that worsen through the day, and weakness that gets worse with repeated use. Antibodies against what?",
+   "choices": {
+    "a": "Voltage-gated calcium channels on the nerve terminal",
+    "b": "Myelin in the peripheral nerves",
+    "c": "The acetylcholine receptor at the neuromuscular junction",
+    "d": "Dopamine receptors"
+   },
+   "explanation": "Myasthenia gravis: antibodies against acetylcholine receptors cause fatigable weakness, often starting in the eye muscles. In Lambert–Eaton syndrome (antibodies against presynaptic calcium channels, often with small-cell lung cancer), strength improves briefly with repeated use.",
+   "learning_objective": "Explain the mechanism of myasthenia gravis.",
+   "xp_reward": null,
+   "lecture_id": "exam_b6",
+   "format": "multiple_choice",
+   "correct_answer": "c"
+  },
+  {
+   "id": "exb6_gbs_01",
+   "discipline": "Clinical Skills",
+   "topic": "Neurology",
+   "subtopic": "Guillain–Barré syndrome",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "Two weeks after a diarrheal illness, a 30-year-old develops weakness climbing up from both legs, with absent reflexes. What is the likely diagnosis, and what must be monitored?",
+   "choices": {
+    "a": "Guillain–Barré syndrome; monitor breathing (vital capacity)",
+    "b": "Multiple sclerosis; monitor vision",
+    "c": "Myasthenia gravis; monitor the pupils",
+    "d": "A stroke; monitor blood pressure"
+   },
+   "explanation": "Guillain–Barré syndrome is an acute inflammatory polyneuropathy, often after Campylobacter infection: ascending weakness and areflexia. It can paralyze the breathing muscles, so the vital capacity is measured regularly. Treatment is IV immunoglobulin or plasma exchange.",
+   "learning_objective": "Recognize Guillain–Barré syndrome.",
+   "xp_reward": null,
+   "lecture_id": "exam_b6",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "exb6_ms_01",
+   "discipline": "Pathology",
+   "topic": "Neurology",
+   "subtopic": "Multiple sclerosis",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "A 28-year-old woman had painful loss of vision in one eye that recovered over weeks. A year later her legs are numb. MRI shows several white-matter lesions. What is the diagnosis?",
+   "choices": {
+    "a": "Amyotrophic lateral sclerosis",
+    "b": "Migraine with aura",
+    "c": "Parkinson disease",
+    "d": "Multiple sclerosis"
+   },
+   "explanation": "Multiple sclerosis is inflammatory demyelination in the central nervous system, with lesions separated in space and time. Optic neuritis (painful, usually recovering vision loss) is a common first episode.",
+   "learning_objective": "Recognize multiple sclerosis.",
+   "xp_reward": null,
+   "lecture_id": "exam_b6",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "exb6_ssri_01",
+   "discipline": "Pharmacology",
+   "topic": "Psychiatry",
+   "subtopic": "Antidepressants",
+   "question_type": "Application",
+   "difficulty_tier": 2,
+   "prompt": "Which is a first-line medicine for moderate depression, and when do its benefits usually appear?",
+   "choices": {
+    "a": "An antipsychotic; within a day",
+    "b": "An SSRI such as sertraline; improvement usually takes two to six weeks",
+    "c": "A benzodiazepine; immediately",
+    "d": "An SSRI; stop it if it hasn't worked in three days"
+   },
+   "explanation": "SSRIs are first-line, alone or with psychotherapy. Side effects come first and the benefit follows over weeks, so patients need to know to keep going. Treatment continues for six to twelve months after recovery, and young people are watched for suicidal thoughts early on.",
+   "learning_objective": "Counsel on starting an SSRI.",
+   "xp_reward": null,
+   "lecture_id": "exam_b6",
+   "format": "multiple_choice",
+   "correct_answer": "b"
+  },
+  {
+   "id": "exb6_status_01",
+   "discipline": "Pharmacology",
+   "topic": "Neurology",
+   "subtopic": "Status epilepticus",
+   "question_type": "Clinical Application",
+   "difficulty_tier": 2,
+   "prompt": "A man's generalized tonic–clonic seizure has lasted six minutes and hasn't stopped. What is the first medicine?",
+   "choices": {
+    "a": "Oral phenytoin",
+    "b": "Nothing until it has lasted 30 minutes",
+    "c": "Haloperidol",
+    "d": "A benzodiazepine, such as IV lorazepam (or IM midazolam without IV access)"
+   },
+   "explanation": "A seizure lasting five minutes or more is status epilepticus. The first treatment is a benzodiazepine; if the seizures continue, a second-line drug such as levetiracetam, fosphenytoin or valproate follows.",
+   "learning_objective": "Treat status epilepticus.",
+   "xp_reward": null,
+   "lecture_id": "exam_b6",
+   "format": "multiple_choice",
+   "correct_answer": "d"
+  },
+  {
+   "id": "exb6_alzheimer_01",
+   "discipline": "Pathology",
+   "topic": "Neurology",
+   "subtopic": "Dementia",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "A 78-year-old's memory has worsened gradually over three years; she now gets lost in familiar places. The rest of the examination is normal. What is most likely?",
+   "choices": {
+    "a": "Alzheimer disease",
+    "b": "A stroke last week",
+    "c": "Delirium",
+    "d": "Normal pressure hydrocephalus"
+   },
+   "explanation": "A slowly progressive loss of memory for recent events, with visuospatial problems, is typical of Alzheimer disease. Delirium is sudden and fluctuating; normal pressure hydrocephalus brings gait problems and incontinence; a stroke is sudden.",
+   "learning_objective": "Recognize Alzheimer disease.",
+   "xp_reward": null,
+   "lecture_id": "exam_b6",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  },
+  {
+   "id": "exb6_meningitis_01",
+   "discipline": "Microbiology",
+   "topic": "Neurology",
+   "subtopic": "Meningitis",
+   "question_type": "Interpretation",
+   "difficulty_tier": 2,
+   "prompt": "Which cerebrospinal fluid result fits bacterial meningitis?",
+   "choices": {
+    "a": "Many neutrophils, high protein and low glucose",
+    "b": "Normal cells with a high protein",
+    "c": "Lymphocytes with a normal glucose",
+    "d": "Yellow fluid (xanthochromia) with normal cells"
+   },
+   "explanation": "Bacterial meningitis: neutrophils, raised protein and low glucose. Viral: lymphocytes and a normal glucose. A high protein with normal cells suggests Guillain–Barré syndrome; xanthochromia suggests a subarachnoid hemorrhage.",
+   "learning_objective": "Interpret CSF in meningitis.",
+   "xp_reward": null,
+   "lecture_id": "exam_b6",
+   "format": "multiple_choice",
+   "correct_answer": "a"
+  }
+ ]
+}

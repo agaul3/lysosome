@@ -1,0 +1,82 @@
+{
+ "version": 1,
+ "id": "immersion_ed_01",
+ "kind": "immersion",
+ "eyebrow": "Emergency Department · Clinical Immersion",
+ "title": "An evening in the Emergency Department",
+ "intro": "Clinical Immersion: six to nine in the evening with an emergency physician. You're in the short coat, with a pen light and a lot of questions.",
+ "context": "immersion",
+ "minutes": 180,
+ "energy": 16,
+ "steps": [
+  {
+   "say": "\"Stick with me, stay out of the way of the stretchers, and ask me anything between patients. Wash your hands every time.\"",
+   "speaker": "Dr. Marcus Bell, emergency physician"
+  },
+  {
+   "say": "Bed 14, Super Track: a sixteen-year-old with an ankle injury from basketball, her mother holding the ice pack."
+  },
+  {
+   "question": "imm_ed_ottawa_01",
+   "lead": "\"Does she need an X-ray?\""
+  },
+  {
+   "say": "A tone sounds overhead: trauma alert, car versus pole, five minutes out. You follow Dr. Bell to Trauma 1, where the team is already gowning."
+  },
+  {
+   "question": "imm_ed_abcde_01",
+   "lead": "\"Watch the order.\""
+  },
+  {
+   "say": "The patient arrives talking, which the team leader says out loud: the airway is open. The rest of the survey goes fast. He goes to CT with a broken arm and bruised ribs."
+  },
+  {
+   "say": "Room 6: an eighty-two-year-old woman from a nursing home, hot and confused, her blood pressure low."
+  },
+  {
+   "question": "imm_ed_sepsis_01",
+   "lead": "\"Sick or not sick? And what first?\""
+  },
+  {
+   "choice": {
+    "prompt": "In the hallway, the patient's son stops you. \"You're a doctor, right? What's wrong with my mother?\"",
+    "category": "Communication",
+    "options": [
+     {
+      "text": "\"I'm a medical student. I'll get Dr. Bell right now so he can talk with you.\"",
+      "reply": "Dr. Bell comes straight out and takes him somewhere quiet to talk.",
+      "score": 2
+     },
+     {
+      "text": "You tell him what you heard: probably sepsis from a urine infection.",
+      "reply": "It's not your information to give, and not your role to give it.",
+      "score": 0
+     },
+     {
+      "text": "\"Sorry, I can't talk,\" and walk off.",
+      "reply": "He's left alone in the corridor, frightened.",
+      "score": 1
+     }
+    ],
+    "lesson": "Be clear about your role, and bring the right person to talk with families"
+   }
+  },
+  {
+   "say": "At nine, Dr. Bell signs your immersion form. \"You didn't get in the way once. Come back when you're a third-year.\""
+  }
+ ],
+ "feedback": [
+  [
+   0.85,
+   "Dr. Bell writes: \"Curious, careful, and knew when to step back.\""
+  ],
+  [
+   0.6,
+   "Dr. Bell writes: \"Engaged and eager. Keep reading around what you see.\""
+  ],
+  [
+   0.0,
+   "Dr. Bell writes: \"Good first shift. Read up on the cases tonight.\""
+  ]
+ ]
+}

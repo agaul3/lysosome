@@ -1,0 +1,109 @@
+{
+ "version": 1,
+ "id": "immersion_clinic_01",
+ "kind": "immersion",
+ "eyebrow": "Outpatient Clinics · Clinical Immersion",
+ "title": "An afternoon in family medicine",
+ "intro": "Clinical Immersion: one to four in the afternoon in the hospital's outpatient clinics, with a family physician and a full schedule.",
+ "context": "immersion",
+ "minutes": 180,
+ "energy": 14,
+ "steps": [
+  {
+   "say": "\"Twenty-minute visits, one to four problems each. Family medicine is everything, for everyone, over years. Come on, room 3 is waiting.\"",
+   "speaker": "Dr. Grace Whitfield, family physician"
+  },
+  {
+   "say": "Room 3: Mr. Davis, 54, back for his blood pressure. His home readings are in the 150s over 90s on amlodipine."
+  },
+  {
+   "question": "imm_fm_bp_01",
+   "lead": "\"You take it this time.\""
+  },
+  {
+   "say": "Your reading: 152/94, the same as his home readings. Dr. Whitfield raises his amlodipine dose, and you both go through his salt intake, in great detail."
+  },
+  {
+   "say": "Room 5: Ms. Alvarez, 32, tired all the time. Her blood tests from last month are normal."
+  },
+  {
+   "question": "imm_fm_phq2_01",
+   "lead": "\"Before we order more tests, screen her.\""
+  },
+  {
+   "say": "She scores 5 on the PHQ-2. On the PHQ-9 she scores 16, and then she says something that makes the room go quiet."
+  },
+  {
+   "choice": {
+    "prompt": "\"Sometimes I think everyone would be better off without me.\" Dr. Whitfield has stepped out to take a call. You:",
+    "category": "Safety",
+    "options": [
+     {
+      "text": "Ask calmly and directly: \"Are you having thoughts of ending your life?\" Then make sure Dr. Whitfield hears it before anyone leaves.",
+      "reply": "She has had the thoughts, but no plan. Dr. Whitfield comes straight back; they make a safety plan together, with the crisis line number and a visit next week.",
+      "score": 2
+     },
+     {
+      "text": "Change the subject to something more hopeful.",
+      "reply": "The moment passes, and the risk goes unassessed.",
+      "score": 0
+     },
+     {
+      "text": "Reassure her that everyone feels that way sometimes.",
+      "reply": "She goes quiet. She feels dismissed.",
+      "score": 0
+     }
+    ],
+    "lesson": "Asking directly about suicide doesn't put the idea in someone's head; it's how you find the risk and get help"
+   }
+  },
+  {
+   "say": "Room 2: Mr. Price, 45, here for a cough, a pack a day for thirty years."
+  },
+  {
+   "choice": {
+    "prompt": "\"I know I should quit. But it's the only thing that relaxes me.\"",
+    "category": "Communication",
+    "options": [
+     {
+      "text": "\"It sounds like smoking does something important for you, and part of you wants to quit. What would be different if you did?\"",
+      "reply": "He thinks about it. \"I could play with my granddaughter without coughing.\" Now he's the one making the case.",
+      "score": 2
+     },
+     {
+      "text": "\"You need to quit. Smoking causes cancer and heart disease.\"",
+      "reply": "He shrugs. \"Everybody says that.\"",
+      "score": 0
+     },
+     {
+      "text": "\"Maybe try cutting down to half a pack?\"",
+      "reply": "\"Maybe.\" The conversation ends there.",
+      "score": 1
+     }
+    ],
+    "lesson": "Use open questions and reflections (motivational interviewing) so patients voice their own reasons to change"
+   }
+  },
+  {
+   "question": "imm_fm_quit_01",
+   "lead": "He sets a quit date. \"What should we offer him?\""
+  },
+  {
+   "say": "At four o'clock, Dr. Whitfield signs your form. \"You'll see all of these again: in the hospital, in the ED, in every specialty. This is where they start.\""
+  }
+ ],
+ "feedback": [
+  [
+   0.85,
+   "Dr. Whitfield writes: \"Calm, kind and safe. You asked the hard question. Excellent.\""
+  ],
+  [
+   0.6,
+   "Dr. Whitfield writes: \"Engaged and thoughtful. Keep practicing the open questions.\""
+  ],
+  [
+   0.0,
+   "Dr. Whitfield writes: \"A good first clinic. Read about depression screening and MI tonight.\""
+  ]
+ ]
+}

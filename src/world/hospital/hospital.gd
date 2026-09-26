@@ -1,16 +1,18 @@
 extends Node3D
 ## University Hospital: the Level 1 atrium and the 4 West inpatient unit
-## (Milestone 11), and the Emergency Department with Emergency Radiology on
-## its second level. Every floor is built in this one scene, far apart (the
-## unit 140 m east of the lobby, the ED 140 m west, radiology 140 m north),
+## (Milestone 11), the Emergency Department with Emergency Radiology on its
+## second level, and the Level 1 Food Court. Every floor is built in this one
+## scene, far apart (the unit 140 m east of the lobby, the ED 140 m west,
+## radiology 140 m north, the food court 140 m south),
 ## and working elevator cars and staff doors carry the student between them
 ## behind a short fade, so moving through the building needs no scene change.
 ## Only the floor the student is on is shown.
 ##
 ## The builders (hospital_lobby.gd, hospital_unit.gd, hospital_ed.gd,
-## hospital_imaging.gd) lay out geometry in a HospitalKit and call back into
-## this scene for everything that is a node: doors, signs, people, screens,
-## interactions and named anchors. The shadowing session
+## hospital_imaging.gd, hospital_food_court.gd) lay out geometry in a
+## HospitalKit and call back into this scene for everything that is a node:
+## doors, signs, people, screens, shops, seats, interactions and named
+## anchors. The shadowing session
 ## (shadowing_session.gd) drives the physician through the anchors;
 ## ed_life.gd keeps the Emergency Department busy.
 signal ride_finished(zone: String)
@@ -42,15 +44,20 @@ const EDLife = preload("res://world/hospital/ed_life.gd")
 const EDDisplay = preload("res://ui/ed_display.gd")
 const VitalsAtlas = preload("res://ui/vitals_atlas.gd")
 const RadiologyImages = preload("res://ui/radiology_images.gd")
+const FoodCourt = preload("res://world/hospital/hospital_food_court.gd")
+const ShopPanel = preload("res://ui/shop_panel.gd")
+const Seat = preload("res://world/seat.gd")
 const UNIT_OFFSET := Vector3(140, 0, 0)
 const ED_OFFSET := ED.ORIGIN
 const IMAGING_OFFSET := Vector3(0, 0, -140)
+const FOOD_COURT_OFFSET := Vector3(0, 0, 140)
 ## Per floor: HUD location, camera framing and follow bounds (world x, z).
 const ZONES := {
-	"lobby": {"title": "University Hospital · Level 1 Lobby", "min": Vector2(-11, -9.5), "max": Vector2(11, 6.5), "view": 19.5},
+	"lobby": {"title": "University Hospital · Level 1 Lobby", "min": Vector2(-11, -18.0), "max": Vector2(13.5, 6.5), "view": 19.5},
 	"unit": {"title": "University Hospital · Level 4 · 4 West", "min": Vector2(137, -2.5), "max": Vector2(172, 3.0), "view": 15.5},
 	"ed": {"title": "University Hospital · Emergency Department", "min": Vector2(-169, -12.0), "max": Vector2(-111, 20.0), "view": 20.0},
 	"imaging": {"title": "University Hospital · Level 2 · Emergency Radiology", "min": Vector2(-17, -149.0), "max": Vector2(17, -131.0), "view": 17.0},
+	"food_court": {"title": "University Hospital · Level 1 · Food Court", "min": Vector2(-9, 133.0), "max": Vector2(9, 146.0), "view": 18.0},
 }
 ## Which floor each floor's working elevator car goes to.
 const ELEVATOR_ROUTES := {"lobby": "unit", "unit": "lobby", "ed": "imaging", "imaging": "ed"}
@@ -95,6 +102,11 @@ var ed_life: Node
 var ed_exit: Node3D
 var lobby_to_ed: Node3D
 var ed_to_lobby: Node3D
+var lobby_to_food_court: Node3D
+var food_court_to_lobby: Node3D
+## The food court's counters (vendor id -> endpoint) and its seats.
+var shops := {}
+var seats: Array[Node3D] = []
 ## What the ED builder hands the life simulation: bays, seats, doors, routes.
 var ed_layout := {}
 var imaging_layout := {}
@@ -122,7 +134,7 @@ var ehr_open := false
 
 func _ready() -> void:
 	player = Player.instantiate()
-	for zone_name in ["lobby", "unit", "ed", "imaging"]:
+	for zone_name in ["lobby", "unit", "ed", "imaging", "food_court"]:
 		var root := Node3D.new()
 		root.name = zone_name.capitalize() + "Floor"
 		add_child(root)
@@ -131,12 +143,14 @@ func _ready() -> void:
 	_build_floor("unit", Unit, UNIT_OFFSET, "Unit")
 	_build_floor("ed", ED, ED_OFFSET, "EmergencyDepartment")
 	_build_floor("imaging", Imaging, IMAGING_OFFSET, "EmergencyRadiology")
+	_build_floor("food_court", FoodCourt, FOOD_COURT_OFFSET, "FoodCourt")
 	build_root = self
 	_build_lighting()
 	# Floor slabs: the floor finishes are visual only.
 	_floor_slab(Vector3(UNIT_OFFSET.x / 2.0, -0.5, 0), Vector3(260, 1, 120))
 	_floor_slab(ED_OFFSET + Vector3(0, -0.5, 8), Vector3(170, 1, 90))
 	_floor_slab(IMAGING_OFFSET + Vector3(0, -0.5, 0), Vector3(70, 1, 50))
+	_floor_slab(FOOD_COURT_OFFSET + Vector3(0, -0.5, 4), Vector3(40, 1, 40))
 	marker = ring(0.42, Color("5ec8b5"))
 	marker.name = "StandMarker"
 	marker.visible = false
@@ -150,6 +164,11 @@ func _ready() -> void:
 	lobby_to_ed.activated.connect(_on_transfer.bind(anchors.ed_from_lobby, PI / 2))
 	ed_to_lobby = add_endpoint("EDToLobby", "Go to the main hospital · Atrium", "", anchors.ed_link_door, 1.7)
 	ed_to_lobby.activated.connect(_on_transfer.bind(Vector3(-28.0, 0, -10.5), -PI / 2))
+	# Glass doors from the clinics corridor to the Food Court, and back.
+	lobby_to_food_court = add_endpoint("LobbyToFoodCourt", "Go to the Food Court", "", Vector3(14.6, 1.0, Lobby.FOOD_COURT_DOOR_Z), 1.7)
+	lobby_to_food_court.activated.connect(_on_transfer.bind(anchors.food_court_entrance, PI / 2))
+	food_court_to_lobby = add_endpoint("FoodCourtToLobby", "Back to the lobby", "", anchors.food_court_door, 1.7)
+	food_court_to_lobby.activated.connect(_on_transfer.bind(Vector3(15.5, 0, Lobby.FOOD_COURT_DOOR_Z), -PI / 2))
 	var arrival: Vector3 = anchors.ed_entrance if AppState.hospital_entry == "ed" else anchors.entrance
 	player.position = arrival + Vector3(0, 0.05, 0)
 	add_child(player)
@@ -164,6 +183,8 @@ func _ready() -> void:
 	hud = HUD.new()
 	add_child(hud)
 	hud.bind_player(player)
+	for seat in seats:
+		seat.sit_requested.connect(player.seating.request)
 	lecture_ui = LectureUI.new()
 	add_child(lecture_ui)
 	physician = Physician.new()
@@ -179,9 +200,29 @@ func _ready() -> void:
 	ed_life.name = "EDLife"
 	add_child(ed_life)
 	ed_life.setup(self)
+	_build_stations()
 	AppState.view_changed.connect(apply_view)
 	apply_view(AppState.first_person)
 	_update_zone(true)
+
+## Clinical Immersion shifts start here (world/activity_station.gd): the ED's
+## central station, 4 West's station, and the Outpatient Clinics' doors.
+var stations := {}
+
+func _build_stations() -> void:
+	var spots := {
+		"ed": [anchors.ed_station + Vector3(0, 1.0, 1.5), "Emergency Department · central station", "The charge nurse glances up. \"Clinical Immersion students check in here for their shifts.\""],
+		"unit": [anchors.corridor_mid + Vector3(0, 1.0, 0), "4 West · nurses' station", "4 West is busy with discharges. Clinical Immersion students join rounds here on their scheduled days."],
+		"clinic": [Vector3(15.5, 1.0, -24.6), "Outpatient Clinics · Family Medicine", "Family Medicine, Internal Medicine and the pharmacy are through these doors. First-years join clinic on their Clinical Immersion days."],
+	}
+	for room in spots:
+		var station := preload("res://world/activity_station.gd").new()
+		station.name = "Station_" + String(room)
+		station.position = spots[room][0]
+		station.reach = 1.8
+		station.setup("hospital", String(room), hud, String(spots[room][1]), String(spots[room][2]))
+		add_child(station)
+		stations[room] = station
 
 ## Builds one floor into its root with a HospitalKit at `origin`.
 func _build_floor(zone_name: String, builder: Variant, origin: Vector3, label: String) -> void:
@@ -215,6 +256,8 @@ func anchor(id: String) -> Vector3:
 	return anchors.get(id, Vector3.INF)
 
 func zone_of(point: Vector3) -> String:
+	if point.z > FOOD_COURT_OFFSET.z / 2.0:
+		return "food_court"
 	if point.x > UNIT_OFFSET.x / 2.0:
 		return "unit"
 	if point.x < ED_OFFSET.x / 2.0:
@@ -369,6 +412,29 @@ func add_figure(who: Variant, pos: Vector3, yaw: float, pose := "stand", seat_to
 	figures.append(figure)
 	return figure
 
+## A food counter: ordering opens the vendor's menu (data/items.gd VENDORS).
+func add_shop(vendor: String, title: String, pos: Vector3) -> Node3D:
+	var counter := add_endpoint("Shop_" + vendor, title, "", pos, 1.8)
+	counter.activated.connect(func() -> void: hud.open_modal(ShopPanel.new(vendor)))
+	shops[vendor] = counter
+	return counter
+
+## A chair the student can sit in (world/seat.gd); `occupant` (a look) seats
+## someone there instead. Tables supply `laptop_surface` for the laptop.
+func add_seat(node_name: String, pos: Vector3, yaw: float, laptop_surface := Vector3.INF, color := Color("5b6f7a"), occupant := {}) -> Node3D:
+	var seat := Seat.new()
+	seat.name = node_name
+	seat.color = color
+	seat.position = pos
+	seat.rotation.y = yaw
+	seat.laptop_surface = laptop_surface
+	if not occupant.is_empty():
+		seat.occupied = true
+		seat.occupant_look = occupant
+	build_root.add_child(seat)
+	seats.append(seat)
+	return seat
+
 func add_endpoint(node_name: String, title: String, response: String, pos: Vector3, reach := 1.55) -> Node3D:
 	var endpoint := Endpoint.new()
 	endpoint.name = node_name
@@ -382,6 +448,7 @@ func add_endpoint(node_name: String, title: String, response: String, pos: Vecto
 ## A hand-sanitizer dispenser the student can use; `id` names it for the script.
 func add_dispenser(id: String, pos: Vector3) -> Node3D:
 	var endpoint := add_endpoint("Dispenser_" + id, "Clean your hands", "Alcohol foam, rubbed in until your hands are dry.", pos, 1.6)
+	endpoint.activated.connect(func() -> void: Achievements.bump("hands_cleaned"))
 	targets[id] = endpoint
 	return endpoint
 
@@ -791,4 +858,15 @@ func _build_visitors() -> void:
 		walker.edges = VISITOR_EDGES
 		zone_roots.lobby.add_child(walker)
 		walker.setup("", player, keep_clear)
+		visitors.append(walker)
+	# The Food Court: a nurse on break and a visitor walk in, along the counters and back.
+	var loop: Array = FoodCourt.WALK_NODES.map(func(node: Vector2) -> Vector2: return node + Vector2(FOOD_COURT_OFFSET.x, FOOD_COURT_OFFSET.z))
+	for index in range(2):
+		var walker := Pedestrian.new()
+		walker.name = "Diner"
+		walker.nodes = loop
+		walker.edges = FoodCourt.WALK_EDGES
+		walker.aside_width = 0.5
+		zone_roots.food_court.add_child(walker)
+		walker.setup(ED.staff_look("nurse", 870) if index == 0 else "", player)
 		visitors.append(walker)

@@ -1,0 +1,388 @@
+{
+ "version": 1,
+ "id": "renal_01",
+ "title": "Renal Physiology & Diuretics",
+ "professor": "Dr. Luis Ferreira",
+ "segments": [
+  {
+   "id": "introduction",
+   "topic": "Introduction",
+   "slide": {
+    "heading": "The Kidney",
+    "bullets": [],
+    "subheading": "Filtration, clearance, the nephron, and where diuretics act",
+    "diagram": "figure",
+    "figure": {
+     "type": "flow",
+     "nodes": [
+      {
+       "id": "g",
+       "label": "Glomerulus",
+       "x": 0.08,
+       "y": 0.18,
+       "color": "second"
+      },
+      {
+       "id": "pct",
+       "label": "Proximal tubule: SGLT2, ~65% Na⁺",
+       "x": 0.34,
+       "y": 0.18,
+       "color": "accent"
+      },
+      {
+       "id": "loop",
+       "label": "Thick ascending limb: NKCC2 (loops)",
+       "x": 0.66,
+       "y": 0.5,
+       "color": "red"
+      },
+      {
+       "id": "dct",
+       "label": "Distal tubule: NCC (thiazides)",
+       "x": 0.34,
+       "y": 0.82,
+       "color": "gold"
+      },
+      {
+       "id": "cd",
+       "label": "Collecting duct: ENaC, aquaporin-2",
+       "x": 0.82,
+       "y": 0.82,
+       "color": "third"
+      }
+     ],
+     "edges": [
+      {
+       "from": "g",
+       "to": "pct"
+      },
+      {
+       "from": "pct",
+       "to": "loop"
+      },
+      {
+       "from": "loop",
+       "to": "dct"
+      },
+      {
+       "from": "dct",
+       "to": "cd"
+      }
+     ],
+     "text_size": 17
+    }
+   },
+   "lines": [
+    {
+     "text": "Good morning. I'm Luis Ferreira, nephrology. Your kidneys filter about a hundred and eighty litres of plasma a day and send back all but a litre or two.",
+     "gesture": "audience"
+    },
+    {
+     "text": "That's the whole story: filter a lot, then take back exactly what you need, segment by segment.",
+     "gesture": "screen"
+    },
+    {
+     "text": "And every diuretic works by blocking one transporter in one segment. By the end you'll know which.",
+     "gesture": "audience"
+    }
+   ]
+  },
+  {
+   "id": "filtration",
+   "topic": "Filtration and clearance",
+   "slide": {
+    "heading": "Filtration and clearance",
+    "bullets": [
+     "GFR ≈ 125 mL/min (≈ 180 L a day)",
+     "Clearance C = (U × V) ÷ P",
+     "Inulin clearance = GFR exactly",
+     "Creatinine clearance ≈ GFR (slight overestimate)",
+     "Filtration fraction = GFR ÷ renal plasma flow ≈ 20%"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "The glomerular filtration rate is about one hundred and twenty-five millilitres a minute in a young adult.",
+     "gesture": "screen",
+     "reveal": 1
+    },
+    {
+     "text": "To measure it, we use clearance: the volume of plasma completely cleared of a substance per minute, urine concentration times urine flow, over plasma concentration.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "question": "renal_clearance_01"
+    },
+    {
+     "text": "A substance that's filtered and neither reabsorbed nor secreted, like inulin, has a clearance equal to the GFR. Creatinine is close, and it's what we use at the bedside.",
+     "gesture": "screen",
+     "reveal": 4
+    }
+   ]
+  },
+  {
+   "id": "arterioles",
+   "topic": "Autoregulation",
+   "slide": {
+    "heading": "Two arterioles set the GFR",
+    "bullets": [
+     "Afferent constriction: GFR falls",
+     "Efferent constriction (angiotensin II): GFR held up",
+     "NSAIDs block prostaglandins that dilate the afferent",
+     "ACE inhibitors relax the efferent",
+     "Together, with dehydration: acute kidney injury"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "The glomerulus sits between two arterioles, and the pressure inside it depends on both.",
+     "gesture": "audience"
+    },
+    {
+     "text": "Prostaglandins keep the afferent arteriole open; angiotensin two squeezes the efferent, which holds glomerular pressure up when flow is low.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "text": "Take away both, with an NSAID and an ACE inhibitor in a dehydrated patient, and the GFR can collapse.",
+     "gesture": "screen",
+     "reveal": 5
+    },
+    {
+     "question": "renal_nsaid_01"
+    }
+   ]
+  },
+  {
+   "id": "nephron",
+   "topic": "The nephron",
+   "slide": {
+    "heading": "Segment by segment",
+    "bullets": [
+     "Proximal tubule: ~65% of Na⁺ and water; all glucose (SGLT2)",
+     "Thin descending limb: water out",
+     "Thick ascending limb: NKCC2; watertight",
+     "Distal tubule: NCC; PTH-regulated Ca²⁺",
+     "Collecting duct: ENaC (aldosterone), aquaporin-2 (ADH)"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "flow",
+     "nodes": [
+      {
+       "id": "g",
+       "label": "Glomerulus",
+       "x": 0.08,
+       "y": 0.18,
+       "color": "second"
+      },
+      {
+       "id": "pct",
+       "label": "Proximal tubule: SGLT2, ~65% Na⁺",
+       "x": 0.34,
+       "y": 0.18,
+       "color": "accent"
+      },
+      {
+       "id": "loop",
+       "label": "Thick ascending limb: NKCC2 (loops)",
+       "x": 0.66,
+       "y": 0.5,
+       "color": "red"
+      },
+      {
+       "id": "dct",
+       "label": "Distal tubule: NCC (thiazides)",
+       "x": 0.34,
+       "y": 0.82,
+       "color": "gold"
+      },
+      {
+       "id": "cd",
+       "label": "Collecting duct: ENaC, aquaporin-2",
+       "x": 0.82,
+       "y": 0.82,
+       "color": "third"
+      }
+     ],
+     "edges": [
+      {
+       "from": "g",
+       "to": "pct"
+      },
+      {
+       "from": "pct",
+       "to": "loop"
+      },
+      {
+       "from": "loop",
+       "to": "dct"
+      },
+      {
+       "from": "dct",
+       "to": "cd"
+      }
+     ],
+     "text_size": 17
+    }
+   },
+   "lines": [
+    {
+     "text": "The proximal tubule does the bulk work: about two-thirds of the sodium and water, all the filtered glucose through SGLT2, and most of the bicarbonate.",
+     "gesture": "screen",
+     "reveal": 1
+    },
+    {
+     "text": "If blood glucose rises past about one hundred and eighty milligrams per decilitre, the transporters saturate and glucose spills into the urine.",
+     "gesture": "screen",
+     "reveal": 1
+    },
+    {
+     "question": "renal_glucose_01"
+    },
+    {
+     "text": "The thick ascending limb pumps salt out through NKCC2 but lets no water follow: that's what makes the medulla salty and the urine concentratable.",
+     "gesture": "screen",
+     "reveal": 3
+    },
+    {
+     "text": "The distal tubule takes back more salt through NCC; the collecting duct fine-tunes sodium through ENaC under aldosterone, and water through aquaporins under antidiuretic hormone.",
+     "gesture": "screen",
+     "reveal": 5
+    }
+   ]
+  },
+  {
+   "id": "diuretics",
+   "topic": "Diuretics",
+   "slide": {
+    "heading": "Where the diuretics act",
+    "bullets": [
+     "Loop (furosemide): NKCC2; strongest",
+     "Thiazide: NCC in the distal tubule",
+     "Spironolactone: blocks aldosterone; keeps K⁺",
+     "Amiloride: blocks ENaC; keeps K⁺",
+     "Watch the potassium"
+    ],
+    "diagram": "figure",
+    "figure": {
+     "type": "table",
+     "columns": [
+      "Diuretic",
+      "Target",
+      "Segment",
+      "Watch for"
+     ],
+     "rows": [
+      [
+       "Furosemide",
+       "NKCC2",
+       "Thick ascending limb",
+       "Low K⁺, ototoxicity"
+      ],
+      [
+       "Hydrochlorothiazide",
+       "NCC",
+       "Distal tubule",
+       "Low Na⁺ and K⁺, high Ca²⁺"
+      ],
+      [
+       "Spironolactone",
+       "Aldosterone receptor",
+       "Collecting duct",
+       "High K⁺, gynecomastia"
+      ],
+      [
+       "Amiloride",
+       "ENaC",
+       "Collecting duct",
+       "High K⁺"
+      ]
+     ],
+     "widths": [
+      0.26,
+      0.22,
+      0.26,
+      0.26
+     ]
+    }
+   },
+   "lines": [
+    {
+     "text": "Now the diuretics, segment by segment. Loop diuretics block NKCC2 in the thick ascending limb. That segment handles so much salt that they're the most powerful.",
+     "gesture": "screen",
+     "reveal": 1
+    },
+    {
+     "question": "renal_loop_01"
+    },
+    {
+     "text": "Thiazides block NCC in the distal tubule. Both loops and thiazides deliver more sodium to the collecting duct, where it's swapped for potassium: so both cause hypokalemia.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "text": "Spironolactone and amiloride act in the collecting duct and spare potassium. Combine them with an ACE inhibitor and potassium can climb dangerously.",
+     "gesture": "screen",
+     "reveal": 4
+    },
+    {
+     "question": "renal_spironolactone_01"
+    }
+   ]
+  },
+  {
+   "id": "water",
+   "topic": "Water balance",
+   "slide": {
+    "heading": "Antidiuretic hormone",
+    "bullets": [
+     "ADH acts on V2 receptors in the collecting duct",
+     "Aquaporin-2 inserted: water reabsorbed",
+     "SIADH: low sodium, concentrated urine",
+     "Diabetes insipidus: dilute urine, thirst"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "Water is handled separately from salt. Antidiuretic hormone, vasopressin, binds V2 receptors on the collecting duct and inserts aquaporin-2 channels, so water leaves the urine.",
+     "gesture": "screen",
+     "reveal": 2
+    },
+    {
+     "text": "Too much ADH, the syndrome of inappropriate ADH, and patients hold water and dilute their sodium. Too little, or kidneys that ignore it, diabetes insipidus, and they pass litres of dilute urine.",
+     "gesture": "screen",
+     "reveal": 4
+    },
+    {
+     "question": "renal_adh_01"
+    }
+   ]
+  },
+  {
+   "id": "summary",
+   "topic": "Summary",
+   "slide": {
+    "heading": "Summary",
+    "bullets": [
+     "Clearance = U × V ÷ P",
+     "NSAID + ACE inhibitor + dehydration: AKI",
+     "Loop: NKCC2; thiazide: NCC; spironolactone: aldosterone",
+     "ADH: aquaporin-2"
+    ],
+    "diagram": "title"
+   },
+   "lines": [
+    {
+     "text": "Filter, reclaim, fine-tune. This afternoon, a patient who's short of breath: think about the lungs and the kidneys together.",
+     "gesture": "audience",
+     "reveal": 4
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,178 @@
+{
+ "version": 1,
+ "id": "nutrition_case_01",
+ "kind": "case",
+ "eyebrow": "Small-Group Room 202",
+ "title": "Case conference: Ms. Walker",
+ "intro": "Your small group, eight chairs around a table, and a case in three pages. Dr. Ofori will hand out each page when you've finished the last.",
+ "context": "lecture",
+ "minutes": 90,
+ "energy": 8,
+ "steps": [
+  {
+   "say": "\"Read page one aloud, and then tell me what you want to know. Don't jump to the answer.\"",
+   "speaker": "Dr. Kofi Ofori, small-group facilitator"
+  },
+  {
+   "say": "Page one. Ms. Denise Walker, 47, has type 2 diabetes. Her HbA1c is 9.1%, up from 7.8% last year. She works two part-time jobs and lives with her two teenage sons. Her doctor has increased her glipizide twice."
+  },
+  {
+   "figure": {
+    "type": "table",
+    "columns": [
+     "Medication",
+     "Dose",
+     "Since"
+    ],
+    "rows": [
+     [
+      "Metformin",
+      "1000 mg twice a day",
+      "4 years"
+     ],
+     [
+      "Glipizide",
+      "10 mg twice a day",
+      "2 years"
+     ],
+     [
+      "Lisinopril",
+      "20 mg daily",
+      "4 years"
+     ],
+     [
+      "Atorvastatin",
+      "40 mg daily",
+      "4 years"
+     ]
+    ]
+   },
+   "caption": "Ms. Walker's medication list."
+  },
+  {
+   "question": "nut_a1c_target_01",
+   "lead": "\"What are we aiming for?\""
+  },
+  {
+   "say": "Page two. At her last visit Ms. Walker mentioned, almost in passing, that she skips meals at the end of the month so her boys can eat, then eats whatever is cheapest when her paycheck comes. Twice she has woken up shaky and sweaty."
+  },
+  {
+   "question": "nut_sulfonylurea_01",
+   "lead": "\"Which drug worries you now?\""
+  },
+  {
+   "question": "nut_hunger_vital_sign_01",
+   "lead": "\"How would we have found this sooner?\""
+  },
+  {
+   "figure": {
+    "type": "bars",
+    "bars": [
+     {
+      "label": "Rent",
+      "value": 1150,
+      "color": "blue",
+      "text": "1150"
+     },
+     {
+      "label": "Food",
+      "value": 420,
+      "color": "green",
+      "text": "420"
+     },
+     {
+      "label": "Utilities",
+      "value": 210,
+      "color": "muted",
+      "text": "210"
+     },
+     {
+      "label": "Transport",
+      "value": 180,
+      "color": "muted",
+      "text": "180"
+     },
+     {
+      "label": "Medicines",
+      "value": 95,
+      "color": "red",
+      "text": "95"
+     }
+    ],
+    "y_label": "Monthly spending ($)",
+    "max": 1300
+   },
+   "caption": "Page three: her monthly budget, from the social worker's note."
+  },
+  {
+   "question": "nut_plate_01",
+   "lead": "\"So what do we tell her about food?\""
+  },
+  {
+   "choice": {
+    "prompt": "Your group has to agree on a plan. You propose:",
+    "category": "Clinical reasoning",
+    "options": [
+     {
+      "text": "A dietitian referral; the food pantry's diabetes-friendly box and help applying for food assistance; and asking her doctor to replace glipizide with a drug that doesn't cause hypoglycemia.",
+      "reply": "Dr. Ofori nods slowly. \"The medicine and the groceries, together. That's the plan.\"",
+      "score": 2
+     },
+     {
+      "text": "Tell her to eat better and exercise more.",
+      "reply": "\"With what money, and which hours?\" someone asks. The group moves on without you.",
+      "score": 0
+     },
+     {
+      "text": "Increase her glipizide again, since her HbA1c is still high.",
+      "reply": "\"And the next time she skips a meal?\" Dr. Ofori asks.",
+      "score": 0
+     }
+    ],
+    "lesson": "Treat the social need along with the medical one"
+   }
+  },
+  {
+   "choice": {
+    "prompt": "One classmate hasn't said anything all session. You:",
+    "category": "Teamwork",
+    "options": [
+     {
+      "text": "Turn to them: \"You've worked in a food bank, haven't you? What would help her most?\"",
+      "reply": "They talk for five minutes, and it's the best thing anyone says all afternoon.",
+      "score": 2
+     },
+     {
+      "text": "Keep talking: the session is nearly over.",
+      "reply": "The group finishes without hearing from them.",
+      "score": 0
+     },
+     {
+      "text": "Let the facilitator deal with it.",
+      "reply": "Dr. Ofori does, eventually.",
+      "score": 1
+     }
+    ],
+    "lesson": "Draw everyone into the group; the quiet voice often knows something you don't"
+   }
+  },
+  {
+   "say": "\"If you volunteer at the Community Kitchen on Harbor Street, you'll meet people like Ms. Walker every week. Remember them when you're writing prescriptions.\"",
+   "speaker": "Dr. Kofi Ofori, small-group facilitator"
+  }
+ ],
+ "feedback": [
+  [
+   0.85,
+   "Dr. Ofori writes: \"You saw the whole patient, not just the HbA1c.\""
+  ],
+  [
+   0.6,
+   "Dr. Ofori writes: \"Good reasoning. Ask about food, money and time as routinely as you ask about symptoms.\""
+  ],
+  [
+   0.0,
+   "Dr. Ofori writes: \"Read about social determinants of health before our next case.\""
+  ]
+ ]
+}

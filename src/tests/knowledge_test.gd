@@ -38,11 +38,15 @@ func model_tests() -> void:
 	academics.reset()
 	var roots := Knowledge.tree(bank.records.values(), academics.topic_statistics)
 	var pharmacology := find(roots, "Pharmacology")
-	check(roots.size() == 2 and pharmacology.attempted == 0 and pharmacology.accuracy == 0.0 and Knowledge.accuracy_text(pharmacology) == "—", "Zero-attempt state is safe")
+	var disciplines := {}
+	for question in bank.records.values():
+		disciplines[question.discipline] = true
+	check(roots.size() == disciplines.size() and pharmacology.attempted == 0 and pharmacology.accuracy == 0.0 and Knowledge.accuracy_text(pharmacology) == "—", "Zero-attempt state is safe (%d disciplines)" % roots.size())
 	check(not find(roots, "Clinical Skills/Hospital Orientation").is_empty(), "Clinical Skills └ Hospital Orientation (the shadowing checks) present")
 	check(not find(roots, "Pharmacology/Pharmacodynamics").is_empty(), "Pharmacology └ Pharmacodynamics hierarchy present")
 	var subtopics: Array = find(roots, "Pharmacology/Pharmacodynamics").children.map(func(n): return n.name)
-	check(subtopics == ["Receptors and ligands", "Agonists", "Antagonists", "Competitive antagonism", "Noncompetitive antagonism", "Potency", "Efficacy", "Dose-response", "Clinical application"], "Every subtopic is listed in lecture order, even unattempted %s" % str(subtopics))
+	# The lecture's subtopics in its order, then the Block 1 exam's own.
+	check(subtopics == ["Receptors and ligands", "Agonists", "Antagonists", "Competitive antagonism", "Noncompetitive antagonism", "Potency", "Efficacy", "Dose-response", "Clinical application", "Partial agonists"], "Every subtopic is listed in lecture order, even unattempted %s" % str(subtopics))
 	answer("pd_affinity_01", true)
 	var pd := find(Knowledge.tree(bank.records.values(), academics.topic_statistics), "Pharmacology/Pharmacodynamics")
 	check(pd.attempted == 1 and pd.correct == 1, "Attempt and correct counts increment")
@@ -77,7 +81,7 @@ func menu_tests() -> void:
 	var names: Array = []
 	for index in range(tabs.get_tab_count()):
 		names.append(tabs.get_tab_title(index))
-	check(names == ["Overview", "Today", "Calendar", "Map", "Knowledge", "Notes", "Achievements", "Inventory", "Settings"], "Knowledge page in the player menu %s" % str(names))
+	check(names == ["Overview", "Today", "Calendar", "Map", "Knowledge", "Notes", "Achievements", "Inventory", "Settings", "Skills", "Wallet", "Journal"], "Knowledge page in the player menu %s" % str(names))
 	hud.menu.show_page(4)
 	await ticks(3)
 	var panel: Node = hud.knowledge_panel

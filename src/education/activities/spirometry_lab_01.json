@@ -1,0 +1,147 @@
+{
+ "version": 1,
+ "id": "spirometry_lab_01",
+ "kind": "lab",
+ "eyebrow": "Skills Lab · Level 2",
+ "title": "The spirometry lab",
+ "intro": "A spirometer at every bench and a box of cardboard mouthpieces. You'll measure your own lungs, then read the tracings of patients from the pulmonary function lab.",
+ "context": "lab",
+ "minutes": 90,
+ "energy": 8,
+ "steps": [
+  {
+   "say": "\"Nose clip on. The test is only as good as the effort, and the effort is only as good as your coaching.\"",
+   "speaker": "Sam Ortega, respiratory therapist"
+  },
+  {
+   "question": "spiro_technique_01"
+  },
+  {
+   "choice": {
+    "prompt": "Your partner goes first. As they start to breathe out, you:",
+    "category": "Technique",
+    "options": [
+     {
+      "text": "Coach loudly: \"Big breath in… and BLAST! Keep going, keep going, keep going!\"",
+      "reply": "A smooth curve that plateaus at six seconds: an acceptable effort.",
+      "score": 2
+     },
+     {
+      "text": "Stay quiet: \"Breathe out whenever you're ready.\"",
+      "reply": "They stop after two seconds. The curve never plateaus, so the FVC is underestimated.",
+      "score": 0
+     },
+     {
+      "text": "Demonstrate once, then let them try without talking.",
+      "reply": "Better, but they stop early on the second try.",
+      "score": 1
+     }
+    ],
+    "lesson": "Coach forced maneuvers actively: full effort, and keep going until the curve plateaus"
+   }
+  },
+  {
+   "say": "Then it's your turn. By the end of six seconds you're seeing stars, and the spirometer prints your curve."
+  },
+  {
+   "question": "spiro_ratio_01",
+   "lead": "Your own tracing"
+  },
+  {
+   "say": "\"Now some real ones. Look at the shape before you look at the numbers.\"",
+   "speaker": "Sam Ortega, respiratory therapist"
+  },
+  {
+   "figure": {
+    "type": "curves",
+    "x": {
+     "label": "Time (s)",
+     "min": 0,
+     "max": 6
+    },
+    "y": {
+     "label": "Volume exhaled (L)",
+     "min": 0,
+     "max": 5.5
+    },
+    "series": [
+     {
+      "fn": "saturating",
+      "params": {
+       "ymax": 4.75,
+       "tau": 0.6213,
+       "y0": 0
+      },
+      "label": "Normal",
+      "color": "second",
+      "from": 0,
+      "to": 6
+     },
+     {
+      "fn": "saturating",
+      "params": {
+       "ymax": 3.9,
+       "tau": 1.2523,
+       "y0": 0
+      },
+      "label": "Obstructive",
+      "color": "red",
+      "from": 0,
+      "to": 6
+     },
+     {
+      "fn": "saturating",
+      "params": {
+       "ymax": 2.4,
+       "tau": 0.4809,
+       "y0": 0
+      },
+      "label": "Restrictive",
+      "color": "accent",
+      "from": 0,
+      "to": 6
+     }
+    ],
+    "vlines": [
+     {
+      "x": 1,
+      "label": "1 s"
+     }
+    ]
+   },
+   "caption": "Obstruction: a slow, drawn-out curve (a low ratio). Restriction: a small curve that still empties fast (a normal ratio)."
+  },
+  {
+   "question": "spiro_restrictive_01",
+   "lead": "Tracing 1"
+  },
+  {
+   "question": "spiro_bronchodilator_01",
+   "lead": "Tracing 2"
+  },
+  {
+   "say": "\"Last thing, and the one your patients will thank you for.\" He hands out placebo inhalers and spacers."
+  },
+  {
+   "question": "spiro_inhaler_01"
+  },
+  {
+   "say": "\"Check the technique at every visit. It's the cheapest treatment in pulmonary medicine.\"",
+   "speaker": "Sam Ortega, respiratory therapist"
+  }
+ ],
+ "feedback": [
+  [
+   0.85,
+   "\"You coach like a pro and read like a fellow.\""
+  ],
+  [
+   0.6,
+   "\"Solid. Look at the shape of the curve before the numbers.\""
+  ],
+  [
+   0.0,
+   "\"Go back over the normal, obstructive and restrictive shapes: the pattern is everything.\""
+  ]
+ ]
+}

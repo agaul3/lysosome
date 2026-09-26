@@ -1,0 +1,221 @@
+{
+  "version": 1,
+  "id": "pharmacokinetics_01",
+  "title": "Pharmacokinetics",
+  "professor": "Dr. Lena Park",
+  "segments": [
+    {
+      "id": "introduction",
+      "topic": "Introduction",
+      "slide": {
+        "heading": "Pharmacokinetics",
+        "subheading": "What the body does to the drug",
+        "bullets": [],
+        "diagram": "figure",
+        "figure": {
+          "type": "flow",
+          "nodes": [
+            {"id": "a", "label": "Absorption", "x": 0.14, "y": 0.35, "color": "accent"},
+            {"id": "d", "label": "Distribution", "x": 0.38, "y": 0.35, "color": "second"},
+            {"id": "m", "label": "Metabolism", "x": 0.62, "y": 0.35, "color": "third"},
+            {"id": "e", "label": "Excretion", "x": 0.86, "y": 0.35, "color": "gold"}
+          ],
+          "edges": [{"from": "a", "to": "d"}, {"from": "d", "to": "m"}, {"from": "m", "to": "e"}]
+        }
+      },
+      "lines": [
+        {"text": "Good morning. On Monday we asked what a drug does to the body. Today we turn it around: what does the body do to the drug?", "gesture": "audience"},
+        {"text": "That is pharmacokinetics: how a drug is absorbed, where it distributes, how it is metabolized and how it is excreted. A-D-M-E.", "gesture": "screen"},
+        {"text": "Get this right and you can predict how much to give, how often, and what happens when a patient's liver or kidneys aren't working.", "gesture": "audience"}
+      ]
+    },
+    {
+      "id": "absorption",
+      "topic": "Absorption and bioavailability",
+      "slide": {
+        "heading": "Absorption and bioavailability",
+        "bullets": [
+          "Bioavailability (F): the fraction reaching the systemic circulation",
+          "IV: F = 1 by definition",
+          "Oral: gut absorption, then the first pass through gut wall and liver",
+          "F = AUC oral ÷ AUC IV (same dose)"
+        ],
+        "diagram": "figure",
+        "figure": {
+          "type": "curves",
+          "x": {"label": "Time (h)", "min": 0, "max": 16},
+          "y": {"label": "Plasma concentration", "min": 0, "max": 100},
+          "series": [
+            {"label": "IV bolus", "fn": "exponential_decay", "params": {"c0": 100, "half_life": 3}, "color": "accent"},
+            {"label": "Same dose, oral (F ≈ 0.4)", "fn": "oral_absorption", "params": {"scale": 48, "half_life": 3, "absorption_half_life": 0.5}, "color": "second"}
+          ],
+          "marks": [{"x": 1.55, "y": 28, "label": "Cmax", "color": "second"}]
+        }
+      },
+      "lines": [
+        {"text": "Give a drug intravenously and all of it reaches the circulation. We say its bioavailability, F, is one.", "gesture": "screen", "reveal": 2},
+        {"text": "Swallow it and the drug has to be absorbed from the gut, and then it travels in the portal vein through the liver before it reaches the rest of the body.", "gesture": "audience", "reveal": 3},
+        {"text": "Enzymes in the gut wall and liver can metabolize a large share on that first pass. That's why some drugs need a much bigger oral dose than IV dose.", "gesture": "audience"},
+        {"text": "To measure F, compare the area under the concentration-time curve after the same dose given each way. Here the oral curve has about forty percent of the IV area.", "gesture": "screen", "reveal": 4},
+        {"question": "pk_bioavailability_01", "lead": "Let's calculate one."},
+        {"question": "pk_first_pass_01"}
+      ]
+    },
+    {
+      "id": "distribution",
+      "topic": "Distribution",
+      "slide": {
+        "heading": "Volume of distribution",
+        "bullets": [
+          "Vd = amount in the body ÷ plasma concentration",
+          "Not a real volume: it reflects where the drug goes",
+          "Small Vd: stays in plasma. Large Vd: bound in tissues",
+          "Loading dose = Vd × target concentration ÷ F"
+        ],
+        "diagram": "figure",
+        "figure": {
+          "type": "table",
+          "columns": ["Vd (70-kg adult)", "Where the drug is", "Example"],
+          "widths": [0.3, 0.42, 0.28],
+          "rows": [
+            ["≈ 3–5 L", "Mostly plasma (large or protein-bound)", "Heparin"],
+            ["≈ 15–40 L", "Extracellular fluid", "Gentamicin"],
+            ["> 100 L", "Bound in tissues", "Digoxin, amiodarone"]
+          ]
+        }
+      },
+      "lines": [
+        {"text": "Once a drug is in the blood, where does it go? We describe that with the volume of distribution, Vd: the amount of drug in the body divided by the plasma concentration.", "gesture": "screen", "reveal": 1},
+        {"text": "It isn't a real anatomical volume. It's the volume the drug would need to occupy to explain the concentration you measure.", "gesture": "audience", "reveal": 2},
+        {"text": "A drug that stays in the blood, because it is large or tightly protein-bound, has a Vd near plasma volume. A drug that hides in fat or muscle leaves little in the plasma, so its Vd can be hundreds of liters.", "gesture": "screen", "reveal": 3},
+        {"text": "Vd is what sets the loading dose. To reach a target concentration straight away, give Vd times that concentration, divided by F.", "gesture": "screen", "reveal": 4},
+        {"question": "pk_loading_dose_01", "lead": "Try this dose calculation."},
+        {"question": "pk_vd_meaning_01"}
+      ]
+    },
+    {
+      "id": "elimination",
+      "topic": "Clearance and elimination",
+      "slide": {
+        "heading": "Clearance and elimination",
+        "bullets": [
+          "Clearance (CL): volume of plasma cleared of drug per unit time",
+          "First-order: a constant fraction per hour (most drugs)",
+          "Zero-order: a constant amount per hour (saturated enzymes)",
+          "Ethanol; phenytoin and aspirin at high doses"
+        ],
+        "diagram": "figure",
+        "figure": {
+          "type": "curves",
+          "x": {"label": "Time (h)", "min": 0, "max": 16},
+          "y": {"label": "Concentration (% of start)", "min": 0, "max": 100},
+          "series": [
+            {"label": "First-order (t½ = 4 h)", "fn": "exponential_decay", "params": {"c0": 100, "half_life": 4}, "color": "accent"},
+            {"label": "Zero-order (10% per hour)", "fn": "linear", "params": {"m": -10, "b": 100}, "from": 0, "to": 10, "color": "third"}
+          ],
+          "marks": [{"x": 4, "y": 50, "label": "50%"}, {"x": 8, "y": 25, "label": "25%"}, {"x": 12, "y": 12.5, "label": "12.5%"}]
+        }
+      },
+      "lines": [
+        {"text": "Clearance is the volume of plasma completely cleared of drug per unit time. The liver and kidneys do most of it.", "gesture": "audience", "reveal": 1},
+        {"text": "For most drugs, elimination is first-order: a constant fraction leaves each hour. Double the concentration and the rate of elimination doubles too.", "gesture": "screen", "reveal": 2},
+        {"text": "When the enzymes are saturated, the body can only remove a fixed amount per hour. That's zero-order elimination: a straight line down instead of a curve.", "gesture": "screen", "reveal": 3},
+        {"text": "Ethanol behaves this way at intoxicating levels, and so do phenytoin and aspirin at high doses, which is why small dose increases can cause big jumps in concentration.", "gesture": "audience", "reveal": 4},
+        {"question": "pk_zero_order_01"}
+      ]
+    },
+    {
+      "id": "half_life",
+      "topic": "Half-life and steady state",
+      "slide": {
+        "heading": "Half-life and steady state",
+        "bullets": [
+          "t½ = 0.693 × Vd ÷ CL",
+          "Each half-life halves the concentration (first-order)",
+          "Repeated dosing accumulates to steady state",
+          "Steady state after about 4–5 half-lives"
+        ],
+        "diagram": "figure",
+        "figure": {
+          "type": "curves",
+          "x": {"label": "Time (h), a dose every 6 h (t½ = 6 h)", "min": 0, "max": 48},
+          "y": {"label": "Plasma concentration", "min": 0, "max": 110},
+          "series": [
+            {"label": "Repeated doses", "fn": "repeated_dose", "params": {"dose_c": 50, "half_life": 6, "interval": 6}, "color": "accent"}
+          ],
+          "hlines": [{"y": 100, "label": "steady-state peak", "color": "gold"}, {"y": 50, "label": "steady-state trough", "color": "second"}]
+        }
+      },
+      "lines": [
+        {"text": "Half-life depends on both distribution and clearance: 0.693 times Vd divided by clearance. A bigger Vd or a smaller clearance means a longer half-life.", "gesture": "screen", "reveal": 1},
+        {"text": "With first-order elimination, each half-life halves what's left. After four half-lives, about ninety-four percent is gone.", "gesture": "audience", "reveal": 2},
+        {"question": "pk_half_life_01", "lead": "A quick calculation.", "remediation": "pk_half_life_remediation_01"},
+        {"text": "Now keep dosing. Each dose adds to what's left of the last, and the concentration climbs until what you give each interval equals what's eliminated.", "gesture": "screen", "reveal": 3},
+        {"text": "That's steady state, and you get there in about four to five half-lives, whatever the dose. The dose sets how high the plateau is, not how fast you reach it.", "gesture": "screen", "reveal": 4},
+        {"question": "pk_steady_state_01"}
+      ]
+    },
+    {
+      "id": "dosing",
+      "topic": "Dosing in the clinic",
+      "slide": {
+        "heading": "Putting it together: dosing",
+        "bullets": [
+          "Maintenance dose = CL × target concentration × interval ÷ F",
+          "Loading dose depends on Vd; maintenance on CL",
+          "Kidney or liver failure lowers clearance",
+          "Same loading dose; lower or less frequent maintenance"
+        ],
+        "diagram": "figure",
+        "figure": {
+          "type": "table",
+          "columns": ["Quantity", "Depends on", "Renal failure (renally cleared drug)"],
+          "widths": [0.26, 0.38, 0.36],
+          "rows": [
+            ["Loading dose", "Vd × target ÷ F", "Usually unchanged"],
+            ["Maintenance dose", "CL × target × interval ÷ F", "Lower, or less often"],
+            ["Half-life", "0.693 × Vd ÷ CL", "Longer"]
+          ],
+          "highlight": 1
+        }
+      },
+      "lines": [
+        {"text": "At steady state, what goes in must equal what comes out. So the maintenance dose is clearance times the target concentration, per dosing interval, divided by F.", "gesture": "screen", "reveal": 1},
+        {"text": "Notice the split: the loading dose depends on the volume of distribution; the maintenance dose depends on clearance.", "gesture": "audience", "reveal": 2},
+        {"text": "When the kidneys fail, clearance of a renally excreted drug falls. Keep giving the usual maintenance dose and it accumulates, sometimes to toxic levels.", "gesture": "audience", "reveal": 3},
+        {"text": "The fix is a lower maintenance dose or a longer interval. The loading dose usually stays the same, because the volume hasn't changed.", "gesture": "screen", "reveal": 4},
+        {"question": "pk_renal_dosing_01", "lead": "A clinical case to finish."}
+      ]
+    },
+    {
+      "id": "summary",
+      "topic": "Summary",
+      "slide": {
+        "heading": "Summary",
+        "bullets": [
+          "F: how much gets in",
+          "Vd: where it goes, and the loading dose",
+          "CL: how fast it leaves, and the maintenance dose",
+          "t½ = 0.693 × Vd ÷ CL; steady state in 4–5 half-lives"
+        ],
+        "diagram": "figure",
+        "figure": {
+          "type": "flow",
+          "nodes": [
+            {"id": "f", "label": "Bioavailability\nF", "x": 0.16, "y": 0.3, "color": "accent"},
+            {"id": "v", "label": "Volume of\ndistribution", "x": 0.5, "y": 0.3, "color": "second"},
+            {"id": "c", "label": "Clearance\nCL", "x": 0.84, "y": 0.3, "color": "third"},
+            {"id": "ld", "label": "Loading dose", "x": 0.5, "y": 0.78, "color": "gold"},
+            {"id": "md", "label": "Maintenance dose", "x": 0.84, "y": 0.78, "color": "gold"}
+          ],
+          "edges": [{"from": "v", "to": "ld"}, {"from": "c", "to": "md"}, {"from": "f", "to": "ld", "dashed": true}]
+        }
+      },
+      "lines": [
+        {"text": "Let's pull it together. Bioavailability is how much gets in. Volume of distribution is where it goes, and it sets the loading dose.", "gesture": "screen", "reveal": 2},
+        {"text": "Clearance is how fast it leaves, and it sets the maintenance dose. Half-life comes from both, and it tells you how long until steady state.", "gesture": "screen", "reveal": 4},
+        {"text": "Next week, the enzymes that do much of this metabolizing. See you then.", "gesture": "audience"}
+      ]
+    }
+  ]
+}
